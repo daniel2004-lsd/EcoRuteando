@@ -1,0 +1,306 @@
+/* ============================================================================
+   ESTILOS PERSONALIZADOS - ECORUTEANDO
+   ============================================================================ */
+
+/* Variables CSS */
+:root {
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --dark-bg: #1b429c;
+    --light-bg: #f8f9fa;
+}
+
+/* Body */
+body {
+    background: linear-gradient(135deg, #36a78d, #0f172a);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #1e3a8a 0%, #10b981 100%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Navbar */
+.navbar {
+    backdrop-filter: blur(10px);
+    background: rgba(33, 37, 41, 0.95) !important;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+.nav-link {
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    margin: 0 5px;
+}
+
+.nav-link:hover {
+    background: rgba(170, 70, 70, 0.1);
+    transform: translateY(-2px);
+}
+
+  .code-block {
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 15px;
+        margin: 15px 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .code-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #2563eb;
+    }
+
+    .code-title {
+        color: #60a5fa;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .copy-btn {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .copy-btn:hover {
+        background: #1d4ed8;
+        transform: translateY(-2px);
+    }
+
+    .copy-btn.copied {
+        background: #10b981;
+    }
+
+    pre {
+        margin: 0;
+        background: #0f172a !important;
+        border-radius: 8px;
+        overflow-x: auto;
+        max-height: 350px;
+    }
+
+    pre code {
+        color: #e2e8f0;
+        font-size: 13px;
+        line-height: 1.6;
+        font-family: 'Courier New', Courier, monospace;
+        display: block;
+        padding: 15px !important;
+    }
+
+    pre::-webkit-scrollbar {
+        height: 8px;
+        width: 8px;
+    }
+
+    pre::-webkit-scrollbar-track {
+        background: #1e293b;
+        border-radius: 8px;
+    }
+
+    pre::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: 8px;
+    }
+
+    pre::-webkit-scrollbar-thumb:hover {
+        background: #475569;
+    }
+
+/* Cards */
+.card {
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Accordion */
+.accordion-item {
+    border-radius: 10px !important;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.accordion-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.accordion-button {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.accordion-button:not(.collapsed) {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    color: white;
+    box-shadow: 0 4px 6px rgba(13, 110, 253, 0.3);
+}
+
+.accordion-button:hover {
+    transform: translateX(5px);
+}
+
+.accordion-button::after {
+    transition: transform 0.3s ease;
+}
+
+.accordion-button:not(.collapsed)::after {
+    transform: rotate(180deg);
+}
+
+.accordion-body {
+    background: white;
+    padding: 2rem;
+}
+
+/* Feature Box */
+.feature-box {
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.feature-box:hover {
+    background: #e9ecef;
+    transform: translateY(-3px);
+}
+
+/* Text Utilities */
+.text-justify {
+    text-align: justify;
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table-hover tbody tr:hover {
+    background: rgba(13, 110, 253, 0.05);
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #0d6efd, #10b981);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #0a58ca, #059669);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.accordion-item {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+
+    .accordion-button {
+        font-size: 0.95rem;
+    }
+
+    .accordion-body {
+        padding: 1rem;
+    }
+}
+
+/* Dark mode elements */
+.bg-dark {
+    background: #1e293b !important;
+}
+
+/* Icons */
+.bi {
+    vertical-align: middle;
+}
+
+/* Alert boxes */
+.alert {
+    border-radius: 10px;
+}
+
+/* List groups */
+.list-group-item {
+    border-left: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+    border-left-color: var(--primary-color);
+    background: #f8f9fa;
+    transform: translateX(5px);
+}
