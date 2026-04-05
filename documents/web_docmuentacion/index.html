@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/styles.css"/>
 </head>
 <body>
+  
 
 <!-- ════════════════════════════════════
      TOP NAV
@@ -53,31 +54,36 @@
   <button class="rap-tab active" onclick="selectRap('ra1',this)">
     <span class="rnum">1</span>
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-    RA1 &mdash; Planear Actividades
+    RA1 &mdash; Interpretar informe de diseño  
   </button>
 
   <button class="rap-tab" onclick="selectRap('ra2',this)">
     <span class="rnum">2</span>
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-    RA2 &mdash; Base de Datos
+    RA1 &mdash; Seleccionar herramientas de desarrollo 
   </button>
 
   <button class="rap-tab" onclick="selectRap('ra3',this)">
     <span class="rnum">3</span>
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-    RA3 &mdash; Front-end
+    RA1 &mdash; Configurar herramientas de desarrollo
   </button>
 
   <button class="rap-tab" onclick="selectRap('ra4',this)">
     <span class="rnum">4</span>
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-    RA4 &mdash; Codificaci&oacute;n
+    RA1  &mdash; Seleccionar herramientas de versionamiento 
   </button>
 
   <button class="rap-tab" onclick="selectRap('ra5',this)">
     <span class="rnum">5</span>
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-    RA5 &mdash; Pruebas
+    RA1 &mdash; Configurar herramientas de versionamiento
+  </button>
+   <button class="rap-tab" onclick="selectRap('ra5',this)">
+    <span class="rnum">6</span>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    RA1 &mdash; Definir estándares de codificación 
   </button>
 
 </div>
@@ -321,38 +327,63 @@
       </div>
     </div>
 
-    <!-- RA1-5: Diagramas UML -->
-    <div class="panel" id="panel-ra1-5">
-      <div class="breadcrumb">RA1 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Diagramas UML</span></div>
+   <!-- RA1-5: Diagramas UML -->
+
+   <div class="panel" id="panel-ra1-5">
+      <div class="breadcrumb">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        RA1 — Informe de Dise&ntilde;o
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="bc-current">Diagramas UML</span>
+      </div>
       <h1 class="sec-title">Diagramas UML</h1>
       <p class="sec-sub">Modelado visual de la arquitectura, comportamiento y estructura del sistema.</p>
 
       <div class="uml-grid">
+        
         <div class="uml-card">
           <div class="uml-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
           <div class="uml-card-title">Diagrama de Casos de Uso</div>
           <div class="uml-card-desc">Muestra las interacciones entre los actores (invitado, usuario, moderador, administrador) y las funcionalidades del sistema.</div>
           <a href="https://docs.google.com/document/d/1PBONEgVfg_ZQlI2xMB4qYQ1cONoGI-vE/edit?usp=sharing" target="_blank" class="drive-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Ver en Google Drive</a>
         </div>
+
         <div class="uml-card">
           <div class="uml-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
           <div class="uml-card-title">Diagrama de Clases</div>
           <div class="uml-card-desc">Representa la estructura est&aacute;tica del sistema: clases, atributos, m&eacute;todos y relaciones entre entidades.</div>
           <a href="https://drive.google.com/file/d/1vqinSm_VP3XfIpk3lCuS7KBV579RbJbN/view?usp=sharing" target="_blank" class="drive-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Ver en Google Drive</a>
         </div>
+
         <div class="uml-card">
           <div class="uml-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></div>
           <div class="uml-card-title">Diagrama de Secuencia</div>
           <div class="uml-card-desc">Ilustra el flujo de mensajes e interacciones entre objetos del sistema a lo largo del tiempo.</div>
           <a href="https://docs.google.com/document/d/1rEgi84KZ5EGM-SSk0ArzEHifC9Coqj3K/edit?usp=sharing" target="_blank" class="drive-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Ver en Google Drive</a>
         </div>
+
         <div class="uml-card">
           <div class="uml-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
           <div class="uml-card-title">Diagrama Entidad-Relaci&oacute;n</div>
           <div class="uml-card-desc">Muestra la estructura completa del modelo de base de datos con todas las tablas y relaciones.</div>
           <a href="https://drive.google.com/file/d/107OG0JNDSUzBa_3D68UCay7L_c4VMPvj/view?usp=drive_link" target="_blank" class="drive-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Ver en Google Drive</a>
         </div>
-      </div>
+
+        <div class="uml-card">
+          <div class="uml-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          <div class="uml-card-title">Diagrama de Dominio</div>
+          <div class="uml-card-desc">Define las entidades conceptuales del negocio (Rutas, CO2, Usuarios) y sus relaciones lógicas esenciales.</div>
+          <a href="https://drive.google.com/file/d/1YfrcRPoSiquGimWGYCoT1ffFv0Au-xTW/view?usp=drive_link" target="_blank" class="drive-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Ver en Drive</a>
+        </div>
+
+        <div class="uml-card">
+          <div class="uml-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></div>
+          <div class="uml-card-title">Transición de Datos</div>
+          <div class="uml-card-desc">Modelado del flujo de información entre el frontend, la API y la persistencia en la base de datos.</div>
+          <a href="https://docs.google.com/document/d/1DqFw1ldT6yDGtiFwNjSpQw2CSu7FLZwV/edit?usp=sharing" target="_blank" class="drive-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Ver en Drive</a>
+        </div>
+
+      </div> 
 
       <div class="ptable-wrap"><table class="ptable">
         <thead><tr><th>Diagrama</th><th>Prop&oacute;sito</th><th>Estado</th></tr></thead>
@@ -783,12 +814,96 @@ CREATE TABLE estadisticas_diarias (
       </table></div>
     </div>
 
-    <!-- RA3-RA5 Coming soon -->
-    <div class="panel" id="panel-ra3-1">
-      <div class="coming-soon">
-        <div class="cs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
-        <div class="cs-title">RA3 &mdash; Componentes Front-end</div>
-        <div class="cs-desc">Secci&oacute;n pendiente de completar. Aqu&iacute; ir&aacute; la documentaci&oacute;n sobre la construcci&oacute;n de los componentes de interfaz de usuario del software.</div>
+   <div class="panel" id="panel-ra3-1">
+      <div class="breadcrumb">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        RA3 — Base de Datos y Entorno
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="bc-current">Configuración de Herramientas</span>
+      </div>
+      
+      <h1 class="sec-title">Configurar Herramientas de Desarrollo</h1>
+      <p class="sec-sub">Preparación y puesta a punto del ecosistema tecnológico para el proyecto.</p>
+
+      <div class="lead">
+        El entorno de desarrollo de <strong>EcoRuteando</strong> ha sido diseñado para soportar un stack moderno: <strong>React/React Native</strong> para el frontend y <strong>C# (.NET 8)</strong> para el backend, garantizando la interoperabilidad mediante estándares REST/JSON[cite: 1104, 1111, 1144].
+      </div>
+
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg> 1. Características Técnicas del Stack</div>
+        <p>Se seleccionaron herramientas que permiten la escalabilidad y el mantenimiento eficiente del sistema[cite: 1069, 1135]:</p>
+        <ul class="blist">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/></svg><span><strong>Visual Studio Code:</strong> Editor multiplataforma con extensiones para depuración de C# y React[cite: 1100, 1102].</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/></svg><span><strong>.NET 8 SDK:</strong> Framework de alto rendimiento para la construcción de la API REST[cite: 1104, 1111].</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/></svg><span><strong>PostgreSQL + PostGIS:</strong> Motor de base de datos con soporte nativo para datos geográficos y trayectos GPS[cite: 1117, 1145].</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/></svg><span><strong>Git/GitHub:</strong> Gestión de versiones mediante flujos de Pull Requests[cite: 1100, 1102].</span></li>
+        </ul>
+      </div>
+
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> 2. Procedimientos de Configuración</div>
+        <div class="ptable-wrap">
+          <table class="ptable">
+            <thead>
+              <tr>
+                <th>Herramienta</th>
+                <th>Acción de Configuración</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>IDE (VS Code)</strong></td>
+                <td>Instalación de <em>C# Dev Kit</em>, <em>ESLint</em> y <em>Prettier</em>. Activación de "Format on Save"[cite: 1262].</td>
+                <td><span class="pbadge">Listo</span></td>
+              </tr>
+              <tr>
+                <td><strong>Lenguaje</strong></td>
+                <td>Verificación de versión con <code>dotnet --version</code>. Creación de proyecto Web API[cite: 1184].</td>
+                <td><span class="pbadge">Listo</span></td>
+              </tr>
+              <tr>
+                <td><strong>Base de Datos</strong></td>
+                <td>Creación de DB <code>ecoruteando_db</code> y habilitación de <code>CREATE EXTENSION postgis;</code>[cite: 1117].</td>
+                <td><span class="pbadge">Listo</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> 3. Pruebas de Funcionamiento</div>
+        <p>Se ejecutó un programa de prueba para validar que el backend puede comunicarse con la base de datos y responder a peticiones HTTP[cite: 1261, 1308]:</p>
+        
+        <div class="code-wrap">
+          <div class="code-bar">
+            <span>SQL - Creación de tabla de prueba</span>
+            <button class="copy-btn" onclick="copyCode('sql-test')">Copiar</button>
+          </div>
+          <pre id="sql-test">
+-- Crear tabla de prueba para verificar entorno
+CREATE TABLE test_env (
+    id SERIAL PRIMARY KEY,
+    mensaje TEXT NOT NULL,
+    creado_at TIMESTAMP DEFAULT now()
+);
+
+INSERT INTO test_env (mensaje) VALUES ('Entorno configurado correctamente');</pre>
+        </div>
+
+        <div class="code-wrap">
+          <div class="code-bar">
+            <span>C# - Endpoint "Hola Mundo" (Program.cs)</span>
+          </div>
+          <pre>
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+app.MapGet("/", () => "EcoRuteando API v1.0 - Entorno Activo");
+
+app.Run();</pre>
+        </div>
       </div>
     </div>
     <div class="panel" id="panel-ra4-1">
