@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --eco-dark:    #2c5f3f;
+  --eco-mid:     #3d7a55;
+  --eco-main:    #4a8f65;
+  --eco-light:   #5ea87a;
+  --eco-soft:    #cde4d5;
+  --eco-pale:    #f2f8f4;
+  --eco-bg:      #e8f3ec;
+  --ivory:       #f9f6f0;
+  --ivory-dark:  #ede8df;
+}
+
+* { font-family: 'Playfair Display', 'Times New Roman', serif; scroll-behavior: smooth; }
+
+.gradient-hero { background: linear-gradient(150deg, #3d6b4f 0%, #4e8866 40%, #5ea87a 100%); }
+.gradient-card { background: linear-gradient(145deg, #ffffff 0%, var(--ivory) 100%); }
+
+.input-eco { background: #e8f0eb; border: 2px solid transparent; transition: all 0.25s; }
+.input-eco:focus { background: #dce8e0; border-color: var(--eco-main); outline: none; box-shadow: 0 0 0 3px rgba(74,143,101,0.18); }
+.input-error { border-color: #dc2626 !important; background: #fee2e2 !important; }
+.input-ok { border-color: #16a34a !important; }
+
+.btn-primary { background: linear-gradient(135deg, var(--eco-dark), var(--eco-main)); transition: all 0.22s; color: white !important; font-weight: bold; }
+.btn-primary:hover:not(:disabled) { background: linear-gradient(135deg, #143d28, #256b4a); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(30,74,50,0.38); }
+.btn-outline { border: 2px solid var(--eco-main); color: var(--eco-main); transition: all 0.22s; }
+
+.animate-pulse-green { animation: pulseGreen 2s infinite; }
+@keyframes pulseGreen { 0%,100% { box-shadow: 0 0 0 0 rgba(46,125,82,0.4); } 50% { box-shadow: 0 0 0 10px rgba(46,125,82,0); } }
+
+/* Centrado del Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.modal-box { background: white; border-radius: 24px; max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem; position: relative; box-shadow: 0 30px 80px rgba(0,0,0,0.25); }
+
+.tag-eco { background: linear-gradient(135deg, #c5e8d4, #a8d9bc); color: var(--eco-dark); padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.75rem; }
+.stat-badge { background: white; border-radius: 16px; padding: 10px 18px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); position: absolute; }
+/* Color de fondo para esta sección */
+.bg-ivory { background-color: #f9f6f0; }
+
+/* Efecto de sombra y elevación idéntico al original */
+.card-hover {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 22px 45px rgba(30, 74, 50, 0.15); /* Sombra verde sutil profunda */
+}
+
+/* Iconos contenedores */
+.feature-icon-bg {
+  background: linear-gradient(135deg, #f9f6f0, #ede8df);
+}
+/* Reducimos el tamaño base de la fuente y los anchos máximos */
+html { font-size: 15px; } /* Achica todo un poco */
+
+.container-compact {
+  max-width: 1000px; /* Antes era 1200px o más */
+  margin: 0 auto;
+}
+
+/* Achicamos las tarjetas del home */
+.card-hover {
+  padding: 1.5rem !important; /* Menos espacio interno */
+}
+
+/* Achicamos el Hero */
+.gradient-hero {
+  padding-top: 5rem !important;
+  padding-bottom: 4rem !important;
+}
+/* Centrado del Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-box {
+  background: white;
+  border-radius: 24px;
+  max-width: 560px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 2.5rem;
+  position: relative;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+}
+
+/* Scrollbar elegante para el texto largo */
+.modal-box::-webkit-scrollbar { width: 6px; }
+.modal-box::-webkit-scrollbar-thumb { background: #cde4d5; border-radius: 3px; }
+/* Ajuste de scroll para que el contenido no se mueva cuando el menú abre */
+body.menu-open {
+  overflow: hidden;
+}
+
+/* Mejora de legibilidad en móviles compactos */
+@media (max-width: 640px) {
+  h1 { font-size: 2.2rem !important; }
+  .gradient-hero { padding-top: 7rem !important; }
+}
