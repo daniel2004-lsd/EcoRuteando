@@ -110,3 +110,19 @@ body.menu-open {
   h1 { font-size: 2.2rem !important; }
   .gradient-hero { padding-top: 7rem !important; }
 }
+/* --- ESTILOS DEL SIDEBAR PROFESIONAL --- */
+.sidebar-overlay {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(6px); /* Desenfoque de fondo premium */
+  transition: all 0.4s ease;
+}
+
+.sidebar-panel {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -10px 0 40px rgba(0,0,0,0.15);
+}
+
+/* Evitar scroll cuando el menú está abierto */
+body.menu-open {
+  overflow: hidden;
+}
