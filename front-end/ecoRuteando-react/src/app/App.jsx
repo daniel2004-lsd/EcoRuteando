@@ -6,6 +6,7 @@ import Register from "../features/auth/components/Register";
 import Recover from "../features/auth/components/Recover";
 import VerifyCode from "../features/auth/components/VerifyCode";
 import NewPassword from "../features/auth/components/NewPassword";
+import Navbar  from "../features/auth/components/Navbar";
 // Solo necesitamos LogoImage e iconos generales aquí
 import { LogoImage } from "../shared/components/Icons";
 
@@ -26,6 +27,7 @@ function App() {
 
   return (
     <div className="relative min-h-screen font-sans antialiased text-gray-900">
+      
       <main>
         {page === "home" && <HomePage onNavigate={navigate} />}
         {page === "login" && <Login onNavigate={navigate} />}
