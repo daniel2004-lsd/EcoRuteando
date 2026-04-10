@@ -54,7 +54,7 @@ const HomePage = ({ onNavigate }) => {
           {/* Icono Hamburguesa Móvil */}
           <button onClick={() => setMenuOpen(true)} className="md:hidden flex flex-col gap-1.5 p-2 z-50 active:scale-90 transition-transform">
             <span className={`w-6 h-0.5 transition-all ${scrolled || menuOpen ? "bg-green-900" : "bg-white"}`} />
-            <span className={`w-6 h-0.5 transition-all ${scrolled || menuOpen ? "bg-green-900" : "bg-white"}`} />
+             <span className={`w-6 h-0.5 transition-all ${scrolled || menuOpen ? "bg-green-900" : "bg-white"}`} />
             <span className={`w-6 h-0.5 transition-all ${scrolled || menuOpen ? "bg-green-900" : "bg-white"}`} />
           </button>
         </div>
