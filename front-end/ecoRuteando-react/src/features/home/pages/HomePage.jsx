@@ -43,7 +43,13 @@ const HomePage = ({ onNavigate }) => {
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
 
       {/* ─── NAVBAR PRINCIPAL ─── */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-white shadow-md py-3 text-green-900" : "bg-transparent py-5 text-white"}`}>
+     <nav
+  className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+    scrolled
+      ? "bg-white shadow-md py-3 text-green-900"
+      : "bg-black/30 backdrop-blur-md py-5 text-white"
+  }`}
+>
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-green-100 p-1">
@@ -168,7 +174,7 @@ const HomePage = ({ onNavigate }) => {
       </div>
 
       {/* ─── HERO SECTION ─── */}
-      <section className="gradient-hero min-h-[85vh] md:min-h-[40vh] flex flex-col items-center justify-center pt-28 pb-16 px-6 text-center relative overflow-hidden text-white">
+      <section className="gradient-hero min-h-[85vh] md:min-h-[40vh] flex flex-col items-center justify-center pt-32 md:pt-28 pb-16 px-6 text-center relative overflow-hidden text-white">
         <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle at 20% 80%, rgba(255,255,255,0.06) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.06) 0%, transparent 50%)" }} />
         <div className="relative z-10 max-w-4xl mx-auto animate-fade-in">
           <span className="tag-eco inline-block mb-6 text-[10px] md:text-sm px-4 py-1.5 rounded-full font-bold shadow-sm text-green-900">
