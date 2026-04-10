@@ -104,7 +104,7 @@ const HomePage = ({ onNavigate }) => {
             aria-label="Abrir menú"
           >
             <span className={`w-6 h-0.5 transition-all ${scrolled || menuOpen ? "bg-green-900" : "bg-white"}`} />
-            <span className={`w-6 h-0.5 transition-all ${scrolled || menuOpen ? "bg-green-900" : "bg-white"}`} />
+             <span className={`w-6 h-0.5 transition-all ${scrolled || menuOpen ? "bg-green-900" : "bg-white"}`} />
             <span className={`w-6 h-0.5 transition-all ${scrolled || menuOpen ? "bg-green-900" : "bg-white"}`} />
           </button>
         </div>
