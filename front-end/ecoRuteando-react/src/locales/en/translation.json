@@ -1,0 +1,62 @@
+{
+  "navbar": {
+    "features": "Features",
+    "why": "Why?",
+    "join": "Join",
+    "login": "Login",
+    "register": "Register"
+  },
+  "hero": {
+    "tagline": "🌱 Eco-friendly mobility platform · Neiva, Colombia",
+    "title": "EcoRuteando",
+    "subtitle": "Your guide to sustainable mobility",
+    "description": "Discover eco-friendly routes combining public transport and bike. Every trip is an opportunity to care for the planet and reduce your carbon footprint.",
+    "registerBtn": "Register now →",
+    "loginBtn": "Login",
+    "guestBtn": "Guest Mode",
+    "ctaTitle": "Start your sustainable journey today",
+    "ctaDescription": "Sign up for free and see how EcoRuteando can transform your way of moving through the city.",
+    "ctaBtn": "Join the green revolution"
+  },
+  "features": {
+    "title": "Smart and sustainable mobility",
+    "description": "EcoRuteando helps you move efficiently while caring for the environment.",
+    "cards": [
+      {
+        "title": "Optimized routes",
+        "desc": "Find the best routes combining public transport and bike."
+      },
+      {
+        "title": "Environmental impact",
+        "desc": "See how much CO₂ you avoid on each trip and help your city."
+      },
+      {
+        "title": "Easy to use",
+        "desc": "Intuitive interface that allows you to plan your trips in seconds."
+      }
+    ]
+  },
+  "why": {
+    "title": "Why choose EcoRuteando?",
+    "reasons": [
+      {
+        "title": "Bike and public transport",
+        "desc": "Combine the best of both for efficient and healthy trips."
+      },
+      {
+        "title": "Real-time info",
+        "desc": "Know estimated times and the best available options."
+      },
+      {
+        "title": "Environmental commitment",
+        "desc": "Every trip helps reduce pollution and improve air quality."
+      }
+    ]
+  },
+  "footer": {
+    "copyright": "© 2025 EcoRuteando — SENA · Neiva, Colombia",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "contact": "Contact"
+  }
+}
