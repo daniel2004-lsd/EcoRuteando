@@ -47,13 +47,13 @@ const HomePage = ({ onNavigate }) => {
   className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
     scrolled
       ? "bg-white shadow-md py-3 text-green-900"
-      : "bg-black/30 backdrop-blur-md py-5 text-white"
+      : "bg-black/30 backdrop-blur-md py-2 text-white"
   }`}
 >
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-green-100 p-1">
-              <LeafIcon size={16} blend="multiply" />
+        <div className="max-w-7xl mx-auto px-2 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-15 h-15 bg-white rounded-full flex items-center justify-center shadow-sm border border-green-100 p-1">
+              <LeafIcon size={50} blend="multiply" />
             </div>
             <span className="font-bold text-xl tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
               EcoRuteando

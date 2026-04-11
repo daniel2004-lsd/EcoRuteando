@@ -5,7 +5,7 @@ import logoImg from "../../../logo.png";
 /**
  * 1. COMPONENTE DE IMAGEN DE LOGO
  */
-export const LogoImage = ({ size = 24, className = "" }) => (
+export const LogoImage = ({ size = 34, className = "" }) => (
   <div 
     style={{ width: size, height: size }} 
     className={`flex items-center justify-center overflow-hidden ${className}`}
