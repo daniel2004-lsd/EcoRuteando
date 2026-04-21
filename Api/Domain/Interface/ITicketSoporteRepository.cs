@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Api.Domain.Interface
 {
-    public interface ITicketSoporteRepository : IRepository<TicketSoporte>
+    public interface ISupportTicketRepository : IRepository<SupportTicket>
     {
     }
-
 }

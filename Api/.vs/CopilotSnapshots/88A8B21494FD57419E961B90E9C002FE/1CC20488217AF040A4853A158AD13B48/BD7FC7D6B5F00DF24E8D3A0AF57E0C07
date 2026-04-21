@@ -1,0 +1,43 @@
+﻿using Api.Application.EntityDto;
+using Api.Application.EntityDto.end;
+using Api.Application.EntityDto.start;
+using Api.Domain.Entity;
+using Api.Domain.Interface;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Api.Application.Service
+{
+    public class RolePermissionService
+    {
+        private readonly IPermissionRoleRepository _repository;
+
+        public RolePermissionService(IPermissionRoleRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task AssignPermission(RolePermissionCreateDto dto)
+        {
+            var relation = new RolePermission
+            {
+                RoleId = dto.RoleId,
+                PermissionId = dto.PermissionId
+            };
+
+            await _repository.CreateAsync(relation);
+        }
+
+        public async Task<List<RolePermissionResponseDto>> GetAll()
+        {
+            var list = await _repository.GetWithDetailsAsync();
+
+            return list.Select((RolePermission x) => new RolePermissionResponseDto(
+                x.RoleEntity?.Name ?? "No Role",
+                x.PermissionEntity?.Name ?? "No Permission",
+                x.Activo 
+            )).ToList();
+        }
+    }
+}

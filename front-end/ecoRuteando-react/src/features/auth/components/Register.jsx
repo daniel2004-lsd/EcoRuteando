@@ -1,160 +1,155 @@
 import { useState } from "react";
 import Input from "../../../shared/components/Input";
 import Button from "../../../shared/components/Button";
-import { Logo, GoogleIcon, FacebookIcon, XIcon, ArrowLeft } from "../../../shared/components/Icons";
+import { Logo, ArrowLeft } from "../../../shared/components/Icons";
 
 function Register({ onNavigate, onShowTerms, termsAccepted, setTermsAccepted }) {
-  const [form, setForm] = useState({ name: "", email: "", pw: "", pw2: "" });
+  const [form, setForm] = useState({ name: "", lastName: "", email: "", pw: "", pw2: "" });
   const [showPw, setShowPw] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // 1. VALIDACIONES DE CONTRASEÑA (Deben ir antes de ser usadas)
+  // Validaciones de contraseña
   const hasMinLength = form.pw.length >= 8;
   const hasUppercase = /[A-Z]/.test(form.pw);
   const hasNumber = /[0-9]/.test(form.pw);
   const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(form.pw);
   const isPwValid = hasMinLength && hasUppercase && hasNumber && hasSpecial;
 
-  // 2. LÓGICA DE FUERZA DE CONTRASEÑA
-  const getStrength = () => {
-    let s = 0;
-    if (form.pw.length > 0) s++;
-    if (hasMinLength) s++;
-    if (hasUppercase && hasNumber) s++;
-    if (hasSpecial) s++;
-    return s;
-  };
-
-  const pwStrength = getStrength();
-  const strengthColors = ["bg-gray-200", "bg-red-400", "bg-yellow-400", "bg-blue-500", "bg-emerald-600"];
-  const strengthLabels = ["", "Débil", "Aceptable", "Fuerte", "Excelente"];
-  const strengthClass = ["", "text-red-500", "text-yellow-600", "text-blue-600", "text-emerald-600"];
-
-  // 3. VALIDACIONES GENERALES
   const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-  const validateName = (v) => v.trim().length >= 2;
 
-  const handleCheckboxClick = (e) => {
-    if (!termsAccepted) {
-      e.preventDefault(); 
-      onShowTerms();
-    } else {
-      setTermsAccepted(false);
+  const handleRegister = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("http://localhost:7000/api/User", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name,
+          lastName: form.lastName,
+          email: form.email,
+          password: form.pw
+        }),
+      });
+
+      if (response.ok) {
+        alert("¡Usuario creado con éxito!");
+        onNavigate("login");
+      } else {
+        const errorData = await response.json();
+        alert("Error: " + (errorData.message || "No se pudo crear la cuenta"));
+      }
+    } catch (error) {
+      alert("Error de conexión. Asegúrate de que la API en Docker esté corriendo.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  // El botón se habilita solo si TODO es válido
+  const isFormValid = 
+    form.name.trim() !== "" && 
+    form.lastName.trim() !== "" &&
+    validateEmail(form.email) && 
+    isPwValid && 
+    form.pw === form.pw2 && 
+    termsAccepted;
+
   return (
-    <div className="min-h-screen bg-[#edf4ef] flex flex-col items-center justify-center px-4 py-10 animate-fade-in text-left">
-      <button onClick={() => onNavigate("home")} className="absolute top-6 right-6 flex items-center gap-1 text-gray-400 hover:text-green-800 text-sm font-medium transition-colors">
-        <ArrowLeft /> Volver
-      </button>
-
-      <div className="mb-8 scale-90 md:scale-100">
-        <Logo size="md" />
-      </div>
-
-      <div className="w-full max-w-sm bg-white rounded-3xl shadow-xl p-8 border border-green-50 animate-slide-up">
-        <h2 className="text-2xl font-bold text-green-900 mb-1 text-center">Crear Cuenta</h2>
-        <p className="text-gray-500 text-sm mb-6 text-center">Únete a la comunidad de movilidad sostenible</p>
-
-        <div className="space-y-4">
-          <Input 
-            label="Nombre completo" 
-            placeholder="Tu nombre" 
-            value={form.name} 
-            onChange={(e) => setForm({...form, name: e.target.value})} 
-            success={form.name && validateName(form.name) ? "Nombre válido" : ""} 
-          />
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 font-sans antialiased tracking-tight bg-white overflow-hidden">
+      <div className="flex flex-col justify-center items-center px-8 md:px-16 py-12 animate-fade-in-left">
+        <div className="w-full max-w-[380px] flex flex-col space-y-6">
           
-          <Input 
-            label="Correo electrónico" 
-            placeholder="tucorreo@email.com" 
-            value={form.email} 
-            onChange={(e) => setForm({...form, email: e.target.value})} 
-            success={form.email && validateEmail(form.email) ? "Correo válido" : ""} 
-          />
+          <div className="relative flex flex-col items-center mb-4">
+            <button onClick={() => onNavigate("home")} className="absolute -top-10 right-0 flex items-center gap-1.5 text-gray-400 hover:text-green-800 text-xs font-bold transition-all uppercase tracking-widest">
+              <ArrowLeft /> Volver
+            </button>
+            <div className="scale-110 mb-2"><Logo size="md" /></div>
+            <h1 className="text-3xl font-black text-gray-900 mt-2 leading-none tracking-tighter text-center">EcoRuteando</h1>
+          </div>
 
-          {/* Sección de Contraseña con Checklist */}
-          <div>
+          <div className="text-center">
+            <h2 className="text-xl font-bold text-gray-800 italic">Crear Cuenta</h2>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex gap-4">
+              <Input 
+                placeholder="Nombre" 
+                value={form.name} 
+                onChange={(e) => setForm({...form, name: e.target.value})} 
+                className="bg-green-50/30 border-none rounded-xl"
+              />
+              <Input 
+                placeholder="Apellido" 
+                value={form.lastName} 
+                onChange={(e) => setForm({...form, lastName: e.target.value})} 
+                className="bg-green-50/30 border-none rounded-xl"
+              />
+            </div>
+            
             <Input 
-              label="Contraseña" 
-              placeholder="Mín. 8 caracteres" 
-              showToggle 
-              showPw={showPw} 
+              placeholder="tucorreo@email.com" 
+              value={form.email} 
+              onChange={(e) => setForm({...form, email: e.target.value})} 
+              className="bg-green-50/30 border-none rounded-xl"
+            />
+
+            <Input 
+              placeholder="Contraseña" 
+              showToggle showPw={showPw} 
               onToggle={() => setShowPw(!showPw)} 
               value={form.pw} 
               onChange={(e) => setForm({...form, pw: e.target.value})} 
+              className="bg-green-50/30 border-none rounded-xl"
+              type={showPw ? "text" : "password"}
             />
-            
-            {form.pw && (
-              <div className="mt-3 p-3 bg-gray-50 rounded-xl border border-gray-100 animate-fade-in">
-                <div className="flex gap-1 mb-2">
-                  {[1, 2, 3, 4].map(i => (
-                    <div key={i} className={`flex-1 h-1 rounded-full transition-all duration-300 ${i <= pwStrength ? strengthColors[pwStrength] : "bg-gray-200"}`} />
-                  ))}
-                </div>
-                
-                {/* Checklist de requisitos visual */}
-                <div className="grid grid-cols-2 gap-y-1">
-                  <p className={`text-[9px] flex items-center gap-1 font-bold ${hasMinLength ? "text-green-600" : "text-gray-400"}`}>
-                    {hasMinLength ? "✓" : "○"} 8+ caracteres
-                  </p>
-                  <p className={`text-[9px] flex items-center gap-1 font-bold ${hasUppercase ? "text-green-600" : "text-gray-400"}`}>
-                    {hasUppercase ? "✓" : "○"} Una Mayúscula
-                  </p>
-                  <p className={`text-[9px] flex items-center gap-1 font-bold ${hasNumber ? "text-green-600" : "text-gray-400"}`}>
-                    {hasNumber ? "✓" : "○"} Un Número
-                  </p>
-                  <p className={`text-[9px] flex items-center gap-1 font-bold ${hasSpecial ? "text-green-600" : "text-gray-400"}`}>
-                    {hasSpecial ? "✓" : "○"} Carácter esp.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
 
-          <Input 
-            label="Confirmar contraseña" 
-            type="password" 
-            placeholder="Repite tu contraseña" 
-            value={form.pw2} 
-            onChange={(e) => setForm({...form, pw2: e.target.value})} 
-            error={form.pw2 && form.pw !== form.pw2 ? "Las contraseñas no coinciden" : ""} 
-          />
+            <Input 
+              type="password"
+              placeholder="Confirmar contraseña" 
+              value={form.pw2} 
+              onChange={(e) => setForm({...form, pw2: e.target.value})} 
+              error={form.pw2 && form.pw !== form.pw2 ? "No coinciden" : ""} 
+              className="bg-green-50/30 border-none rounded-xl"
+            />
 
-          <div className="pt-2">
-            <label className="flex items-start gap-2.5 cursor-pointer group">
+            {/* Checkbox de Términos (Indispensable para habilitar el botón) */}
+            <div className="flex items-center gap-2 px-1">
               <input 
                 type="checkbox" 
+                id="terms" 
                 checked={termsAccepted} 
-                onChange={handleCheckboxClick}
-                className="accent-green-600 mt-1 w-4 h-4 cursor-pointer"
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                className="w-4 h-4 accent-green-800 cursor-pointer"
               />
-              <span className="text-xs text-gray-600 text-left">
-                Acepto los <button type="button" onClick={onShowTerms} className="text-green-700 font-bold hover:underline">términos y condiciones</button>
-              </span>
-            </label>
-          </div>
+              <label htmlFor="terms" className="text-xs text-gray-600 cursor-pointer">
+                Acepto los <span className="text-green-800 font-bold underline" onClick={onShowTerms}>términos y condiciones</span>
+              </label>
+            </div>
 
-          <Button 
-            className="w-full py-3.5 mt-2 shadow-md" 
-            disabled={!termsAccepted || !validateEmail(form.email) || form.pw !== form.pw2 || !isPwValid}
-          >
-            Crear cuenta
-          </Button>
-          
-          <div className="relative flex items-center gap-3 my-4">
-            <div className="flex-1 h-px bg-gray-100" /><span className="text-[10px] text-gray-400 font-bold uppercase">Continuar con</span><div className="flex-1 h-px bg-gray-100" />
-          </div>
-          <div className="flex gap-3">
-            <button className="flex-1 border border-gray-200 rounded-xl py-2 flex justify-center items-center hover:bg-gray-50 transition-all"><GoogleIcon /></button>
-            <button className="flex-1 border border-gray-200 rounded-xl py-2 flex justify-center items-center hover:bg-gray-50 transition-all"><FacebookIcon /></button>
-            <button className="flex-1 border border-gray-200 rounded-xl py-2 flex justify-center items-center hover:bg-gray-50 transition-all"><XIcon /></button>
+            <Button 
+              onClick={handleRegister}
+              className="w-full py-3.5 bg-green-800 hover:bg-green-900 text-white font-bold rounded-2xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" 
+              disabled={isLoading || !isFormValid}
+            >
+              {isLoading ? "Registrando..." : "Crear cuenta gratuita"}
+            </Button>
+            
+            <p className="text-center text-sm text-gray-500 mt-4">
+              ¿Ya tienes cuenta? <button onClick={() => onNavigate("login")} className="text-green-800 font-bold hover:underline">Iniciar sesión</button>
+            </p>
           </div>
         </div>
-        
-        <p className="text-center text-sm text-gray-500 mt-6">
-          ¿Ya tienes cuenta? <button onClick={() => onNavigate("login")} className="text-green-700 font-bold hover:underline">Iniciar sesión</button>
-        </p>
+      </div>
+
+      <div className="hidden md:block bg-green-950 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-tr from-emerald-900 via-green-950 to-black opacity-70" />
+          <div className="relative z-10 flex flex-col justify-center items-center h-full p-10 text-white text-center">
+            <h3 className="text-4xl md:text-5xl font-black mb-6 italic tracking-tighter">Conduce el futuro.</h3>
+            <p className="text-gray-100 text-base max-w-sm">Descubre rutas eficientes y reduce tu huella de carbono.</p>
+          </div>
       </div>
     </div>
   );

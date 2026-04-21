@@ -1,0 +1,27 @@
+﻿using Api.Domain.Entity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Api.Infrastructure.Data.Configurations
+{
+    public class RegistroAuditoriaConfiguration : IEntityTypeConfiguration<RegistroAuditoria>
+    {
+        public void Configure(EntityTypeBuilder<RegistroAuditoria> builder)
+        {
+            builder.HasKey(x => x.Id);
+
+            builder.OwnsOne(x => x.DireccionIP, d =>
+            {
+                d.Property(x => x.Valor)
+                 .HasColumnName("DireccionIP")
+                 .IsRequired();
+            });
+
+            builder.OwnsOne(x => x.NombreTabla, n =>
+            {
+                n.Property(x => x.Valor)
+                 .HasColumnName("NombreTabla");
+            });
+        }
+    }
+}

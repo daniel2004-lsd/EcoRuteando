@@ -1,0 +1,8 @@
+﻿namespace Api.Application.EntityDto.start
+{
+    public record PermisoRolCreateDto(
+          int IdRol,
+          int IdPermiso
+      );
+}
+}

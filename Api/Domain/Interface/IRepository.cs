@@ -1,18 +1,16 @@
-﻿using Api.Domain.Entity.genery;
-using System;
+﻿using Api.Domain.Entity;
+using Api.Domain.Entity.Enums.genery;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Api.Domain.Interface
 {
     public interface IRepository<T> where T : EntityGenery
     {
-        Task<T> ObtenerPorId(int id);
-        Task<List<T>> ObtenerTodos();
-        Task Crear(T entity);
-        Task Actualizar(T entity);
-        Task Eliminar(int id);
+        Task<T?> GetByIdAsync(int id);
+        Task<List<T>> GetAllAsync();
+        Task CreateAsync(T entity);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(int id);
     }
 }

@@ -1,52 +1,53 @@
-﻿using Api.Domain.Entity.genery;
+﻿using Api.Domain.Entity;
+using Api.Domain.Entity.Enums.genery;
 using Api.Domain.Interface;
-using System;
+using Api.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Api.Infrastructure.Repositories
 {
     public class Repository<T> : IRepository<T> where T : EntityGenery
     {
-        protected readonly List<T> _data = new List<T>();
+        protected readonly AppDbContext _context;
+        protected readonly DbSet<T> _dbSet;
 
-        public Task<T> ObtenerPorId(int id)
+        public Repository(AppDbContext context)
         {
-            var entity = _data.FirstOrDefault(x => x.Id == id);
-            return Task.FromResult(entity);
+            _context = context;
+            _dbSet = _context.Set<T>();
         }
 
-        public Task<List<T>> ObtenerTodos()
+        public async Task<T?> GetByIdAsync(int id)
         {
-            return Task.FromResult(_data);
+            return await _dbSet.FindAsync(id);
         }
 
-        public Task Crear(T entity)
+        public async Task<List<T>> GetAllAsync()
         {
-            _data.Add(entity);
-            return Task.CompletedTask;
+            return await _dbSet.ToListAsync();
         }
 
-        public Task Actualizar(T entity)
+        public async Task CreateAsync(T entity)
         {
-            var existente = _data.FirstOrDefault(x => x.Id == entity.Id);
-            if (existente != null)
-            {
-                _data.Remove(existente);
-                _data.Add(entity);
-            }
-            return Task.CompletedTask;
+            await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task Eliminar(int id)
+        public async Task UpdateAsync(T entity)
         {
-            var entity = _data.FirstOrDefault(x => x.Id == id);
-            if (entity != null)
-                _data.Remove(entity);
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
+        }
 
-            return Task.CompletedTask;
+        public async Task DeleteAsync(int id)
+        {
+            var entity = await _dbSet.FindAsync(id);
+            if (entity is null) return;
+
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Api.Domain.Interface
 {
-    public interface IValidacionReporteRepository : IRepository<ValidacionReporte>
+    public interface IReportValidationRepository : IRepository<ReportValidation>
     {
     }
 }

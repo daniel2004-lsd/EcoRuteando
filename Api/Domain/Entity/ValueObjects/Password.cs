@@ -8,14 +8,16 @@ namespace Api.Domain.Entity.ValueObjects
 {
     public class Password
     {
-        public string Valor { get; private set; }
+        public string Value { get; private set; }
 
-        public Password(string valor)
+        private Password() { } 
+
+        public Password(string valor) 
         {
-            if (valor.Length < 6)
-                throw new Exception("Contraseña muy corta");
+            if (string.IsNullOrWhiteSpace(valor))
+                throw new ArgumentException("La contraseña no puede estar vacía");
 
-            Valor = valor;
+            Value = valor;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Api.Domain.Entity.ValueObjects
 
     public class UrlImagen
     {
-        public string Valor { get; private set; }
+        public string Value { get; private set; }
 
         private UrlImagen() { }
 
@@ -24,7 +24,7 @@ namespace Api.Domain.Entity.ValueObjects
             if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
                 throw new Exception("La URL debe ser http o https");
 
-            Valor = valor;
+            Value = valor;
         }
     }
 }

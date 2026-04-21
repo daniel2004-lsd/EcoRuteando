@@ -1,0 +1,44 @@
+﻿using Api.Domain.Entity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Api.Infrastructure.Data.Configurations
+{
+    public class RutaConfiguration : IEntityTypeConfiguration<Ruta>
+    {
+        public void Configure(EntityTypeBuilder<Ruta> builder)
+        {
+            builder.HasKey(x => x.Id);
+
+            
+            builder.OwnsOne(x => x.GeometriaTrayecto, t =>
+            {
+               
+                t.OwnsMany(x => x.Puntos, p =>
+                {
+                    p.WithOwner().HasForeignKey("RutaId");
+
+                    p.Property<double>("Id"); 
+                    p.HasKey("Id");
+
+                    p.Property(x => x.Latitud).HasColumnName("Latitud");
+                    p.Property(x => x.Longitud).HasColumnName("Longitud");
+                });
+            });
+            builder.OwnsOne(x => x.DistanciaKm, d =>
+            {
+                d.Property(x => x.Valor)
+                 .HasColumnName("DistanciaKm")
+                 .IsRequired();
+            });
+
+        
+            builder.OwnsOne(x => x.TiempoEstimado, t =>
+            {
+                t.Property(x => x.Valor)
+                 .HasColumnName("TiempoEstimado");
+            });
+        }
+
+    }
+}

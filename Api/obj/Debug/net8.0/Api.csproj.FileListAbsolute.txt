@@ -1,130 +1,141 @@
-C:\Users\CORE5 ULTRA\Downloads\Api\obj\Debug\net8.0\Api.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\CORE5 ULTRA\Downloads\Api\obj\Debug\net8.0\Api.AssemblyInfoInputs.cache
-C:\Users\CORE5 ULTRA\Downloads\Api\obj\Debug\net8.0\Api.AssemblyInfo.cs
-C:\Users\CORE5 ULTRA\Downloads\Api\obj\Debug\net8.0\Api.csproj.CoreCompileInputs.cache
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Api.exe
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Api.deps.json
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Api.runtimeconfig.json
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Api.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Api.pdb
-C:\Users\CORE5 ULTRA\Downloads\Api\obj\Debug\net8.0\Api.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\obj\Debug\net8.0\refint\Api.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\obj\Debug\net8.0\Api.pdb
-C:\Users\CORE5 ULTRA\Downloads\Api\obj\Debug\net8.0\Api.genruntimeconfig.cache
-C:\Users\CORE5 ULTRA\Downloads\Api\obj\Debug\net8.0\ref\Api.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\obj\Debug\net8.0\Api.csproj.AssemblyReference.cache
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Azure.Core.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Azure.Identity.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Humanizer.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.CodeAnalysis.Workspaces.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Data.SqlClient.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Design.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.SqlServer.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Extensions.Caching.Abstractions.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Extensions.Caching.Memory.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Identity.Client.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Identity.Client.Extensions.Msal.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\Mono.TextTemplating.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.CodeDom.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.Composition.AttributedModel.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.Composition.Convention.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.Composition.Hosting.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.Composition.Runtime.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.Composition.TypedParts.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.Drawing.Common.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.IO.Pipelines.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.Memory.Data.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.Runtime.Caching.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.Security.Permissions.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\System.Windows.Extensions.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\runtimes\unix\lib\net6.0\Microsoft.Data.SqlClient.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\runtimes\win\lib\net6.0\Microsoft.Data.SqlClient.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
-C:\Users\CORE5 ULTRA\Downloads\Api\obj\Debug\net8.0\Api.csproj.Up2Date
+C:\EcoRuteando\Api\bin\Debug\net8.0\appsettings.json
+C:\EcoRuteando\Api\bin\Debug\net8.0\Api.staticwebassets.endpoints.json
+C:\EcoRuteando\Api\bin\Debug\net8.0\Api.exe
+C:\EcoRuteando\Api\bin\Debug\net8.0\Api.deps.json
+C:\EcoRuteando\Api\bin\Debug\net8.0\Api.runtimeconfig.json
+C:\EcoRuteando\Api\bin\Debug\net8.0\Api.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Api.pdb
+C:\EcoRuteando\Api\bin\Debug\net8.0\Azure.Core.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Azure.Identity.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Humanizer.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.CodeAnalysis.Workspaces.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.Data.SqlClient.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.Identity.Client.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.Identity.Client.Extensions.Msal.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Mono.TextTemplating.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Npgsql.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.CodeDom.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.Composition.AttributedModel.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.Composition.Convention.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.Composition.Hosting.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.Composition.Runtime.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.Composition.TypedParts.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.Drawing.Common.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.Memory.Data.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.Runtime.Caching.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.Security.Permissions.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\System.Windows.Extensions.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\runtimes\unix\lib\net6.0\Microsoft.Data.SqlClient.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\runtimes\win\lib\net6.0\Microsoft.Data.SqlClient.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\EcoRuteando\Api\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\EcoRuteando\Api\obj\Debug\net8.0\Api.csproj.AssemblyReference.cache
+C:\EcoRuteando\Api\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\EcoRuteando\Api\obj\Debug\net8.0\Api.GeneratedMSBuildEditorConfig.editorconfig
+C:\EcoRuteando\Api\obj\Debug\net8.0\Api.AssemblyInfoInputs.cache
+C:\EcoRuteando\Api\obj\Debug\net8.0\Api.AssemblyInfo.cs
+C:\EcoRuteando\Api\obj\Debug\net8.0\Api.csproj.CoreCompileInputs.cache
+C:\EcoRuteando\Api\obj\Debug\net8.0\Api.MvcApplicationPartsAssemblyInfo.cs
+C:\EcoRuteando\Api\obj\Debug\net8.0\Api.MvcApplicationPartsAssemblyInfo.cache
+C:\EcoRuteando\Api\obj\Debug\net8.0\Api.sourcelink.json
+C:\EcoRuteando\Api\obj\Debug\net8.0\rjimswa.dswa.cache.json
+C:\EcoRuteando\Api\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+C:\EcoRuteando\Api\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+C:\EcoRuteando\Api\obj\Debug\net8.0\scopedcss\bundle\Api.styles.css
+C:\EcoRuteando\Api\obj\Debug\net8.0\staticwebassets.build.json
+C:\EcoRuteando\Api\obj\Debug\net8.0\staticwebassets.build.json.cache
+C:\EcoRuteando\Api\obj\Debug\net8.0\staticwebassets.development.json
+C:\EcoRuteando\Api\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\EcoRuteando\Api\obj\Debug\net8.0\swae.build.ex.cache
+C:\EcoRuteando\Api\obj\Debug\net8.0\Api.csproj.Up2Date
+C:\EcoRuteando\Api\obj\Debug\net8.0\Api.dll
+C:\EcoRuteando\Api\obj\Debug\net8.0\refint\Api.dll
+C:\EcoRuteando\Api\obj\Debug\net8.0\Api.pdb
+C:\EcoRuteando\Api\obj\Debug\net8.0\Api.genruntimeconfig.cache
+C:\EcoRuteando\Api\obj\Debug\net8.0\ref\Api.dll
