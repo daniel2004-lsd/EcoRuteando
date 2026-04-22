@@ -1,5 +1,4 @@
-﻿using Api.Domain.Entity;
-using Api.Domain.Entity.Enums.genery;
+﻿using Api.Domain.Enums.genery;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

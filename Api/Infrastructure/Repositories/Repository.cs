@@ -1,5 +1,4 @@
-﻿using Api.Domain.Entity;
-using Api.Domain.Entity.Enums.genery;
+﻿using Api.Domain.Enums.genery;
 using Api.Domain.Interface;
 using Api.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

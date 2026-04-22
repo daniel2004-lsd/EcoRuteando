@@ -1,13 +1,11 @@
-﻿using Api.Application.EntityDto;
-using Api.Application.EntityDto.end;
-using Api.Application.EntityDto.start;
-using System.Linq; 
-using Api.Domain.Entity;
+﻿using System.Linq;
 using Api.Domain.Interface;
-using Api.Infrastructure.Repositories;
 using System.Collections.Generic;
-using System.Linq; 
+using System.Linq;
 using System.Threading.Tasks;
+using Api.Application.DTO.InputDTO;
+using Api.Application.DTO.OutputDTO;
+using Api.Domain.Entities;
 
 namespace Api.Application.Service
 {
@@ -38,8 +36,8 @@ public async Task<List<UserRoleResponseDto>> GetAll()
         var list = await _repository.GetWithDetailsAsync();
 
         return list.Select(x => new UserRoleResponseDto(
-            x.RoleEntity?.Name.ToString() ?? "No Role",
-            x.UserEntity?.Email.Value ?? "No Email",
+            x.Role?.Name.ToString() ?? "No Role",
+            x.User?.Email.Value ?? "No Email",
             x.Active
         )).ToList();
     }

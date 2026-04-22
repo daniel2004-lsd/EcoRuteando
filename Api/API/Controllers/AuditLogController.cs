@@ -1,10 +1,11 @@
-﻿using Api.Application.EntityDto;
+﻿using Api.Application.DTO.InputDTO;
+using Api.Application.DTO.OutputDTO;
 using Api.Application.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Api.Controllers
+namespace Api.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

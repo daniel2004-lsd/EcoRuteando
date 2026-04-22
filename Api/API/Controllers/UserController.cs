@@ -1,8 +1,8 @@
 ﻿using Api.Application.Service;
 using Microsoft.AspNetCore.Mvc;
-using Api.Application.EntityDto.start;
 using System.Threading.Tasks;
 using System;
+using Api.Application.DTO.InputDTO;
 
 namespace Api.API.Controllers
 {

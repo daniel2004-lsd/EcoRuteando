@@ -1,4 +1,4 @@
-﻿using Api.Domain.Entity;
+﻿using Api.Domain.Entities;
 using Api.Domain.Interface;
 using Api.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -19,8 +19,8 @@ namespace Api.Infrastructure.Repositories
         public async Task<List<UserRole>> GetWithDetailsAsync()
         {
             return await _context.Set<UserRole>()
-                .Include(x => x.RoleEntity)
-                .Include(x => x.UserEntity)
+                .Include(x => x.Role)
+                .Include(x => x.User)
                 .ToListAsync();
         }
     }

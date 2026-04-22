@@ -1,11 +1,12 @@
-﻿using Api.Application.EntityDto;
-using Api.Domain.Entity;
-using Api.Domain.Entity.Enums;
-using Api.Domain.Interface;
+﻿using Api.Domain.Interface;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Api.Domain.Enums;
+using Api.Application.DTO.OutputDTO;
+using Api.Application.DTO.InputDTO;
+using Api.Domain.Entities;
 
 namespace Api.Application.Service
 {

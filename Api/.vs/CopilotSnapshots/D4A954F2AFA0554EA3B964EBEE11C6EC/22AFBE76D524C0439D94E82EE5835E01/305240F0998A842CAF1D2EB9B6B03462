@@ -1,0 +1,35 @@
+﻿using Api.Application.EntityDto.end;
+using Api.Application.EntityDto.start;
+using Api.Domain.Entity;
+using Api.Domain.Entity.ValueObjects;
+using AutoMapper;
+
+namespace Api.Application.DTO.Mappers
+{
+    public class MappingProfile : Profile
+    {
+        public MappingProfile()
+        {
+            // --- USUARIO ---
+            CreateMap<UserCreateDto, User>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => new Username(src.Name)))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => new Email(src.Email)))
+                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => new Password(src.Password)))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName));
+
+            CreateMap<User, UserResponseDto>()
+                .ConstructUsing(src => new UserResponseDto(
+                    src.Name.Value,
+                    src.LastName,
+                    src.Email.Value,
+                    src.Active
+                ));
+
+            // --- SESIÓN (Ejemplo de cómo seguir agregando) ---
+            // CreateMap<Session, SessionResponseDto>();
+
+            // --- RUTA (Para tu lógica de movilidad sostenible) ---
+            // CreateMap<Route, RouteResponseDto>();
+        }
+    }
+}

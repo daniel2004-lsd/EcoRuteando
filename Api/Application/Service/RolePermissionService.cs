@@ -1,7 +1,6 @@
-﻿using Api.Application.EntityDto;
-using Api.Application.EntityDto.end;
-using Api.Application.EntityDto.start;
-using Api.Domain.Entity;
+﻿using Api.Application.DTO.InputDTO;
+using Api.Application.DTO.OutputDTO;
+using Api.Domain.Entities;
 using Api.Domain.Interface;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,8 +33,8 @@ namespace Api.Application.Service
             var list = await _repository.GetWithDetailsAsync();
 
             return list.Select(x => new RolePermissionResponseDto(
-                x.RoleEntity != null ? x.RoleEntity.Name.ToString() : "No Role",
-                x.PermissionEntity?.Name?.Value ?? "No Permission",
+                x.Role != null ? x.Role.Name.ToString() : "No Role",
+                x.Permission != null ? x.Permission.Name?.Value ?? "No Permission" : "No Permission",
                 x.Active
             )).ToList();
         }

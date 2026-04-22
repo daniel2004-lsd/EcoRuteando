@@ -1,5 +1,5 @@
-﻿using Api.Domain.Entity;
-using Api.Domain.Entity.ValueObjects;
+﻿using Api.Domain.Entities;
+using Api.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

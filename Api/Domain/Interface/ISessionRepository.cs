@@ -1,4 +1,4 @@
-﻿using Api.Domain.Entity;
+﻿using Api.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

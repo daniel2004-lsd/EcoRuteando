@@ -1,4 +1,4 @@
-﻿using Api.Domain.Entity;
+﻿using Api.Domain.Entities;
 using Api.Domain.Interface;
 using Api.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

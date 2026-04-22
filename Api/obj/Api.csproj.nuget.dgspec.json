@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\EcoRuteando\\Api\\Api.csproj": {}
+    "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Api.csproj": {}
   },
   "projects": {
-    "C:\\EcoRuteando\\Api\\Api.csproj": {
+    "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\EcoRuteando\\Api\\Api.csproj",
+        "projectUniqueName": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Api.csproj",
         "projectName": "Api",
-        "projectPath": "C:\\EcoRuteando\\Api\\Api.csproj",
+        "projectPath": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Api.csproj",
         "packagesPath": "C:\\Users\\CORE5 ULTRA\\.nuget\\packages\\",
-        "outputPath": "C:\\EcoRuteando\\Api\\obj\\",
+        "outputPath": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -30,6 +30,7 @@
         },
         "frameworks": {
           "net8.0": {
+            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {}
           }
@@ -48,8 +49,13 @@
       },
       "frameworks": {
         "net8.0": {
+          "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.4, )"

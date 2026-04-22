@@ -1,11 +1,10 @@
-﻿using Api.Application.EntityDto;
-using Api.Application.EntityDto.end;
-using Api.Application.EntityDto.start;
-using Api.Domain.Entity;
-using Api.Domain.Entity.Enums;
+﻿using Api.Application.DTO.InputDTO;
+using Api.Application.DTO.OutputDTO;
+using Api.Domain.Entities;
+using Api.Domain.Enums;
 using Api.Domain.Interface;
 using System.Collections.Generic;
-using System.Linq; // <--- Importante para el .Select()
+using System.Linq; 
 using System.Threading.Tasks;
 
 namespace Api.Application.Service

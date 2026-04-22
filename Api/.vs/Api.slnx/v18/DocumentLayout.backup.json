@@ -1,90 +1,38 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\EcoRuteando\\Api\\",
+  "WorkspaceRootPath": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\mappers\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:application\\mappers\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\infrastructure\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:infrastructure\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\infrastructure\\data\\appdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:infrastructure\\data\\appdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\application\\service\\profileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:application\\service\\profileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\domain\\entity\\valueobjects\\phonenumber.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:domain\\entity\\valueobjects\\phonenumber.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\application\\entitydto\\start\\profilecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:application\\entitydto\\start\\profilecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\api\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:api\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\application\\entitydto\\end\\profileresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:application\\entitydto\\end\\profileresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\domain\\entity\\profile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:domain\\entity\\profile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\application\\service\\roleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:application\\service\\roleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\application\\entitydto\\end\\roleresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:application\\entitydto\\end\\roleresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\application\\entitydto\\start\\rolecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:application\\entitydto\\start\\rolecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\api\\controllers\\rolecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:api\\controllers\\rolecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\domain\\entity\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:domain\\entity\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\domain\\entity\\valueobjects\\password.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:domain\\entity\\valueobjects\\password.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\domain\\entity\\valueobjects\\coordinates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:domain\\entity\\valueobjects\\coordinates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\infrastructure\\data\\configurations\\routeconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:infrastructure\\data\\configurations\\routeconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\domain\\entity\\valueobjects\\routepath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:domain\\entity\\valueobjects\\routepath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\domain\\entity\\route.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:domain\\entity\\route.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\ecoruteando\\api\\domain\\entity\\enums\\genery\\entitygenery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:domain\\entity\\enums\\genery\\entitygenery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:application\\service\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\userroleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:application\\service\\userroleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\dto\\outputdto\\userresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:application\\dto\\outputdto\\userresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\dto\\inputdto\\usercreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED562DFE-B9EF-5F88-771F-EBF333E4D08F}|Api.csproj|solutionrelative:application\\dto\\inputdto\\usercreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -94,279 +42,110 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "PhoneNumber.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Domain\\Entity\\ValueObjects\\PhoneNumber.cs",
-              "RelativeDocumentMoniker": "Domain\\Entity\\ValueObjects\\PhoneNumber.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Domain\\Entity\\ValueObjects\\PhoneNumber.cs",
-              "RelativeToolTip": "Domain\\Entity\\ValueObjects\\PhoneNumber.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAYwBgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T04:20:25.057Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ProfileService.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Application\\Service\\ProfileService.cs",
-              "RelativeDocumentMoniker": "Application\\Service\\ProfileService.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Application\\Service\\ProfileService.cs",
-              "RelativeToolTip": "Application\\Service\\ProfileService.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAqwC0AAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T04:15:48.804Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "ProfileController.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\API\\Controllers\\ProfileController.cs",
-              "RelativeDocumentMoniker": "API\\Controllers\\ProfileController.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\API\\Controllers\\ProfileController.cs",
-              "RelativeToolTip": "API\\Controllers\\ProfileController.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAYwCAAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T04:15:06.816Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Profile.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Domain\\Entity\\Profile.cs",
-              "RelativeDocumentMoniker": "Domain\\Entity\\Profile.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Domain\\Entity\\Profile.cs",
-              "RelativeToolTip": "Domain\\Entity\\Profile.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T04:13:22.197Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ProfileResponseDto.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Application\\EntityDto\\end\\ProfileResponseDto.cs",
-              "RelativeDocumentMoniker": "Application\\EntityDto\\end\\ProfileResponseDto.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Application\\EntityDto\\end\\ProfileResponseDto.cs",
-              "RelativeToolTip": "Application\\EntityDto\\end\\ProfileResponseDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T04:13:03.306Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ProfileCreateDto.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Application\\EntityDto\\start\\ProfileCreateDto.cs",
-              "RelativeDocumentMoniker": "Application\\EntityDto\\start\\ProfileCreateDto.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Application\\EntityDto\\start\\ProfileCreateDto.cs",
-              "RelativeToolTip": "Application\\EntityDto\\start\\ProfileCreateDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T04:12:39.642Z",
+              "DocumentIndex": 2,
+              "Title": "Api",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Api.csproj",
+              "RelativeDocumentMoniker": "Api.csproj",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Api.csproj",
+              "RelativeToolTip": "Api.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-04-22T19:17:05.064Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "AppDbContext.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Infrastructure\\Data\\AppDbContext.cs",
-              "RelativeDocumentMoniker": "Infrastructure\\Data\\AppDbContext.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Infrastructure\\Data\\AppDbContext.cs",
-              "RelativeToolTip": "Infrastructure\\Data\\AppDbContext.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAUwDsAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T12:04:45.872Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AppDbContextFactory.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Infrastructure\\Data\\AppDbContextFactory.cs",
-              "RelativeDocumentMoniker": "Infrastructure\\Data\\AppDbContextFactory.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Infrastructure\\Data\\AppDbContextFactory.cs",
-              "RelativeToolTip": "Infrastructure\\Data\\AppDbContextFactory.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T12:54:02.476Z",
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\appsettings.json",
+              "RelativeDocumentMoniker": "API\\appsettings.json",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\appsettings.json",
+              "RelativeToolTip": "API\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-22T19:16:35.366Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "MappingProfile.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Mappers\\MappingProfile.cs",
+              "RelativeDocumentMoniker": "Application\\Mappers\\MappingProfile.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Mappers\\MappingProfile.cs*",
+              "RelativeToolTip": "Application\\Mappers\\MappingProfile.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T19:14:10.853Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\UserService.cs",
+              "RelativeDocumentMoniker": "Application\\Service\\UserService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\UserService.cs",
+              "RelativeToolTip": "Application\\Service\\UserService.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAADwvxYAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T19:09:10.678Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UserRoleService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\UserRoleService.cs",
+              "RelativeDocumentMoniker": "Application\\Service\\UserRoleService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\UserRoleService.cs",
+              "RelativeToolTip": "Application\\Service\\UserRoleService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T19:09:09.291Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAUwAsAAAAjAAAAAAAAAA==",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Program.cs",
+              "RelativeDocumentMoniker": "API\\Program.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Program.cs",
+              "RelativeToolTip": "API\\Program.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAAEQAAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T12:54:27.466Z",
+              "WhenOpened": "2026-04-22T19:08:53.799Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "RoleService.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Application\\Service\\RoleService.cs",
-              "RelativeDocumentMoniker": "Application\\Service\\RoleService.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Application\\Service\\RoleService.cs",
-              "RelativeToolTip": "Application\\Service\\RoleService.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAkwBkAAAAwAAAAAAAAAA==",
+              "DocumentIndex": 6,
+              "Title": "UserResponseDto.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\DTO\\OutputDTO\\UserResponseDto.cs",
+              "RelativeDocumentMoniker": "Application\\DTO\\OutputDTO\\UserResponseDto.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\DTO\\OutputDTO\\UserResponseDto.cs",
+              "RelativeToolTip": "Application\\DTO\\OutputDTO\\UserResponseDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T03:51:30.178Z",
+              "WhenOpened": "2026-04-22T19:06:32.835Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "RoleResponseDto.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Application\\EntityDto\\end\\RoleResponseDto.cs",
-              "RelativeDocumentMoniker": "Application\\EntityDto\\end\\RoleResponseDto.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Application\\EntityDto\\end\\RoleResponseDto.cs",
-              "RelativeToolTip": "Application\\EntityDto\\end\\RoleResponseDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAbAAAAAAAAAA==",
+              "DocumentIndex": 7,
+              "Title": "UserCreateDto.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\DTO\\InputDTO\\UserCreateDto.cs",
+              "RelativeDocumentMoniker": "Application\\DTO\\InputDTO\\UserCreateDto.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\DTO\\InputDTO\\UserCreateDto.cs",
+              "RelativeToolTip": "Application\\DTO\\InputDTO\\UserCreateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T03:52:10.021Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "RoleCreateDto.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Application\\EntityDto\\start\\RoleCreateDto.cs",
-              "RelativeDocumentMoniker": "Application\\EntityDto\\start\\RoleCreateDto.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Application\\EntityDto\\start\\RoleCreateDto.cs",
-              "RelativeToolTip": "Application\\EntityDto\\start\\RoleCreateDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T03:56:02.783Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "RoleController.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\API\\Controllers\\RoleController.cs",
-              "RelativeDocumentMoniker": "API\\Controllers\\RoleController.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\API\\Controllers\\RoleController.cs",
-              "RelativeToolTip": "API\\Controllers\\RoleController.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAYwCAAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T03:51:13.083Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "Role.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Domain\\Entity\\Role.cs",
-              "RelativeDocumentMoniker": "Domain\\Entity\\Role.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Domain\\Entity\\Role.cs",
-              "RelativeToolTip": "Domain\\Entity\\Role.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T03:50:08.589Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Password.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Domain\\Entity\\ValueObjects\\Password.cs",
-              "RelativeDocumentMoniker": "Domain\\Entity\\ValueObjects\\Password.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Domain\\Entity\\ValueObjects\\Password.cs",
-              "RelativeToolTip": "Domain\\Entity\\ValueObjects\\Password.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAkwAoAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T13:15:25.457Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "RouteConfiguration.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Infrastructure\\Data\\Configurations\\RouteConfiguration.cs",
-              "RelativeDocumentMoniker": "Infrastructure\\Data\\Configurations\\RouteConfiguration.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Infrastructure\\Data\\Configurations\\RouteConfiguration.cs",
-              "RelativeToolTip": "Infrastructure\\Data\\Configurations\\RouteConfiguration.cs",
-              "ViewState": "AgIAAAEAAAAAAAAAAAAswAwAAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T13:11:37.66Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "Coordinates.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Domain\\Entity\\ValueObjects\\Coordinates.cs",
-              "RelativeDocumentMoniker": "Domain\\Entity\\ValueObjects\\Coordinates.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Domain\\Entity\\ValueObjects\\Coordinates.cs",
-              "RelativeToolTip": "Domain\\Entity\\ValueObjects\\Coordinates.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T13:04:43.525Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "EntityGenery.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Domain\\Entity\\Enums\\genery\\EntityGenery.cs",
-              "RelativeDocumentMoniker": "Domain\\Entity\\Enums\\genery\\EntityGenery.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Domain\\Entity\\Enums\\genery\\EntityGenery.cs",
-              "RelativeToolTip": "Domain\\Entity\\Enums\\genery\\EntityGenery.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T12:38:26.973Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "Api",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Api.csproj",
-              "RelativeDocumentMoniker": "Api.csproj",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Api.csproj",
-              "RelativeToolTip": "Api.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAkwCAAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-20T12:44:18.35Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "RoutePath.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Domain\\Entity\\ValueObjects\\RoutePath.cs",
-              "RelativeDocumentMoniker": "Domain\\Entity\\ValueObjects\\RoutePath.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Domain\\Entity\\ValueObjects\\RoutePath.cs",
-              "RelativeToolTip": "Domain\\Entity\\ValueObjects\\RoutePath.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAUwAkAAABEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T12:32:00.012Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "Route.cs",
-              "DocumentMoniker": "C:\\EcoRuteando\\Api\\Domain\\Entity\\Route.cs",
-              "RelativeDocumentMoniker": "Domain\\Entity\\Route.cs",
-              "ToolTip": "C:\\EcoRuteando\\Api\\Domain\\Entity\\Route.cs",
-              "RelativeToolTip": "Domain\\Entity\\Route.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T12:31:50.266Z",
+              "WhenOpened": "2026-04-22T19:06:21.001Z",
               "EditorCaption": ""
             }
           ]
