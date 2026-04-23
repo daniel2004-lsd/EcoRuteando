@@ -74,7 +74,6 @@ const HomePage = ({ onNavigate }) => {
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
 
       {/* ─── NAVBAR PRINCIPAL ─── */}
-<<<<<<< HEAD
      <nav
   className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
     scrolled
@@ -86,15 +85,6 @@ const HomePage = ({ onNavigate }) => {
           <div className="flex items-center gap-4">
             <div className="w-15 h-15 bg-white rounded-full flex items-center justify-center shadow-sm border border-green-100 p-1">
               <LeafIcon size={50} blend="multiply" />
-=======
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white shadow-md py-3 text-green-900" : "bg-black/30 backdrop-blur-md py-5 text-white"
-      }`}>
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-green-100 p-1">
-              <LeafIcon size={16} blend="multiply" />
->>>>>>> f64eba88da75c7d956e98d75fe3f8ae1906dcfbd
             </div>
             <span className="font-bold text-xl tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
               EcoRuteando
