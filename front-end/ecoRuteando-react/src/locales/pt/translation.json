@@ -1,0 +1,62 @@
+{
+  "navbar": {
+    "features": "Funcionalidades",
+    "why": "Por quê?",
+    "join": "Participar",
+    "login": "Entrar",
+    "register": "Registrar"
+  },
+  "hero": {
+    "tagline": "🌱 Plataforma de mobilidade ecológica · Neiva, Colômbia",
+    "title": "EcoRuteando",
+    "subtitle": "Seu guia para uma mobilidade sustentável",
+    "description": "Descubra rotas ecológicas que combinam transporte público e bicicleta. Cada viagem é uma oportunidade de cuidar do planeta e reduzir sua pegada de carbono.",
+    "registerBtn": "Registre-se agora →",
+    "loginBtn": "Entrar",
+    "guestBtn": "Modo Visitante",
+    "ctaTitle": "Comece sua jornada sustentável hoje",
+    "ctaDescription": "Registre-se gratuitamente e veja como o EcoRuteando pode transformar sua forma de se mover pela cidade.",
+    "ctaBtn": "Junte-se à revolução verde"
+  },
+  "features": {
+    "title": "Mobilidade inteligente e sustentável",
+    "description": "O EcoRuteando ajuda você a se mover de forma eficiente enquanto cuida do meio ambiente.",
+    "cards": [
+      {
+        "title": "Rotas otimizadas",
+        "desc": "Encontre as melhores rotas combinando transporte público e bicicleta."
+      },
+      {
+        "title": "Impacto ambiental",
+        "desc": "Veja quanto CO₂ você evita em cada viagem e contribua para sua cidade."
+      },
+      {
+        "title": "Fácil de usar",
+        "desc": "Interface intuitiva que permite planejar suas viagens em segundos."
+      }
+    ]
+  },
+  "why": {
+    "title": "Por que escolher o EcoRuteando?",
+    "reasons": [
+      {
+        "title": "Bicicleta e transporte público",
+        "desc": "Combine o melhor dos dois para viagens eficientes e saudáveis."
+      },
+      {
+        "title": "Informação em tempo real",
+        "desc": "Conheça os tempos estimados e as melhores opções disponíveis."
+      },
+      {
+        "title": "Compromisso ambiental",
+        "desc": "Cada viagem ajuda a reduzir a poluição e melhorar a qualidade do ar."
+      }
+    ]
+  },
+  "footer": {
+    "copyright": "© 2025 EcoRuteando — SENA · Neiva, Colômbia",
+    "privacy": "Privacidade",
+    "terms": "Termos",
+    "contact": "Contato"
+  }
+}

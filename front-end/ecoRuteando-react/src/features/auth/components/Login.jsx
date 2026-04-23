@@ -13,8 +13,8 @@ function Login({ onNavigate }) {
   return (
     <div className="min-h-screen bg-[#edf4ef] flex flex-col items-center justify-center px-4 py-10 animate-fade-in">
       {/* Botón Volver arriba a la derecha */}
-      <button 
-        onClick={() => onNavigate("home")} 
+      <button
+        onClick={() => onNavigate("home")}
         className="absolute top-6 right-6 flex items-center gap-1 text-gray-400 hover:text-green-800 text-sm font-medium transition-colors"
       >
         <ArrowLeft /> Volver
@@ -33,10 +33,10 @@ function Login({ onNavigate }) {
             label="Correo electrónico"
             placeholder="tucorreo@email.com"
             value={form.email}
-            onChange={(e) => setForm({...form, email: e.target.value})}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
             success={form.email && validateEmail(form.email) ? "Correo válido" : ""}
           />
-          
+
           <div>
             <Input
               label="Contraseña"
@@ -45,12 +45,12 @@ function Login({ onNavigate }) {
               showPw={showPw}
               onToggle={() => setShowPw(!showPw)}
               value={form.pw}
-              onChange={(e) => setForm({...form, pw: e.target.value})}
+              onChange={(e) => setForm({ ...form, pw: e.target.value })}
             />
             {/* Link "¿Olvidaste tu contraseña?" a la derecha */}
             <div className="text-right mt-2">
-              <button 
-                onClick={() => onNavigate("recover")} 
+              <button
+                onClick={() => onNavigate("recover")}
                 className="text-green-700 text-xs font-bold hover:underline"
               >
                 ¿Olvidaste tu contraseña?
@@ -58,20 +58,21 @@ function Login({ onNavigate }) {
             </div>
           </div>
 
-          <Button 
-            className="w-full py-3.5 mt-2 shadow-md" 
+          <Button
+            className="w-full py-3.5 mt-2 shadow-md"
+            onClick={() => onNavigate("dashboard")}
             disabled={!validateEmail(form.email) || form.pw.length < 8}
           >
             Iniciar sesión
           </Button>
-          
+
           {/* Social Buttons: Solo logos centrados */}
           <div className="relative flex items-center gap-3 my-4">
             <div className="flex-1 h-px bg-gray-100" />
             <span className="text-[10px] text-gray-400 font-bold uppercase">Continuar con</span>
             <div className="flex-1 h-px bg-gray-100" />
           </div>
-          
+
           <div className="flex gap-3">
             <button className="flex-1 border border-gray-200 rounded-xl py-2 flex justify-center items-center hover:bg-gray-50 transition-all">
               <GoogleIcon />
@@ -84,7 +85,7 @@ function Login({ onNavigate }) {
             </button>
           </div>
         </div>
-        
+
         {/* Enlace al registro al final */}
         <p className="text-center text-sm text-gray-500 mt-8">
           ¿No tienes cuenta? <button onClick={() => onNavigate("register")} className="text-green-700 font-bold hover:underline">Regístrate aquí.</button>
