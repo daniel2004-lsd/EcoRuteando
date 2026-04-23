@@ -1,0 +1,62 @@
+{
+  "navbar": {
+    "features": "Fonctionnalités",
+    "why": "Pourquoi ?",
+    "join": "Rejoindre",
+    "login": "Se connecter",
+    "register": "S'inscrire"
+  },
+  "hero": {
+    "tagline": "🌱 Plateforme de mobilité écologique · Neiva, Colombie",
+    "title": "EcoRuteando",
+    "subtitle": "Votre guide pour une mobilité durable",
+    "description": "Découvrez des itinéraires écologiques combinant transport public et vélo. Chaque trajet est une opportunité de prendre soin de la planète et de réduire votre empreinte carbone.",
+    "registerBtn": "Inscrivez-vous maintenant →",
+    "loginBtn": "Se connecter",
+    "guestBtn": "Mode invité",
+    "ctaTitle": "Commencez votre voyage durable aujourd'hui",
+    "ctaDescription": "Inscrivez-vous gratuitement et découvrez comment EcoRuteando peut transformer votre façon de vous déplacer en ville.",
+    "ctaBtn": "Rejoignez la révolution verte"
+  },
+  "features": {
+    "title": "Mobilité intelligente et durable",
+    "description": "EcoRuteando vous aide à vous déplacer efficacement tout en prenant soin de l'environnement.",
+    "cards": [
+      {
+        "title": "Itinéraires optimisés",
+        "desc": "Trouvez les meilleurs itinéraires en combinant transport public et vélo."
+      },
+      {
+        "title": "Impact environnemental",
+        "desc": "Voyez combien de CO₂ vous économisez à chaque trajet et contribuez à votre ville."
+      },
+      {
+        "title": "Facile à utiliser",
+        "desc": "Une interface intuitive qui vous permet de planifier vos trajets en quelques secondes."
+      }
+    ]
+  },
+  "why": {
+    "title": "Pourquoi choisir EcoRuteando ?",
+    "reasons": [
+      {
+        "title": "Vélo et transport public",
+        "desc": "Combinez le meilleur des deux pour des trajets efficaces et sains."
+      },
+      {
+        "title": "Informations en temps réel",
+        "desc": "Consultez les temps estimés et les meilleures options disponibles."
+      },
+      {
+        "title": "Engagement environnemental",
+        "desc": "Chaque trajet aide à réduire la pollution et à améliorer la qualité de l'air."
+      }
+    ]
+  },
+  "footer": {
+    "copyright": "© 2025 EcoRuteando — SENA · Neiva, Colombie",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "contact": "Contact"
+  }
+}
