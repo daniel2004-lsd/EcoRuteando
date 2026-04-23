@@ -1,12 +1,9 @@
-﻿using Api.Application.DTO.InputDTO;
+﻿using AutoMapper;
+using Api.Application.DTO.InputDTO;
 using Api.Application.DTO.OutputDTO;
 using Api.Domain.Entities;
-using Api.Domain.Enums;
 using Api.Domain.Interface;
-using Api.Domain.ValueObjects;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Api.Application.Service
@@ -14,24 +11,18 @@ namespace Api.Application.Service
     public class AuditLogService
     {
         private readonly IAuditLogRepository _repository;
+        private readonly IMapper _mapper;
 
-        public AuditLogService(IAuditLogRepository repository)
+        public AuditLogService(IAuditLogRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task Register(AuditLogCreateDto dto)
         {
-            var log = new AuditLog
-            {
-                UserId = dto.UserId,
-                Action = (ActionType)dto.ActionId,
-                TableName = Enum.Parse<TableName>(dto.TableName),
-                OldData = dto.OldData, 
-                NewData = dto.NewData,
-                IpAddress = new IpAddress(dto.IpAddress),
-                CreatedAt = DateTime.UtcNow
-            };
+            var log = _mapper.Map<AuditLog>(dto);
+            log.CreatedAt = System.DateTime.UtcNow;
 
             await _repository.CreateAsync(log);
         }
@@ -39,16 +30,7 @@ namespace Api.Application.Service
         public async Task<List<AuditLogResponseDto>> GetAll()
         {
             var list = await _repository.GetAllAsync();
-
-            return list.Select(x => new AuditLogResponseDto(
-                x.UserId,
-                x.Action.ToString(),
-                x.TableName.ToString(),
-                x.OldData, 
-                x.NewData,
-                x.IpAddress.Value,
-                x.CreatedAt
-            )).ToList();
+            return _mapper.Map<List<AuditLogResponseDto>>(list);
         }
     }
 }

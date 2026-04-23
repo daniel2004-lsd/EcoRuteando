@@ -1,33 +1,28 @@
-﻿using Api.Domain.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using Api.Application.DTO.InputDTO;
 using Api.Application.DTO.OutputDTO;
-using Api.Domain.ValueObjects;
 using Api.Domain.Entities;
+using Api.Domain.Interface;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Api.Application.Service
 {
     public class SupportTicketService
     {
         private readonly ISupportTicketRepository _repository;
+        private readonly IMapper _mapper;
 
-        public SupportTicketService(ISupportTicketRepository repository)
+        public SupportTicketService(ISupportTicketRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task CreateTicket(SupportTicketCreateDto dto)
         {
-            var ticket = new SupportTicket
-            {
-                ProfileId = dto.ProfileId,
-                Subject = new TicketSubject(dto.Subject),
-                Priority = (TicketPriority)dto.PriorityId,
-                CreatedAt = DateTime.UtcNow
-            };
+            var ticket = _mapper.Map<SupportTicket>(dto);
+            ticket.CreatedAt = System.DateTime.UtcNow;
 
             await _repository.CreateAsync(ticket);
         }
@@ -35,14 +30,7 @@ namespace Api.Application.Service
         public async Task<List<SupportTicketResponseDto>> GetAll()
         {
             var list = await _repository.GetAllAsync();
-
-            return list.Select(x => new SupportTicketResponseDto(
-                x.ProfileId,
-                x.Subject.Value,
-                x.Priority.ToString(),
-                x.CreatedAt,
-                x.Active
-            )).ToList();
+            return _mapper.Map<List<SupportTicketResponseDto>>(list);
         }
     }
 }

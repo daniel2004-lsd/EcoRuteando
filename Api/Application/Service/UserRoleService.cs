@@ -1,45 +1,34 @@
-﻿using System.Linq;
-using Api.Domain.Interface;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using Api.Application.DTO.InputDTO;
 using Api.Application.DTO.OutputDTO;
 using Api.Domain.Entities;
+using Api.Domain.Interface;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Api.Application.Service
 {
     public class UserRoleService
     {
         private readonly IUserRoleRepository _repository;
+        private readonly IMapper _mapper;
 
-        public UserRoleService(IUserRoleRepository repository)
+        public UserRoleService(IUserRoleRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task AssignRole(UserRoleCreateDto dto)
         {
-            var relation = new UserRole
-            {
-                RoleId = dto.RoleId,
-                UserId = dto.UserId
-            };
-
+            var relation = _mapper.Map<UserRole>(dto);
             await _repository.CreateAsync(relation);
         }
 
-
-public async Task<List<UserRoleResponseDto>> GetAll()
-    {
-        // CORRECCIÓN: Cambiar GetWithNamesAsync por GetWithDetailsAsync
-        var list = await _repository.GetWithDetailsAsync();
-
-        return list.Select(x => new UserRoleResponseDto(
-            x.Role?.Name.ToString() ?? "No Role",
-            x.User?.Email.Value ?? "No Email",
-            x.Active
-        )).ToList();
+        public async Task<List<UserRoleResponseDto>> GetAll()
+        {
+            var list = await _repository.GetWithDetailsAsync();
+            return _mapper.Map<List<UserRoleResponseDto>>(list);
+        }
     }
-}
 }

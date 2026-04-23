@@ -1,33 +1,28 @@
-﻿using Api.Domain.Interface;
-using System;
+﻿using AutoMapper;
+using Api.Application.DTO.InputDTO;
+using Api.Application.DTO.OutputDTO;
+using Api.Domain.Entities;
+using Api.Domain.Interface;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
-using Api.Domain.Enums;
-using Api.Application.DTO.OutputDTO;
-using Api.Application.DTO.InputDTO;
-using Api.Domain.Entities;
 
 namespace Api.Application.Service
 {
     public class ReportValidationService
     {
         private readonly IReportValidationRepository _repository;
+        private readonly IMapper _mapper;
 
-        public ReportValidationService(IReportValidationRepository repository)
+        public ReportValidationService(IReportValidationRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task Validate(ReportValidationCreateDto dto)
         {
-            var validation = new ReportValidation
-            {
-                ProfileId = dto.ProfileId,
-                ReportId = dto.ReportId,
-                ConfirmationStatus = (ConfirmationStatus)dto.ConfirmationStatusId,
-                VotedAt = DateTime.UtcNow
-            };
+            var validation = _mapper.Map<ReportValidation>(dto);
+            validation.VotedAt = System.DateTime.UtcNow;
 
             await _repository.CreateAsync(validation);
         }
@@ -35,14 +30,7 @@ namespace Api.Application.Service
         public async Task<List<ReportValidationResponseDto>> GetAll()
         {
             var list = await _repository.GetAllAsync();
-
-            return list.Select(x => new ReportValidationResponseDto(
-                x.ProfileId,
-                x.ReportId,
-                x.ConfirmationStatus.ToString(),
-                x.VotedAt,
-                x.Active
-            )).ToList();
+            return _mapper.Map<List<ReportValidationResponseDto>>(list);
         }
     }
 }

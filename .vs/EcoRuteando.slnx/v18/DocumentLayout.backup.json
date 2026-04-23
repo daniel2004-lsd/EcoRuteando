@@ -7,16 +7,48 @@
       "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\mappers\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\configurationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\configurationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\domain\\entities\\profile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\domain\\entities\\profile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\userroleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\userroleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\dto\\inputdto\\usercreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\dto\\inputdto\\usercreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\travelhistoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\travelhistoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\supportticketservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\supportticketservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\sessionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\sessionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\routeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\routeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\routereviewservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\routereviewservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\roleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\roleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\rolepermissionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\rolepermissionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\reportvalidationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\reportvalidationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\profileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\profileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\pointofinterestservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -27,128 +59,20 @@
       "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\permissionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\auditlogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\auditlogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\dto\\outputdto\\userresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\dto\\outputdto\\userresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\api\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\api\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\infrastructure\\data\\configurations\\routereviewconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\infrastructure\\data\\configurations\\routereviewconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\routereviewservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\routereviewservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\passwordrecoveryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\passwordrecoveryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\roleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\roleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\reportvalidationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\reportvalidationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\rolepermissionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\rolepermissionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\routeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\routeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\sessionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\sessionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\supportticketservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\supportticketservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\travelhistoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\travelhistoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\profileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\profileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\obstaclereportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\obstaclereportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\configurationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\configurationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\userroleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\userroleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\infrastructure\\repositories\\travelhistoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\infrastructure\\repositories\\travelhistoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\infrastructure\\repositories\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\infrastructure\\repositories\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\infrastructure\\repositories\\permissionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\infrastructure\\repositories\\permissionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\infrastructure\\data\\configurations\\permissionconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\infrastructure\\data\\configurations\\permissionconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\domain\\interface\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\domain\\interface\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\domain\\interface\\ipermissionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\domain\\interface\\ipermissionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\domain\\entities\\route.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\domain\\entities\\route.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\api\\controllers\\userrolecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\api\\controllers\\userrolecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\api\\controllers\\sessioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\api\\controllers\\sessioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\api\\controllers\\rolecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\api\\controllers\\rolecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\api\\controllers\\permissioncontroller .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\api\\controllers\\permissioncontroller .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\api\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\api\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\api\\controllers\\permisorolcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\api\\controllers\\permisorolcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\api\\controllers\\configurationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\api\\controllers\\configurationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|c:\\users\\core5 ultra\\onedrive\\desktop\\ecoruteando\\api\\application\\service\\auditlogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBFA08EA-AECE-205F-7B85-326FD0B81BAD}|Api\\Api.csproj|solutionrelative:api\\application\\service\\auditlogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -158,86 +82,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Profile.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Domain\\Entities\\Profile.cs",
-              "RelativeDocumentMoniker": "Api\\Domain\\Entities\\Profile.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Domain\\Entities\\Profile.cs",
-              "RelativeToolTip": "Api\\Domain\\Entities\\Profile.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:35:08.354Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "PointOfInterestService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\PointOfInterestService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\PointOfInterestService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\PointOfInterestService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\PointOfInterestService.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAIwBkAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:23:51.201Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "PermissionService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\PermissionService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\PermissionService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\PermissionService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\PermissionService.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAIwBgAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:21:32.683Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "AuditLogService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\AuditLogService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\AuditLogService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\AuditLogService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\AuditLogService.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAcwB8AAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:23:09.468Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ConfigurationService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ConfigurationService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\ConfigurationService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ConfigurationService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\ConfigurationService.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAIwBYAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:20:57.257Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "UserController.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\UserController.cs",
-              "RelativeDocumentMoniker": "Api\\API\\Controllers\\UserController.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\UserController.cs",
-              "RelativeToolTip": "Api\\API\\Controllers\\UserController.cs",
-              "ViewState": "AgIAACUAAAAAAAAAAAAcwC0AAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:20:54.22Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -246,399 +92,230 @@
               "RelativeDocumentMoniker": "Api\\Application\\Mappers\\MappingProfile.cs",
               "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Mappers\\MappingProfile.cs",
               "RelativeToolTip": "Api\\Application\\Mappers\\MappingProfile.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAeAAAAAAAAAA==",
+              "ViewState": "AgIAAI4AAAAAAAAAAAAgwAcAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T19:26:21.38Z",
+              "WhenOpened": "2026-04-23T02:50:14.53Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "UserCreateDto.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\DTO\\InputDTO\\UserCreateDto.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\DTO\\InputDTO\\UserCreateDto.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\DTO\\InputDTO\\UserCreateDto.cs",
-              "RelativeToolTip": "Api\\Application\\DTO\\InputDTO\\UserCreateDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T19:33:43.785Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "UserResponseDto.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\DTO\\OutputDTO\\UserResponseDto.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\DTO\\OutputDTO\\UserResponseDto.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\DTO\\OutputDTO\\UserResponseDto.cs",
-              "RelativeToolTip": "Api\\Application\\DTO\\OutputDTO\\UserResponseDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T19:34:04.733Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "RouteReviewConfiguration.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Infrastructure\\Data\\Configurations\\RouteReviewConfiguration.cs",
-              "RelativeDocumentMoniker": "Api\\Infrastructure\\Data\\Configurations\\RouteReviewConfiguration.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Infrastructure\\Data\\Configurations\\RouteReviewConfiguration.cs",
-              "RelativeToolTip": "Api\\Infrastructure\\Data\\Configurations\\RouteReviewConfiguration.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAIwBAAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:25:04.965Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "RouteReviewService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RouteReviewService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\RouteReviewService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RouteReviewService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\RouteReviewService.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAA0wBsAAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:24:02.026Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "PasswordRecoveryService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\PasswordRecoveryService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\PasswordRecoveryService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\PasswordRecoveryService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\PasswordRecoveryService.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAIwBoAAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:23:46.049Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "RoleService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RoleService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\RoleService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RoleService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\RoleService.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAcwBwAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:21:57.944Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "ReportValidationService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ReportValidationService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\ReportValidationService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ReportValidationService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\ReportValidationService.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAIwBcAAAAsAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:23:57.498Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "RolePermissionService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RolePermissionService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\RolePermissionService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RolePermissionService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\RolePermissionService.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAIwBUAAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:21:50.763Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "RouteService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RouteService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\RouteService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RouteService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\RouteService.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAIwBoAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:24:06.812Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "SessionService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\SessionService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\SessionService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\SessionService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\SessionService.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAIwBoAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:22:09.062Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "SupportTicketService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\SupportTicketService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\SupportTicketService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\SupportTicketService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\SupportTicketService.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAIwBcAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:24:17.374Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "TravelHistoryService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\TravelHistoryService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\TravelHistoryService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\TravelHistoryService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\TravelHistoryService.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAIwBwAAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:24:25.693Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "ProfileService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ProfileService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\ProfileService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ProfileService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\ProfileService.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAcwBsAAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:21:42.391Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "ObstacleReportService.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ObstacleReportService.cs",
-              "RelativeDocumentMoniker": "Api\\Application\\Service\\ObstacleReportService.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ObstacleReportService.cs",
-              "RelativeToolTip": "Api\\Application\\Service\\ObstacleReportService.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAcwB0AAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:23:15.36Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 1,
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\UserService.cs",
               "RelativeDocumentMoniker": "Api\\Application\\Service\\UserService.cs",
               "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\UserService.cs",
               "RelativeToolTip": "Api\\Application\\Service\\UserService.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAIwBsAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAswCkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:22:28.079Z",
+              "WhenOpened": "2026-04-23T02:46:29.162Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 2,
               "Title": "UserRoleService.cs",
               "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\UserRoleService.cs",
               "RelativeDocumentMoniker": "Api\\Application\\Service\\UserRoleService.cs",
               "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\UserRoleService.cs",
               "RelativeToolTip": "Api\\Application\\Service\\UserRoleService.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAgwBYAAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAADwvyEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:22:20.657Z",
+              "WhenOpened": "2026-04-23T02:46:06.03Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
-              "Title": "TravelHistoryRepository.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Infrastructure\\Repositories\\TravelHistoryRepository.cs",
-              "RelativeDocumentMoniker": "Api\\Infrastructure\\Repositories\\TravelHistoryRepository.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Infrastructure\\Repositories\\TravelHistoryRepository.cs",
-              "RelativeToolTip": "Api\\Infrastructure\\Repositories\\TravelHistoryRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAYAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "TravelHistoryService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\TravelHistoryService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\TravelHistoryService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\TravelHistoryService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\TravelHistoryService.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAUwCEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:25:18.601Z",
+              "WhenOpened": "2026-04-23T02:45:25.409Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "Repository.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Infrastructure\\Repositories\\Repository.cs",
-              "RelativeDocumentMoniker": "Api\\Infrastructure\\Repositories\\Repository.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Infrastructure\\Repositories\\Repository.cs",
-              "RelativeToolTip": "Api\\Infrastructure\\Repositories\\Repository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAA==",
+              "DocumentIndex": 4,
+              "Title": "SupportTicketService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\SupportTicketService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\SupportTicketService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\SupportTicketService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\SupportTicketService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:25:14.595Z",
+              "WhenOpened": "2026-04-23T02:41:56.793Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
-              "Title": "PermissionRepository.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Infrastructure\\Repositories\\PermissionRepository.cs",
-              "RelativeDocumentMoniker": "Api\\Infrastructure\\Repositories\\PermissionRepository.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Infrastructure\\Repositories\\PermissionRepository.cs",
-              "RelativeToolTip": "Api\\Infrastructure\\Repositories\\PermissionRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAYAAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "SessionService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\SessionService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\SessionService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\SessionService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\SessionService.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAiwCMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:25:09.258Z",
+              "WhenOpened": "2026-04-23T02:38:00.521Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
-              "Title": "PermissionConfiguration.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Infrastructure\\Data\\Configurations\\PermissionConfiguration.cs",
-              "RelativeDocumentMoniker": "Api\\Infrastructure\\Data\\Configurations\\PermissionConfiguration.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Infrastructure\\Data\\Configurations\\PermissionConfiguration.cs",
-              "RelativeToolTip": "Api\\Infrastructure\\Data\\Configurations\\PermissionConfiguration.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAYAAAAAAAAAA==",
+              "DocumentIndex": 6,
+              "Title": "RouteService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RouteService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\RouteService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RouteService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\RouteService.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAUwCMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:24:59.905Z",
+              "WhenOpened": "2026-04-23T02:37:42.663Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
-              "Title": "IRepository.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Domain\\Interface\\IRepository.cs",
-              "RelativeDocumentMoniker": "Api\\Domain\\Interface\\IRepository.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Domain\\Interface\\IRepository.cs",
-              "RelativeToolTip": "Api\\Domain\\Interface\\IRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAA==",
+              "DocumentIndex": 7,
+              "Title": "RouteReviewService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RouteReviewService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\RouteReviewService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RouteReviewService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\RouteReviewService.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAUwCMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:24:42.953Z",
+              "WhenOpened": "2026-04-23T02:36:47.4Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
-              "Title": "IPermissionRepository.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Domain\\Interface\\IPermissionRepository.cs",
-              "RelativeDocumentMoniker": "Api\\Domain\\Interface\\IPermissionRepository.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Domain\\Interface\\IPermissionRepository.cs",
-              "RelativeToolTip": "Api\\Domain\\Interface\\IPermissionRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 8,
+              "Title": "RoleService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RoleService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\RoleService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RoleService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\RoleService.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAUwCEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:24:38.38Z",
+              "WhenOpened": "2026-04-23T02:36:28.756Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
-              "Title": "Route.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Domain\\Entities\\Route.cs",
-              "RelativeDocumentMoniker": "Api\\Domain\\Entities\\Route.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Domain\\Entities\\Route.cs",
-              "RelativeToolTip": "Api\\Domain\\Entities\\Route.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAmAAAAAAAAAA==",
+              "DocumentIndex": 9,
+              "Title": "RolePermissionService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RolePermissionService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\RolePermissionService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\RolePermissionService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\RolePermissionService.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAUwCEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:24:31.561Z",
+              "WhenOpened": "2026-04-23T02:36:00.975Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
-              "Title": "UserRoleController.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\UserRoleController.cs",
-              "RelativeDocumentMoniker": "Api\\API\\Controllers\\UserRoleController.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\UserRoleController.cs",
-              "RelativeToolTip": "Api\\API\\Controllers\\UserRoleController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAeAAAAAAAAAA==",
+              "DocumentIndex": 10,
+              "Title": "ReportValidationService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ReportValidationService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\ReportValidationService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ReportValidationService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\ReportValidationService.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAowCMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:21:07.096Z",
+              "WhenOpened": "2026-04-23T02:35:35.564Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
-              "Title": "SessionController.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\SessionController.cs",
-              "RelativeDocumentMoniker": "Api\\API\\Controllers\\SessionController.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\SessionController.cs",
-              "RelativeToolTip": "Api\\API\\Controllers\\SessionController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAeAAAAAAAAAA==",
+              "DocumentIndex": 11,
+              "Title": "ProfileService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ProfileService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\ProfileService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ProfileService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\ProfileService.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAUwCQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:20:50.034Z",
+              "WhenOpened": "2026-04-23T02:34:59.588Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
-              "Title": "RoleController.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\RoleController.cs",
-              "RelativeDocumentMoniker": "Api\\API\\Controllers\\RoleController.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\RoleController.cs",
-              "RelativeToolTip": "Api\\API\\Controllers\\RoleController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAeAAAAAAAAAA==",
+              "DocumentIndex": 12,
+              "Title": "PointOfInterestService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\PointOfInterestService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\PointOfInterestService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\PointOfInterestService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\PointOfInterestService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:20:46.422Z",
+              "WhenOpened": "2026-04-23T02:33:55.575Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
-              "Title": "PermissionController .cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\PermissionController .cs",
-              "RelativeDocumentMoniker": "Api\\API\\Controllers\\PermissionController .cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\PermissionController .cs",
-              "RelativeToolTip": "Api\\API\\Controllers\\PermissionController .cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAeAAAAAAAAAA==",
+              "DocumentIndex": 13,
+              "Title": "PermissionService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\PermissionService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\PermissionService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\PermissionService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\PermissionService.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAUwCEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:20:41.928Z",
+              "WhenOpened": "2026-04-23T02:31:48.445Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
-              "Title": "ProfileController.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\ProfileController.cs",
-              "RelativeDocumentMoniker": "Api\\API\\Controllers\\ProfileController.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\ProfileController.cs",
-              "RelativeToolTip": "Api\\API\\Controllers\\ProfileController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAeAAAAAAAAAA==",
+              "DocumentIndex": 14,
+              "Title": "PasswordRecoveryService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\PasswordRecoveryService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\PasswordRecoveryService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\PasswordRecoveryService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\PasswordRecoveryService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:20:35.968Z",
+              "WhenOpened": "2026-04-23T02:31:26.248Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
-              "Title": "PermisoRolController.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\PermisoRolController.cs",
-              "RelativeDocumentMoniker": "Api\\API\\Controllers\\PermisoRolController.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\PermisoRolController.cs",
-              "RelativeToolTip": "Api\\API\\Controllers\\PermisoRolController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAeAAAAAAAAAA==",
+              "DocumentIndex": 15,
+              "Title": "ObstacleReportService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ObstacleReportService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\ObstacleReportService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ObstacleReportService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\ObstacleReportService.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAA2wCMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:20:24.402Z",
+              "WhenOpened": "2026-04-23T02:30:09.156Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
-              "Title": "ConfigurationController.cs",
-              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\ConfigurationController.cs",
-              "RelativeDocumentMoniker": "Api\\API\\Controllers\\ConfigurationController.cs",
-              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\API\\Controllers\\ConfigurationController.cs",
-              "RelativeToolTip": "Api\\API\\Controllers\\ConfigurationController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAeAAAAAAAAAA==",
+              "DocumentIndex": 16,
+              "Title": "ConfigurationService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ConfigurationService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\ConfigurationService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\ConfigurationService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\ConfigurationService.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAUwCEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:20:15.758Z",
+              "WhenOpened": "2026-04-23T02:29:44.316Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "AuditLogService.cs",
+              "DocumentMoniker": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\AuditLogService.cs",
+              "RelativeDocumentMoniker": "Api\\Application\\Service\\AuditLogService.cs",
+              "ToolTip": "C:\\Users\\CORE5 ULTRA\\OneDrive\\Desktop\\EcoRuteando\\Api\\Application\\Service\\AuditLogService.cs",
+              "RelativeToolTip": "Api\\Application\\Service\\AuditLogService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-23T02:28:55.04Z",
               "EditorCaption": ""
             }
           ]

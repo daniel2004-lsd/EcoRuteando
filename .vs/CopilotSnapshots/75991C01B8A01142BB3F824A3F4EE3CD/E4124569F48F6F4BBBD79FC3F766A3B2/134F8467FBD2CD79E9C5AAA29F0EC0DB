@@ -1,0 +1,155 @@
+﻿using AutoMapper;
+using Api.Domain.Entities;
+using Api.Domain.ValueObjects;
+using Api.Application.DTO.InputDTO;
+using Api.Application.DTO.OutputDTO;
+
+using Profile = Api.Domain.Entities.Profile;
+
+namespace Api.Application.Mappers
+{
+    public class MappingProfile : AutoMapper.Profile
+    {
+        public MappingProfile()
+        {
+            CreateMap<UserCreateDto, User>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => new Username(src.Name)))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => new Email(src.Email)))
+                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => new Password(src.Password)))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName));
+
+            CreateMap<User, UserResponseDto>()
+                .ConstructUsing(src => new UserResponseDto(
+                    src.Name.Value,
+                    src.LastName,
+                    src.Email.Value,
+                    src.Active
+                ));
+
+            CreateMap<PermissionCreateDto, Permission>();
+            CreateMap<Permission, PermissionResponseDto>();
+
+            CreateMap<RoleCreateDto, Role>();
+            CreateMap<Role, RoleResponseDto>();
+
+            CreateMap<RolePermissionCreateDto, RolePermission>();
+            CreateMap<RolePermission, RolePermissionResponseDto>()
+                .ConstructUsing(src => new RolePermissionResponseDto(
+                    src.Role != null ? src.Role.Name.ToString() : "Sin Rol",
+                    src.Permission != null && src.Permission.Name != null ? src.Permission.Name.Value : "Sin Permiso",
+                    src.Active
+                ));
+
+            CreateMap<SupportTicketCreateDto, SupportTicket>();
+
+            CreateMap<SupportTicket, SupportTicketResponseDto>()
+                .ConstructUsing(src => new SupportTicketResponseDto(
+                    src.ProfileId,
+                    src.Subject,
+                    src.Priority != null ? src.Priority.ToString() : "Baja",
+                    src.CreatedAt,
+                    src.Active
+               ));
+
+            CreateMap<PasswordRecoveryCreateDto, PasswordRecovery>();
+            CreateMap<PasswordRecovery, PasswordRecoveryResponseDto>();
+
+            CreateMap<UserRoleCreateDto, UserRole>();
+            CreateMap<UserRole, UserRoleResponseDto>()
+                .ConstructUsing(src => new UserRoleResponseDto(
+                    src.Role != null ? src.Role.Name.ToString() : "Sin Rol",
+                    src.User != null ? src.User.Email.Value : "Sin Email",
+                    src.Active
+                ));
+
+            CreateMap<SessionCreateDto, Session>();
+            CreateMap<Session, SessionResponseDto>();
+
+            CreateMap<ProfileCreateDto, Profile>()
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => new PhoneNumber(src.PhoneNumber)))
+                .ForMember(dest => dest.ProfilePicture, opt => opt.MapFrom(src => new UrlImagen(src.ProfilePicture)));
+
+            CreateMap<Profile, ProfileResponseDto>()
+                .ConstructUsing(src => new ProfileResponseDto(
+                    src.SessionId,
+                    src.PhoneNumber.Value,
+                    src.ProfilePicture.Value,
+                    src.Active
+                ));
+
+            CreateMap<ConfigurationCreateDto, Configuration>();
+            CreateMap<Configuration, ConfigurationResponseDto>()
+                .ConstructUsing(src => new ConfigurationResponseDto(
+                    src.Language != null ? src.Language.ToString() : "Default",
+                    src.BackgroundColor != null ? src.BackgroundColor.ToString() : "Default",
+                    src.Active
+                ));
+
+            CreateMap<ObstacleReportCreateDto, ObstacleReport>()
+                .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => new UrlImagen(src.PhotoUrl)));
+
+            CreateMap<ObstacleReport, ObstacleReportResponseDto>()
+                .ConstructUsing(src => new ObstacleReportResponseDto(
+                    src.ProfileId,
+                    src.Type != null ? src.Type.ToString() : "Desconocido",
+                    src.Description,
+                    src.Location != null ? src.Location.Latitude : 0,
+                    src.Location != null ? src.Location.Longitude : 0,
+                    src.PhotoUrl != null ? src.PhotoUrl.Value : null,
+                    src.CreatedAt,
+                    src.Active
+                ));
+
+            CreateMap<PointOfInterestCreateDto, PointOfInterest>();
+            CreateMap<PointOfInterest, PointOfInterestResponseDto>()
+                .ConstructUsing(src => new PointOfInterestResponseDto(
+                    src.Name != null ? src.Name.Value : "Sin Nombre",
+                    src.Category.ToString(),
+                    src.Location != null ? src.Location.Latitude : 0,
+                    src.Location != null ? src.Location.Longitude : 0,
+                    src.Address,
+                    src.CreatedBy,
+                    src.Active
+                ));
+            CreateMap<ReportValidationCreateDto, ReportValidation>();
+            CreateMap<ReportValidation, ReportValidationResponseDto>()
+                .ConstructUsing(src => new ReportValidationResponseDto(
+                    src.ProfileId,
+                    src.ReportId,
+                    src.ConfirmationStatus != null ? src.ConfirmationStatus.ToString() : "Pendiente",
+                    src.VotedAt,
+                    src.Active
+                ));
+
+            CreateMap<RouteCreateDto, Route>()
+                .ForMember(dest => dest.Path, opt => opt.MapFrom(src => src.PathJson));
+            CreateMap<Route, RouteResponseDto>()
+                .ConstructUsing(src => new RouteResponseDto(
+                    src.Name != null ? src.Name.Value : "Sin Nombre",
+                    src.Description,
+                    src.Path != null ? src.Path.SerializedPoints : null,
+                    src.DistanceKm != null ? (double)src.DistanceKm.Value : 0.0,
+                    src.EstimatedTime != null ? src.EstimatedTime.Value : 0, 
+                    src.CreatedBy,
+                    src.CreatedAt,
+                    src.Active
+                ));
+
+
+            CreateMap<RouteReviewCreateDto, RouteReview>();
+            CreateMap<RouteReview, RouteReviewResponseDto>();
+            CreateMap<AuditLogCreateDto, AuditLog>();
+            CreateMap<AuditLog, AuditLogResponseDto>()
+                .ConstructUsing(src => new AuditLogResponseDto(
+                    src.UserId,
+                    src.Action != null ? src.Action.ToString() : "Acción Desconocida",
+                    src.TableName.ToString(),
+                    src.OldData,
+                    src.NewData,
+                    src.IpAddress != null ? src.IpAddress.Value : "0.0.0.0",
+                    src.CreatedAt,
+                    src.Active
+                ));
+        }
+    }
+}

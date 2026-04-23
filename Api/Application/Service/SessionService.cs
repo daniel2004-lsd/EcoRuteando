@@ -1,32 +1,28 @@
-﻿using Api.Domain.Interface;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
+﻿using AutoMapper;
 using Api.Application.DTO.InputDTO;
 using Api.Application.DTO.OutputDTO;
 using Api.Domain.Entities;
-using Api.Domain.ValueObjects;
+using Api.Domain.Interface;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Api.Application.Service
 {
     public class SessionService
     {
         private readonly ISessionRepository _repository;
+        private readonly IMapper _mapper;
 
-        public SessionService(ISessionRepository repository)
+        public SessionService(ISessionRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task CreateSession(SessionCreateDto dto)
         {
-            var session = new Session
-            {
-                UserId = dto.UserId,
-                IpAddress = new IpAddress(dto.IpAddress),
-                StartDate = DateTime.UtcNow
-            };
+            var session = _mapper.Map<Session>(dto);
+            session.StartDate = System.DateTime.UtcNow;
 
             await _repository.CreateAsync(session);
         }
@@ -34,14 +30,7 @@ namespace Api.Application.Service
         public async Task<List<SessionResponseDto>> GetAll()
         {
             var sessions = await _repository.GetAllAsync();
-
-            return sessions.Select(s => new SessionResponseDto(
-                s.UserId,
-                s.StartDate,
-                s.EndDate?.Value,
-                s.IpAddress.Value,
-                s.Active 
-            )).ToList();
+            return _mapper.Map<List<SessionResponseDto>>(sessions);
         }
     }
 }
