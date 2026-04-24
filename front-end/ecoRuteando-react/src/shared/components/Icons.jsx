@@ -99,3 +99,70 @@ export const LeafIcon = ({ size = 24, white = false, blend = "normal" }) => (
     <img src={logoImg} alt="Leaf" className="max-w-full max-h-full object-contain" />
   </div>
 );
+export const RouteIcon = ({ size = 28 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+    <path d="M3 6h18M3 12h12M3 18h6" />
+  </svg>
+);
+
+export const ClockIcon = ({ size = 28 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M12 6v6l4 2"/>
+  </svg>
+);
+
+export const UsersIcon = ({ size = 28 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+    <circle cx="9" cy="7" r="4"/>
+    <path d="M17 11c1.5 0 3 1.5 3 3v2h-6"/>
+    <path d="M3 21v-2c0-2 2-4 6-4s6 2 6 4v2"/>
+  </svg>
+);
+export const MessageCircleIcon = ({ size = 24 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <path
+    
+      d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+export const ReportIcon = ({ size = 24 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <path d="M9 17h6M9 13h6M9 9h6M7 21h10a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2z"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+  </svg>
+);
+export const DownloadIcon = ({ size = 24 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <path d="M12 3v10m0 0l4-4m-4 4l-4-4M5 21h14"
+      stroke="currentColor" strokeWidth="2"/>
+  </svg>
+);
+export const SettingsIcon = ({ size = 24 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <path
+      d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+    <path
+      d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V22a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H2a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1A2 2 0 1 1 6 3.2l.1.1a1.7 1.7 0 0 0 1.9.3H8a1.7 1.7 0 0 0 1-1.5V2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5h.1a1.7 1.7 0 0 0 1.9-.3l.1-.1A2 2 0 1 1 21 6l-.1.1a1.7 1.7 0 0 0-.3 1.9V8c0 .7.4 1.4 1.1 1.7H22a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+  </svg>
+);
+export const TicketIcon = ({ size = 24 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <path
+      d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V7z"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+  </svg>
+);
