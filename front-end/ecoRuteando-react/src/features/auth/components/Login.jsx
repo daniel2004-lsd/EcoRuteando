@@ -3,16 +3,55 @@ import Input from "../../../shared/components/Input";
 import Button from "../../../shared/components/Button";
 import { Logo, GoogleIcon, FacebookIcon, XIcon, ArrowLeft } from "../../../shared/components/Icons";
 
-function Login({ onNavigate }) {
+function Login({ onNavigate, setUserRole }) {
   const [form, setForm] = useState({ email: "", pw: "" });
   const [showPw, setShowPw] = useState(false);
+  const ADMIN_EMAIL = "admin@ecoruteando.com";
+  const ADMIN_PASSWORD = "123456789";
 
-  // Validación básica idéntica al original
   const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+  
+  const handleLogin = () => {
+    const email = form.email.trim().toLowerCase();
+    const password = form.pw.trim();
+
+    if (!email || !password) {
+      alert("Completa todos los campos");
+      return;
+    }
+
+    // Validación para ADMIN - Ahora va a dashboard primero
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      setUserRole("admin");
+      onNavigate("dashboard"); // ← Cambiado: primero va al dashboard
+      return;
+    }
+
+    // Validación para usuarios normales
+    if (!validateEmail(email)) {
+      alert("Correo electrónico no válido");
+      return;
+    }
+
+    if (password.length < 8) {
+      alert("La contraseña debe tener al menos 8 caracteres");
+      return;
+    }
+
+    // Usuario normal
+    setUserRole("user");
+    onNavigate("dashboard");
+  };
+
+  const isButtonDisabled = () => {
+    if (!form.email || !form.pw) return true;
+    if (!validateEmail(form.email)) return true;
+    if (form.pw.length < 8) return true;
+    return false;
+  };
 
   return (
     <div className="min-h-screen bg-[#edf4ef] flex flex-col items-center justify-center px-4 py-10 animate-fade-in">
-      {/* Botón Volver arriba a la derecha */}
       <button
         onClick={() => onNavigate("home")}
         className="absolute top-6 right-6 flex items-center gap-1 text-gray-400 hover:text-green-800 text-sm font-medium transition-colors"
@@ -47,7 +86,6 @@ function Login({ onNavigate }) {
               value={form.pw}
               onChange={(e) => setForm({ ...form, pw: e.target.value })}
             />
-            {/* Link "¿Olvidaste tu contraseña?" a la derecha */}
             <div className="text-right mt-2">
               <button
                 onClick={() => onNavigate("recover")}
@@ -60,13 +98,12 @@ function Login({ onNavigate }) {
 
           <Button
             className="w-full py-3.5 mt-2 shadow-md"
-            onClick={() => onNavigate("dashboard")}
-            disabled={!validateEmail(form.email) || form.pw.length < 8}
+            onClick={handleLogin}
+            disabled={isButtonDisabled()}
           >
             Iniciar sesión
           </Button>
 
-          {/* Social Buttons: Solo logos centrados */}
           <div className="relative flex items-center gap-3 my-4">
             <div className="flex-1 h-px bg-gray-100" />
             <span className="text-[10px] text-gray-400 font-bold uppercase">Continuar con</span>
@@ -85,8 +122,6 @@ function Login({ onNavigate }) {
             </button>
           </div>
         </div>
-
-        {/* Enlace al registro al final */}
         <p className="text-center text-sm text-gray-500 mt-8">
           ¿No tienes cuenta? <button onClick={() => onNavigate("register")} className="text-green-700 font-bold hover:underline">Regístrate aquí.</button>
         </p>

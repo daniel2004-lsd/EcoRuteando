@@ -21,11 +21,16 @@ const LANGUAGES = [
 
 const HomePage = ({ onNavigate }) => {
   const { t, i18n } = useTranslation();
-  const [scrolled, setScrolled]       = useState(false);
-  const [menuOpen, setMenuOpen]       = useState(false);
-  const [language, setLanguage]       = useState(i18n.language || "es");
-  const [langOpen, setLangOpen]       = useState(false);
-  const langRef                       = useRef(null);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("appLanguage") || i18n.language || 'es';
+  });
+
+  useEffect(() => {
+    localStorage.setItem("appLanguage", language);
+    i18n.changeLanguage(language);
+  }, [language, i18n]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -64,134 +69,102 @@ const HomePage = ({ onNavigate }) => {
 
   const changeLanguage = (lng) => {
     setLanguage(lng);
-    i18n.changeLanguage(lng);
-    setLangOpen(false);
+  };
+
+  const handleGuestMode = () => {
+    onNavigate("dashboard");
   };
 
   const currentLang = LANGUAGES.find((l) => l.code === language) || LANGUAGES[0];
 
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 overflow-x-hidden">
 
-      {/* ─── NAVBAR PRINCIPAL ─── */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white shadow-md py-3 text-green-900" : "bg-black/30 backdrop-blur-md py-5 text-white"
-      }`}>
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-green-100 p-1">
-              <LeafIcon size={16} blend="multiply" />
+      {/* ─── NAVBAR CORREGIDO - LOGO SIEMPRE VISIBLE ─── */}
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "bg-white shadow-md py-3"
+            : "bg-gradient-to-r from-green-900 to-emerald-800 py-4"
+        }`}
+      >
+        <div className="max-w-6xl mx-auto px-4 md:px-6 flex items-center justify-between">
+          {/* Logo - SIEMPRE CON FONDO BLANCO */}
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => scrollToSection("hero")}>
+            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md">
+              <LeafIcon size={16} className="text-green-600" />
             </div>
-            <span className="font-bold text-xl tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <span className={`font-bold text-lg md:text-xl tracking-tight ${
+              scrolled ? "text-green-800" : "text-white"
+            }`} style={{ fontFamily: "'Playfair Display', serif" }}>
               EcoRuteando
             </span>
           </div>
 
-          {/* Menú Desktop */}
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium">
-            <a href="#features" className={`nav-link transition-colors ${scrolled ? "text-gray-600 hover:text-green-800" : "text-white/90 hover:text-white"}`}>
-              {t("navbar.features")}
+          {/* MENÚ CENTRAL */}
+          <div className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium">
+            <a href="#features" className={`transition-colors ${scrolled ? "text-gray-600 hover:text-green-600" : "text-white/90 hover:text-white"}`}>
+              Features
             </a>
-            <a href="#why" className={`nav-link transition-colors ${scrolled ? "text-gray-600 hover:text-green-800" : "text-white/90 hover:text-white"}`}>
-              {t("navbar.why")}
+            <a href="#why" className={`transition-colors ${scrolled ? "text-gray-600 hover:text-green-600" : "text-white/90 hover:text-white"}`}>
+              Why?
             </a>
-            <button onClick={() => onNavigate("register")} className={`nav-link transition-colors ${scrolled ? "text-gray-600 hover:text-green-800" : "text-white/90 hover:text-white"}`}>
-              {t("navbar.join")}
+            <button onClick={() => onNavigate("register")} className={`transition-colors ${scrolled ? "text-gray-600 hover:text-green-600" : "text-white/90 hover:text-white"}`}>
+              Join
             </button>
           </div>
 
-          {/* Botones Desktop */}
+          {/* BOTONES DERECHA */}
           <div className="hidden md:flex gap-3 items-center">
             <button
               onClick={() => onNavigate("login")}
-              className={`px-5 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${scrolled ? "border-green-700 text-green-700 hover:bg-green-700 hover:text-white" : "border-white/80 text-white hover:bg-white hover:text-green-900"}`}
+              className={`px-4 lg:px-5 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${
+                scrolled 
+                  ? "border-green-600 text-green-600 hover:bg-green-600 hover:text-white" 
+                  : "border-white/80 text-white hover:bg-white hover:text-green-900"
+              }`}
             >
-              {t("navbar.login")}
+              Login
             </button>
             <button
               onClick={() => onNavigate("register")}
-              className="btn-primary text-white px-5 py-2 rounded-xl text-sm font-semibold shadow-md"
+              className="px-4 lg:px-5 py-2 rounded-xl text-sm font-semibold shadow-md bg-green-600 hover:bg-green-700 text-white transition-all"
             >
-              {t("navbar.register")}
+              Register
             </button>
-
-            {/* ── Selector de idioma con ícono globo ── */}
-            <div className="relative" ref={langRef}>
-              <button
-                onClick={() => setLangOpen(!langOpen)}
-                className={`w-9 h-9 rounded-full border-2 flex items-center justify-center transition-colors ${
-                  scrolled
-                    ? "border-green-700 text-green-700 hover:bg-green-50"
-                    : "border-white/80 text-white hover:bg-white/20"
-                }`}
-                title="Cambiar idioma"
-              >
-                <GlobeIcon />
-              </button>
-
-              {/* Dropdown */}
-              {langOpen && (
-                <div className="absolute right-0 mt-2 w-44 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50">
-                  {LANGUAGES.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() => changeLanguage(lang.code)}
-                      className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-green-50 ${
-                        language === lang.code
-                          ? "bg-green-50 text-green-800 font-bold"
-                          : "text-gray-700"
-                      }`}
-                    >
-                      <span className="text-base">{lang.flag}</span>
-                      <span>{lang.label}</span>
-                      {language === lang.code && (
-                        <span className="ml-auto text-green-600 text-xs">✓</span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
 
-          {/* Icono Hamburguesa Móvil */}
-          <button
-            onClick={() => setMenuOpen(true)}
-            className="md:hidden flex flex-col gap-1.5 p-2 z-50 active:scale-90 transition-transform"
-            aria-label="Abrir menú"
-          >
-            <span className={`w-6 h-0.5 transition-all ${scrolled || menuOpen ? "bg-green-900" : "bg-white"}`} />
-            <span className={`w-6 h-0.5 transition-all ${scrolled || menuOpen ? "bg-green-900" : "bg-white"}`} />
-            <span className={`w-6 h-0.5 transition-all ${scrolled || menuOpen ? "bg-green-900" : "bg-white"}`} />
+          {/* Hamburguesa */}
+          <button onClick={() => setMenuOpen(true)} className="md:hidden flex flex-col gap-1.5 p-2">
+            <span className={`w-6 h-0.5 rounded-full transition-all ${scrolled ? "bg-green-800" : "bg-white"}`} />
+            <span className={`w-6 h-0.5 rounded-full transition-all ${scrolled ? "bg-green-800" : "bg-white"}`} />
+            <span className={`w-6 h-0.5 rounded-full transition-all ${scrolled ? "bg-green-800" : "bg-white"}`} />
           </button>
         </div>
       </nav>
 
-      {/* ─── SIDEBAR RESPONSIVE ─── */}
+      {/* ─── SIDEBAR ─── */}
       <div className={`fixed inset-0 z-[100] md:hidden ${menuOpen ? "visible" : "invisible"}`}>
-        <div
-          className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${menuOpen ? "opacity-100" : "opacity-0"}`}
-          onClick={() => setMenuOpen(false)}
-        />
-        <div className={`absolute top-0 right-0 bottom-0 w-[75%] max-w-sm bg-white flex flex-col shadow-2xl transition-transform duration-300 ease-out ${menuOpen ? "translate-x-0" : "translate-x-full"}`}>
-          <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-green-900">
-              <LeafIcon size={24} />
-              <span className="font-bold text-lg">EcoRuteando</span>
+        <div className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${menuOpen ? "opacity-100" : "opacity-0"}`} onClick={() => setMenuOpen(false)} />
+        <div className={`absolute top-0 right-0 bottom-0 w-[85%] max-w-sm bg-white flex flex-col shadow-2xl transition-transform duration-300 ease-out ${menuOpen ? "translate-x-0" : "translate-x-full"}`}>
+          <div className="p-5 border-b border-gray-100 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <LeafIcon size={24} className="text-green-600" />
+              <span className="font-bold text-lg text-green-800">EcoRuteando</span>
             </div>
-            <button onClick={() => setMenuOpen(false)} className="text-gray-400 p-2 hover:text-green-800 transition-colors" aria-label="Cerrar menú">
+            <button onClick={() => setMenuOpen(false)} className="text-gray-400 p-2 hover:text-green-600 transition-colors">
               <CloseIcon />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
-            <button onClick={() => scrollToSection("features")} className="w-full flex items-center gap-4 p-4 rounded-2xl text-gray-600 hover:bg-green-50 hover:text-green-900 transition-all font-medium text-left">
-              <MapIcon size={20} /> {t("navbar.features")}
+          <div className="flex-1 py-4 px-4 space-y-1">
+            <button onClick={() => scrollToSection("features")} className="w-full flex items-center gap-4 p-4 rounded-2xl text-gray-600 hover:bg-green-50 hover:text-green-600 transition-all font-medium text-left">
+              <MapIcon size={22} /> {t('navbar.features')}
             </button>
-            <button onClick={() => scrollToSection("why")} className="w-full flex items-center gap-4 p-4 rounded-2xl text-gray-600 hover:bg-green-50 hover:text-green-900 transition-all font-medium text-left">
-              <ActivityIcon size={20} /> {t("navbar.why")}
+            <button onClick={() => scrollToSection("why")} className="w-full flex items-center gap-4 p-4 rounded-2xl text-gray-600 hover:bg-green-50 hover:text-green-600 transition-all font-medium text-left">
+              <ActivityIcon size={22} /> {t('navbar.why')}
             </button>
-            <button onClick={() => { onNavigate("register"); setMenuOpen(false); }} className="w-full flex items-center gap-4 p-4 rounded-2xl text-gray-600 hover:bg-green-50 hover:text-green-900 transition-all font-medium text-left">
-              <HeartIcon size={20} /> {t("navbar.join")}
+            <button onClick={() => { onNavigate("register"); setMenuOpen(false); }} className="w-full flex items-center gap-4 p-4 rounded-2xl text-gray-600 hover:bg-green-50 hover:text-green-600 transition-all font-medium text-left">
+              <HeartIcon size={22} /> {t('navbar.join')}
             </button>
 
             {/* Idiomas en el sidebar móvil */}
@@ -215,153 +188,229 @@ const HomePage = ({ onNavigate }) => {
               </div>
             </div>
           </div>
-          <div className="p-6 bg-gray-50 flex flex-col gap-3">
-            <button onClick={() => { onNavigate("register"); setMenuOpen(false); }} className="w-full btn-primary py-4 rounded-2xl font-bold shadow-lg text-sm text-white">
-              {t("navbar.register")} →
+          <div className="p-5 bg-gray-50 flex flex-col gap-3 border-t border-gray-100">
+            <button onClick={() => { onNavigate("register"); setMenuOpen(false); }} className="w-full py-4 rounded-2xl font-bold shadow-lg text-sm text-white bg-green-600 hover:bg-green-700 transition-all">
+              {t('navbar.register')} →
             </button>
-            <button onClick={() => { onNavigate("login"); setMenuOpen(false); }} className="w-full bg-white border border-gray-200 text-gray-700 py-4 rounded-2xl font-bold text-sm">
-              {t("navbar.login")}
+            <button onClick={() => { onNavigate("login"); setMenuOpen(false); }} className="w-full bg-white border border-gray-200 text-gray-700 py-4 rounded-2xl font-bold text-sm hover:bg-gray-50 transition-all">
+              {t('navbar.login')}
             </button>
-            <button onClick={() => { onNavigate("landing"); setMenuOpen(false); }} className="w-full bg-transparent text-gray-400 py-2 rounded-2xl font-bold text-[10px] uppercase tracking-widest mt-2">
-              {t("hero.guestBtn")}
+            <button onClick={() => { handleGuestMode(); setMenuOpen(false); }} className="w-full bg-green-50 border border-green-200 text-green-700 py-4 rounded-2xl font-semibold text-sm hover:bg-green-100 transition-all">
+              {t('hero.guestBtn') || "Modo Invitado"}
             </button>
           </div>
         </div>
       </div>
 
       {/* ─── HERO SECTION ─── */}
-      <section className="gradient-hero min-h-[85vh] md:min-h-[40vh] flex flex-col items-center justify-center pt-32 md:pt-28 pb-16 px-6 text-center relative overflow-hidden text-white">
-        <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle at 20% 80%, rgba(255,255,255,0.06) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.06) 0%, transparent 50%)" }} />
-        <div className="relative z-10 max-w-4xl mx-auto animate-fade-in">
-          <span className="tag-eco inline-block mb-6 text-[10px] md:text-sm px-4 py-1.5 rounded-full font-bold shadow-sm text-green-900">
-            {t("hero.tagline")}
-          </span>
-          <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl animate-pulse-green p-3 md:p-4">
-            <LeafIcon size={40} blend="multiply" />
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-5 text-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-green-800 via-emerald-700 to-teal-800" />
+        <div className="absolute top-0 left-0 w-80 h-80 bg-white/5 rounded-full -translate-x-40 -translate-y-40" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-white/5 rounded-full translate-x-40 translate-y-40" />
+
+        <div className="relative z-10 w-full max-w-5xl mx-auto">
+          <div className="flex justify-center mb-6">
+            <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center shadow-2xl animate-float">
+              <LeafIcon size={48} className="text-green-600" />
+            </div>
           </div>
-          <h1 className="text-4xl md:text-7xl font-black mb-5 leading-tight tracking-tight px-2" style={{ fontFamily: "'Playfair Display', serif" }}>
-            {t("hero.title")}
+
+          <h1 className="text-5xl md:text-7xl font-black text-white mb-4 leading-tight tracking-tight px-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+            EcoRuteando
           </h1>
-          <p className="text-lg md:text-2xl font-semibold text-green-100 mb-4 px-4">
-            {t("hero.subtitle")}
+
+          <p className="text-xl md:text-2xl font-semibold text-green-100 mb-4 px-4">
+            {t('hero.subtitle')}
           </p>
-          <p className="max-w-2xl mx-auto mb-10 text-green-50 opacity-90 text-xs md:text-base leading-relaxed px-6">
-            {t("hero.description")}
+
+          <p className="max-w-2xl mx-auto mb-10 text-green-50 text-sm md:text-base leading-relaxed px-4">
+            {t('hero.description')}
           </p>
-          <div className="hidden md:flex flex-row gap-4 justify-center items-center px-6">
-            <button onClick={() => onNavigate("register")} className="bg-white text-green-900 px-10 py-4 rounded-2xl font-bold text-base shadow-xl hover:-translate-y-1 transition-all duration-300">
-              {t("hero.registerBtn")}
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
+            <button onClick={() => onNavigate("register")} className="group w-full sm:w-auto bg-white text-green-700 px-8 py-3 rounded-xl font-bold shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105">
+              {t('hero.registerBtn')}
+              <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
             </button>
-            <button onClick={() => onNavigate("login")} className="bg-white/20 backdrop-blur-md text-white border border-white/40 px-10 py-4 rounded-2xl font-semibold text-base hover:bg-white/30 transition-all">
-              {t("hero.loginBtn")}
+            <button onClick={() => onNavigate("login")} className="w-full sm:w-auto bg-white/20 backdrop-blur-md text-white border border-white/40 px-8 py-3 rounded-xl font-semibold hover:bg-white/30 transition-all duration-300">
+              {t('hero.loginBtn')}
             </button>
-            <button onClick={() => onNavigate("landing")} className="bg-white/20 backdrop-blur-md text-white border border-white/40 px-10 py-4 rounded-2xl font-semibold text-base hover:bg-white/30 transition-all">
-              {t("hero.guestBtn")}
+            <button onClick={handleGuestMode} className="w-full sm:w-auto bg-white/10 backdrop-blur-md text-white border border-white/30 px-8 py-3 rounded-xl font-medium hover:bg-white/20 transition-all duration-300">
+              {t('hero.guestBtn')}
             </button>
+          </div>
+        </div>
+
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center">
+            <div className="w-1 h-2 bg-white/60 rounded-full mt-2 animate-pulse" />
           </div>
         </div>
       </section>
 
-      {/* SECCIÓN 2: MOVILIDAD INTELIGENTE */}
-      <section id="features" className="py-16 md:py-24 px-6 bg-ivory">
-        <div className="max-w-6xl mx-auto text-center mb-12 md:mb-16">
-          <h2 className="text-2xl md:text-4xl font-bold text-gray-800 mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
-            {t("features.title")}
-          </h2>
-          <p className="text-gray-500 text-sm md:text-lg max-w-2xl mx-auto px-4">
-            {t("features.description")}
-          </p>
-        </div>
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-center">
-          {t("features.cards", { returnObjects: true }).map((card, i) => {
-            const icons  = [<MapIcon size={28} />, <ActivityIcon size={28} />, <HeartIcon size={28} />];
-            const colors = ["text-green-700", "text-teal-600", "text-emerald-600"];
-            return (
-              <div key={i} className="bg-white p-8 md:p-10 rounded-2xl card-hover shadow-sm border border-stone-50 group">
-                <div className={`w-14 h-14 md:w-16 md:h-16 feature-icon-bg rounded-2xl flex items-center justify-center mx-auto mb-6 ${colors[i]} group-hover:scale-110 transition-transform`}>
-                  {icons[i]}
-                </div>
-                <h3 className="text-base md:text-lg font-bold text-green-900 mb-3">{card.title}</h3>
-                <p className="text-gray-500 text-xs md:text-sm leading-relaxed">{card.desc}</p>
+      {/* SECCIÓN 2: FEATURES */}
+      <section id="features" className="py-20 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="flex justify-center mb-4">
+              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-md">
+                <LeafIcon size={24} className="text-green-600" />
               </div>
-            );
-          })}
+            </div>
+            <span className="text-green-600 text-sm font-semibold uppercase tracking-wider">Características</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mt-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+              {t('features.title')}
+            </h2>
+            <p className="text-gray-500 mt-3 max-w-2xl mx-auto">{t('features.description')}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {t('features.cards', { returnObjects: true }).map((card, i) => {
+              const icons = [<MapIcon size={32} />, <ActivityIcon size={32} />, <HeartIcon size={32} />];
+              const colors = ["from-green-500 to-emerald-500", "from-teal-500 to-cyan-500", "from-emerald-500 to-green-500"];
+
+              return (
+                <div key={i} className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100">
+                  <div className={`w-16 h-16 bg-gradient-to-br ${colors[i]} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-md`}>
+                    <div className="text-white">{icons[i]}</div>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">{card.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{card.desc}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      {/* SECCIÓN 3: ¿POR QUÉ ELEGIR? */}
-      <section id="why" className="py-16 px-6 bg-white">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="order-2 lg:order-1">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8" style={{ fontFamily: "'Playfair Display', serif" }}>
-              {t("why.title")}
+      {/* SECCIÓN 3: BENEFICIOS */}
+      <section id="why" className="py-20 px-6 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="flex justify-center mb-4">
+              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-md">
+                <LeafIcon size={28} className="text-green-600" />
+              </div>
+            </div>
+            <span className="text-green-600 text-sm font-semibold uppercase tracking-wider">BENEFICIOS</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mt-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+              Why choose EcoRuteando?
             </h2>
-            <div className="space-y-4">
-              {t("why.reasons", { returnObjects: true }).map((reason, i) => {
-                const icons = [<BikeIcon size={18} />, <BusIcon size={18} />, <LeafIcon size={18} />];
-                return (
-                  <div key={i} className="flex gap-4 p-4 md:p-5 bg-ivory rounded-2xl card-hover shadow-sm items-center border border-stone-50">
-                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 text-green-700 shadow-sm">
-                      {icons[i]}
-                    </div>
-                    <div>
-                      <h4 className="text-sm md:text-base font-bold text-gray-800">{reason.title}</h4>
-                      <p className="text-[11px] md:text-xs text-gray-500">{reason.desc}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
           </div>
-          <div className="relative flex justify-center order-1 lg:order-2">
-            <div className="w-48 h-48 md:w-64 md:h-64 bg-[#d1f5e1] rounded-full flex items-center justify-center shadow-inner animate-pulse-green">
-              <LeafIcon size={90} blend="multiply" className="opacity-80" />
+
+          <div className="grid md:grid-cols-2 gap-10 items-start">
+            <div className="space-y-4">
+              <div className="flex gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <BikeIcon size={22} className="text-green-600" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-800">Bike and public transport</h4>
+                  <p className="text-gray-500 text-sm">Combine the best of both for efficient and healthy trips.</p>
+                </div>
+              </div>
+
+              <div className="flex gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
+                <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <ActivityIcon size={22} className="text-teal-600" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-800">Real-time info</h4>
+                  <p className="text-gray-500 text-sm">Know estimated times and the best available options.</p>
+                </div>
+              </div>
+
+              <div className="flex gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
+                <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <LeafIcon size={22} className="text-emerald-600" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-800">Environmental commitment</h4>
+                  <p className="text-gray-500 text-sm">Every trip helps reduce pollution and improve air quality.</p>
+                </div>
+              </div>
             </div>
-            <div className="absolute top-0 right-4 bg-white p-3 rounded-xl shadow-lg animate-slide-up">
-              <p className="text-xl font-black text-green-700 leading-none">34+</p>
-              <p className="text-[10px] text-gray-400 font-bold uppercase">Funciones</p>
-            </div>
-            <div className="absolute bottom-4 left-4 bg-white p-3 rounded-xl shadow-lg animate-slide-up" style={{ animationDelay: "0.2s" }}>
-              <p className="text-xl font-black text-emerald-600 leading-none">CO₂↓</p>
-              <p className="text-[10px] text-gray-400 font-bold uppercase">Reducción</p>
+
+            <div className="relative flex justify-center">
+              <div className="w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-2xl">
+                <div className="w-40 h-40 md:w-48 md:h-48 bg-white rounded-full flex flex-col items-center justify-center shadow-lg">
+                  <LeafIcon size={56} className="text-green-600 mb-2" />
+                  <p className="text-3xl md:text-4xl font-black text-green-600">-30%</p>
+                  <p className="text-xs text-gray-500 font-semibold">CO₂</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA FINAL */}
-      <section className="gradient-hero py-16 md:py-20 px-6 text-center relative overflow-hidden">
-        <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 70%)" }} />
-        <div className="relative z-10 max-w-3xl mx-auto">
-          <h2 className="text-2xl md:text-4xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
-            {t("hero.ctaTitle")}
+      <section className="relative py-20 px-6 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-green-700 to-emerald-800" />
+
+        <div className="relative z-10 max-w-3xl mx-auto text-center">
+          <div className="flex justify-center mb-6">
+            <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-2xl animate-float">
+              <LeafIcon size={40} className="text-green-600" />
+            </div>
+          </div>
+
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+            Start your sustainable journey today
           </h2>
-          <p className="text-green-50 text-sm md:text-base mb-10 opacity-90 leading-relaxed px-4">
-            {t("hero.ctaDescription")}
+          <p className="text-green-100 text-base mb-8 max-w-md mx-auto">
+            Join EcoRuteando and make every trip count for the planet
           </p>
-          <button onClick={() => onNavigate("register")} className="bg-white text-green-900 px-10 py-4 rounded-2xl font-bold text-base shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 mx-auto">
-            {t("hero.ctaBtn")} <LeafIcon size={20} blend="multiply" />
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button onClick={() => onNavigate("register")} className="px-8 py-3 bg-white text-green-700 rounded-xl font-bold shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105">
+              Join the green revolution →
+            </button>
+            <button onClick={handleGuestMode} className="px-8 py-3 bg-white/20 backdrop-blur-sm text-white border border-white/30 rounded-xl font-medium hover:bg-white/30 transition-all duration-300">
+              Guest Mode
+            </button>
+          </div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-[#0a210f] text-green-200 py-10 md:py-12 px-6 text-center">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <LeafIcon size={20} white={true} blend="screen" />
-          <span className="font-bold text-white tracking-wide text-lg">EcoRuteando</span>
-        </div>
-        <p className="mb-6 opacity-70 text-[10px] md:text-xs leading-relaxed max-w-md mx-auto">
-          {t("footer.copyright")}
-        </p>
-        <div className="flex justify-center gap-4 text-[10px] md:text-xs text-green-500 font-bold uppercase tracking-wider">
-          <button className="hover:text-white transition-colors">{t("footer.privacy")}</button>
-          <span className="opacity-20">|</span>
-          <button className="hover:text-white transition-colors">{t("footer.terms")}</button>
-          <span className="opacity-20">|</span>
-          <button className="hover:text-white transition-colors">{t("footer.contact")}</button>
+      <footer className="bg-gray-900 py-10 px-6">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md">
+              <LeafIcon size={16} className="text-green-600" />
+            </div>
+            <span className="font-bold text-white text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>
+              EcoRuteando
+            </span>
+          </div>
+          
+          <p className="text-gray-400 text-xs mb-4">
+            © 2025 EcoRuteando — SENA · Neiva, Colombia
+          </p>
+          
+          <div className="flex justify-center gap-6 text-xs text-gray-500">
+            <button className="hover:text-white transition-colors">Privacy</button>
+            <span className="text-gray-600">|</span>
+            <button className="hover:text-white transition-colors">Terms</button>
+            <span className="text-gray-600">|</span>
+            <button className="hover:text-white transition-colors">Contact</button>
+          </div>
         </div>
       </footer>
+
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        .animate-bounce-slow { animation: bounce-slow 2s ease-in-out infinite; }
+        .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+      `}</style>
     </div>
   );
 };
