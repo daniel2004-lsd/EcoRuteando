@@ -1,0 +1,47 @@
+{
+  "navbar": {
+    "features": "Fonctionnalités",
+    "why": "Pourquoi?",
+    "join": "Rejoindre",
+    "login": "Se connecter",
+    "register": "S'inscrire",
+    "guest": "Mode Invité"
+  },
+  "hero": {
+    "tagline": "🚲 Plateforme de mobilité écologique · Neiva, Colombie",
+    "title": "EcoRuteando",
+    "subtitle": "Votre guide vers une mobilité durable",
+    "description": "Découvrez des itinéraires écologiques combinant transports en commun et vélo. Chaque trajet est une opportunité de protéger la planète et de réduire votre empreinte carbone en ville.",
+    "registerBtn": "Inscrivez-vous maintenant",
+    "loginBtn": "Se connecter",
+    "guestBtn": "Entrer comme Invité",
+    "ctaTitle": "Prêt à commencer à rouler?",
+    "ctaDescription": "Rejoignez notre communauté et commencez à profiter d'une mobilité plus durable",
+    "ctaBtn": "Inscription gratuite"
+  },
+  "features": {
+    "title": "Mobilité Intelligente",
+    "description": "Une technologie conçue pour faciliter votre quotidien et protéger l'environnement",
+    "cards": [
+      { "title": "Itinéraires Écologiques", "desc": "Trouvez la meilleure combinaison de transports en commun et de vélo" },
+      { "title": "Suivi en Direct", "desc": "Consultez la météo et le trafic en temps réel" },
+      { "title": "Impact Environnemental", "desc": "Mesurez combien de CO₂ vous avez évité d'émettre à chaque trajet" }
+    ]
+  },
+  "why": {
+    "title": "Pourquoi choisir EcoRuteando?",
+    "reasons": [
+      { "title": "Combinez les Transports", "desc": "Nous intégrons bus, vélos et itinéraires piétons dans une seule app" },
+      { "title": "Économisez Temps et Argent", "desc": "Trouvez l'itinéraire le plus efficace pour vos déplacements quotidiens" },
+      { "title": "Protégez la Planète", "desc": "Chaque voyage durable ajoute des points et réduit votre empreinte carbone" }
+    ],
+    "routes": "Itinéraires",
+    "reduction": "Réduction"
+  },
+  "footer": {
+    "copyright": "© 2024 EcoRuteando · Mobilité durable pour votre ville · Neiva, Colombie",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "contact": "Contact"
+  }
+}
