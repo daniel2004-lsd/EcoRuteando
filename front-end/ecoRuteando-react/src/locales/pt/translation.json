@@ -1,0 +1,47 @@
+{
+  "navbar": {
+    "features": "Características",
+    "why": "Por quê?",
+    "join": "Junte-se",
+    "login": "Entrar",
+    "register": "Cadastrar",
+    "guest": "Modo Convidado"
+  },
+  "hero": {
+    "tagline": "🚲 Plataforma de mobilidade ecológica · Neiva, Colômbia",
+    "title": "EcoRuteando",
+    "subtitle": "Seu guia para a mobilidade sustentável",
+    "description": "Descubra rotas ecológicas que combinam transporte público e bicicleta. Cada trajeto é uma oportunidade para cuidar do planeta e reduzir sua pegada de carbono na cidade.",
+    "registerBtn": "Cadastre-se agora",
+    "loginBtn": "Entrar",
+    "guestBtn": "Entrar como Convidado",
+    "ctaTitle": "Pronto para começar a rodar?",
+    "ctaDescription": "Junte-se à nossa comunidade e comece a desfrutar de uma mobilidade mais sustentável",
+    "ctaBtn": "Cadastre-se grátis"
+  },
+  "features": {
+    "title": "Mobilidade Inteligente",
+    "description": "Tecnologia pensada para facilitar seu dia a dia e cuidar do meio ambiente",
+    "cards": [
+      { "title": "Rotas Ecológicas", "desc": "Encontre a melhor combinação de transporte público e bicicleta" },
+      { "title": "Monitoramento ao Vivo", "desc": "Consulte o clima e o trânsito em tempo real" },
+      { "title": "Impacto Ambiental", "desc": "Meça quanto CO₂ você deixou de emitir em cada viagem" }
+    ]
+  },
+  "why": {
+    "title": "Por que escolher o EcoRuteando?",
+    "reasons": [
+      { "title": "Combine Transporte", "desc": "Integramos ônibus, bicicletas e rotas pedestres em um só aplicativo" },
+      { "title": "Economize Tempo e Dinheiro", "desc": "Encontre a rota mais eficiente para seus deslocamentos diários" },
+      { "title": "Cuide do Planeta", "desc": "Cada viagem sustentável soma pontos e reduz sua pegada de carbono" }
+    ],
+    "routes": "Rotas",
+    "reduction": "Redução"
+  },
+  "footer": {
+    "copyright": "© 2024 EcoRuteando · Mobilidade sustentável para sua cidade · Neiva, Colômbia",
+    "privacy": "Privacidade",
+    "terms": "Termos",
+    "contact": "Contato"
+  }
+}

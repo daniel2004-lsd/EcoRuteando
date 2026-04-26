@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HomePage from "../features/home/pages/HomePage";
 import Login from "../features/auth/components/Login";
 import Register from "../features/auth/components/Register";
@@ -8,30 +8,112 @@ import NewPassword from "../features/auth/components/NewPassword";
 import { LogoImage } from "../shared/components/Icons";
 import UserDashboard from "../features/home/pages/UserDashboard";
 import AdminPanel from "../features/admin/pages/AdminPanel";
+import UserProfile from "../features/home/pages/UserProfile";
+import LoadingOverlay from "../shared/components/LoadingOverlay";
+import ConfirmModal from "../shared/components/ConfirmModal";
 
 function App() {
-  const [page, setPage] = useState("home");
+  // Cargar la página guardada en localStorage o usar "home" por defecto
+  const [page, setPage] = useState(() => {
+    const savedPage = localStorage.getItem("currentPage");
+    return savedPage || "home";
+  });
+  
   const [showTerms, setShowTerms] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [userRole, setUserRole] = useState("user");
+  const [userRole, setUserRole] = useState(() => {
+    const savedRole = localStorage.getItem("userRole");
+    return savedRole || "user";
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [confirmModal, setConfirmModal] = useState({ 
+    isOpen: false, 
+    pendingAction: null, 
+    title: "", 
+    message: "", 
+    confirmText: "", 
+    cancelText: "", 
+    type: "warning" 
+  });
 
-  const navigate = (p) => {
+  // Guardar la página actual en localStorage cuando cambie
+  useEffect(() => {
+    localStorage.setItem("currentPage", page);
+  }, [page]);
+
+  // Guardar el rol del usuario en localStorage cuando cambie
+  useEffect(() => {
+    localStorage.setItem("userRole", userRole);
+  }, [userRole]);
+
+  // Navegación con loading y confirmación
+  const navigate = async (p, skipConfirm = false) => {
+    // Confirmar al salir del dashboard o admin
+    if (!skipConfirm && (page === "dashboard" || page === "admin" || page === "profile") && p === "home") {
+      setConfirmModal({
+        isOpen: true,
+        pendingAction: () => {
+          setConfirmModal(prev => ({ ...prev, isOpen: false }));
+          performNavigation(p);
+        },
+        title: "¿Salir del dashboard?",
+        message: "¿Estás seguro de que deseas salir?",
+        confirmText: "Sí, salir",
+        cancelText: "Cancelar",
+        type: "warning"
+      });
+      return;
+    }
+    performNavigation(p);
+  };
+
+  const performNavigation = async (p) => {
+    setIsLoading(true);
+    // 3 segundos de carga
+    await new Promise(resolve => setTimeout(resolve, 3000));
     setPage(p);
     window.scrollTo(0, 0);
+    setIsLoading(false);
   };
-  
+
   const handleAcceptTerms = () => {
     setTermsAccepted(true);
     setShowTerms(false);
   };
 
+  const closeConfirmModal = () => {
+    setConfirmModal({ isOpen: false, pendingAction: null, title: "", message: "", confirmText: "", cancelText: "", type: "warning" });
+  };
+
+  const executePendingAction = () => {
+    if (confirmModal.pendingAction) {
+      confirmModal.pendingAction();
+    }
+  };
+
   return (
     <div className="relative min-h-screen font-sans antialiased text-gray-900">
+      {/* Loading Overlay */}
+      {isLoading && <LoadingOverlay message="Cargando..." />}
+
+      {/* Confirm Modal */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={closeConfirmModal}
+        onConfirm={executePendingAction}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        confirmText={confirmModal.confirmText}
+        cancelText={confirmModal.cancelText}
+        type={confirmModal.type}
+      />
+
       <main>
         {page === "home" && <HomePage onNavigate={navigate} />}
         {page === "dashboard" && <UserDashboard onNavigate={navigate} userRole={userRole} />}
         {page === "login" && <Login onNavigate={navigate} setUserRole={setUserRole} />}
         {page === "admin" && <AdminPanel onNavigate={navigate} userRole={userRole} />}
+        {page === "profile" && <UserProfile onNavigate={navigate} userRole={userRole} />}
         {page === "register" && (
           <Register
             onNavigate={navigate}
