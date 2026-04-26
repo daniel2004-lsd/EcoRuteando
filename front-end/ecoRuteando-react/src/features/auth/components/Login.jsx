@@ -72,10 +72,10 @@ function Login({ onNavigate, setUserRole }) {
             label="Correo electrónico"
             placeholder="tucorreo@email.com"
             value={form.email}
-            onChange={(e) => setForm({...form, email: e.target.value})}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
             success={form.email && validateEmail(form.email) ? "Correo válido" : ""}
           />
-          
+
           <div>
             <Input
               label="Contraseña"
@@ -84,11 +84,11 @@ function Login({ onNavigate, setUserRole }) {
               showPw={showPw}
               onToggle={() => setShowPw(!showPw)}
               value={form.pw}
-              onChange={(e) => setForm({...form, pw: e.target.value})}
+              onChange={(e) => setForm({ ...form, pw: e.target.value })}
             />
             <div className="text-right mt-2">
-              <button 
-                onClick={() => onNavigate("recover")} 
+              <button
+                onClick={() => onNavigate("recover")}
                 className="text-green-700 text-xs font-bold hover:underline"
               >
                 ¿Olvidaste tu contraseña?
@@ -109,7 +109,7 @@ function Login({ onNavigate, setUserRole }) {
             <span className="text-[10px] text-gray-400 font-bold uppercase">Continuar con</span>
             <div className="flex-1 h-px bg-gray-100" />
           </div>
-          
+
           <div className="flex gap-3">
             <button className="flex-1 border border-gray-200 rounded-xl py-2 flex justify-center items-center hover:bg-gray-50 transition-all">
               <GoogleIcon />
