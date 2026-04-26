@@ -166,3 +166,70 @@ export const TicketIcon = ({ size = 24 }) => (
     />
   </svg>
 );
+
+
+export const UserIcon = ({ size = 24, white = false }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={white ? "white" : "currentColor"} strokeWidth="2">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" strokeLinecap="round"/>
+    <circle cx="12" cy="7" r="4"/>
+  </svg>
+);
+
+export const LockIcon = ({ size = 24, white = false }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={white ? "white" : "currentColor"} strokeWidth="2">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+  </svg>
+);
+
+export const PhoneIcon = ({ size = 24, white = false }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={white ? "white" : "currentColor"} strokeWidth="2">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </svg>
+);
+
+export const MapPinIcon = ({ size = 24, white = false }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={white ? "white" : "currentColor"} strokeWidth="2">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+    <circle cx="12" cy="10" r="3"/>
+  </svg>
+);
+
+export const CalendarIcon = ({ size = 24, white = false }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={white ? "white" : "currentColor"} strokeWidth="2">
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+    <line x1="16" y1="2" x2="16" y2="6"/>
+    <line x1="8" y1="2" x2="8" y2="6"/>
+    <line x1="3" y1="10" x2="21" y2="10"/>
+  </svg>
+);
+
+export const EditIcon = ({ size = 24, white = false }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={white ? "white" : "currentColor"} strokeWidth="2">
+    <path d="M17 3l4 4-7 7H10v-4l7-7z"/>
+    <path d="M4 20h16"/>
+  </svg>
+);
+
+export const SaveIcon = ({ size = 24, white = false }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={white ? "white" : "currentColor"} strokeWidth="2">
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+    <polyline points="17 21 17 13 7 13 7 21"/>
+    <polyline points="7 3 7 8 15 8"/>
+  </svg>
+);
+export const AwardIcon = ({ size = 24, white = false }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={white ? "white" : "currentColor"} strokeWidth="2">
+    <circle cx="12" cy="8" r="7"/>
+    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+  </svg>
+);
+
+export const TreeIcon = ({ size = 24, white = false }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={white ? "white" : "currentColor"} strokeWidth="2">
+    <path d="M12 2L12 2L12 2M12 2L12 2L12 2M12 2L12 2L12 2M12 2L12 2L12 2" />
+    <path d="M12 2L9 7h6L12 2z"/>
+    <path d="M12 7L8 13h8l-4-6z"/>
+    <path d="M12 13v9"/>
+  </svg>
+);
