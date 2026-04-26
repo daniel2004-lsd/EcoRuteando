@@ -5,19 +5,21 @@ import {
   ArrowLeft,
   UsersIcon,
   SettingsIcon,
+  RouteIcon,
   TicketIcon,
   ReportIcon,
   DownloadIcon,
-  ShieldIcon
+  ShieldIcon,
+  ClockIcon
 } from "../../../shared/components/Icons";
 
 const AdminPanel = ({ onNavigate, userRole }) => {
   const [stats] = useState({
-    users: 1,
-    routes: 2,
-    reports: 2,
-    tickets: 0,
-    co2Saved: 1.5
+    users: 245,
+    routes: 67,
+    reports: 23,
+    tickets: 8,
+    co2Saved: 1245.8
   });
 
   const modules = [
@@ -25,176 +27,257 @@ const AdminPanel = ({ onNavigate, userRole }) => {
       id: "users",
       icon: <UsersIcon size={28} />,
       title: "Gestión de Usuarios",
-      subtitle: "Administrar cuentas",
-      bgColor: "bg-blue-50",
-      iconColor: "text-blue-600",
+      subtitle: "Administrar cuentas y permisos",
+      bgColor: "from-teal-500 to-emerald-500",
       onClick: () => onNavigate("admin/users")
+    },
+    {
+      id: "reports",
+      icon: <ReportIcon size={28} />,
+      title: "Reportes",
+      subtitle: "Verificar y gestionar reportes",
+      bgColor: "from-orange-500 to-red-500",
+      onClick: () => onNavigate("admin/reports")
+    },
+    {
+      id: "support",
+      icon: <TicketIcon size={28} />,
+      title: "Soporte",
+      subtitle: "Tickets de ayuda y consultas",
+      bgColor: "from-purple-500 to-pink-500",
+      onClick: () => onNavigate("admin/support")
     },
     {
       id: "export",
       icon: <DownloadIcon size={28} />,
       title: "Exportar Datos",
-      subtitle: "PDF y Excel",
-      bgColor: "bg-green-50",
-      iconColor: "text-green-600",
+      subtitle: "PDF, Excel y CSV",
+      bgColor: "from-green-500 to-emerald-500",
       onClick: () => alert("Exportando datos...")
     },
     {
       id: "audit",
       icon: <ActivityIcon size={28} />,
       title: "Auditoría",
-      subtitle: "Logs del sistema",
-      bgColor: "bg-orange-50",
-      iconColor: "text-orange-600",
+      subtitle: "Logs y actividad del sistema",
+      bgColor: "from-amber-500 to-yellow-500",
       onClick: () => onNavigate("admin/audit")
-    },
-    {
-      id: "support",
-      icon: <TicketIcon size={28} />,
-      title: "Soporte",
-      subtitle: "Tickets de ayuda",
-      bgColor: "bg-purple-50",
-      iconColor: "text-purple-600",
-      onClick: () => onNavigate("admin/support")
     },
     {
       id: "settings",
       icon: <SettingsIcon size={28} />,
       title: "Configuración",
-      subtitle: "Ajustes del sistema",
-      bgColor: "bg-gray-50",
-      iconColor: "text-gray-600",
+      subtitle: "Ajustes globales del sistema",
+      bgColor: "from-gray-500 to-gray-600",
       onClick: () => onNavigate("admin/settings")
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-purple-50">
-      {/* HEADER */}
-      <header className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg">
-              <ShieldIcon size={24} white={true} />
-            </div>
-            <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Panel de Administración
-                </h1>
-                <span className="px-3 py-1 text-xs font-bold bg-purple-100 text-purple-600 rounded-full">
-                  ADMIN
-                </span>
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
+      
+      {/* HEADER CON ESTILO NATURAL */}
+      <header className="relative bg-gradient-to-r from-emerald-700 via-green-700 to-teal-700 shadow-lg overflow-hidden">
+        <div className="absolute top-0 left-0 w-80 h-80 bg-white/5 rounded-full -translate-x-40 -translate-y-40" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-white/5 rounded-full translate-x-40 translate-y-40" />
+        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
+        
+        <div className="max-w-7xl mx-auto px-6 py-6 relative z-10">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-4">
+              {/* Círculo blanco con hoja */}
+              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-xl">
+                <LeafIcon size={28} className="text-emerald-600" />
               </div>
-              <p className="text-sm text-gray-500">
-                EcoRuteando - Sistema de gestión
-              </p>
+              <div>
+                <div className="flex items-center gap-3">
+                  <h1 className="text-2xl font-bold text-white">Panel de Administración</h1>
+                  <span className="px-3 py-1 text-xs font-bold bg-white/20 backdrop-blur-md text-white rounded-full border border-white/30">
+                    ADMIN
+                  </span>
+                </div>
+                <p className="text-emerald-100 text-sm">EcoRuteando - Sistema de gestión</p>
+              </div>
             </div>
+            
+            <button
+              onClick={() => onNavigate("dashboard")}
+              className="flex items-center gap-2 px-5 py-2.5 bg-white/20 backdrop-blur-md text-white rounded-xl font-semibold text-sm hover:bg-white/30 transition-all border border-white/30"
+            >
+              <ArrowLeft size={16} />
+              Volver al Dashboard
+            </button>
           </div>
-
-          <button
-            onClick={() => onNavigate("dashboard")}
-            className="flex items-center gap-2 px-5 py-2.5 border-2 border-purple-600 text-purple-600 rounded-xl font-semibold hover:bg-purple-600 hover:text-white transition-all"
-          >
-            <ArrowLeft size={18} />
-            Volver al Dashboard
-          </button>
         </div>
       </header>
 
-      {/* CONTENIDO */}
+      {/* CONTENIDO PRINCIPAL */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         
-        {/* STATS CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl p-6 shadow-sm border">
-            <p className="text-3xl font-black text-blue-600">{stats.users}</p>
-            <p className="text-sm text-gray-500">Usuarios</p>
+        {/* STATS CARDS - ESTILO NATURAL */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
+          <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-emerald-100">
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+                <UsersIcon size={22} className="text-teal-600" />
+              </div>
+              <span className="text-3xl font-black text-gray-800">{stats.users}</span>
+            </div>
+            <p className="text-sm text-gray-500 mt-3">Usuarios</p>
           </div>
-          <div className="bg-white rounded-2xl p-6 shadow-sm border">
-            <p className="text-3xl font-black text-green-600">{stats.routes}</p>
-            <p className="text-sm text-gray-500">Rutas</p>
+
+          <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-emerald-100">
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                <RouteIcon size={22} className="text-emerald-600" />
+              </div>
+              <span className="text-3xl font-black text-gray-800">{stats.routes}</span>
+            </div>
+            <p className="text-sm text-gray-500 mt-3">Rutas</p>
           </div>
-          <div className="bg-white rounded-2xl p-6 shadow-sm border">
-            <p className="text-3xl font-black text-red-600">{stats.reports}</p>
-            <p className="text-sm text-gray-500">Reportes</p>
+
+          <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-emerald-100">
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                <ReportIcon size={22} className="text-orange-600" />
+              </div>
+              <span className="text-3xl font-black text-gray-800">{stats.reports}</span>
+            </div>
+            <p className="text-sm text-gray-500 mt-3">Reportes</p>
           </div>
-          <div className="bg-white rounded-2xl p-6 shadow-sm border">
-            <p className="text-3xl font-black text-purple-600">{stats.tickets}</p>
-            <p className="text-sm text-gray-500">Tickets</p>
+
+          <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-emerald-100">
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                <TicketIcon size={22} className="text-purple-600" />
+              </div>
+              <span className="text-3xl font-black text-gray-800">{stats.tickets}</span>
+            </div>
+            <p className="text-sm text-gray-500 mt-3">Tickets</p>
+          </div>
+
+          <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-white">
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                <LeafIcon size={22} white={true} />
+              </div>
+              <span className="text-3xl font-black">{stats.co2Saved} kg</span>
+            </div>
+            <p className="text-sm text-emerald-100 mt-3">CO₂ Ahorrado</p>
           </div>
         </div>
 
-        {/* MÓDULOS DEL SISTEMA */}
-        <h2 className="text-xl font-bold mb-6 text-gray-800">📦 Módulos del Sistema</h2>
+        {/* TÍTULO MÓDULOS */}
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-3">
+            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-md border border-emerald-200">
+              <LeafIcon size={28} className="text-emerald-600" />
+            </div>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Módulos del Sistema</h2>
+          <p className="text-gray-500 text-sm mt-1">Gestiona y controla toda la plataforma</p>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {/* MÓDULOS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           {modules.map((module) => (
             <div
               key={module.id}
               onClick={module.onClick}
-              className="bg-white rounded-2xl p-6 shadow-sm border hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer"
+              className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-pointer border border-emerald-100"
             >
-              <div className={`w-12 h-12 ${module.bgColor} rounded-xl flex items-center justify-center mb-3`}>
-                <span className={module.iconColor}>{module.icon}</span>
+              <div className={`w-14 h-14 bg-gradient-to-br ${module.bgColor} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md`}>
+                <span className="text-white">{module.icon}</span>
               </div>
-              <h3 className="text-lg font-bold text-gray-800">{module.title}</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-1">{module.title}</h3>
               <p className="text-sm text-gray-500">{module.subtitle}</p>
             </div>
           ))}
         </div>
 
-        {/* IMPACTO AMBIENTAL */}
-        <div className="bg-gradient-to-br from-green-600 to-emerald-500 rounded-2xl p-8 text-white mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <LeafIcon size={24} white={true} />
-            <h3 className="text-xl font-bold">Impacto Ambiental</h3>
+        {/* IMPACTO AMBIENTAL Y ACCIONES PENDIENTES */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Impacto Ambiental - ESTILO VERDE */}
+          <div className="relative rounded-2xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 to-green-700" />
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full translate-x-20 -translate-y-20" />
+            <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-full -translate-x-20 translate-y-20" />
+            <div className="relative z-10 p-8 text-center">
+              <div className="flex justify-center mb-4">
+                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-xl animate-float">
+                  <LeafIcon size={32} className="text-emerald-600" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">🌿 Impacto Ambiental</h3>
+              <p className="text-emerald-100 text-sm mb-6">
+                Gracias a los usuarios de EcoRuteando, se han ahorrado <strong className="text-white">{stats.co2Saved} kg de CO₂</strong> mediante el uso de rutas ecológicas.
+              </p>
+              <button
+                onClick={() => onNavigate("admin/impact")}
+                className="px-6 py-2.5 bg-white text-emerald-700 rounded-xl font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              >
+                Ver Estadísticas →
+              </button>
+            </div>
           </div>
-          <p className="mb-4">
-            Gracias a los usuarios de EcoRuteando, se han ahorrado <strong>{stats.co2Saved} kg de CO₂</strong> mediante el uso de rutas ecológicas.
-          </p>
-          <button
-            onClick={() => onNavigate("admin/impact")}
-            className="bg-white text-green-700 px-6 py-2 rounded-xl font-semibold hover:bg-gray-100 transition-all"
-          >
-            Ver Estadísticas →
-          </button>
+
+          {/* Acciones Pendientes */}
+          <div className="bg-white rounded-2xl p-6 shadow-lg border border-emerald-100">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+                <ActivityIcon size={20} className="text-amber-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-800">⚠️ Acciones Pendientes</h3>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-orange-50 rounded-xl">
+                <div className="flex items-center gap-3">
+                  <ReportIcon size={18} className="text-orange-500" />
+                  <div>
+                    <p className="font-semibold text-gray-800">Reportes sin revisar</p>
+                    <p className="text-xs text-gray-500">Requieren atención inmediata</p>
+                  </div>
+                </div>
+                <span className="text-2xl font-bold text-orange-600">{stats.reports}</span>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-purple-50 rounded-xl">
+                <div className="flex items-center gap-3">
+                  <TicketIcon size={18} className="text-purple-500" />
+                  <div>
+                    <p className="font-semibold text-gray-800">Tickets de soporte</p>
+                    <p className="text-xs text-gray-500">Esperando respuesta</p>
+                  </div>
+                </div>
+                <span className="text-2xl font-bold text-purple-600">{stats.tickets}</span>
+              </div>
+            </div>
+            <button 
+              onClick={() => onNavigate("admin/pending")}
+              className="mt-4 w-full bg-emerald-50 text-emerald-700 py-2.5 rounded-xl font-semibold text-sm hover:bg-emerald-100 transition-all"
+            >
+              Revisar todas →
+            </button>
+          </div>
         </div>
 
-        {/* ACCIONES PENDIENTES */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border">
-          <h3 className="text-lg font-bold mb-4 text-gray-800">⚠️ Acciones Pendientes</h3>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-red-50 rounded-xl">
-              <div className="flex items-center gap-3">
-                <ReportIcon size={20} className="text-red-500" />
-                <div>
-                  <p className="font-semibold text-gray-800">Reportes sin revisar</p>
-                  <p className="text-xs text-gray-500">Requieren atención</p>
-                </div>
-              </div>
-              <span className="text-2xl font-bold text-red-600">{stats.reports}</span>
-            </div>
-            
-            <div className="flex items-center justify-between p-3 bg-purple-50 rounded-xl">
-              <div className="flex items-center gap-3">
-                <TicketIcon size={20} className="text-purple-500" />
-                <div>
-                  <p className="font-semibold text-gray-800">Tickets de soporte</p>
-                  <p className="text-xs text-gray-500">Esperando respuesta</p>
-                </div>
-              </div>
-              <span className="text-2xl font-bold text-purple-600">{stats.tickets}</span>
-            </div>
-          </div>
-          <button 
-            onClick={() => onNavigate("admin/pending")}
-            className="mt-4 w-full bg-gray-100 text-gray-700 py-2 rounded-xl font-semibold hover:bg-gray-200 transition-all"
-          >
-            Revisar todas →
-          </button>
+        {/* FRASE MOTIVACIONAL */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-500 flex items-center justify-center gap-2">
+            <LeafIcon size={14} className="text-emerald-500" />
+            Cada acción cuenta para un futuro más verde
+            <LeafIcon size={14} className="text-emerald-500" />
+          </p>
         </div>
       </div>
+
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-5px); }
+        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+      `}</style>
     </div>
   );
 };
