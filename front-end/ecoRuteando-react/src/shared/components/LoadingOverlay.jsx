@@ -1,37 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { LeafIcon } from "./Icons"; // ← Asegura que la importación sea correcta
+import { LeafIcon } from "./Icons";
 
-const LoadingOverlay = ({ message = "Cargando..." }) => {
+const LoadingOverlay = ({ message = "Cargando...", isLoading = false, isDarkMode = false }) => {
   const [dots, setDots] = useState("");
 
   useEffect(() => {
+    if (!isLoading) return;
+    
     const interval = setInterval(() => {
       setDots(prev => prev.length >= 3 ? "" : prev + ".");
     }, 400);
     return () => clearInterval(interval);
-  }, []);
+  }, [isLoading]);
 
   // Prevenir scroll cuando el loading está activo
   useEffect(() => {
-    document.body.style.overflow = "hidden";
+    if (isLoading) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, []);
+  }, [isLoading]);
+
+  if (!isLoading) return null;
+
+  // Colores según tema
+  const bgGradient = isDarkMode 
+    ? "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
+    : "bg-gradient-to-br from-emerald-900 via-green-800 to-teal-900";
+
+  const textColor = isDarkMode ? "text-gray-200" : "text-white";
+  const subTextColor = isDarkMode ? "text-gray-400" : "text-emerald-200";
+  const leafColor = isDarkMode ? "text-emerald-400" : "text-emerald-600";
 
   return (
-    <div className="fixed inset-0 z-[200] bg-gradient-to-br from-emerald-900 via-green-800 to-teal-900 flex flex-col items-center justify-center">
+    <div className={`fixed inset-0 z-[200] ${bgGradient} flex flex-col items-center justify-center`}>
       {/* Círculos decorativos */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full -translate-x-48 -translate-y-48 animate-pulse-slow" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full translate-x-48 translate-y-48 animate-pulse-slow animation-delay-1000" />
-      <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 animate-pulse-slow animation-delay-2000" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full translate-x-48 translate-y-48 animate-pulse-slow" style={{ animationDelay: "1s" }} />
+      <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 animate-pulse-slow" style={{ animationDelay: "2s" }} />
       
       {/* Partículas flotantes */}
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(20)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-white/30 rounded-full animate-float-particle"
+            className="absolute w-1 h-1 bg-white/40 rounded-full animate-float-particle"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -48,12 +65,13 @@ const LoadingOverlay = ({ message = "Cargando..." }) => {
           <div className="absolute inset-0 w-32 h-32 mx-auto bg-white/10 rounded-full animate-ping-slow" />
           <div className="absolute inset-0 w-32 h-32 mx-auto bg-white/20 rounded-full animate-pulse-ring" />
           
-          <div className="relative w-32 h-32 mx-auto mb-6 bg-white rounded-3xl flex items-center justify-center shadow-2xl animate-float-bounce">
-            <LeafIcon size={60} className="text-emerald-600 animate-spin-slow" />
+          <div className={`relative w-32 h-32 mx-auto mb-6 bg-white rounded-3xl flex items-center justify-center shadow-2xl animate-float-bounce`}>
+            <LeafIcon size={60} className={`${leafColor} animate-spin-slow`} />
           </div>
         </div>
         
         <div className="flex flex-col items-center gap-4 mt-4">
+          {/* Dots animados */}
           <div className="flex gap-3">
             <div className="w-3 h-3 bg-white rounded-full animate-bounce-dot" style={{ animationDelay: "0s" }} />
             <div className="w-3 h-3 bg-white rounded-full animate-bounce-dot" style={{ animationDelay: "0.15s" }} />
@@ -61,13 +79,17 @@ const LoadingOverlay = ({ message = "Cargando..." }) => {
             <div className="w-3 h-3 bg-white rounded-full animate-bounce-dot" style={{ animationDelay: "0.45s" }} />
           </div>
           
-          <p className="text-white font-medium text-base tracking-wide">
+          {/* Mensaje */}
+          <p className={`${textColor} font-medium text-base tracking-wide`}>
             {message}
             <span className="inline-block w-6 text-left">{dots}</span>
           </p>
           
-          <p className="text-emerald-200 text-xs mt-4 animate-pulse">
-            🌿 EcoRuteando - Movilidad sostenible 🌿
+          {/* Subtítulo */}
+          <p className={`${subTextColor} text-xs mt-4 animate-pulse flex items-center gap-2`}>
+            <LeafIcon size={12} className={leafColor} />
+            EcoRuteando - Movilidad sostenible
+            <LeafIcon size={12} className={leafColor} />
           </p>
         </div>
       </div>
@@ -111,8 +133,6 @@ const LoadingOverlay = ({ message = "Cargando..." }) => {
         .animate-ping-slow { animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
         .animate-pulse-ring { animation: pulse-ring 2s ease-in-out infinite; }
         .animate-float-particle { animation: float-particle 4s ease-in-out infinite; }
-        .animation-delay-1000 { animation-delay: 1s; }
-        .animation-delay-2000 { animation-delay: 2s; }
       `}</style>
     </div>
   );
