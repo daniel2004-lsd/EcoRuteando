@@ -16,9 +16,11 @@ import PlanRoute from "../features/home/pages/PlanRoute";
 import UserHistory from "../features/home/pages/UserHistory";
 import UserStatistics from "../features/home/pages/UserStatistics";
 import ReporterProblem from "../features/home/pages/ReporterProblem";
+import UserAlerts from "../features/home/pages/UserAlert";
 
 function AppContent() {
   const { isDarkMode, toggleTheme } = useTheme();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Estado de la página basado en la URL
   const [page, setPage] = useState(() => {
@@ -35,7 +37,8 @@ function AppContent() {
     if (path === "/user/plan-route") return "user/plan-route";
     if (path === "/user/history") return "user/history";
     if (path === "/user/statistics") return "user/statistics";
-    if (path === "/user/reporter-problem") return "user/reporter-problem"; // ✅ CORREGIDO (minúsculas y guión)
+    if (path === "/user/reporter-problem") return "user/reporter-problem";
+    if (path === "/user/alerts") return "user/alerts";
     return "home";
   });
 
@@ -45,7 +48,6 @@ function AppContent() {
     const savedRole = localStorage.getItem("userRole");
     return savedRole || "user";
   });
-  const [isLoading, setIsLoading] = useState(false);
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
     pendingAction: null,
@@ -72,7 +74,8 @@ function AppContent() {
       else if (path === "/user/plan-route") setPage("user/plan-route");
       else if (path === "/user/history") setPage("user/history");
       else if (path === "/user/statistics") setPage("user/statistics");
-      else if (path === "/user/reporter-problem") setPage("user/reporter-problem"); // ✅ AGREGADO
+      else if (path === "/user/reporter-problem") setPage("user/reporter-problem");
+      else if (path === "/user/alerts") setPage("user/alerts");
       else setPage("home");
     };
 
@@ -95,27 +98,13 @@ function AppContent() {
     }
   };
 
-  // Función para navegar - CORREGIDA para que funcione sin recargar
+  // Función para navegar con loading (SOLO UNA VEZ DECLARADA)
   const navigate = (path) => {
-    // Asegurar que la ruta empiece con /
-    const fullPath = path.startsWith('/') ? path : `/${path}`;
-    window.history.pushState({}, "", fullPath);
-    
-    // Actualizar el estado basado en la nueva ruta
-    if (fullPath === "/" || fullPath === "") setPage("home");
-    else if (fullPath === "/dashboard") setPage("dashboard");
-    else if (fullPath === "/login") setPage("login");
-    else if (fullPath === "/register") setPage("register");
-    else if (fullPath === "/admin") setPage("admin");
-    else if (fullPath === "/profile") setPage("profile");
-    else if (fullPath === "/recover") setPage("recover");
-    else if (fullPath === "/verify") setPage("verify");
-    else if (fullPath === "/newpassword") setPage("newpassword");
-    else if (fullPath === "/user/plan-route") setPage("user/plan-route");
-    else if (fullPath === "/user/history") setPage("user/history");
-    else if (fullPath === "/user/statistics") setPage("user/statistics");
-    else if (fullPath === "/user/reporter-problem") setPage("user/reporter-problem");
-    else setPage("home");
+    setIsLoading(true);
+    setTimeout(() => {
+      window.location.href = path;
+      setTimeout(() => setIsLoading(false), 500);
+    }, 300);
   };
 
   return (
@@ -127,7 +116,7 @@ function AppContent() {
         {isDarkMode ? "☀️" : "🌙"}
       </button>
 
-      {isLoading && <LoadingOverlay message="Cargando..." />}
+      <LoadingOverlay isLoading={isLoading} isDarkMode={isDarkMode} message="Cargando..." />
 
       <ConfirmModal
         isOpen={confirmModal.isOpen}
@@ -159,7 +148,8 @@ function AppContent() {
         {page === "user/plan-route" && <PlanRoute onNavigate={navigate} />}
         {page === "user/history" && <UserHistory onNavigate={navigate} />}
         {page === "user/statistics" && <UserStatistics onNavigate={navigate} />}
-        {page === "user/reporter-problem" && <ReporterProblem onNavigate={navigate} />} {/* ✅ CORREGIDO */}
+        {page === "user/reporter-problem" && <ReporterProblem onNavigate={navigate} />}
+        {page === "user/alerts" && <UserAlerts onNavigate={navigate} />}
       </main>
 
       {/* MODAL DE TÉRMINOS Y CONDICIONES */}
