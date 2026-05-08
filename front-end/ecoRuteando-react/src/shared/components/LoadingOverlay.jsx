@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { LeafIcon } from "./Icons";
+import { LeafIcon } from "./Icons"; // ← Asegura que la importación sea correcta
 
 const LoadingOverlay = ({ message = "Cargando..." }) => {
   const [dots, setDots] = useState("");
@@ -11,9 +11,17 @@ const LoadingOverlay = ({ message = "Cargando..." }) => {
     return () => clearInterval(interval);
   }, []);
 
+  // Prevenir scroll cuando el loading está activo
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 z-[200] bg-gradient-to-br from-emerald-900 via-green-800 to-teal-900 flex flex-col items-center justify-center">
-      {/* Círculos decorativos animados */}
+      {/* Círculos decorativos */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full -translate-x-48 -translate-y-48 animate-pulse-slow" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full translate-x-48 translate-y-48 animate-pulse-slow animation-delay-1000" />
       <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 animate-pulse-slow animation-delay-2000" />
@@ -34,20 +42,17 @@ const LoadingOverlay = ({ message = "Cargando..." }) => {
         ))}
       </div>
       
-      {/* Logo con animación principal */}
+      {/* Logo con animación */}
       <div className="relative z-10 text-center">
         <div className="relative">
-          {/* Círculo externo pulsante */}
           <div className="absolute inset-0 w-32 h-32 mx-auto bg-white/10 rounded-full animate-ping-slow" />
           <div className="absolute inset-0 w-32 h-32 mx-auto bg-white/20 rounded-full animate-pulse-ring" />
           
-          {/* Logo */}
           <div className="relative w-32 h-32 mx-auto mb-6 bg-white rounded-3xl flex items-center justify-center shadow-2xl animate-float-bounce">
             <LeafIcon size={60} className="text-emerald-600 animate-spin-slow" />
           </div>
         </div>
         
-        {/* Texto de carga con puntos animados */}
         <div className="flex flex-col items-center gap-4 mt-4">
           <div className="flex gap-3">
             <div className="w-3 h-3 bg-white rounded-full animate-bounce-dot" style={{ animationDelay: "0s" }} />
