@@ -1,5 +1,5 @@
 import React from "react";
-import { LeafIcon, CloseIcon } from "./Icons";
+import { LeafIcon, CloseIcon } from "./Icons"; // ← Corregir importación
 
 const ConfirmModal = ({ 
   isOpen, 
@@ -12,14 +12,19 @@ const ConfirmModal = ({
 }) => {
   if (!isOpen) return null;
 
+  // Prevenir scroll cuando el modal está abierto
+  React.useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-      {/* Fondo oscuro con efecto verde */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fade-in" onClick={onClose} />
       
-      {/* Modal - Estilo ambiental */}
       <div className="relative z-10 bg-white rounded-3xl shadow-2xl max-w-md w-full animate-slide-up overflow-hidden">
-        {/* Header con gradiente verde natural */}
         <div className="bg-gradient-to-r from-emerald-600 to-green-700 p-5 text-white">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
@@ -28,16 +33,12 @@ const ConfirmModal = ({
               </div>
               <h3 className="text-lg font-bold">{title}</h3>
             </div>
-            <button 
-              onClick={onClose} 
-              className="text-white/70 hover:text-white transition-colors"
-            >
+            <button onClick={onClose} className="text-white/70 hover:text-white transition-colors">
               <CloseIcon />
             </button>
           </div>
         </div>
         
-        {/* Body */}
         <div className="p-6">
           <div className="flex justify-center mb-4">
             <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center animate-pulse-light">
@@ -47,7 +48,6 @@ const ConfirmModal = ({
           <p className="text-gray-600 text-center leading-relaxed">{message}</p>
         </div>
         
-        {/* Footer con botones verdes */}
         <div className="p-4 bg-emerald-50 flex gap-3">
           <button
             onClick={onClose}
