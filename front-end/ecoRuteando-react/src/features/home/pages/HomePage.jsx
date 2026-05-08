@@ -77,7 +77,7 @@ const HomePage = ({ onNavigate }) => {
   };
 
   const handleGuestMode = () => {
-    onNavigate("dashboard");
+    onNavigate("/dashboard");
   };
 
   const currentLang = LANGUAGES.find((l) => l.code === language) || LANGUAGES[0];
@@ -88,16 +88,16 @@ const HomePage = ({ onNavigate }) => {
       {/* ─── NAVBAR ─── */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-            ? isDarkMode ? "bg-gray-900/95 backdrop-blur-md shadow-lg py-3 border-b border-green-500/20" : "bg-white/95 backdrop-blur-md shadow-lg py-3"
-            : isDarkMode ? "bg-black/80 backdrop-blur-md py-5" : "bg-gradient-to-r from-green-900 via-emerald-800 to-teal-800 py-5"
+            ? isDarkMode ? "bg-gray-900/95 backdrop-blur-md shadow-lg py-3 border-b border-emerald-500/20" : "bg-white/95 backdrop-blur-md shadow-lg py-3"
+            : isDarkMode ? "bg-black/80 backdrop-blur-md py-5" : "bg-gradient-to-r from-emerald-700 via-green-700 to-teal-700 py-5"
           }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => scrollToSection("hero")}>
-            <div className={`w-10 h-10 ${isDarkMode ? 'bg-gradient-to-br from-green-500 to-emerald-600' : 'bg-white'} rounded-full flex items-center justify-center shadow-lg`}>
-              <LeafIcon size={20} className={isDarkMode ? 'text-white' : 'text-green-600'} />
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg ${isDarkMode ? 'bg-emerald-500/20' : 'bg-white'}`}>
+              <LeafIcon size={20} className={isDarkMode ? 'text-emerald-400' : 'text-emerald-600'} />
             </div>
-            <span className={`font-bold text-xl md:text-2xl tracking-tight ${scrolled ? (isDarkMode ? "text-white" : "text-green-800") : "text-white"
+            <span className={`font-bold text-xl md:text-2xl tracking-tight ${scrolled ? (isDarkMode ? "text-white" : "text-gray-800") : "text-white"
               }`} style={{ fontFamily: "'Playfair Display', serif" }}>
               EcoRuteando
             </span>
@@ -105,19 +105,19 @@ const HomePage = ({ onNavigate }) => {
 
           <div className="hidden md:flex items-center gap-8 lg:gap-10 text-base font-medium">
             <a href="#features" className={`transition-colors duration-300 hover:scale-105 ${scrolled
-                ? (isDarkMode ? "text-gray-300 hover:text-green-400" : "text-gray-700 hover:text-green-600")
+                ? (isDarkMode ? "text-gray-300 hover:text-emerald-400" : "text-gray-700 hover:text-emerald-600")
                 : "text-white/90 hover:text-white"
               }`}>
               Características
             </a>
             <a href="#why" className={`transition-colors duration-300 hover:scale-105 ${scrolled
-                ? (isDarkMode ? "text-gray-300 hover:text-green-400" : "text-gray-700 hover:text-green-600")
+                ? (isDarkMode ? "text-gray-300 hover:text-emerald-400" : "text-gray-700 hover:text-emerald-600")
                 : "text-white/90 hover:text-white"
               }`}>
               Beneficios
             </a>
-            <button onClick={() => onNavigate("register")} className={`transition-colors duration-300 hover:scale-105 ${scrolled
-                ? (isDarkMode ? "text-gray-300 hover:text-green-400" : "text-gray-700 hover:text-green-600")
+            <button onClick={() => onNavigate("/register")} className={`transition-colors duration-300 hover:scale-105 ${scrolled
+                ? (isDarkMode ? "text-gray-300 hover:text-emerald-400" : "text-gray-700 hover:text-emerald-600")
                 : "text-white/90 hover:text-white"
               }`}>
               Unirse
@@ -128,15 +128,15 @@ const HomePage = ({ onNavigate }) => {
             <button
               onClick={() => window.location.href = "/login"}
               className={`px-5 lg:px-6 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all duration-300 hover:scale-105 ${scrolled
-                  ? (isDarkMode ? "border-green-500 text-green-400 hover:bg-green-500 hover:text-black" : "border-green-600 text-green-600 hover:bg-green-600 hover:text-white")
-                  : "border-white/80 text-white hover:bg-white hover:text-green-900"
+                  ? (isDarkMode ? "border-emerald-500 text-emerald-400 hover:bg-emerald-500 hover:text-black" : "border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white")
+                  : "border-white/80 text-white hover:bg-white hover:text-emerald-900"
                 }`}
             >
               Iniciar sesión
             </button>
             <button
-              onClick={() => onNavigate("register")}
-              className={`px-5 lg:px-6 py-2.5 rounded-xl text-sm font-semibold shadow-md transition-all duration-300 hover:scale-105 ${isDarkMode ? "bg-green-600 hover:bg-green-500 text-white" : "bg-green-600 hover:bg-green-700 text-white"
+              onClick={() => onNavigate("/register")}
+              className={`px-5 lg:px-6 py-2.5 rounded-xl text-sm font-semibold shadow-md transition-all duration-300 hover:scale-105 ${isDarkMode ? "bg-emerald-600 hover:bg-emerald-500 text-white" : "bg-emerald-600 hover:bg-emerald-700 text-white"
                 }`}
             >
               Registrarse
@@ -167,7 +167,7 @@ const HomePage = ({ onNavigate }) => {
                       key={lang.code}
                       onClick={() => changeLanguage(lang.code)}
                       className={`flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors ${language === lang.code
-                          ? (isDarkMode ? 'bg-green-600 text-white' : 'bg-green-50 text-green-700')
+                          ? (isDarkMode ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700')
                           : (isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50')
                         }`}
                     >
@@ -186,9 +186,9 @@ const HomePage = ({ onNavigate }) => {
           </div>
 
           <button onClick={() => setMenuOpen(true)} className="md:hidden flex flex-col gap-1.5 p-2">
-            <span className={`w-6 h-0.5 rounded-full transition-all ${scrolled ? (isDarkMode ? "bg-white" : "bg-green-800") : "bg-white"}`} />
-            <span className={`w-6 h-0.5 rounded-full transition-all ${scrolled ? (isDarkMode ? "bg-white" : "bg-green-800") : "bg-white"}`} />
-            <span className={`w-6 h-0.5 rounded-full transition-all ${scrolled ? (isDarkMode ? "bg-white" : "bg-green-800") : "bg-white"}`} />
+            <span className={`w-6 h-0.5 rounded-full transition-all ${scrolled ? (isDarkMode ? "bg-white" : "bg-gray-800") : "bg-white"}`} />
+            <span className={`w-6 h-0.5 rounded-full transition-all ${scrolled ? (isDarkMode ? "bg-white" : "bg-gray-800") : "bg-white"}`} />
+            <span className={`w-6 h-0.5 rounded-full transition-all ${scrolled ? (isDarkMode ? "bg-white" : "bg-gray-800") : "bg-white"}`} />
           </button>
         </div>
       </nav>
@@ -199,21 +199,21 @@ const HomePage = ({ onNavigate }) => {
         <div className={`absolute top-0 right-0 bottom-0 w-[85%] max-w-sm ${isDarkMode ? 'bg-gray-800' : 'bg-white'} flex flex-col shadow-2xl transition-transform duration-300 ease-out ${menuOpen ? "translate-x-0" : "translate-x-full"}`}>
           <div className={`p-5 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'} flex items-center justify-between`}>
             <div className="flex items-center gap-2">
-              <LeafIcon size={24} className="text-green-600" />
-              <span className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-green-800'}`}>EcoRuteando</span>
+              <LeafIcon size={24} className="text-emerald-500" />
+              <span className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>EcoRuteando</span>
             </div>
-            <button onClick={() => setMenuOpen(false)} className={`${isDarkMode ? 'text-gray-400 hover:text-green-400' : 'text-gray-400 hover:text-green-600'} p-2 transition-colors`}>
+            <button onClick={() => setMenuOpen(false)} className={`${isDarkMode ? 'text-gray-400 hover:text-emerald-400' : 'text-gray-400 hover:text-emerald-600'} p-2 transition-colors`}>
               <CloseIcon />
             </button>
           </div>
           <div className="flex-1 py-4 px-4 space-y-1">
-            <button onClick={() => scrollToSection("features")} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-gray-700 hover:text-green-400' : 'text-gray-600 hover:bg-green-50 hover:text-green-600'}`}>
+            <button onClick={() => scrollToSection("features")} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-gray-700 hover:text-emerald-400' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'}`}>
               <MapIcon size={22} /> Características
             </button>
-            <button onClick={() => scrollToSection("why")} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-gray-700 hover:text-green-400' : 'text-gray-600 hover:bg-green-50 hover:text-green-600'}`}>
+            <button onClick={() => scrollToSection("why")} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-gray-700 hover:text-emerald-400' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'}`}>
               <ActivityIcon size={22} /> Beneficios
             </button>
-            <button onClick={() => { onNavigate("register"); setMenuOpen(false); }} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-gray-700 hover:text-green-400' : 'text-gray-600 hover:bg-green-50 hover:text-green-600'}`}>
+            <button onClick={() => { onNavigate("/register"); setMenuOpen(false); }} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-gray-700 hover:text-emerald-400' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'}`}>
               <HeartIcon size={22} /> Unirse
             </button>
 
@@ -225,7 +225,7 @@ const HomePage = ({ onNavigate }) => {
                     key={lang.code}
                     onClick={() => changeLanguage(lang.code)}
                     className={`flex items-center gap-2 p-3 rounded-xl text-sm transition-colors ${language === lang.code
-                        ? isDarkMode ? "bg-gray-700 text-green-400 font-bold border border-green-500" : "bg-green-50 text-gray-800 font-bold border border-green-200"
+                        ? isDarkMode ? "bg-gray-700 text-emerald-400 font-bold border border-emerald-500" : "bg-emerald-50 text-gray-800 font-bold border border-emerald-200"
                         : isDarkMode ? "text-gray-400 hover:bg-gray-700 border border-gray-700" : "text-gray-600 hover:bg-gray-50 border border-gray-100"
                       }`}
                   >
@@ -237,32 +237,32 @@ const HomePage = ({ onNavigate }) => {
             </div>
           </div>
           <div className={`p-5 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'} flex flex-col gap-3 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
-            <button onClick={() => { onNavigate("register"); setMenuOpen(false); }} className="w-full py-4 rounded-2xl font-bold shadow-lg text-sm text-white bg-green-600 hover:bg-green-700 transition-all">
+            <button onClick={() => { onNavigate("/register"); setMenuOpen(false); }} className="w-full py-4 rounded-2xl font-bold shadow-lg text-sm text-white bg-emerald-600 hover:bg-emerald-700 transition-all">
               Registrarse →
             </button>
-            <button onClick={() => { onNavigate("login"); setMenuOpen(false); }} className={`w-full py-4 rounded-2xl font-bold text-sm transition-all ${isDarkMode ? 'bg-gray-800 border border-gray-700 text-gray-200 hover:bg-gray-700' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
+            <button onClick={() => { onNavigate("/login"); setMenuOpen(false); }} className={`w-full py-4 rounded-2xl font-bold text-sm transition-all ${isDarkMode ? 'bg-gray-800 border border-gray-700 text-gray-200 hover:bg-gray-700' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
               Iniciar sesión
             </button>
-            <button onClick={() => { handleGuestMode(); setMenuOpen(false); }} className={`w-full py-4 rounded-2xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-gray-800 border border-green-500/50 text-green-400 hover:bg-gray-700' : 'bg-green-50 border border-green-200 text-green-700 hover:bg-green-100'}`}>
+            <button onClick={() => { handleGuestMode(); setMenuOpen(false); }} className={`w-full py-4 rounded-2xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-gray-800 border border-emerald-500/50 text-emerald-400 hover:bg-gray-700' : 'bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100'}`}>
               Modo Invitado
             </button>
           </div>
         </div>
       </div>
 
-      {/* ─── HERO SECTION - MODO OSCURO CON ESTILO MEJORADO ─── */}
-      <section className="relative min-h-[85vh] flex flex-col items-center justify-center px-5 text-center overflow-hidden">
-        {/* Fondo condicional: modo oscuro usa gradiente oscuro + capa negra, modo claro usa gradiente verde original */}
+      {/* ─── HERO SECTION ─── */}
+      <section id="hero" className="relative min-h-[85vh] flex flex-col items-center justify-center px-5 text-center overflow-hidden">
+        {/* Fondo condicional */}
         {isDarkMode ? (
           <>
-            <div className="absolute inset-0 bg-gradient-to-r from-emerald-900 to-green-900" />
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/50 to-green-900/50" />
             <div className="absolute inset-0 bg-black/40" />
-            <div className="absolute top-0 left-0 w-96 h-96 bg-green-500/10 rounded-full -translate-x-48 -translate-y-48" />
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full translate-x-48 translate-y-48" />
+            <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full -translate-x-48 -translate-y-48" />
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-500/10 rounded-full translate-x-48 translate-y-48" />
           </>
         ) : (
           <>
-            <div className="absolute inset-0 bg-gradient-to-br from-green-900 via-emerald-800 to-teal-900" />
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-700 via-green-700 to-teal-700" />
             <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-white/5 rounded-full -translate-x-64 -translate-y-64" />
             <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-white/5 rounded-full translate-x-64 translate-y-64" />
             <div className="absolute top-1/2 left-1/2 w-[700px] h-[700px] bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
@@ -272,7 +272,7 @@ const HomePage = ({ onNavigate }) => {
         <div className="relative z-10 w-full max-w-5xl mx-auto">
           <div className="flex justify-center mb-6">
             <div className="w-28 h-28 md:w-32 md:h-32 bg-white rounded-2xl flex items-center justify-center shadow-2xl animate-float">
-              <LeafIcon size={52} className="text-green-600" />
+              <LeafIcon size={52} className="text-emerald-600" />
             </div>
           </div>
 
@@ -280,7 +280,7 @@ const HomePage = ({ onNavigate }) => {
             EcoRuteando
           </h1>
 
-          <p className="text-xl md:text-2xl lg:text-3xl font-semibold text-green-100 mb-4 px-4">
+          <p className="text-xl md:text-2xl lg:text-3xl font-semibold text-emerald-100 mb-4 px-4">
             {t('hero.subtitle')}
           </p>
 
@@ -290,19 +290,19 @@ const HomePage = ({ onNavigate }) => {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
             <button
-              onClick={() => onNavigate("register")}
+              onClick={() => onNavigate("/register")}
               className={`group w-full sm:w-auto px-8 md:px-10 py-3 md:py-4 rounded-2xl font-bold text-base md:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 ${isDarkMode
-                  ? 'bg-white text-green-700 hover:bg-gray-100'
-                  : 'bg-white text-green-700'
+                  ? 'bg-white text-emerald-700 hover:bg-gray-100'
+                  : 'bg-white text-emerald-700'
                 }`}
             >
               {t('hero.registerBtn')}
               <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 ml-1">→</span>
             </button>
             <button
-              onClick={() => onNavigate("login")}
+              onClick={() => onNavigate("/login")}
               className={`w-full sm:w-auto px-8 md:px-10 py-3 md:py-4 rounded-2xl font-semibold text-base md:text-lg transition-all duration-300 hover:scale-105 ${isDarkMode
-                  ? 'bg-green-600/80 backdrop-blur-sm text-white border border-green-400/50 hover:bg-green-600'
+                  ? 'bg-emerald-600/80 backdrop-blur-sm text-white border border-emerald-400/50 hover:bg-emerald-600'
                   : 'bg-white/20 backdrop-blur-md text-white border border-white/40 hover:bg-white/30'
                 }`}
             >
@@ -333,10 +333,10 @@ const HomePage = ({ onNavigate }) => {
           <div className="text-center mb-12">
             <div className="flex justify-center mb-4">
               <div className={`w-14 h-14 rounded-xl flex items-center justify-center shadow-md border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
-                <LeafIcon size={28} className="text-green-600" />
+                <LeafIcon size={28} className="text-emerald-500" />
               </div>
             </div>
-            <span className="text-green-600 text-sm font-semibold uppercase tracking-wider">Características</span>
+            <span className="text-emerald-600 text-sm font-semibold uppercase tracking-wider">Características</span>
             <h2 className={`text-3xl md:text-4xl font-bold mt-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: "'Playfair Display', serif" }}>
               {t('features.title')}
             </h2>
@@ -346,10 +346,10 @@ const HomePage = ({ onNavigate }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {t('features.cards', { returnObjects: true }).map((card, i) => {
               const icons = [<MapIcon size={36} />, <ActivityIcon size={36} />, <HeartIcon size={36} />];
-              const colors = ["from-green-500 to-emerald-500", "from-teal-500 to-cyan-500", "from-emerald-500 to-green-500"];
+              const colors = ["from-emerald-500 to-green-500", "from-teal-500 to-cyan-500", "from-green-500 to-emerald-500"];
 
               return (
-                <div key={i} className={`group rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border ${isDarkMode ? 'bg-gray-800 border-gray-700 hover:border-green-500/50' : 'bg-white border-gray-100'}`}>
+                <div key={i} className={`group rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border ${isDarkMode ? 'bg-gray-800 border-gray-700 hover:border-emerald-500/50' : 'bg-white border-gray-100'}`}>
                   <div className={`w-20 h-20 bg-gradient-to-br ${colors[i]} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-md`}>
                     <div className="text-white">{icons[i]}</div>
                   </div>
@@ -368,10 +368,10 @@ const HomePage = ({ onNavigate }) => {
           <div className="text-center mb-12">
             <div className="flex justify-center mb-4">
               <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-md border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
-                <LeafIcon size={32} className="text-green-600" />
+                <LeafIcon size={32} className="text-emerald-500" />
               </div>
             </div>
-            <span className="text-green-600 text-sm font-semibold uppercase tracking-wider">BENEFICIOS</span>
+            <span className="text-emerald-600 text-sm font-semibold uppercase tracking-wider">BENEFICIOS</span>
             <h2 className={`text-3xl md:text-4xl font-bold mt-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: "'Playfair Display', serif" }}>
               Why choose EcoRuteando?
             </h2>
@@ -381,9 +381,9 @@ const HomePage = ({ onNavigate }) => {
             <div className="space-y-4">
               {t('why.reasons', { returnObjects: true }).map((reason, i) => {
                 const icons = [<BikeIcon size={24} />, <ActivityIcon size={24} />, <LeafIcon size={24} />];
-                const iconColors = ["text-green-600", "text-teal-600", "text-emerald-600"];
-                const bgColors = ["bg-green-100", "bg-teal-100", "bg-emerald-100"];
-                const darkBgColors = ["bg-green-900/30", "bg-teal-900/30", "bg-emerald-900/30"];
+                const iconColors = ["text-emerald-600", "text-teal-600", "text-green-600"];
+                const bgColors = ["bg-emerald-100", "bg-teal-100", "bg-green-100"];
+                const darkBgColors = ["bg-emerald-900/30", "bg-teal-900/30", "bg-green-900/30"];
 
                 return (
                   <div key={i} className={`flex gap-5 p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white'}`}>
@@ -400,10 +400,10 @@ const HomePage = ({ onNavigate }) => {
             </div>
 
             <div className="relative flex justify-center">
-              <div className="w-80 h-80 md:w-96 md:h-96 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-2xl">
+              <div className="w-80 h-80 md:w-96 md:h-96 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full flex items-center justify-center shadow-2xl">
                 <div className="w-52 h-52 md:w-60 md:h-60 bg-white rounded-full flex flex-col items-center justify-center shadow-lg">
-                  <LeafIcon size={72} className="text-green-600 mb-3" />
-                  <p className="text-4xl md:text-5xl font-black text-green-600">-30%</p>
+                  <LeafIcon size={72} className="text-emerald-600 mb-3" />
+                  <p className="text-4xl md:text-5xl font-black text-emerald-600">-30%</p>
                   <p className="text-sm text-gray-500 font-semibold">CO₂</p>
                 </div>
               </div>
@@ -414,29 +414,29 @@ const HomePage = ({ onNavigate }) => {
 
       {/* CTA FINAL */}
       <section className="relative py-16 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-900 to-green-900" />
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-700 to-green-700" />
         <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute top-0 left-0 w-96 h-96 bg-green-500/10 rounded-full -translate-x-48 -translate-y-48" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full translate-x-48 translate-y-48" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full -translate-x-48 -translate-y-48" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-500/10 rounded-full translate-x-48 translate-y-48" />
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <div className="flex justify-center mb-5">
             <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-2xl animate-float">
-              <LeafIcon size={40} className="text-green-600" />
+              <LeafIcon size={40} className="text-emerald-600" />
             </div>
           </div>
 
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
             Start your sustainable journey today
           </h2>
-          <p className="text-green-100 text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-emerald-100 text-lg mb-8 max-w-2xl mx-auto">
             Join EcoRuteando and make every trip count for the planet
           </p>
           <div className="flex flex-col sm:flex-row gap-5 justify-center">
-            <button className="px-10 py-4 bg-white text-green-700 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-gray-100">
+            <button className="px-10 py-4 bg-white text-emerald-700 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-gray-100">
               Join the green revolution →
             </button>
-            <button className="px-10 py-4 bg-green-600/80 backdrop-blur-sm text-white border border-green-400/50 rounded-xl font-semibold text-lg hover:bg-green-600 transition-all duration-300 hover:scale-105">
+            <button className="px-10 py-4 bg-emerald-600/80 backdrop-blur-sm text-white border border-emerald-400/50 rounded-xl font-semibold text-lg hover:bg-emerald-600 transition-all duration-300 hover:scale-105">
               Guest Mode
             </button>
           </div>
@@ -448,7 +448,7 @@ const HomePage = ({ onNavigate }) => {
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md">
-              <LeafIcon size={20} className="text-green-600" />
+              <LeafIcon size={20} className="text-emerald-600" />
             </div>
             <span className="font-bold text-white text-xl" style={{ fontFamily: "'Playfair Display', serif" }}>
               EcoRuteando
@@ -460,11 +460,11 @@ const HomePage = ({ onNavigate }) => {
           </p>
 
           <div className="flex justify-center gap-8 text-sm text-gray-500">
-            <button className="hover:text-green-400 transition-colors">Privacy</button>
+            <button className="hover:text-emerald-400 transition-colors">Privacy</button>
             <span className="text-gray-600">|</span>
-            <button className="hover:text-green-400 transition-colors">Terms</button>
+            <button className="hover:text-emerald-400 transition-colors">Terms</button>
             <span className="text-gray-600">|</span>
-            <button className="hover:text-green-400 transition-colors">Contact</button>
+            <button className="hover:text-emerald-400 transition-colors">Contact</button>
           </div>
         </div>
       </footer>
