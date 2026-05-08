@@ -11,14 +11,34 @@ import AdminPanel from "../features/admin/pages/AdminPanel";
 import UserProfile from "../features/home/pages/UserProfile";
 import LoadingOverlay from "../shared/components/LoadingOverlay";
 import ConfirmModal from "../shared/components/ConfirmModal";
+import { ThemeProvider, useTheme } from "./context/ThemeContext";
+import PlanRoute from "../features/home/pages/PlanRoute";
+import UserHistory from "../features/home/pages/UserHistory";
+import UserStatistics from "../features/home/pages/UserStatistics";
+import ReporterProblem from "../features/home/pages/ReporterProblem";
 
-function App() {
-  // Cargar la página guardada en localStorage o usar "home" por defecto
+function AppContent() {
+  const { isDarkMode, toggleTheme } = useTheme();
+
+  // Estado de la página basado en la URL
   const [page, setPage] = useState(() => {
-    const savedPage = localStorage.getItem("currentPage");
-    return savedPage || "home";
+    const path = window.location.pathname;
+    if (path === "/" || path === "") return "home";
+    if (path === "/dashboard") return "dashboard";
+    if (path === "/login") return "login";
+    if (path === "/register") return "register";
+    if (path === "/admin") return "admin";
+    if (path === "/profile") return "profile";
+    if (path === "/recover") return "recover";
+    if (path === "/verify") return "verify";
+    if (path === "/newpassword") return "newpassword";
+    if (path === "/user/plan-route") return "user/plan-route";
+    if (path === "/user/history") return "user/history";
+    if (path === "/user/statistics") return "user/statistics";
+    if (path === "/user/reporter-problem") return "user/reporter-problem"; // ✅ CORREGIDO (minúsculas y guión)
+    return "home";
   });
-  
+
   const [showTerms, setShowTerms] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [userRole, setUserRole] = useState(() => {
@@ -26,55 +46,39 @@ function App() {
     return savedRole || "user";
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [confirmModal, setConfirmModal] = useState({ 
-    isOpen: false, 
-    pendingAction: null, 
-    title: "", 
-    message: "", 
-    confirmText: "", 
-    cancelText: "", 
-    type: "warning" 
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    pendingAction: null,
+    title: "",
+    message: "",
+    confirmText: "",
+    cancelText: "",
+    type: "warning"
   });
 
-  // Guardar la página actual en localStorage cuando cambie
+  // Escuchar cambios en la URL (popstate)
   useEffect(() => {
-    localStorage.setItem("currentPage", page);
-  }, [page]);
+    const handlePathChange = () => {
+      const path = window.location.pathname;
+      if (path === "/" || path === "") setPage("home");
+      else if (path === "/dashboard") setPage("dashboard");
+      else if (path === "/login") setPage("login");
+      else if (path === "/register") setPage("register");
+      else if (path === "/admin") setPage("admin");
+      else if (path === "/profile") setPage("profile");
+      else if (path === "/recover") setPage("recover");
+      else if (path === "/verify") setPage("verify");
+      else if (path === "/newpassword") setPage("newpassword");
+      else if (path === "/user/plan-route") setPage("user/plan-route");
+      else if (path === "/user/history") setPage("user/history");
+      else if (path === "/user/statistics") setPage("user/statistics");
+      else if (path === "/user/reporter-problem") setPage("user/reporter-problem"); // ✅ AGREGADO
+      else setPage("home");
+    };
 
-  // Guardar el rol del usuario en localStorage cuando cambie
-  useEffect(() => {
-    localStorage.setItem("userRole", userRole);
-  }, [userRole]);
-
-  // Navegación con loading y confirmación
-  const navigate = async (p, skipConfirm = false) => {
-    // Confirmar al salir del dashboard o admin
-    if (!skipConfirm && (page === "dashboard" || page === "admin" || page === "profile") && p === "home") {
-      setConfirmModal({
-        isOpen: true,
-        pendingAction: () => {
-          setConfirmModal(prev => ({ ...prev, isOpen: false }));
-          performNavigation(p);
-        },
-        title: "¿Salir del dashboard?",
-        message: "¿Estás seguro de que deseas salir?",
-        confirmText: "Sí, salir",
-        cancelText: "Cancelar",
-        type: "warning"
-      });
-      return;
-    }
-    performNavigation(p);
-  };
-
-  const performNavigation = async (p) => {
-    setIsLoading(true);
-    // 3 segundos de carga
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    setPage(p);
-    window.scrollTo(0, 0);
-    setIsLoading(false);
-  };
+    window.addEventListener("popstate", handlePathChange);
+    return () => window.removeEventListener("popstate", handlePathChange);
+  }, []);
 
   const handleAcceptTerms = () => {
     setTermsAccepted(true);
@@ -91,12 +95,40 @@ function App() {
     }
   };
 
+  // Función para navegar - CORREGIDA para que funcione sin recargar
+  const navigate = (path) => {
+    // Asegurar que la ruta empiece con /
+    const fullPath = path.startsWith('/') ? path : `/${path}`;
+    window.history.pushState({}, "", fullPath);
+    
+    // Actualizar el estado basado en la nueva ruta
+    if (fullPath === "/" || fullPath === "") setPage("home");
+    else if (fullPath === "/dashboard") setPage("dashboard");
+    else if (fullPath === "/login") setPage("login");
+    else if (fullPath === "/register") setPage("register");
+    else if (fullPath === "/admin") setPage("admin");
+    else if (fullPath === "/profile") setPage("profile");
+    else if (fullPath === "/recover") setPage("recover");
+    else if (fullPath === "/verify") setPage("verify");
+    else if (fullPath === "/newpassword") setPage("newpassword");
+    else if (fullPath === "/user/plan-route") setPage("user/plan-route");
+    else if (fullPath === "/user/history") setPage("user/history");
+    else if (fullPath === "/user/statistics") setPage("user/statistics");
+    else if (fullPath === "/user/reporter-problem") setPage("user/reporter-problem");
+    else setPage("home");
+  };
+
   return (
-    <div className="relative min-h-screen font-sans antialiased text-gray-900">
-      {/* Loading Overlay */}
+    <div className={`relative min-h-screen font-sans antialiased ${isDarkMode ? "dark" : ""}`}>
+      <button
+        onClick={toggleTheme}
+        className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
+      >
+        {isDarkMode ? "☀️" : "🌙"}
+      </button>
+
       {isLoading && <LoadingOverlay message="Cargando..." />}
 
-      {/* Confirm Modal */}
       <ConfirmModal
         isOpen={confirmModal.isOpen}
         onClose={closeConfirmModal}
@@ -111,12 +143,11 @@ function App() {
       <main>
         {page === "home" && <HomePage onNavigate={navigate} />}
         {page === "dashboard" && <UserDashboard onNavigate={navigate} userRole={userRole} />}
-        {page === "login" && <Login onNavigate={navigate} setUserRole={setUserRole} />}
+        {page === "login" && <Login setUserRole={setUserRole} />}
         {page === "admin" && <AdminPanel onNavigate={navigate} userRole={userRole} />}
         {page === "profile" && <UserProfile onNavigate={navigate} userRole={userRole} />}
         {page === "register" && (
           <Register
-            onNavigate={navigate}
             onShowTerms={() => setShowTerms(true)}
             termsAccepted={termsAccepted}
             setTermsAccepted={setTermsAccepted}
@@ -125,6 +156,10 @@ function App() {
         {page === "recover" && <Recover onNavigate={navigate} />}
         {page === "verify" && <VerifyCode onNavigate={navigate} />}
         {page === "newpassword" && <NewPassword onNavigate={navigate} />}
+        {page === "user/plan-route" && <PlanRoute onNavigate={navigate} />}
+        {page === "user/history" && <UserHistory onNavigate={navigate} />}
+        {page === "user/statistics" && <UserStatistics onNavigate={navigate} />}
+        {page === "user/reporter-problem" && <ReporterProblem onNavigate={navigate} />} {/* ✅ CORREGIDO */}
       </main>
 
       {/* MODAL DE TÉRMINOS Y CONDICIONES */}
@@ -183,6 +218,14 @@ function App() {
         </div>
       )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }
 
