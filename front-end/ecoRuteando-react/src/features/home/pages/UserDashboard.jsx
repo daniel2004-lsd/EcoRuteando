@@ -14,6 +14,7 @@ import { useTheme } from "../../../app/context/ThemeContext";
 
 const UserDashboard = ({ onNavigate, userRole }) => {
   const { isDarkMode, toggleTheme } = useTheme();
+  const [showBackModal, setShowBackModal] = useState(false);
 
   const [stats] = useState({
     routes: 5,
@@ -21,6 +22,15 @@ const UserDashboard = ({ onNavigate, userRole }) => {
     co2Saved: 3.2,
     points: 120
   });
+
+  // Función para volver
+  const handleBack = () => {
+    setShowBackModal(true);
+  };
+
+  const confirmBack = () => {
+    onNavigate('/');
+  };
 
   const baseModules = [
     {
@@ -43,13 +53,6 @@ const UserDashboard = ({ onNavigate, userRole }) => {
       title: 'Mi Perfil',
       subtitle: 'Configura tu cuenta',
       onClick: () => onNavigate('/profile')
-    },
-    {
-      id: 'explorar',
-      icon: <RouteIcon size={28} />,
-      title: 'Explorar',
-      subtitle: 'Puntos de interés',
-      onClick: () => onNavigate('/user/explore')
     },
     {
       id: 'alertas',
@@ -105,7 +108,7 @@ const UserDashboard = ({ onNavigate, userRole }) => {
             </div>
 
             <button
-              onClick={() => onNavigate('/home')}
+              onClick={handleBack}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-gray-700/50 text-emerald-400 border border-emerald-500/30 hover:bg-gray-700' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
             >
               <ArrowLeft size={16} />
@@ -197,6 +200,39 @@ const UserDashboard = ({ onNavigate, userRole }) => {
           </p>
         </div>
       </div>
+
+      {/* MODAL PARA VOLVER AL HOME */}
+      {showBackModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setShowBackModal(false)}>
+          <div className={`max-w-md w-full rounded-2xl shadow-2xl overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`} onClick={(e) => e.stopPropagation()}>
+            <div className={`p-5 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'} flex items-center gap-3`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-yellow-500/20' : 'bg-yellow-100'}`}>
+                <span className="text-xl">⚠️</span>
+              </div>
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Salir del Dashboard</h3>
+            </div>
+            <div className="p-5">
+              <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                ¿Estás seguro de que deseas salir del dashboard?
+              </p>
+            </div>
+            <div className={`p-5 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-100'} flex gap-3`}>
+              <button
+                onClick={() => setShowBackModal(false)}
+                className={`flex-1 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmBack}
+                className={`flex-1 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-emerald-600 text-white hover:bg-emerald-700'}`}
+              >
+                Sí, Salir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
