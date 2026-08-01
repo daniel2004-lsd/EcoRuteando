@@ -1,62 +1,137 @@
 {
-  "navbar": {
+  "nav": {
     "features": "Features",
-    "why": "Why?",
+    "benefits": "Benefits",
     "join": "Join",
-    "login": "Login",
-    "register": "Register"
+    "login": "Log in",
+    "register": "Sign up",
+    "guest": "Guest Mode",
+    "language": "Language"
   },
   "hero": {
-    "tagline": "🌱 Eco-friendly mobility platform · Neiva, Colombia",
-    "title": "EcoRuteando",
     "subtitle": "Your guide to sustainable mobility",
     "description": "Discover eco-friendly routes combining public transport and bike. Every trip is an opportunity to care for the planet and reduce your carbon footprint.",
-    "registerBtn": "Register now →",
-    "loginBtn": "Login",
+    "registerBtn": "Register now",
+    "loginBtn": "Log in",
     "guestBtn": "Guest Mode",
-    "ctaTitle": "Start your sustainable journey today",
-    "ctaDescription": "Sign up for free and see how EcoRuteando can transform your way of moving through the city.",
-    "ctaBtn": "Join the green revolution"
+    "badge": "Sustainable mobility · SENA Neiva",
+    "chips": {
+      "bike": "Bike, bus or walk",
+      "co2": "-30% CO₂ footprint",
+      "routes": "Routes in seconds"
+    }
   },
   "features": {
-    "title": "Smart and sustainable mobility",
-    "description": "EcoRuteando helps you move efficiently while caring for the environment.",
+    "tag": "Features",
+    "title": "Three steps toward a sustainable journey",
+    "description": "Designed to help you plan eco-friendly routes quickly and easily",
+    "stop": "Stop",
     "cards": [
       {
-        "title": "Optimized routes",
-        "desc": "Find the best routes combining public transport and bike."
+        "title": "Smart Routes",
+        "desc": "Combine bicycle and public transport with precise times and green alternatives."
       },
       {
-        "title": "Environmental impact",
-        "desc": "See how much CO₂ you avoid on each trip and help your city."
+        "title": "CO₂ Savings",
+        "desc": "Every trip counts. Visualize the positive impact of your mobility choices."
       },
       {
-        "title": "Easy to use",
-        "desc": "Intuitive interface that allows you to plan your trips in seconds."
+        "title": "Active Community",
+        "desc": "Join a network of people committed to sustainable mobility in your city."
       }
     ]
   },
   "why": {
+    "tag": "Benefits",
     "title": "Why choose EcoRuteando?",
+    "co2": "CO₂ EMISSIONS",
     "reasons": [
       {
-        "title": "Bike and public transport",
-        "desc": "Combine the best of both for efficient and healthy trips."
+        "title": "Integrated mobility",
+        "desc": "Easily connect bicycle segments with public transport routes."
       },
       {
-        "title": "Real-time info",
-        "desc": "Know estimated times and the best available options."
+        "title": "Health & wellness",
+        "desc": "Promote daily exercise and improve your quality of life while commuting."
       },
       {
-        "title": "Environmental commitment",
-        "desc": "Every trip helps reduce pollution and improve air quality."
+        "title": "Real environmental impact",
+        "desc": "Every kilometer on a bicycle avoids emissions. Your contribution matters."
       }
     ]
   },
+  "cta": {
+    "title": "Start your sustainable journey today",
+    "description": "Join EcoRuteando and make every trip count for the planet",
+    "button": "Join the green revolution →"
+  },
   "footer": {
-    "copyright": "© 2025 EcoRuteando — SENA · Neiva, Colombia",
     "privacy": "Privacy",
     "terms": "Terms",
     "contact": "Contact"
   }
+
+  ,
+"dashboard": {
+  "title": "User Dashboard",
+  "subtitle": "Manage your sustainable mobility",
+  "welcome": "Welcome",
+
+  "back": "Back",
+
+  "stats": {
+    "routesCreated": "Routes Created",
+    "tripsCompleted": "Trips Completed",
+    "co2Saved": "CO₂ Saved",
+    "ecoPoints": "Eco Points"
+  },
+
+  "tools": {
+    "title": "Tools",
+    "subtitle": "Choose an option to get started"
+  },
+
+  "modules": {
+    "planRoute": {
+      "title": "Plan Route",
+      "subtitle": "Find the best eco-friendly route"
+    },
+    "history": {
+      "title": "History",
+      "subtitle": "Review your previous trips"
+    },
+    "profile": {
+      "title": "My Profile",
+      "subtitle": "Manage your personal information"
+    },
+    "alerts": {
+      "title": "Alerts",
+      "subtitle": "Check notifications"
+    },
+    "report": {
+      "title": "Report Problem",
+      "subtitle": "Report route incidents"
+    },
+    "admin": {
+      "title": "Admin Panel",
+      "subtitle": "Manage users and permissions"
+    }
+  },
+
+  "impact": {
+    "title": "Your Environmental Impact",
+    "description": "So far you have avoided emitting",
+    "descriptionEnd": "thanks to your sustainable trips.",
+    "button": "View Statistics"
+  },
+
+  "footer": "Every sustainable trip helps protect the planet 🌱",
+
+  "modal": {
+    "title": "Go back?",
+    "message": "If you return to the home page, you'll need to log in again to access the dashboard.",
+    "cancel": "Cancel",
+    "confirm": "Go Back"
+  }
+}
 }
