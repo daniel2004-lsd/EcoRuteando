@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "../../../app/context/ThemeContext";
+import { login } from "../../../services/authService";
+import { useAuth } from "../../../app/context/AuthContext";
 
 function Login({ setUserRole }) {
   const { isDarkMode, toggleTheme } = useTheme();
+  const { saveTokens } = useAuth();
   const [form, setForm] = useState({ email: "", pw: "" });
   const [showPw, setShowPw] = useState(false);
-  const ADMIN_EMAIL = "admin@ecoruteando.com";
-  const ADMIN_PASSWORD = "123456789";
+  
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -17,38 +19,45 @@ function Login({ setUserRole }) {
 
   const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+
     const email = form.email.trim().toLowerCase();
     const password = form.pw.trim();
 
     if (!email || !password) {
-      alert("Completa todos los campos");
-      return;
-    }
-
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      setUserRole("admin");
-      localStorage.setItem("userRole", "admin");
-      localStorage.setItem("lastPage", "dashboard");
-      window.location.href = "/dashboard";
-      return;
+        alert("Completa todos los campos");
+        return;
     }
 
     if (!validateEmail(email)) {
-      alert("Correo electrónico no válido");
-      return;
+        alert("Correo electrónico no válido");
+        return;
     }
 
     if (password.length < 8) {
-      alert("La contraseña debe tener al menos 8 caracteres");
-      return;
+        alert("La contraseña debe tener al menos 8 caracteres");
+        return;
     }
 
-    setUserRole("user");
-    localStorage.setItem("userRole", "user");
-    localStorage.setItem("lastPage", "dashboard");
-    window.location.href = "/dashboard";
-  };
+    try {
+
+        const response = await login(email, password);
+
+        saveTokens(
+            response.token.accessToken,
+            response.token.refreshToken
+        );
+
+        window.location.href = "/dashboard";
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        alert("Correo o contraseña incorrectos.");
+    }
+};
 
   const goToRegister = () => {
     window.location.href = "/register";
