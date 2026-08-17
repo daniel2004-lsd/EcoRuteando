@@ -1,4 +1,7 @@
+// App.jsx - CORREGIDO para mostrar HomePage en la raíz
+
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next"; // ✅ IMPORTAR useTranslation
 import HomePage from "../features/home/pages/HomePage";
 import Login from "../features/auth/components/Login";
 import Register from "../features/auth/components/Register";
@@ -12,20 +15,26 @@ import UserProfile from "../features/home/pages/UserProfile";
 import LoadingOverlay from "../shared/components/LoadingOverlay";
 import ConfirmModal from "../shared/components/ConfirmModal";
 import { ThemeProvider, useTheme } from "./context/ThemeContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import PlanRoute from "../features/home/pages/PlanRoute";
 import UserHistory from "../features/home/pages/UserHistory";
 import UserStatistics from "../features/home/pages/UserStatistics";
 import ReporterProblem from "../features/home/pages/ReporterProblem";
 import UserAlerts from "../features/home/pages/UserAlert";
+import "leaflet/dist/leaflet.css";
 
 function AppContent() {
   const { isDarkMode, toggleTheme } = useTheme();
+  const { i18n } = useTranslation(); // ✅ OBTENER i18n
   const [isLoading, setIsLoading] = useState(false);
 
-  // Estado de la página basado en la URL
+  // ✅ CORREGIDO: La raíz muestra HomePage
   const [page, setPage] = useState(() => {
     const path = window.location.pathname;
-    if (path === "/" || path === "") return "home";
+
+    if (path === "/" || path === "") {
+      return "home";
+    }
     if (path === "/dashboard") return "dashboard";
     if (path === "/login") return "login";
     if (path === "/register") return "register";
@@ -39,6 +48,7 @@ function AppContent() {
     if (path === "/user/statistics") return "user/statistics";
     if (path === "/user/reporter-problem") return "user/reporter-problem";
     if (path === "/user/alerts") return "user/alerts";
+
     return "home";
   });
 
@@ -58,25 +68,41 @@ function AppContent() {
     type: "warning"
   });
 
-  // Escuchar cambios en la URL (popstate)
   useEffect(() => {
     const handlePathChange = () => {
       const path = window.location.pathname;
-      if (path === "/" || path === "") setPage("home");
-      else if (path === "/dashboard") setPage("dashboard");
-      else if (path === "/login") setPage("login");
-      else if (path === "/register") setPage("register");
-      else if (path === "/admin") setPage("admin");
-      else if (path === "/profile") setPage("profile");
-      else if (path === "/recover") setPage("recover");
-      else if (path === "/verify") setPage("verify");
-      else if (path === "/newpassword") setPage("newpassword");
-      else if (path === "/user/plan-route") setPage("user/plan-route");
-      else if (path === "/user/history") setPage("user/history");
-      else if (path === "/user/statistics") setPage("user/statistics");
-      else if (path === "/user/reporter-problem") setPage("user/reporter-problem");
-      else if (path === "/user/alerts") setPage("user/alerts");
-      else setPage("home");
+
+      if (path === "/" || path === "") {
+        setPage("home");
+      } else if (path === "/dashboard") {
+        setPage("dashboard");
+      } else if (path === "/login") {
+        setPage("login");
+      } else if (path === "/register") {
+        setPage("register");
+      } else if (path === "/admin") {
+        setPage("admin");
+      } else if (path === "/profile") {
+        setPage("profile");
+      } else if (path === "/recover") {
+        setPage("recover");
+      } else if (path === "/verify") {
+        setPage("verify");
+      } else if (path === "/newpassword") {
+        setPage("newpassword");
+      } else if (path === "/user/plan-route") {
+        setPage("user/plan-route");
+      } else if (path === "/user/history") {
+        setPage("user/history");
+      } else if (path === "/user/statistics") {
+        setPage("user/statistics");
+      } else if (path === "/user/reporter-problem") {
+        setPage("user/reporter-problem");
+      } else if (path === "/user/alerts") {
+        setPage("user/alerts");
+      } else {
+        setPage("home");
+      }
     };
 
     window.addEventListener("popstate", handlePathChange);
@@ -98,7 +124,6 @@ function AppContent() {
     }
   };
 
-  // Función para navegar con loading (SOLO UNA VEZ DECLARADA)
   const navigate = (path) => {
     setIsLoading(true);
     setTimeout(() => {
@@ -130,7 +155,8 @@ function AppContent() {
       />
 
       <main>
-        {page === "home" && <HomePage onNavigate={navigate} />}
+        {/* ✅ KEY PARA FORZAR RE-RENDER AL CAMBIAR IDIOMA */}
+        {page === "home" && <HomePage key={i18n.language} onNavigate={navigate} />}
         {page === "dashboard" && <UserDashboard onNavigate={navigate} userRole={userRole} />}
         {page === "login" && <Login setUserRole={setUserRole} />}
         {page === "admin" && <AdminPanel onNavigate={navigate} userRole={userRole} />}
@@ -142,9 +168,25 @@ function AppContent() {
             setTermsAccepted={setTermsAccepted}
           />
         )}
-        {page === "recover" && <Recover onNavigate={navigate} />}
-        {page === "verify" && <VerifyCode onNavigate={navigate} />}
-        {page === "newpassword" && <NewPassword onNavigate={navigate} />}
+        {page === "recover" && (
+          <Recover onNavigate={navigate} />
+        )}
+
+        {page === "verify" && (
+          <VerifyCode
+            onNavigate={navigate}
+            onCodeVerified={(code) => {
+              sessionStorage.setItem("passwordRecoveryCode", code);
+            }}
+          />
+        )}
+
+        {page === "newpassword" && (
+          <NewPassword
+            onNavigate={navigate}
+          />
+        )}
+      
         {page === "user/plan-route" && <PlanRoute onNavigate={navigate} />}
         {page === "user/history" && <UserHistory onNavigate={navigate} />}
         {page === "user/statistics" && <UserStatistics onNavigate={navigate} />}
@@ -152,7 +194,7 @@ function AppContent() {
         {page === "user/alerts" && <UserAlerts onNavigate={navigate} />}
       </main>
 
-      {/* MODAL DE TÉRMINOS Y CONDICIONES */}
+      {/* Modal de términos - sin cambios */}
       {showTerms && (
         <div className="modal-overlay animate-fade-in" onClick={() => setShowTerms(false)}>
           <div className="modal-box animate-slide-up" onClick={(e) => e.stopPropagation()}>
@@ -214,7 +256,9 @@ function AppContent() {
 function App() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
     </ThemeProvider>
   );
 }

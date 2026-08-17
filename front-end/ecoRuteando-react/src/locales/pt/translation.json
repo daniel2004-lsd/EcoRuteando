@@ -1,47 +1,136 @@
 {
-  "navbar": {
+  "nav": {
     "features": "Características",
-    "why": "Por quê?",
-    "join": "Junte-se",
+    "benefits": "Benefícios",
+    "join": "Juntar-se",
     "login": "Entrar",
-    "register": "Cadastrar",
-    "guest": "Modo Convidado"
+    "register": "Registrar",
+    "guest": "Modo Convidado",
+    "language": "Idioma"
   },
   "hero": {
-    "tagline": "🚲 Plataforma de mobilidade ecológica · Neiva, Colômbia",
-    "title": "EcoRuteando",
-    "subtitle": "Seu guia para a mobilidade sustentável",
-    "description": "Descubra rotas ecológicas que combinam transporte público e bicicleta. Cada trajeto é uma oportunidade para cuidar do planeta e reduzir sua pegada de carbono na cidade.",
-    "registerBtn": "Cadastre-se agora",
+    "subtitle": "Seu guia para mobilidade sustentável",
+    "description": "Descubra rotas ecológicas combinando transporte público e bicicleta. Cada viagem é uma oportunidade de cuidar do planeta e reduzir sua pegada de carbono.",
+    "registerBtn": "Registre-se agora",
     "loginBtn": "Entrar",
-    "guestBtn": "Entrar como Convidado",
-    "ctaTitle": "Pronto para começar a rodar?",
-    "ctaDescription": "Junte-se à nossa comunidade e comece a desfrutar de uma mobilidade mais sustentável",
-    "ctaBtn": "Cadastre-se grátis"
+    "guestBtn": "Modo Convidado",
+    "badge": "Mobilidade Sustentável · SENA Neiva",
+    "chips": {
+      "bike": "Bicicleta, ônibus ou a pé",
+      "co2": "-30% pegada de CO₂",
+      "routes": "Rotas em segundos"
+    }
   },
   "features": {
-    "title": "Mobilidade Inteligente",
-    "description": "Tecnologia pensada para facilitar seu dia a dia e cuidar do meio ambiente",
+    "tag": "Características",
+    "title": "Três passos para uma viagem sustentável",
+    "description": "Projetado para você planejar rotas ecológicas de forma rápida e fácil",
+    "stop": "Parada",
     "cards": [
-      { "title": "Rotas Ecológicas", "desc": "Encontre a melhor combinação de transporte público e bicicleta" },
-      { "title": "Monitoramento ao Vivo", "desc": "Consulte o clima e o trânsito em tempo real" },
-      { "title": "Impacto Ambiental", "desc": "Meça quanto CO₂ você deixou de emitir em cada viagem" }
+      {
+        "title": "Rotas Inteligentes",
+        "desc": "Combine bicicleta e transporte público com tempos exatos e alternativas verdes."
+      },
+      {
+        "title": "Economia de CO₂",
+        "desc": "Cada trajeto soma. Visualize o impacto positivo das suas escolhas de mobilidade."
+      },
+      {
+        "title": "Comunidade Ativa",
+        "desc": "Junte-se a uma rede de pessoas comprometidas com a mobilidade sustentável na sua cidade."
+      }
     ]
   },
   "why": {
-    "title": "Por que escolher o EcoRuteando?",
+    "tag": "Benefícios",
+    "title": "Por que escolher EcoRuteando?",
+    "co2": "EMISSÕES DE CO₂",
     "reasons": [
-      { "title": "Combine Transporte", "desc": "Integramos ônibus, bicicletas e rotas pedestres em um só aplicativo" },
-      { "title": "Economize Tempo e Dinheiro", "desc": "Encontre a rota mais eficiente para seus deslocamentos diários" },
-      { "title": "Cuide do Planeta", "desc": "Cada viagem sustentável soma pontos e reduz sua pegada de carbono" }
-    ],
-    "routes": "Rotas",
-    "reduction": "Redução"
+      {
+        "title": "Mobilidade integrada",
+        "desc": "Conecte facilmente trechos de bicicleta com rotas de transporte público."
+      },
+      {
+        "title": "Saúde e bem-estar",
+        "desc": "Promova exercícios diários e melhore sua qualidade de vida enquanto se desloca."
+      },
+      {
+        "title": "Impacto ambiental real",
+        "desc": "Cada quilômetro de bicicleta evita emissões. Sua contribuição conta."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Comece hoje sua rota sustentável",
+    "description": "Junte-se ao EcoRuteando e faça cada trajeto contar para o planeta",
+    "button": "Junte-se à revolução verde →"
   },
   "footer": {
-    "copyright": "© 2024 EcoRuteando · Mobilidade sustentável para sua cidade · Neiva, Colômbia",
     "privacy": "Privacidade",
     "terms": "Termos",
     "contact": "Contato"
   }
+  ,
+"dashboard": {
+  "title": "Painel do Usuário",
+  "subtitle": "Gerencie sua mobilidade sustentável",
+  "welcome": "Bem-vindo",
+
+  "back": "Voltar",
+
+  "stats": {
+    "routesCreated": "Rotas Criadas",
+    "tripsCompleted": "Viagens Realizadas",
+    "co2Saved": "CO₂ Economizado",
+    "ecoPoints": "EcoPontos"
+  },
+
+  "tools": {
+    "title": "Ferramentas",
+    "subtitle": "Selecione uma opção para começar"
+  },
+
+  "modules": {
+    "planRoute": {
+      "title": "Planejar Rota",
+      "subtitle": "Encontre a melhor rota ecológica"
+    },
+    "history": {
+      "title": "Histórico",
+      "subtitle": "Veja suas viagens anteriores"
+    },
+    "profile": {
+      "title": "Meu Perfil",
+      "subtitle": "Gerencie suas informações pessoais"
+    },
+    "alerts": {
+      "title": "Alertas",
+      "subtitle": "Consulte notificações"
+    },
+    "report": {
+      "title": "Reportar Problema",
+      "subtitle": "Informe incidentes nas rotas"
+    },
+    "admin": {
+      "title": "Painel Administrativo",
+      "subtitle": "Gerencie usuários e permissões"
+    }
+  },
+
+  "impact": {
+    "title": "Seu impacto ambiental",
+    "description": "Até agora você evitou emitir",
+    "descriptionEnd": "graças às suas viagens sustentáveis.",
+    "button": "Ver Estatísticas"
+  },
+
+  "footer": "Cada viagem sustentável ajuda a cuidar do planeta 🌱",
+
+  "modal": {
+    "title": "Deseja voltar?",
+    "message": "Se voltar para a página inicial, será necessário fazer login novamente para acessar o painel.",
+    "cancel": "Cancelar",
+    "confirm": "Voltar"
+  }
+}
 }
