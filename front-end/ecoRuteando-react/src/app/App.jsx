@@ -31,7 +31,7 @@ function AppContent() {
   // ✅ CORREGIDO: La raíz muestra HomePage
   const [page, setPage] = useState(() => {
     const path = window.location.pathname;
-    
+
     if (path === "/" || path === "") {
       return "home";
     }
@@ -48,7 +48,7 @@ function AppContent() {
     if (path === "/user/statistics") return "user/statistics";
     if (path === "/user/reporter-problem") return "user/reporter-problem";
     if (path === "/user/alerts") return "user/alerts";
-    
+
     return "home";
   });
 
@@ -71,7 +71,7 @@ function AppContent() {
   useEffect(() => {
     const handlePathChange = () => {
       const path = window.location.pathname;
-      
+
       if (path === "/" || path === "") {
         setPage("home");
       } else if (path === "/dashboard") {
@@ -168,9 +168,25 @@ function AppContent() {
             setTermsAccepted={setTermsAccepted}
           />
         )}
-        {page === "recover" && <Recover onNavigate={navigate} />}
-        {page === "verify" && <VerifyCode onNavigate={navigate} />}
-        {page === "newpassword" && <NewPassword onNavigate={navigate} />}
+        {page === "recover" && (
+          <Recover onNavigate={navigate} />
+        )}
+
+        {page === "verify" && (
+          <VerifyCode
+            onNavigate={navigate}
+            onCodeVerified={(code) => {
+              sessionStorage.setItem("passwordRecoveryCode", code);
+            }}
+          />
+        )}
+
+        {page === "newpassword" && (
+          <NewPassword
+            onNavigate={navigate}
+          />
+        )}
+      
         {page === "user/plan-route" && <PlanRoute onNavigate={navigate} />}
         {page === "user/history" && <UserHistory onNavigate={navigate} />}
         {page === "user/statistics" && <UserStatistics onNavigate={navigate} />}
