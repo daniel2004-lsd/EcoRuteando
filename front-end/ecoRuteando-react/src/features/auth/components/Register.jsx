@@ -1,11 +1,20 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "../../../app/context/ThemeContext";
+import { register } from "../../../services/authService";
+import toast from "react-hot-toast";
 
 function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
   const { isDarkMode, toggleTheme } = useTheme();
-  const [form, setForm] = useState({ name: "", email: "", pw: "", confirmPw: "" });
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    pw: "",
+    confirmPw: ""
+  });
   const [showPw, setShowPw] = useState(false);
   const [showConfirmPw, setShowConfirmPw] = useState(false);
+
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -18,7 +27,8 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
 
   const isFormValid = () => {
     return (
-      form.name.trim() !== "" &&
+      form.firstName.trim() !== "" &&
+      form.lastName.trim() !== "" &&
       validateEmail(form.email) &&
       form.pw.length >= 8 &&
       form.pw === form.confirmPw &&
@@ -26,14 +36,41 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
     );
   };
 
-  const handleRegister = () => {
-    if (!isFormValid()) {
-      alert("Por favor, completa todos los campos correctamente");
-      return;
-    }
-    alert("Registro exitoso. Ahora puedes iniciar sesión");
-    window.location.href = "/login";
-  };
+  const handleRegister = async () => {
+  console.log("Entró a handleRegister");
+
+  if (!isFormValid()) {
+    toast.error("Por favor, completa todos los campos correctamente");
+    return;
+  }
+
+  try {
+    await register({
+      firstName: form.firstName,
+      lastName: form.lastName,
+      email: form.email,
+      password: form.pw
+    });
+
+    toast.success("¡Registro exitoso!", {
+      duration: 1500,
+      style: {
+        background: "#065f46",
+        color: "#fff",
+        border: "1px solid #10b981"
+      }
+    });
+
+    setTimeout(() => {
+      goToLogin();
+    }, 1500);
+
+  } catch (error) {
+    console.error(error);
+
+    toast.error("No fue posible registrar el usuario");
+  }
+};
 
   const goToLogin = () => {
     window.location.href = "/login";
@@ -80,7 +117,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-green-950 to-emerald-950' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'} flex flex-col items-center justify-center px-4 py-6`}>
-      
+
       <button
         onClick={toggleTheme}
         className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
@@ -110,7 +147,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
 
       <div className="w-full max-w-md mx-auto">
         <div className={`rounded-xl shadow-lg overflow-hidden transition-all duration-300 ${isDarkMode ? 'bg-gray-800/80 backdrop-blur-sm border border-green-500/20' : 'bg-white border border-gray-100'}`}>
-          
+
           <div className="px-6 pt-5 pb-2 text-center">
             <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Crear cuenta</h2>
             <p className={`text-xs mt-0.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Comienza tu viaje sostenible</p>
@@ -118,22 +155,59 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
 
           <div className="px-6 pb-6">
             <div className="space-y-4">
-              
-              <div>
-                <label className={`block text-xs font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-green-400' : 'text-gray-600'}`}>
-                  Nombre completo
-                </label>
-                <input
-                  type="text"
-                  placeholder="Juan Pérez"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 ${
-                    isDarkMode 
-                      ? 'bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500' 
-                      : 'border-gray-200 focus:border-emerald-400'
-                  }`}
-                />
+
+              <div className="grid grid-cols-2 gap-3">
+
+                <div>
+                  <label
+                    className={`block text-xs font-medium mb-1 ${isDarkMode ? "text-green-400" : "text-gray-600"
+                      }`}
+                  >
+                    Nombre
+                  </label>
+
+                  <input
+                    type="text"
+                    placeholder="Daniel"
+                    value={form.firstName}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        firstName: e.target.value,
+                      })
+                    }
+                    className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 ${isDarkMode
+                        ? "bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500"
+                        : "border-gray-200 focus:border-emerald-400"
+                      }`}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    className={`block text-xs font-medium mb-1 ${isDarkMode ? "text-green-400" : "text-gray-600"
+                      }`}
+                  >
+                    Apellido
+                  </label>
+
+                  <input
+                    type="text"
+                    placeholder="Salazar"
+                    value={form.lastName}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        lastName: e.target.value,
+                      })
+                    }
+                    className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 ${isDarkMode
+                        ? "bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500"
+                        : "border-gray-200 focus:border-emerald-400"
+                      }`}
+                  />
+                </div>
+
               </div>
 
               <div>
@@ -145,11 +219,10 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                   placeholder="tucorreo@email.com"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 ${
-                    isDarkMode 
-                      ? 'bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500' 
-                      : 'border-gray-200 focus:border-emerald-400'
-                  }`}
+                  className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 ${isDarkMode
+                    ? 'bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500'
+                    : 'border-gray-200 focus:border-emerald-400'
+                    }`}
                 />
                 {form.email && validateEmail(form.email) && (
                   <p className="text-emerald-500 text-[10px] mt-1">Correo válido</p>
@@ -166,11 +239,10 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                     placeholder="Mínimo 8 caracteres"
                     value={form.pw}
                     onChange={(e) => setForm({ ...form, pw: e.target.value })}
-                    className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 pr-9 ${
-                      isDarkMode 
-                        ? 'bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500' 
-                        : 'border-gray-200 focus:border-emerald-400'
-                    }`}
+                    className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 pr-9 ${isDarkMode
+                      ? 'bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500'
+                      : 'border-gray-200 focus:border-emerald-400'
+                      }`}
                   />
                   <button
                     type="button"
@@ -192,11 +264,10 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                     placeholder="Repite tu contraseña"
                     value={form.confirmPw}
                     onChange={(e) => setForm({ ...form, confirmPw: e.target.value })}
-                    className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 pr-9 ${
-                      isDarkMode 
-                        ? 'bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500' 
-                        : 'border-gray-200 focus:border-emerald-400'
-                    }`}
+                    className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 pr-9 ${isDarkMode
+                      ? 'bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500'
+                      : 'border-gray-200 focus:border-emerald-400'
+                      }`}
                   />
                   <button
                     type="button"
@@ -233,11 +304,10 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
               <button
                 onClick={handleRegister}
                 disabled={!isFormValid()}
-                className={`w-full py-2.5 mt-2 text-white font-medium text-sm rounded-lg transition-all duration-300 hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed ${
-                  isDarkMode 
-                    ? 'bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500' 
-                    : 'bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700'
-                }`}
+                className={`w-full py-2.5 mt-2 text-white font-medium text-sm rounded-lg transition-all duration-300 hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed ${isDarkMode
+                  ? 'bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500'
+                  : 'bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700'
+                  }`}
               >
                 Registrarse
               </button>
@@ -249,27 +319,24 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
               </div>
 
               <div className="flex gap-2">
-                <button className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${
-                  isDarkMode 
-                    ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10' 
-                    : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
-                }`}>
+                <button className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${isDarkMode
+                  ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
+                  : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
+                  }`}>
                   <GoogleIcon />
                   <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Google</span>
                 </button>
-                <button className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${
-                  isDarkMode 
-                    ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10' 
-                    : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
-                }`}>
+                <button className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${isDarkMode
+                  ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
+                  : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
+                  }`}>
                   <FacebookIcon />
                   <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Facebook</span>
                 </button>
-                <button className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${
-                  isDarkMode 
-                    ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10' 
-                    : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
-                }`}>
+                <button className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${isDarkMode
+                  ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
+                  : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
+                  }`}>
                   <XIcon />
                   <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>X</span>
                 </button>

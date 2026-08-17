@@ -14,7 +14,7 @@ export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
     return savedTheme === "dark";
-  });
+  });  // 👈 La 'x' eliminada
 
   useEffect(() => {
     if (isDarkMode) {
