@@ -2,63 +2,152 @@ import { useState } from "react";
 import Input from "../../../shared/components/Input";
 import Button from "../../../shared/components/Button";
 import { Logo, MailIcon, ArrowLeft } from "../../../shared/components/Icons";
+import { forgotPassword } from "../../../services/authService";
 
 const Recover = ({ onNavigate }) => {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
-  
-  const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  // Esta es la función que faltaba y causaba el error
-  const handleSend = () => {
-    if (validateEmail(email)) {
+  const validateEmail = (value) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+
+  const handleSend = async () => {
+    if (!validateEmail(email)) {
+      setError("Ingresa un correo electrónico válido.");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+
+    try {
+      await forgotPassword(email.trim());
+      sessionStorage.setItem(
+        "passwordRecoveryEmail",
+        email.trim()
+      );
+
+      // El backend ya generó y envió el OTP.
       setSent(true);
+    } catch (error) {
+      console.error("Error al solicitar recuperación:", error);
+
+      setError(
+        error.response?.data?.message ||
+        "No fue posible enviar el código. Intenta nuevamente."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (sent) return (
-    <div className="min-h-screen bg-[#edf4ef] flex flex-col items-center justify-center px-4 animate-fade-in">
-      <div className="mb-8"><Logo size="md" /></div>
-      <div className="w-full max-w-sm bg-white rounded-3xl shadow-xl p-8 text-center border border-green-50 animate-slide-up">
-        <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-5">
-          <MailIcon />
+  if (sent) {
+    return (
+      <div className="w-full max-w-md mx-auto text-center">
+
+        <div className="flex justify-center mb-6">
+          <Logo />
         </div>
-        <h2 className="text-xl font-bold text-green-900 mb-3 text-center">Revisa tu correo</h2>
-        <p className="text-gray-500 text-sm mb-2 leading-relaxed">Hemos enviado un enlace de verificación a:</p>
-        <p className="text-green-800 font-bold text-base mb-6 break-all">{email}</p>
-        <Button onClick={() => onNavigate("verify")} className="w-full py-3 mb-3">Ya tengo el código →</Button>
-        <button onClick={() => setSent(false)} className="text-green-700 text-sm font-bold hover:underline block mx-auto mb-4">¿Correo incorrecto? Cambiarlo</button>
-        <button onClick={() => onNavigate("login")} className="flex items-center gap-1 text-gray-400 text-sm font-medium mx-auto hover:text-gray-600 transition-colors">
-          <ArrowLeft /> Volver al inicio de sesión
+
+        <div className="mb-6">
+          <div className="flex justify-center mb-4">
+            <MailIcon />
+          </div>
+
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            Revisa tu correo
+          </h2>
+
+          <p className="text-gray-600">
+            Hemos enviado un código de verificación a:
+          </p>
+
+          <p className="font-bold text-gray-800 mt-2">
+            {email}
+          </p>
+        </div>
+
+        <Button
+          onClick={() => onNavigate("verify")}
+          className="w-full py-3 mb-3"
+        >
+          Ya tengo el código →
+        </Button>
+
+        <button
+          onClick={() => setSent(false)}
+          className="text-green-700 text-sm font-bold hover:underline block mx-auto mb-4"
+        >
+          ¿Correo incorrecto? Cambiarlo
+        </button>
+
+        <button
+          onClick={() => onNavigate("login")}
+          className="flex items-center gap-1 text-gray-400 text-sm font-medium mx-auto hover:text-gray-600 transition-colors"
+        >
+          <ArrowLeft />
+          Volver al inicio de sesión
         </button>
       </div>
-    </div>
-  );
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-[#edf4ef] flex flex-col items-center justify-center px-4 animate-fade-in">
-      <div className="mb-8"><Logo size="md" /></div>
-      <div className="w-full max-w-sm bg-white rounded-3xl shadow-xl p-8 border border-green-50 animate-slide-up">
-        <h2 className="text-xl font-bold text-green-900 mb-2 text-center">Recuperar contraseña</h2>
-        <div className="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto my-4"><MailIcon /></div>
-        <p className="text-gray-500 text-[13px] text-center mb-6 leading-relaxed">
-          Ingresa tu correo electrónico y te enviaremos un código de verificación para restablecer tu contraseña.
-        </p>
-        <div className="space-y-4">
-          <Input 
-            label="Correo electrónico" 
-            placeholder="tucorreo@email.com" 
-            value={email} 
-            onChange={e => setEmail(e.target.value)}
-            success={validateEmail(email) ? "Correo válido" : ""} 
-          />
-          <Button onClick={handleSend} className="w-full py-3.5" disabled={!validateEmail(email)}>Enviar código</Button>
-        </div>
-        <button onClick={() => onNavigate("login")} className="flex items-center gap-1 text-green-700 text-sm font-bold mt-6 mx-auto hover:underline">
-          <ArrowLeft /> Volver al inicio de sesión
-        </button>
+    <div className="w-full max-w-md mx-auto">
+
+      <div className="flex justify-center mb-6">
+        <Logo />
       </div>
+
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-gray-800 mb-3">
+          Recuperar contraseña
+        </h2>
+
+        <p className="text-gray-600 text-sm leading-relaxed">
+          Ingresa tu correo electrónico y te enviaremos un código
+          de verificación de 6 dígitos para restablecer tu contraseña.
+        </p>
+      </div>
+
+      <Input
+        label="Correo electrónico"
+        placeholder="tucorreo@email.com"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        success={
+          email.length > 0 && validateEmail(email)
+            ? "Correo válido"
+            : ""
+        }
+      />
+
+      {error && (
+        <p className="text-red-600 text-sm mt-2">
+          {error}
+        </p>
+      )}
+
+      <Button
+        onClick={handleSend}
+        disabled={loading || !validateEmail(email)}
+        className="w-full py-3 mt-5"
+      >
+        {loading ? "Enviando código..." : "Enviar código"}
+      </Button>
+
+      <button
+        onClick={() => onNavigate("login")}
+        className="flex items-center gap-1 text-green-700 text-sm font-bold mt-6 mx-auto hover:underline"
+      >
+        <ArrowLeft />
+        Volver al inicio de sesión
+      </button>
     </div>
   );
 };
+
 export default Recover;
+
