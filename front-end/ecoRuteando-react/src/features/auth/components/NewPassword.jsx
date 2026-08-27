@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Input from "../../../shared/components/Input";
 import Button from "../../../shared/components/Button";
 import {
@@ -8,7 +10,9 @@ import {
 } from "../../../shared/components/Icons";
 import { resetPassword } from "../../../services/authService";
 
-const NewPassword = ({ onNavigate }) => {
+const NewPassword = () => {
+    const { t } = useTranslation();
+    const navigate = useNavigate();
     const [form, setForm] = useState({
         pw: "",
         pw2: ""
@@ -40,10 +44,10 @@ const NewPassword = ({ onNavigate }) => {
 
     const strengthLabels = [
         "",
-        "Muy débil",
-        "Media",
-        "Fuerte",
-        "Muy fuerte"
+        t("auth.newPassword.strengthVeryWeak", "Muy débil"),
+        t("auth.newPassword.strengthMedium", "Media"),
+        t("auth.newPassword.strengthStrong", "Fuerte"),
+        t("auth.newPassword.strengthVeryStrong", "Muy fuerte")
     ];
 
     const strengthClass = [
@@ -58,12 +62,12 @@ const NewPassword = ({ onNavigate }) => {
         setError("");
 
         if (form.pw.length < 8) {
-            setError("La contraseña debe tener al menos 8 caracteres.");
+            setError(t("auth.newPassword.minLengthError", "La contraseña debe tener al menos 8 caracteres."));
             return;
         }
 
         if (form.pw !== form.pw2) {
-            setError("Las contraseñas no coinciden.");
+            setError(t("auth.newPassword.errorMismatch", "Las contraseñas no coinciden."));
             return;
         }
 
@@ -71,7 +75,7 @@ const NewPassword = ({ onNavigate }) => {
 
         if (!token) {
             setError(
-                "No se encontró el código de recuperación. Solicita un nuevo código."
+                t("auth.newPassword.noCodeError", "No se encontró el código de recuperación. Solicita un nuevo código.")
             );
             return;
         }
@@ -91,7 +95,7 @@ const NewPassword = ({ onNavigate }) => {
 
             setError(
                 error.response?.data?.message ||
-                "No fue posible restablecer la contraseña. Verifica el código e inténtalo nuevamente."
+                t("auth.newPassword.resetError", "No fue posible restablecer la contraseña. Verifica el código e inténtalo nuevamente.")
             );
         } finally {
             setLoading(false);
@@ -111,19 +115,18 @@ const NewPassword = ({ onNavigate }) => {
                 </div>
 
                 <h2 className="text-2xl font-bold text-green-900 mb-3">
-                    ¡Contraseña actualizada!
+                    {t("auth.newPassword.successTitle", "¡Contraseña actualizada!")}
                 </h2>
 
                 <p className="text-gray-500 text-sm mb-8">
-                    Tu contraseña ha sido restablecida exitosamente.
-                    Ya puedes iniciar sesión con tu nueva contraseña.
+                    {t("auth.newPassword.successMessage", "Tu contraseña ha sido restablecida exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.")}
                 </p>
 
                 <Button
-                    onClick={() => onNavigate("login")}
+                    onClick={() => navigate("/login")}
                     className="w-full py-3.5"
                 >
-                    Iniciar sesión
+                    {t("auth.newPassword.loginButton", "Iniciar sesión")}
                 </Button>
 
             </div>
@@ -142,7 +145,7 @@ const NewPassword = ({ onNavigate }) => {
                     </div>
 
                     <span className="text-[10px] font-bold text-green-700 uppercase">
-                        Correo
+                        {t("auth.newPassword.stepEmail", "Correo")}
                     </span>
                 </div>
 
@@ -154,7 +157,7 @@ const NewPassword = ({ onNavigate }) => {
                     </div>
 
                     <span className="text-[10px] font-bold text-green-700 uppercase">
-                        Código
+                        {t("auth.newPassword.stepCode", "Código")}
                     </span>
                 </div>
 
@@ -166,7 +169,7 @@ const NewPassword = ({ onNavigate }) => {
                     </div>
 
                     <span className="text-[10px] font-bold text-green-700 uppercase">
-                        Contraseña
+                        {t("auth.newPassword.stepPassword", "Contraseña")}
                     </span>
                 </div>
 
@@ -180,11 +183,11 @@ const NewPassword = ({ onNavigate }) => {
                 </div>
 
                 <h2 className="text-xl font-bold text-green-900 mb-2">
-                    Nueva contraseña
+                    {t("auth.newPassword.title", "Nueva contraseña")}
                 </h2>
 
                 <p className="text-gray-500 text-sm">
-                    Elige una contraseña segura para proteger tu cuenta.
+                    {t("auth.newPassword.subtitle", "Elige una contraseña segura para proteger tu cuenta.")}
                 </p>
 
             </div>
@@ -195,8 +198,8 @@ const NewPassword = ({ onNavigate }) => {
                 <div>
 
                     <Input
-                        label="Nueva contraseña"
-                        placeholder="Mín. 8 caracteres"
+                        label={t("auth.newPassword.newPasswordLabel", "Nueva contraseña")}
+                        placeholder={t("auth.newPassword.newPasswordPlaceholder", "Mín. 8 caracteres")}
                         showToggle
                         showPw={showPw}
                         onToggle={() => setShowPw(!showPw)}
@@ -207,7 +210,7 @@ const NewPassword = ({ onNavigate }) => {
                                 pw: e.target.value
                             })
                         }
-                        hint="Usa mayúsculas y números"
+                        hint={t("auth.newPassword.passwordHint", "Usa mayúsculas y números")}
                     />
 
                     {form.pw && (
@@ -241,9 +244,9 @@ const NewPassword = ({ onNavigate }) => {
 
                 {/* Confirmar contraseña */}
                 <Input
-                    label="Confirmar nueva contraseña"
+                    label={t("auth.newPassword.confirmLabel", "Confirmar nueva contraseña")}
                     type="password"
-                    placeholder="Repite tu contraseña"
+                    placeholder={t("auth.newPassword.confirmPlaceholder", "Repite tu contraseña")}
                     value={form.pw2}
                     onChange={(e) =>
                         setForm({
@@ -253,12 +256,12 @@ const NewPassword = ({ onNavigate }) => {
                     }
                     error={
                         form.pw2 && form.pw !== form.pw2
-                            ? "Las contraseñas no coinciden"
+                            ? t("auth.newPassword.mismatch", "Las contraseñas no coinciden")
                             : ""
                     }
                     success={
                         form.pw2 && form.pw === form.pw2
-                            ? "Las contraseñas coinciden"
+                            ? t("auth.newPassword.match", "Las contraseñas coinciden")
                             : ""
                     }
                 />
@@ -281,8 +284,8 @@ const NewPassword = ({ onNavigate }) => {
                     }
                 >
                     {loading
-                        ? "Restableciendo..."
-                        : "Restablecer contraseña"}
+                        ? t("auth.newPassword.resetting", "Restableciendo...")
+                        : t("auth.newPassword.resetButton", "Restablecer contraseña")}
                 </Button>
 
             </div>

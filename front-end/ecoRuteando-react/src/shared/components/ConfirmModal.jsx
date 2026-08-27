@@ -10,15 +10,16 @@ const ConfirmModal = ({
   confirmText = "Sí, continuar",
   cancelText = "Cancelar"
 }) => {
-  if (!isOpen) return null;
-
   // Prevenir scroll cuando el modal está abierto
   React.useEffect(() => {
+    if (!isOpen) return;
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">

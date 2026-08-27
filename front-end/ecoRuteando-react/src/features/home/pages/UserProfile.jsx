@@ -921,8 +921,8 @@ const UserProfile = ({ onNavigate, userRole }) => {
     email: "danielsalazarvargas953@gmail.com",
     phone: "+57 300 123 4567",
     location: "Neiva, Huila, Colombia",
-    birthday: "15 de mayo, 1995",
-    bio: "Apasionado por la movilidad sostenible y el cuidado del medio ambiente."
+    birthday: t("profile.personal.defaultBirthday", "15 de mayo, 1995"),
+    bio: t("profile.personal.defaultBio", "Apasionado por la movilidad sostenible y el cuidado del medio ambiente.")
   });
 
   const [formData, setFormData] = useState(profile);

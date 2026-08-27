@@ -1,0 +1,75 @@
+@startuml Actividad_Registro
+title <b>Diagrama de Actividad — Registro de Usuario</b>\n<size:10>CU01 · RF1 / RF4.1 · Register.jsx + API /auth/register</size>
+
+|#E8F5E9|Usuario|
+start
+:Abre el formulario de registro;
+:Ingresa nombre, apellido,\ncorreo, contraseña y confirmación;
+
+|#FFFFFF|Sistema|
+if (¿Campos completos y\nformato de correo válido?) then (no)
+  :Muestra "Completa todos los campos\ncorrectamente" (toast);
+  |Usuario|
+  :Corrige los datos;
+  detach
+else (sí)
+endif
+
+if (¿Contraseñas coinciden\ny ≥ 8 caracteres?) then (no)
+  :Muestra "Las contraseñas no coinciden";
+  |Usuario|
+  :Corrige las contraseñas;
+  detach
+else (sí)
+endif
+
+if (¿Términos y condiciones\naceptados?) then (no)
+  :Botón "Registrarse" deshabilitado;
+  |Usuario|
+  :Consulta y acepta los términos (CU15);
+  detach
+else (sí)
+endif
+
+|Sistema|
+:Recibe solicitud POST /auth/register;
+if (¿Correo ya existe en la BD?) then (sí)
+  :Responde error "No fue posible\nregistrar el usuario";
+  |Usuario|
+  :Ve el mensaje de error;
+  stop
+else (no)
+endif
+
+|Base de Datos|
+:Almacena usuario con contraseña cifrada (hash);
+
+|Sistema|
+:Genera código de verificación;
+:Envía código al correo vía SMTP Gmail :587;
+:Notifica "¡Registro exitoso! Te enviamos\nun código a tu correo";
+
+|Usuario|
+:Es redirigido a /verify-email;
+:Ingresa el código recibido;
+
+|Sistema|
+if (¿Código correcto?) then (no)
+  :Muestra error y permite reenviar código;
+  |Usuario|
+  :Reintenta o solicita nuevo código;
+  detach
+else (sí)
+endif
+
+|Base de Datos|
+:Marca la cuenta como verificada;
+
+|Sistema|
+:Habilita el acceso (cuenta activada);
+
+|Usuario|
+:Inicia sesión con sus credenciales (CU05);
+stop
+
+@enduml

@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { me } from "../../../services/authService";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../../../src/app/context/LanguageContext";
@@ -15,39 +14,50 @@ import {
   ShieldIcon
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
+import routeService from "../../../services/routeService";
 
 const UserDashboard = ({ onNavigate, userRole }) => {
   const { t } = useTranslation();
   const { isDarkMode, toggleTheme } = useTheme();
   const [showBackModal, setShowBackModal] = useState(false);
   const [user, setUser] = useState(null);
+  const [stats, setStats] = useState({
+    routes: 0,
+    trips: 0,
+    co2Saved: 0,
+    points: 0
+  });
+
   useEffect(() => {
-
     const loadUser = async () => {
-
       try {
-
         const response = await me();
-
         setUser(response);
-
       } catch (error) {
-
         console.error(error);
-
       }
     };
-
     loadUser();
-
   }, []);
 
-  const [stats] = useState({
-    routes: 5,
-    trips: 12,
-    co2Saved: 3.2,
-    points: 120
-  });
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const routes = await routeService.getAll();
+        const totalCO2 = routes.reduce((sum, r) => sum + (r.co2SavedKg || 0), 0);
+        const totalKm = routes.reduce((sum, r) => sum + (r.distanceKm || 0), 0);
+        setStats({
+          routes: routes.length,
+          trips: routes.length,
+          co2Saved: totalCO2.toFixed(1),
+          points: Math.round(totalKm * 10)
+        });
+      } catch (error) {
+        console.error("Error cargando stats:", error);
+      }
+    };
+    loadStats();
+  }, []);
 
   // Función para volver
   const handleBack = () => {
@@ -137,26 +147,32 @@ const UserDashboard = ({ onNavigate, userRole }) => {
         <div className="relative max-w-7xl mx-auto px-6 py-7">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl ring-4 ${isDarkMode ? 'bg-gray-700 ring-emerald-500/20' : 'bg-white ring-white/30'}`}>
-                <LeafIcon size={26} className="text-emerald-500" />
-              </div>
+              {user ? (
+                <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm ring-4 ring-white/30 flex items-center justify-center text-white text-xl font-black uppercase shadow-xl">
+                  {user.firstName?.charAt(0)}
+                </div>
+              ) : (
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl ring-4 ${isDarkMode ? 'bg-gray-700 ring-emerald-500/20' : 'bg-white ring-white/30'}`}>
+                  <LeafIcon size={26} className="text-emerald-500" />
+                </div>
+              )}
               <div>
-                <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">{t("dashboard.title")}</h1>
-                <p className={`text-sm font-medium ${isDarkMode ? 'text-emerald-400' : 'text-emerald-100'}`}>{t("dashboard.subtitle")}</p>
-                {user && (
-                  <div className="mt-3 flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold uppercase">
-                      {user.firstName?.charAt(0)}
-                    </div>
-                    <div className="leading-tight">
-                      <p className="font-semibold text-white text-sm">
-                        {t("dashboard.welcome")}, {user.firstName}
-                      </p>
-                      <p className="text-xs text-white/70">
-                        {user.email}
-                      </p>
-                    </div>
-                  </div>
+                {user ? (
+                  <>
+                    <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">
+                      {t("dashboard.welcome")}, {user.firstName}
+                    </h1>
+                    <p className={`text-sm font-medium ${isDarkMode ? 'text-emerald-400' : 'text-emerald-100'}`}>{user.email}</p>
+                  </>
+                ) : (
+                  <>
+                    <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">
+                      {t("dashboard.guest", "Modo invitado")}
+                    </h1>
+                    <p className={`text-sm font-medium ${isDarkMode ? 'text-emerald-400' : 'text-emerald-100'}`}>
+                      {t("dashboard.guestHint", "Explora sin crear una cuenta")}
+                    </p>
+                  </>
                 )}
               </div>
             </div>
