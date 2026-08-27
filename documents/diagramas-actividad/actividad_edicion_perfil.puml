@@ -1,0 +1,47 @@
+@startuml Actividad_EdicionPerfil
+title <b>Diagrama de Actividad — Edición de Perfil</b>\n<size:10>CU12 · RF5 · UserProfile.jsx</size>
+
+|#E8F5E9|Usuario|
+start
+:Inicia sesión;
+:Accede a "Mi perfil" (/profile);
+
+|#FFFFFF|Sistema|
+:Carga los datos actuales del usuario;
+:Habilita campos editables;
+
+|Usuario|
+:Modifica nombre / correo;
+:Pulsa "Guardar cambios";
+
+|#FFFFFF|Sistema|
+:Solicita confirmación de identidad;
+|Usuario|
+:Ingresa su contraseña actual;
+
+|Sistema|
+if (¿Contraseña correcta?) then (no)
+  :Cancela la edición con mensaje de error;
+  |Usuario|
+  :Reintenta o abandona;
+  detach
+else (sí)
+endif
+
+if (¿Nuevo correo ya registrado?) then (sí)
+  :Informa "correo no disponible";
+  |Usuario|
+  :Ingresa otro correo;
+  detach
+else (no)
+endif
+
+|Base de Datos|
+:Actualiza los datos personales;
+:Registra fecha de actualización (RF5.3);
+
+|Sistema|
+:Confirma "Datos actualizados";
+stop
+
+@enduml

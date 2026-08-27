@@ -3,8 +3,10 @@ import { useTranslation } from "react-i18next";
 import { LeafIcon, ArrowLeft, MapIcon, BikeIcon, BusIcon } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import MapViewGoogle from "../../../features/auth/components/MapViewGoogle";
+import mapsService from "../../../services/mapsService";
+import routeService from "../../../services/routeService";
 
-const GOOGLE_MAPS_API_KEY = "AIzaSyBpSXrBLSge02YgFOiH-rT8FaMUYizwcp4";
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
 
 // Coordenadas de Neiva
 const NEIVA_LAT = 2.9273;
@@ -20,28 +22,7 @@ const NEIVA_PLACES = [
   { name: "Aeropuerto Benito Salas", lat: 2.9500, lng: -75.2900, address: "Sur, Neiva" },
 ];
 
-// Decodificar polyline
-const decodeGooglePolyline = (encoded) => {
-  if (!encoded) return [];
-  let index = 0, lat = 0, lng = 0;
-  const coordinates = [];
-  const len = encoded.length;
-
-  while (index < len) {
-    let b, shift = 0, result = 0;
-    do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
-    const dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
-    lat += dlat;
-    shift = 0; result = 0;
-    do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
-    const dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
-    lng += dlng;
-    coordinates.push({ lat: lat / 1e5, lng: lng / 1e5 });
-  }
-  return coordinates;
-};
-
-// Cargar Google Maps
+// Cargar Google Maps (solo para el visualizador del mapa)
 let mapsLoadingPromise = null;
 const loadGoogleMapsApi = () => {
   if (mapsLoadingPromise) return mapsLoadingPromise;
@@ -64,13 +45,12 @@ const loadGoogleMapsApi = () => {
   return mapsLoadingPromise;
 };
 
-// Componente de búsqueda
+// Componente de búsqueda (usa backend para geocoding)
 const LocationSearch = ({ placeholder, onSelect, isDarkMode, value, type = "origin", externalValue }) => {
   const [query, setQuery] = useState(value || externalValue || "");
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const autocompleteRef = useRef(null);
   const debounceRef = useRef(null);
 
   useEffect(() => {
@@ -79,16 +59,8 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, value, type = "orig
     }
   }, [externalValue]);
 
-  useEffect(() => {
-    loadGoogleMapsApi().then((google) => {
-      if (!autocompleteRef.current) {
-        autocompleteRef.current = new google.maps.places.AutocompleteService();
-      }
-    });
-  }, []);
-
-  const searchPlaces = (text) => {
-    if (text.length < 2 || !autocompleteRef.current) {
+  const searchPlaces = async (text) => {
+    if (text.length < 2) {
       if (text.length === 0) {
         setSuggestions(NEIVA_PLACES);
       } else {
@@ -99,30 +71,35 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, value, type = "orig
 
     setIsLoading(true);
     
-    autocompleteRef.current.getPlacePredictions(
-      {
-        input: text,
-        location: new window.google.maps.LatLng(NEIVA_LAT, NEIVA_LON),
-        radius: 30000,
-        types: ['geocode', 'establishment'],
-        componentRestrictions: { country: 'co' }
-      },
-      (predictions, status) => {
-        if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions) {
-          setSuggestions(predictions.map(p => ({
-            placeId: p.place_id,
-            name: p.structured_formatting?.main_text || p.description.split(',')[0],
-            address: p.structured_formatting?.secondary_text || p.description,
-          })));
-        } else {
-          const filtered = NEIVA_PLACES.filter(p => 
-            p.name.toLowerCase().includes(text.toLowerCase())
-          );
-          setSuggestions(filtered);
-        }
-        setIsLoading(false);
+    try {
+      // Usar backend para geocoding
+      const response = await mapsService.geocode(text);
+      
+      if (response.results && response.results.length > 0) {
+        setSuggestions(response.results.map(r => ({
+          name: r.formattedAddress.split(',')[0],
+          address: r.formattedAddress,
+          lat: r.lat,
+          lng: r.lng,
+          placeId: r.placeId,
+        })));
+      } else {
+        // Fallback a lugares predefinidos
+        const filtered = NEIVA_PLACES.filter(p => 
+          p.name.toLowerCase().includes(text.toLowerCase())
+        );
+        setSuggestions(filtered);
       }
-    );
+    } catch (error) {
+      console.error("Error en geocoding:", error);
+      // Fallback a lugares predefinidos
+      const filtered = NEIVA_PLACES.filter(p => 
+        p.name.toLowerCase().includes(text.toLowerCase())
+      );
+      setSuggestions(filtered);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -131,35 +108,15 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, value, type = "orig
     return () => clearTimeout(debounceRef.current);
   }, [query]);
 
-  const getPlaceLocation = (place) => {
-    if (place.lat && place.lng) {
-      onSelect({
-        name: place.name,
-        address: place.address,
-        lat: place.lat,
-        lng: place.lng,
-      });
-      setQuery(place.name);
-      setShowDropdown(false);
-      return;
-    }
-    
-    if (!place.placeId) return;
-    
-    const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ placeId: place.placeId }, (results, status) => {
-      if (status === 'OK' && results[0]) {
-        const loc = results[0].geometry.location;
-        onSelect({
-          name: place.name,
-          address: results[0].formatted_address,
-          lat: loc.lat(),
-          lng: loc.lng(),
-        });
-        setQuery(place.name);
-        setShowDropdown(false);
-      }
+  const selectPlace = (place) => {
+    onSelect({
+      name: place.name,
+      address: place.address,
+      lat: place.lat,
+      lng: place.lng,
     });
+    setQuery(place.name);
+    setShowDropdown(false);
   };
 
   return (
@@ -197,7 +154,7 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, value, type = "orig
           {suggestions.map((place, idx) => (
             <button
               key={idx}
-              onClick={() => getPlaceLocation(place)}
+              onClick={() => selectPlace(place)}
               className={`w-full text-left px-3 py-2 text-sm transition-colors border-b last:border-b-0 ${
                 isDarkMode ? 'hover:bg-gray-700 text-gray-300 border-gray-700' : 'hover:bg-gray-50 text-gray-700 border-gray-100'
               }`}
@@ -227,6 +184,8 @@ const PlanRoute = ({ onNavigate }) => {
   const [originInputValue, setOriginInputValue] = useState("");
   const [mapCenter, setMapCenter] = useState({ lat: NEIVA_LAT, lng: NEIVA_LON });
   const [mapsReady, setMapsReady] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     loadGoogleMapsApi().then(() => {
@@ -246,7 +205,7 @@ const PlanRoute = ({ onNavigate }) => {
             address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`
           };
           setUserLocation(location);
-          console.log("✅ Ubicación obtenida:", location);
+          console.log("Ubicación obtenida:", location);
         },
         (err) => {
           console.error("Error obteniendo ubicación:", err);
@@ -256,9 +215,8 @@ const PlanRoute = ({ onNavigate }) => {
     }
   }, []);
 
-  // Función para calcular ruta
+  // Función para calcular ruta (usa backend)
   const calculateRoute = async () => {
-    // Validar que haya origen y destino
     if (!origin) {
       setError("Seleccione un origen");
       return;
@@ -280,64 +238,85 @@ const PlanRoute = ({ onNavigate }) => {
     setError(null);
 
     try {
-      console.log("📡 Calculando ruta...");
+      console.log("Calculando ruta via backend...");
       console.log("Origen:", origin);
       console.log("Destino:", destination);
       console.log("Modo:", transportMode);
 
-      const directions = new window.google.maps.DirectionsService();
-      
+      // Mapear modos de transporte
       const modeMap = {
-        walking: window.google.maps.TravelMode.WALKING,
-        bike: window.google.maps.TravelMode.BICYCLING,
-        public: window.google.maps.TravelMode.TRANSIT,
+        walking: "walking",
+        bike: "bicycling",
+        public: "transit",
       };
 
-      const result = await new Promise((resolve, reject) => {
-        directions.route({
-          origin: { lat: origin.lat, lng: origin.lng },
-          destination: { lat: destination.lat, lng: destination.lng },
-          travelMode: modeMap[transportMode] || window.google.maps.TravelMode.WALKING,
-          unitSystem: window.google.maps.UnitSystem.METRIC,
-        }, (response, status) => {
-          console.log("📡 Respuesta Directions API:", status);
-          
-          if (status === 'OK') {
-            resolve(response);
-          } else if (status === 'REQUEST_DENIED') {
-            reject(new Error('API key no autorizada. Habilite Directions API en Google Cloud Console.'));
-          } else if (status === 'ZERO_RESULTS') {
-            reject(new Error('No hay ruta disponible entre estos lugares.'));
-          } else if (status === 'NOT_FOUND') {
-            reject(new Error('No se encontró uno de los lugares.'));
-          } else {
-            reject(new Error(`Error: ${status}`));
-          }
-        });
-      });
+      const result = await mapsService.getDirections(
+        origin.lat,
+        origin.lng,
+        destination.lat,
+        destination.lng,
+        modeMap[transportMode] || "walking"
+      );
 
-      if (result?.routes?.[0]) {
-        const leg = result.routes[0].legs[0];
-        const distance = (leg.distance.value / 1000).toFixed(1);
-        const duration = Math.round(leg.duration.value / 60);
+      console.log("Respuesta del backend:", result);
+
+      if (result && result.encodedPolyline) {
+        const distance = (result.distance.valueMeters / 1000).toFixed(1);
+        const duration = Math.round(result.duration.valueSeconds / 60);
         
-        console.log("✅ Ruta calculada:", { distance, duration });
+        console.log("Ruta calculada:", { distance, duration });
         
         setRoute({
           distance,
           duration,
-          geometry: result.routes[0].overview_polyline,
-          startAddress: leg.start_address,
-          endAddress: leg.end_address,
+          geometry: result.encodedPolyline,
+          startAddress: origin.address,
+          endAddress: destination.address,
         });
       } else {
         setError("No se encontró una ruta válida");
       }
     } catch (err) {
-      console.error("❌ Error:", err);
-      setError(err.message);
+      console.error("Error:", err);
+      setError(err.message || "Error calculando la ruta");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Guardar ruta en el backend
+  const saveRoute = async () => {
+    if (!route || !origin || !destination) return;
+
+    setSaving(true);
+    try {
+      const modeMap = {
+        walking: "walking",
+        bike: "bike",
+        public: "public_transport",
+      };
+
+      await routeService.create({
+        name: `${origin.name} → ${destination.name}`,
+        description: `Ruta calculada desde ${origin.name} hasta ${destination.name}`,
+        transportType: modeMap[transportMode] || "walking",
+        startName: origin.name,
+        destinationName: destination.name,
+        startLat: origin.lat,
+        startLng: origin.lng,
+        endLat: destination.lat,
+        endLng: destination.lng,
+        encodedPolyline: route.geometry,
+        distanceKm: parseFloat(route.distance),
+        estimatedTimeMin: route.duration,
+      });
+
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      console.error("Error guardando ruta:", err);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -361,15 +340,13 @@ const PlanRoute = ({ onNavigate }) => {
       setOrigin(userLocation);
       setOriginInputValue("Mi ubicación");
       setMapCenter({ lat: userLocation.lat, lng: userLocation.lng });
-      console.log("📍 Usando ubicación como origen:", userLocation);
+      console.log("Usando ubicación como origen:", userLocation);
       
-      // Si ya hay destino, recalcular ruta
       if (destination && destination.lat) {
         setTimeout(() => calculateRoute(), 100);
       }
     } else {
       setError("No se pudo obtener su ubicación. Verifique los permisos del GPS.");
-      // Intentar obtener ubicación nuevamente
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const location = {
@@ -393,7 +370,7 @@ const PlanRoute = ({ onNavigate }) => {
     setMapCenter({ lat: NEIVA_LAT, lng: NEIVA_LON });
   };
 
-  // Seleccionar destino rápido (para pruebas)
+  // Seleccionar destino rápido
   const selectQuickDestination = (place) => {
     setDestination(place);
     if (origin && origin.lat) {
@@ -574,12 +551,27 @@ const PlanRoute = ({ onNavigate }) => {
                     {route.startAddress?.split(',')[0]} → {route.endAddress?.split(',')[0]}
                   </p>
                 </div>
-                <button
-                  onClick={() => setRoute(null)}
-                  className="w-6 h-6 rounded-md flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
-                  <span className="text-gray-400 text-sm">✕</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={saveRoute}
+                    disabled={saving || saved}
+                    className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                      saved
+                        ? 'bg-green-100 text-green-700'
+                        : saving
+                        ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                        : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                    }`}
+                  >
+                    {saved ? '✓ Guardada' : saving ? 'Guardando...' : 'Guardar'}
+                  </button>
+                  <button
+                    onClick={() => setRoute(null)}
+                    className="w-6 h-6 rounded-md flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+                  >
+                    <span className="text-gray-400 text-sm">✕</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

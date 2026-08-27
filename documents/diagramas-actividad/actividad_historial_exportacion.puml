@@ -1,0 +1,54 @@
+@startuml Actividad_HistorialExportacion
+title <b>Diagrama de Actividad — Historial y Exportación de Trayectos</b>\n<size:10>CU04 + CU19 · RF12 / RF29</size>
+
+|#E8F5E9|Usuario|
+start
+:Inicia sesión;
+:Accede a "Mi historial" (/user/history);
+
+|#FFFFFF|Base de Datos|
+:Consulta los trayectos del usuario\ncon fecha, ruta y CO₂ ahorrado;
+
+|#FFFFFF|Sistema|
+if (¿Existen trayectos registrados?) then (no)
+  :Muestra "sin información disponible";
+  stop
+else (sí)
+endif
+
+:Lista los trayectos ordenados por fecha;
+
+|Usuario|
+if (¿Desea ver el detalle?) then (sí)
+  :Selecciona un trayecto;
+  |Sistema|
+  :Muestra detalle completo:\nmapa, distancia, tiempo y CO₂;
+else (no)
+endif
+
+if (¿Desea eliminar un registro?) then (sí)
+  :Selecciona eliminar;
+  |Sistema|
+  :Pide confirmación y elimina (RF12.3);
+else (no)
+endif
+
+if (¿Desea exportar?) then (sí)
+  :Selecciona rango de fechas (RF29.2);
+  |Sistema|
+  :Filtra los trayectos del período;
+  :Genera archivo PDF / Excel;
+  if (¿Registros en el rango?) then (no)
+    :Informa "sin información disponible";
+    stop
+  else (sí)
+  endif
+  :Descarga el archivo al dispositivo;
+else (no)
+endif
+
+|Usuario|
+:Consulta o exporta su historial según necesite;
+stop
+
+@enduml

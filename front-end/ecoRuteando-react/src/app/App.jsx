@@ -1,266 +1,204 @@
-// App.jsx - CORREGIDO para mostrar HomePage en la raíz
+import { useState, useCallback } from "react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { ThemeProvider, useTheme } from "./context/ThemeContext";
+import { LanguageProvider } from "./context/LanguageContext";
+import { AuthProvider } from "./context/AuthContext";
+import { LogoImage } from "../shared/components/Icons";
+import LoadingOverlay from "../shared/components/LoadingOverlay";
+import ConfirmModal from "../shared/components/ConfirmModal";
 
-import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next"; // ✅ IMPORTAR useTranslation
-import HomePage from "../features/home/pages/HomePage";
+// Auth pages
 import Login from "../features/auth/components/Login";
 import Register from "../features/auth/components/Register";
 import Recover from "../features/auth/components/Recover";
 import VerifyCode from "../features/auth/components/VerifyCode";
+import VerifyEmailCode from "../features/auth/components/VerifyEmailCode";
 import NewPassword from "../features/auth/components/NewPassword";
-import { LogoImage } from "../shared/components/Icons";
+import OAuthCallback from "../features/auth/components/OAuthCallback";
+import TwoFactorVerify from "../features/auth/components/TwoFactorVerify";
+
+// App pages
+import HomePage from "../features/home/pages/HomePage";
 import UserDashboard from "../features/home/pages/UserDashboard";
-import AdminPanel from "../features/admin/pages/AdminPanel";
 import UserProfile from "../features/home/pages/UserProfile";
-import LoadingOverlay from "../shared/components/LoadingOverlay";
-import ConfirmModal from "../shared/components/ConfirmModal";
-import { ThemeProvider, useTheme } from "./context/ThemeContext";
-import { LanguageProvider } from "./context/LanguageContext";
-import PlanRoute from "../features/home/pages/PlanRoute";
 import UserHistory from "../features/home/pages/UserHistory";
 import UserStatistics from "../features/home/pages/UserStatistics";
-import ReporterProblem from "../features/home/pages/ReporterProblem";
 import UserAlerts from "../features/home/pages/UserAlert";
+import PlanRoute from "../features/home/pages/PlanRoute";
+import ReporterProblem from "../features/home/pages/ReporterProblem";
+import AdminPanel from "../features/admin/pages/AdminPanel";
+
 import "leaflet/dist/leaflet.css";
 
+function AdminSection({ title }) {
+    const navigate = useNavigate();
+    const { isDarkMode } = useTheme();
+    const { t } = useTranslation();
+    return (
+        <div className={`min-h-screen flex flex-col items-center justify-center gap-3 ${isDarkMode ? "bg-gray-900" : "bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50"}`}>
+            <h1 className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-gray-700"}`}>{t(title)}</h1>
+            <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>{t("admin.section.underConstruction", "Sección en construcción")}</p>
+            <button
+                onClick={() => navigate("/admin")}
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
+            >
+                {t("admin.section.backToPanel", "Volver al panel")}
+            </button>
+        </div>
+    );
+}
+
 function AppContent() {
-  const { isDarkMode, toggleTheme } = useTheme();
-  const { i18n } = useTranslation(); // ✅ OBTENER i18n
-  const [isLoading, setIsLoading] = useState(false);
+    const { isDarkMode, toggleTheme } = useTheme();
+    const { i18n, t } = useTranslation();
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+    const [userRole, setUserRole] = useState(() => localStorage.getItem("userRole") || "user");
+    const [showTerms, setShowTerms] = useState(false);
+    const [termsAccepted, setTermsAccepted] = useState(false);
+    const [confirmModal, setConfirmModal] = useState({
+        isOpen: false, pendingAction: null, title: "", message: "",
+        confirmText: "", cancelText: "", type: "warning"
+    });
 
-  // ✅ CORREGIDO: La raíz muestra HomePage
-  const [page, setPage] = useState(() => {
-    const path = window.location.pathname;
+    // Normaliza rutas relativas ("admin/users" -> "/admin/users")
+    const onNavigate = useCallback((path) => {
+        if (typeof path !== "string" || !path) return;
+        navigate(path.startsWith("/") ? path : `/${path}`);
+    }, [navigate]);
 
-    if (path === "/" || path === "") {
-      return "home";
-    }
-    if (path === "/dashboard") return "dashboard";
-    if (path === "/login") return "login";
-    if (path === "/register") return "register";
-    if (path === "/admin") return "admin";
-    if (path === "/profile") return "profile";
-    if (path === "/recover") return "recover";
-    if (path === "/verify") return "verify";
-    if (path === "/newpassword") return "newpassword";
-    if (path === "/user/plan-route") return "user/plan-route";
-    if (path === "/user/history") return "user/history";
-    if (path === "/user/statistics") return "user/statistics";
-    if (path === "/user/reporter-problem") return "user/reporter-problem";
-    if (path === "/user/alerts") return "user/alerts";
-
-    return "home";
-  });
-
-  const [showTerms, setShowTerms] = useState(false);
-  const [termsAccepted, setTermsAccepted] = useState(false);
-  const [userRole, setUserRole] = useState(() => {
-    const savedRole = localStorage.getItem("userRole");
-    return savedRole || "user";
-  });
-  const [confirmModal, setConfirmModal] = useState({
-    isOpen: false,
-    pendingAction: null,
-    title: "",
-    message: "",
-    confirmText: "",
-    cancelText: "",
-    type: "warning"
-  });
-
-  useEffect(() => {
-    const handlePathChange = () => {
-      const path = window.location.pathname;
-
-      if (path === "/" || path === "") {
-        setPage("home");
-      } else if (path === "/dashboard") {
-        setPage("dashboard");
-      } else if (path === "/login") {
-        setPage("login");
-      } else if (path === "/register") {
-        setPage("register");
-      } else if (path === "/admin") {
-        setPage("admin");
-      } else if (path === "/profile") {
-        setPage("profile");
-      } else if (path === "/recover") {
-        setPage("recover");
-      } else if (path === "/verify") {
-        setPage("verify");
-      } else if (path === "/newpassword") {
-        setPage("newpassword");
-      } else if (path === "/user/plan-route") {
-        setPage("user/plan-route");
-      } else if (path === "/user/history") {
-        setPage("user/history");
-      } else if (path === "/user/statistics") {
-        setPage("user/statistics");
-      } else if (path === "/user/reporter-problem") {
-        setPage("user/reporter-problem");
-      } else if (path === "/user/alerts") {
-        setPage("user/alerts");
-      } else {
-        setPage("home");
-      }
+    const handleAcceptTerms = () => {
+        setTermsAccepted(true);
+        setShowTerms(false);
     };
 
-    window.addEventListener("popstate", handlePathChange);
-    return () => window.removeEventListener("popstate", handlePathChange);
-  }, []);
+    const closeConfirmModal = () => {
+        setConfirmModal({ isOpen: false, pendingAction: null, title: "", message: "", confirmText: "", cancelText: "", type: "warning" });
+    };
 
-  const handleAcceptTerms = () => {
-    setTermsAccepted(true);
-    setShowTerms(false);
-  };
+    const executePendingAction = () => {
+        if (confirmModal.pendingAction) confirmModal.pendingAction();
+    };
 
-  const closeConfirmModal = () => {
-    setConfirmModal({ isOpen: false, pendingAction: null, title: "", message: "", confirmText: "", cancelText: "", type: "warning" });
-  };
+    return (
+        <div className={`relative min-h-screen font-sans antialiased ${isDarkMode ? "dark" : ""}`}>
+            <button
+                onClick={toggleTheme}
+                className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
+            >
+                {isDarkMode ? "☀️" : "🌙"}
+            </button>
 
-  const executePendingAction = () => {
-    if (confirmModal.pendingAction) {
-      confirmModal.pendingAction();
-    }
-  };
+            <LoadingOverlay isLoading={isLoading} isDarkMode={isDarkMode} message="Cargando..." />
 
-  const navigate = (path) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      window.location.href = path;
-      setTimeout(() => setIsLoading(false), 500);
-    }, 300);
-  };
+            <ConfirmModal
+                isOpen={confirmModal.isOpen}
+                onClose={closeConfirmModal}
+                onConfirm={executePendingAction}
+                title={confirmModal.title}
+                message={confirmModal.message}
+                confirmText={confirmModal.confirmText}
+                cancelText={confirmModal.cancelText}
+                type={confirmModal.type}
+            />
 
-  return (
-    <div className={`relative min-h-screen font-sans antialiased ${isDarkMode ? "dark" : ""}`}>
-      <button
-        onClick={toggleTheme}
-        className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
-      >
-        {isDarkMode ? "☀️" : "🌙"}
-      </button>
+            <main>
+                <Routes>
+                    <Route path="/" element={<HomePage key={i18n.language} onNavigate={onNavigate} />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={
+                        <Register
+                            onShowTerms={() => setShowTerms(true)}
+                            termsAccepted={termsAccepted}
+                            setTermsAccepted={setTermsAccepted}
+                        />
+                    } />
+                    <Route path="/recover" element={<Recover />} />
+                    <Route path="/verify" element={<VerifyCode onCodeVerified={(code) => sessionStorage.setItem("passwordRecoveryCode", code)} />} />
+                    <Route path="/verify-email" element={<VerifyEmailCode />} />
+                    <Route path="/newpassword" element={<NewPassword />} />
+                    <Route path="/auth/callback" element={<OAuthCallback />} />
+                    <Route path="/verify-2fa" element={<TwoFactorVerify />} />
+                    <Route path="/dashboard" element={<UserDashboard userRole={userRole} onNavigate={onNavigate} />} />
+                    <Route path="/admin" element={<AdminPanel userRole={userRole} onNavigate={onNavigate} />} />
+                    <Route path="/admin/users" element={<AdminSection title="admin.section.users" />} />
+                    <Route path="/admin/reports" element={<AdminSection title="admin.section.reports" />} />
+                    <Route path="/admin/support" element={<AdminSection title="admin.section.support" />} />
+                    <Route path="/admin/audit" element={<AdminSection title="admin.section.audit" />} />
+                    <Route path="/admin/settings" element={<AdminSection title="admin.section.settings" />} />
+                    <Route path="/admin/impact" element={<AdminSection title="admin.section.impact" />} />
+                    <Route path="/profile" element={<UserProfile userRole={userRole} onNavigate={onNavigate} />} />
+                    <Route path="/user/plan-route" element={<PlanRoute onNavigate={onNavigate} />} />
+                    <Route path="/user/history" element={<UserHistory onNavigate={onNavigate} />} />
+                    <Route path="/user/statistics" element={<UserStatistics onNavigate={onNavigate} />} />
+                    <Route path="/user/reporter-problem" element={<ReporterProblem onNavigate={onNavigate} />} />
+                    <Route path="/user/alerts" element={<UserAlerts onNavigate={onNavigate} />} />
+                </Routes>
+            </main>
 
-      <LoadingOverlay isLoading={isLoading} isDarkMode={isDarkMode} message="Cargando..." />
+            {showTerms && (
+                <div className="modal-overlay animate-fade-in" onClick={() => setShowTerms(false)}>
+                    <div className="modal-box animate-slide-up" onClick={(e) => e.stopPropagation()}>
+                        <button onClick={() => setShowTerms(false)} className="absolute top-6 right-6 text-gray-400 hover:text-green-800 transition-colors text-xl">✕</button>
 
-      <ConfirmModal
-        isOpen={confirmModal.isOpen}
-        onClose={closeConfirmModal}
-        onConfirm={executePendingAction}
-        title={confirmModal.title}
-        message={confirmModal.message}
-        confirmText={confirmModal.confirmText}
-        cancelText={confirmModal.cancelText}
-        type={confirmModal.type}
-      />
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-green-100 p-1 shadow-sm">
+                                <LogoImage size={22} />
+                            </div>
+                            <div>
+                                <h2 className="text-xl font-bold text-green-900">{t("terms.title", "Términos y Condiciones")}</h2>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{t("terms.date", "EcoRuteando · Enero 2025")}</p>
+                            </div>
+                        </div>
 
-      <main>
-        {/* ✅ KEY PARA FORZAR RE-RENDER AL CAMBIAR IDIOMA */}
-        {page === "home" && <HomePage key={i18n.language} onNavigate={navigate} />}
-        {page === "dashboard" && <UserDashboard onNavigate={navigate} userRole={userRole} />}
-        {page === "login" && <Login setUserRole={setUserRole} />}
-        {page === "admin" && <AdminPanel onNavigate={navigate} userRole={userRole} />}
-        {page === "profile" && <UserProfile onNavigate={navigate} userRole={userRole} />}
-        {page === "register" && (
-          <Register
-            onShowTerms={() => setShowTerms(true)}
-            termsAccepted={termsAccepted}
-            setTermsAccepted={setTermsAccepted}
-          />
-        )}
-        {page === "recover" && (
-          <Recover onNavigate={navigate} />
-        )}
+                        <div className="modal-content text-sm text-gray-600 space-y-5 leading-relaxed text-justify pr-2 max-h-[50vh] overflow-y-auto custom-scrollbar">
+                            <section>
+                                <h3 className="font-bold text-green-800 mb-1">{t("terms.acceptance.title", "1. Aceptación de los Términos")}</h3>
+                                <p>{t("terms.acceptance.text", "Al registrarse y utilizar los servicios de EcoRuteando, usted acepta quedar vinculado por estos Términos y Condiciones.")}</p>
+                            </section>
+                            <section>
+                                <h3 className="font-bold text-green-800 mb-1">{t("terms.service.title", "2. Descripción del Servicio")}</h3>
+                                <p>{t("terms.service.text", "EcoRuteando es una plataforma de movilidad sostenible desarrollada en el marco del programa de Desarrollo de Software del SENA.")}</p>
+                            </section>
+                            <section>
+                                <h3 className="font-bold text-green-800 mb-1">{t("terms.userRegistration.title", "3. Registro de Usuario")}</h3>
+                                <p>{t("terms.userRegistration.text", "El usuario deberá crear una cuenta con información veraz, completa y actualizada.")}</p>
+                            </section>
+                            <section>
+                                <h3 className="font-bold text-green-800 mb-1">{t("terms.acceptableUse.title", "4. Uso Aceptable")}</h3>
+                                <p>{t("terms.acceptableUse.text", "Queda expresamente prohibido: compartir contenido ofensivo, usar la plataforma para actividades ilegales.")}</p>
+                            </section>
+                        </div>
 
-        {page === "verify" && (
-          <VerifyCode
-            onNavigate={navigate}
-            onCodeVerified={(code) => {
-              sessionStorage.setItem("passwordRecoveryCode", code);
-            }}
-          />
-        )}
-
-        {page === "newpassword" && (
-          <NewPassword
-            onNavigate={navigate}
-          />
-        )}
-      
-        {page === "user/plan-route" && <PlanRoute onNavigate={navigate} />}
-        {page === "user/history" && <UserHistory onNavigate={navigate} />}
-        {page === "user/statistics" && <UserStatistics onNavigate={navigate} />}
-        {page === "user/reporter-problem" && <ReporterProblem onNavigate={navigate} />}
-        {page === "user/alerts" && <UserAlerts onNavigate={navigate} />}
-      </main>
-
-      {/* Modal de términos - sin cambios */}
-      {showTerms && (
-        <div className="modal-overlay animate-fade-in" onClick={() => setShowTerms(false)}>
-          <div className="modal-box animate-slide-up" onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setShowTerms(false)} className="absolute top-6 right-6 text-gray-400 hover:text-green-800 transition-colors text-xl">✕</button>
-
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-green-100 p-1 shadow-sm">
-                <LogoImage size={22} />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-green-900">Términos y Condiciones</h2>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">EcoRuteando · Enero 2025</p>
-              </div>
-            </div>
-
-            <div className="modal-content text-sm text-gray-600 space-y-5 leading-relaxed text-justify pr-2 max-h-[50vh] overflow-y-auto custom-scrollbar">
-              <section>
-                <h3 className="font-bold text-green-800 mb-1">1. Aceptación de los Términos</h3>
-                <p>Al registrarse y utilizar los servicios de EcoRuteando, usted acepta quedar vinculado por estos Términos y Condiciones. Si no está de acuerdo con alguno de los términos aquí establecidos, le recomendamos no hacer uso de la plataforma.</p>
-              </section>
-
-              <section>
-                <h3 className="font-bold text-green-800 mb-1">2. Descripción del Servicio</h3>
-                <p>EcoRuteando es una plataforma de movilidad sostenible desarrollada en el marco del programa de Desarrollo de Software del SENA, sede Neiva, Colombia. Su propósito es facilitar la planificación de rutas ecológicas que combinan transporte público y bicicleta.</p>
-              </section>
-
-              <section>
-                <h3 className="font-bold text-green-800 mb-1">3. Registro de Usuario</h3>
-                <p>Para acceder a las funcionalidades completas de la plataforma, el usuario deberá crear una cuenta con información veraz, completa y actualizada. El usuario es responsable de mantener la confidencialidad de sus credenciales.</p>
-              </section>
-
-              <section>
-                <h3 className="font-bold text-green-800 mb-1">4. Uso Aceptable</h3>
-                <p>Queda expresamente prohibido: compartir contenido ofensivo, usar la plataforma para actividades ilegales o intentar vulnerar la seguridad del sistema.</p>
-              </section>
-
-              <section>
-                <h3 className="font-bold text-green-800 mb-1">10. Ley Aplicable y Jurisdicción</h3>
-                <p>Estos Términos y Condiciones se rigen por las leyes de la República de Colombia. Cualquier disputa será resuelta ante los tribunales competentes de la ciudad de Neiva, Huila.</p>
-              </section>
-            </div>
-
-            <div className="flex gap-3 mt-8">
-              <button onClick={() => setShowTerms(false)} className="flex-1 py-3.5 border-2 border-gray-100 rounded-2xl font-bold text-gray-400 hover:bg-gray-50 transition-all text-sm">Cerrar</button>
-              <button
-                onClick={handleAcceptTerms}
-                className="flex-1 bg-green-700 hover:bg-green-800 text-white py-3.5 rounded-2xl font-bold shadow-lg shadow-green-200 transition-all text-sm"
-              >
-                Acepto los términos
-              </button>
-            </div>
-          </div>
+                        <div className="flex gap-3 mt-8">
+                            <button onClick={() => setShowTerms(false)} className="flex-1 py-3.5 border-2 border-gray-100 rounded-2xl font-bold text-gray-400 hover:bg-gray-50 transition-all text-sm">{t("terms.close", "Cerrar")}</button>
+                            <button
+                                onClick={handleAcceptTerms}
+                                className="flex-1 bg-green-700 hover:bg-green-800 text-white py-3.5 rounded-2xl font-bold shadow-lg shadow-green-200 transition-all text-sm"
+                            >
+                                {t("terms.accept", "Acepto los términos")}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
-      )}
-    </div>
-  );
+    );
 }
 
 function App() {
-  return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <AppContent />
-      </LanguageProvider>
-    </ThemeProvider>
-  );
+    return (
+        <ThemeProvider>
+            <LanguageProvider>
+                <AuthProvider>
+                    <BrowserRouter>
+                        <AppContent />
+                    </BrowserRouter>
+                </AuthProvider>
+            </LanguageProvider>
+        </ThemeProvider>
+    );
 }
 
 export default App;

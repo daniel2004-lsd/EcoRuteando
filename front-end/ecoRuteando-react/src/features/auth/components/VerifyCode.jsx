@@ -1,14 +1,46 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Button from "../../../shared/components/Button";
 import {
     Logo,
     ArrowLeft,
     ShieldIcon
 } from "../../../shared/components/Icons";
+import { forgotPassword } from "../../../services/authService";
 
-const VerifyCode = ({ onNavigate, onCodeVerified }) => {
+const VerifyCode = ({ onCodeVerified }) => {
+    const { t } = useTranslation();
+    const navigate = useNavigate();
     const [code, setCode] = useState(["", "", "", "", "", ""]);
+    const [resendMessage, setResendMessage] = useState("");
+    const [resending, setResending] = useState(false);
     const inputs = useRef([]);
+
+    const handleResend = async () => {
+        const email = sessionStorage.getItem("passwordRecoveryEmail");
+
+        if (!email) {
+            setResendMessage(t("auth.verifyCode.noEmailError", "No hay un correo guardado. Vuelve a solicitar el código."));
+            return;
+        }
+
+        setResending(true);
+        setResendMessage("");
+
+        try {
+            await forgotPassword(email);
+            setResendMessage(t("auth.verifyCode.codeResent", "Código reenviado. Revisa tu correo."));
+        } catch (err) {
+            if (err.response?.status === 429) {
+                setResendMessage(t("auth.verifyCode.rateLimited", "Demasiadas solicitudes. Espera unos minutos e intenta de nuevo."));
+            } else {
+                setResendMessage(t("auth.verifyCode.resendError", "No fue posible reenviar el código. Intenta nuevamente."));
+            }
+        } finally {
+            setResending(false);
+        }
+    };
 
     const handleChange = (value, index) => {
         if (!/^[0-9]?$/.test(value)) return;
@@ -44,7 +76,7 @@ const VerifyCode = ({ onNavigate, onCodeVerified }) => {
             onCodeVerified(otp);
         }
 
-        onNavigate("newpassword");
+        navigate("/newpassword");
     };
 
     return (
@@ -59,7 +91,7 @@ const VerifyCode = ({ onNavigate, onCodeVerified }) => {
                     </div>
 
                     <span className="text-[10px] font-bold text-green-700 uppercase">
-                        Correo
+                        {t("auth.verifyCode.stepEmail", "Correo")}
                     </span>
                 </div>
 
@@ -71,7 +103,7 @@ const VerifyCode = ({ onNavigate, onCodeVerified }) => {
                     </div>
 
                     <span className="text-[10px] font-bold text-green-700 uppercase">
-                        Código
+                        {t("auth.verifyCode.stepCode", "Código")}
                     </span>
                 </div>
 
@@ -83,7 +115,7 @@ const VerifyCode = ({ onNavigate, onCodeVerified }) => {
                     </div>
 
                     <span className="text-[10px] font-bold text-gray-400 uppercase">
-                        Contraseña
+                        {t("auth.verifyCode.stepPassword", "Contraseña")}
                     </span>
                 </div>
 
@@ -97,11 +129,11 @@ const VerifyCode = ({ onNavigate, onCodeVerified }) => {
                 </div>
 
                 <h2 className="text-xl font-bold text-green-900 mb-2">
-                    Verificar código
+                    {t("auth.verifyCode.title", "Verificar código")}
                 </h2>
 
                 <p className="text-gray-500 text-sm">
-                    Introduce el código de 6 dígitos que recibiste en tu correo.
+                    {t("auth.verifyCode.subtitle", "Introduce el código de 6 dígitos que recibiste en tu correo.")}
                 </p>
 
             </div>
@@ -132,31 +164,39 @@ const VerifyCode = ({ onNavigate, onCodeVerified }) => {
 
             </div>
 
-            <p className="text-center text-sm text-gray-500 mb-6">
-                ¿No recibiste el código?{" "}
+            <p className="text-center text-sm text-gray-500 mb-2">
+                {t("auth.verifyCode.noCodeReceived", "¿No recibiste el código?")}{" "}
                 <button
                     type="button"
-                    className="text-green-700 font-bold hover:underline"
+                    onClick={handleResend}
+                    disabled={resending}
+                    className="text-green-700 font-bold hover:underline disabled:opacity-50"
                 >
-                    Reenviar
+                    {resending ? t("auth.verifyCode.resending", "Reenviando...") : t("auth.verifyCode.resend", "Reenviar")}
                 </button>
             </p>
+
+            {resendMessage && (
+                <p className={`text-center text-xs mb-4 ${resendMessage.includes("reenviado") ? "text-green-600" : "text-red-600"}`}>
+                    {resendMessage}
+                </p>
+            )}
 
             <Button
                 onClick={handleVerify}
                 className="w-full py-3.5 mb-4 shadow-md"
                 disabled={code.includes("")}
             >
-                Verificar código
+                {t("auth.verifyCode.verifyButton", "Verificar código")}
             </Button>
 
             <button
                 type="button"
-                onClick={() => onNavigate("recover")}
+                onClick={() => navigate("/recover")}
                 className="flex items-center gap-1 text-green-700 text-sm font-bold mx-auto hover:underline"
             >
                 <ArrowLeft />
-                Volver
+                {t("auth.verifyCode.back", "Volver")}
             </button>
 
         </div>
