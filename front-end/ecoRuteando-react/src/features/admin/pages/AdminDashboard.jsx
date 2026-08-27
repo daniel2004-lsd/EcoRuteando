@@ -29,43 +29,43 @@ const AdminDashboard = ({ onNavigate, userRole }) => {
     {
       id: "users",
       icon: <UsersIcon size={32} />,
-      title: "Gestión de Usuarios",
-      subtitle: "Administrar cuentas",
+      title: t("admin.dashboard.modules.users.title", "Gestión de Usuarios"),
+      subtitle: t("admin.dashboard.modules.users.subtitle", "Administrar cuentas"),
       onClick: () => onNavigate("admin/users")
     },
     {
       id: "reports",
       icon: <ReportIcon size={32} />,
-      title: "Reportes",
-      subtitle: "Verificar reportes",
+      title: t("admin.dashboard.modules.reports.title", "Reportes"),
+      subtitle: t("admin.dashboard.modules.reports.subtitle", "Verificar reportes"),
       onClick: () => onNavigate("admin/reports")
     },
     {
       id: "support",
       icon: <MessageCircleIcon size={32} />,
-      title: "Soporte",
-      subtitle: "Tickets de ayuda",
+      title: t("admin.dashboard.modules.support.title", "Soporte"),
+      subtitle: t("admin.dashboard.modules.support.subtitle", "Tickets de ayuda"),
       onClick: () => onNavigate("admin/support")
     },
     {
       id: "export",
       icon: <DownloadIcon size={32} />,
-      title: "Exportar Datos",
-      subtitle: "PDF y Excel",
-      onClick: () => alert("Exportando...")
+      title: t("admin.dashboard.modules.export.title", "Exportar Datos"),
+      subtitle: t("admin.dashboard.modules.export.subtitle", "PDF y Excel"),
+      onClick: () => alert(t("admin.dashboard.exporting", "Exportando..."))
     },
     {
       id: "audit",
       icon: <ActivityIcon size={32} />,
-      title: "Auditoría",
-      subtitle: "Logs del sistema",
+      title: t("admin.dashboard.modules.audit.title", "Auditoría"),
+      subtitle: t("admin.dashboard.modules.audit.subtitle", "Logs del sistema"),
       onClick: () => onNavigate("admin/audit")
     },
     {
       id: "settings",
       icon: <SettingsIcon size={32} />,
-      title: "Configuración",
-      subtitle: "Ajustes del sistema",
+      title: t("admin.dashboard.modules.settings.title", "Configuración"),
+      subtitle: t("admin.dashboard.modules.settings.subtitle", "Ajustes del sistema"),
       onClick: () => onNavigate("admin/settings")
     }
   ];
@@ -85,7 +85,7 @@ const AdminDashboard = ({ onNavigate, userRole }) => {
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-bold text-gray-900">
-                  Admin Dashboard
+                  {t("admin.dashboard.title", "Admin Dashboard")}
                 </h1>
 
                 {/* 🔥 BADGE ADMIN */}
@@ -97,7 +97,7 @@ const AdminDashboard = ({ onNavigate, userRole }) => {
               </div>
 
               <p className="text-sm text-gray-500">
-                Panel de control del sistema
+                {t("admin.dashboard.controlPanelSubtitle", "Panel de control del sistema")}
               </p>
             </div>
           </div>
@@ -107,7 +107,7 @@ const AdminDashboard = ({ onNavigate, userRole }) => {
             className="flex items-center gap-2 px-5 py-2.5 border-2 border-red-600 text-red-600 rounded-xl font-semibold hover:bg-red-600 hover:text-white transition-all"
           >
             <ArrowLeft size={18} />
-            Volver
+            {t("admin.dashboard.back", "Volver")}
           </button>
         </div>
       </header>
@@ -119,33 +119,33 @@ const AdminDashboard = ({ onNavigate, userRole }) => {
 
           <div className="bg-white rounded-2xl p-6 shadow-sm border">
             <p className="text-3xl font-black">{stats.users}</p>
-            <p className="text-sm text-gray-500">Usuarios</p>
+            <p className="text-sm text-gray-500">{t("admin.dashboard.stats.users", "Usuarios")}</p>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow-sm border">
             <p className="text-3xl font-black">{stats.routes}</p>
-            <p className="text-sm text-gray-500">Rutas</p>
+            <p className="text-sm text-gray-500">{t("admin.dashboard.stats.routes", "Rutas")}</p>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow-sm border">
             <p className="text-3xl font-black">{stats.reports}</p>
-            <p className="text-sm text-gray-500">Reportes</p>
+            <p className="text-sm text-gray-500">{t("admin.dashboard.stats.reports", "Reportes")}</p>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow-sm border">
             <p className="text-3xl font-black">{stats.tickets}</p>
-            <p className="text-sm text-gray-500">Tickets</p>
+            <p className="text-sm text-gray-500">{t("admin.dashboard.stats.tickets", "Tickets")}</p>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow-sm border">
             <p className="text-3xl font-black">{stats.co2Saved} kg</p>
-            <p className="text-sm text-gray-500">CO₂</p>
+            <p className="text-sm text-gray-500">{t("admin.dashboard.stats.co2", "CO₂")}</p>
           </div>
 
         </div>
 
         {/* MODULES */}
-        <h2 className="text-xl font-bold mb-6">Panel de administración</h2>
+        <h2 className="text-xl font-bold mb-6">{t("admin.dashboard.administrationPanel", "Panel de administración")}</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {modules.map((m) => (

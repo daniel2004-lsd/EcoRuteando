@@ -15,9 +15,11 @@ import {
   CalendarIcon
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const AdminPanel = ({ onNavigate, userRole }) => {
   const { isDarkMode, toggleTheme } = useTheme();
+  const { t } = useTranslation();
 
   const [stats] = useState({
     users: 245,
@@ -31,50 +33,50 @@ const AdminPanel = ({ onNavigate, userRole }) => {
     {
       id: "users",
       icon: <UsersIcon size={28} />,
-      title: "Gestión de Usuarios",
-      subtitle: "Administrar cuentas y permisos",
+      title: t("admin.panel.modules.users.title", "Gestión de Usuarios"),
+      subtitle: t("admin.panel.modules.users.subtitle", "Administrar cuentas y permisos"),
       onClick: () => onNavigate("admin/users")
     },
     {
       id: "reports",
       icon: <ReportIcon size={28} />,
-      title: "Reportes",
-      subtitle: "Verificar y gestionar reportes",
+      title: t("admin.panel.modules.reports.title", "Reportes"),
+      subtitle: t("admin.panel.modules.reports.subtitle", "Verificar y gestionar reportes"),
       onClick: () => onNavigate("admin/reports")
     },
     {
       id: "support",
       icon: <TicketIcon size={28} />,
-      title: "Soporte",
-      subtitle: "Tickets de ayuda y consultas",
+      title: t("admin.panel.modules.support.title", "Soporte"),
+      subtitle: t("admin.panel.modules.support.subtitle", "Tickets de ayuda y consultas"),
       onClick: () => onNavigate("admin/support")
     },
     {
       id: "export",
       icon: <DownloadIcon size={28} />,
-      title: "Exportar Datos",
-      subtitle: "PDF, Excel y CSV",
-      onClick: () => alert("Exportando datos...")
+      title: t("admin.panel.modules.export.title", "Exportar Datos"),
+      subtitle: t("admin.panel.modules.export.subtitle", "PDF, Excel y CSV"),
+      onClick: () => alert(t("admin.panel.exportingData", "Exportando datos..."))
     },
     {
       id: "audit",
       icon: <ActivityIcon size={28} />,
-      title: "Auditoría",
-      subtitle: "Logs y actividad del sistema",
+      title: t("admin.panel.modules.audit.title", "Auditoría"),
+      subtitle: t("admin.panel.modules.audit.subtitle", "Logs y actividad del sistema"),
       onClick: () => onNavigate("admin/audit")
     },
     {
       id: "settings",
       icon: <SettingsIcon size={28} />,
-      title: "Configuración",
-      subtitle: "Ajustes globales del sistema",
+      title: t("admin.panel.modules.settings.title", "Configuración"),
+      subtitle: t("admin.panel.modules.settings.subtitle", "Ajustes globales del sistema"),
       onClick: () => onNavigate("admin/settings")
     }
   ];
 
   const pendingActions = [
-    { id: "reports", icon: <ReportIcon size={18} />, label: "Reportes sin revisar", desc: "Requieren atención inmediata", count: stats.reports, color: "orange" },
-    { id: "tickets", icon: <TicketIcon size={18} />, label: "Tickets de soporte", desc: "Esperando respuesta", count: stats.tickets, color: "purple" }
+    { id: "reports", icon: <ReportIcon size={18} />, label: t("admin.panel.pending.reports.label", "Reportes sin revisar"), desc: t("admin.panel.pending.reports.desc", "Requieren atención inmediata"), count: stats.reports, color: "orange" },
+    { id: "tickets", icon: <TicketIcon size={18} />, label: t("admin.panel.pending.tickets.label", "Tickets de soporte"), desc: t("admin.panel.pending.tickets.desc", "Esperando respuesta"), count: stats.tickets, color: "purple" }
   ];
 
   return (
@@ -97,8 +99,8 @@ const AdminPanel = ({ onNavigate, userRole }) => {
                 <ShieldIcon size={24} className="text-emerald-500" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">Panel de Administración</h1>
-                <p className={`text-sm ${isDarkMode ? 'text-emerald-400' : 'text-green-100'}`}>EcoRuteando - Sistema de gestión</p>
+                <h1 className="text-2xl font-bold text-white">{t("admin.panel.title", "Panel de Administración")}</h1>
+                <p className={`text-sm ${isDarkMode ? 'text-emerald-400' : 'text-green-100'}`}>{t("admin.panel.systemTagline", "EcoRuteando - Sistema de gestión")}</p>
               </div>
             </div>
 
@@ -107,7 +109,7 @@ const AdminPanel = ({ onNavigate, userRole }) => {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-gray-700/50 text-emerald-400 border border-emerald-500/30 hover:bg-gray-700' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
             >
               <ArrowLeft size={16} />
-              Volver al Dashboard
+              {t("admin.panel.backToDashboard", "Volver al Dashboard")}
             </button>
           </div>
         </div>
@@ -123,9 +125,9 @@ const AdminPanel = ({ onNavigate, userRole }) => {
               <LeafIcon size={32} className="text-emerald-500" />
             </div>
           </div>
-          <h3 className={`text-sm font-medium ${isDarkMode ? 'text-emerald-300' : 'text-emerald-600'}`}>CO₂ Total Ahorrado</h3>
+          <h3 className={`text-sm font-medium ${isDarkMode ? 'text-emerald-300' : 'text-emerald-600'}`}>{t("admin.panel.totalCo2Saved", "CO₂ Total Ahorrado")}</h3>
           <p className={`text-4xl md:text-5xl font-black mt-2 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-700'}`}>{stats.co2Saved} kg</p>
-          <p className={`text-xs mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Equivalente a plantar {Math.round(stats.co2Saved * 2)} árboles</p>
+          <p className={`text-xs mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("admin.panel.equivalentTrees", "Equivalente a plantar {{count}} árboles", { count: Math.round(stats.co2Saved * 2) })}</p>
         </div>
 
         {/* Grid de estadísticas */}
@@ -136,7 +138,7 @@ const AdminPanel = ({ onNavigate, userRole }) => {
               <UsersIcon size={20} className="text-emerald-500" />
             </div>
             <p className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{stats.users}</p>
-            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Usuarios</p>
+            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("admin.panel.stats.users", "Usuarios")}</p>
           </div>
 
           {/* Rutas */}
@@ -145,7 +147,7 @@ const AdminPanel = ({ onNavigate, userRole }) => {
               <RouteIcon size={20} className="text-emerald-500" />
             </div>
             <p className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{stats.routes}</p>
-            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Rutas</p>
+            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("admin.panel.stats.routes", "Rutas")}</p>
           </div>
 
           {/* Reportes */}
@@ -154,7 +156,7 @@ const AdminPanel = ({ onNavigate, userRole }) => {
               <ReportIcon size={20} className="text-emerald-500" />
             </div>
             <p className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{stats.reports}</p>
-            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Reportes</p>
+            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("admin.panel.stats.reports", "Reportes")}</p>
           </div>
 
           {/* Tickets */}
@@ -163,7 +165,7 @@ const AdminPanel = ({ onNavigate, userRole }) => {
               <TicketIcon size={20} className="text-emerald-500" />
             </div>
             <p className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{stats.tickets}</p>
-            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Tickets</p>
+            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("admin.panel.stats.tickets", "Tickets")}</p>
           </div>
 
           {/* Puntos */}
@@ -172,13 +174,13 @@ const AdminPanel = ({ onNavigate, userRole }) => {
               <ShieldIcon size={20} className="text-emerald-500" />
             </div>
             <p className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>120</p>
-            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Puntos ECO</p>
+            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("admin.panel.stats.ecoPoints", "Puntos ECO")}</p>
           </div>
         </div>
 
         {/* Título de módulos */}
         <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
-          <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Módulos del Sistema</h2>
+          <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{t("admin.panel.modulesTitle", "Módulos del Sistema")}</h2>
         </div>
 
         {/* Módulos */}
@@ -199,7 +201,7 @@ const AdminPanel = ({ onNavigate, userRole }) => {
         </div>
 
         {/* Acciones Pendientes */}
-        <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>⚠️ Acciones Pendientes</h2>
+        <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{t("admin.panel.pendingActionsTitle", "⚠️ Acciones Pendientes")}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {pendingActions.map((action) => (
             <div
@@ -229,15 +231,15 @@ const AdminPanel = ({ onNavigate, userRole }) => {
               <LeafIcon size={32} className="text-emerald-500" />
             </div>
           </div>
-          <h3 className={`text-lg font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>🌿 Impacto Ambiental</h3>
+          <h3 className={`text-lg font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{t("admin.panel.environmentalImpact", "🌿 Impacto Ambiental")}</h3>
           <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} max-w-md mx-auto`}>
-            Gracias a los usuarios de EcoRuteando, se han ahorrado <strong className="text-emerald-500">{stats.co2Saved} kg de CO₂</strong> mediante el uso de rutas ecológicas.
+            {t("admin.panel.impact.thanks", "Gracias a los usuarios de EcoRuteando, se han ahorrado")} <strong className="text-emerald-500">{stats.co2Saved} kg de CO₂</strong> {t("admin.panel.impact.viaEcoRoutes", "mediante el uso de rutas ecológicas.")}
           </p>
           <button
             onClick={() => onNavigate("admin/impact")}
             className={`mt-4 px-6 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 mx-auto ${isDarkMode ? 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 border border-emerald-500/30' : 'bg-emerald-600 text-white hover:bg-emerald-700'}`}
           >
-            Ver Estadísticas →
+            {t("admin.panel.viewStats", "Ver Estadísticas →")}
           </button>
         </div>
 
@@ -245,7 +247,7 @@ const AdminPanel = ({ onNavigate, userRole }) => {
         <div className="mt-8 text-center">
           <p className={`text-sm flex items-center justify-center gap-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
             <LeafIcon size={14} className="text-emerald-500" />
-            Cada acción cuenta para un futuro más verde
+            {t("admin.panel.motivationalPhrase", "Cada acción cuenta para un futuro más verde")}
             <LeafIcon size={14} className="text-emerald-500" />
           </p>
         </div>

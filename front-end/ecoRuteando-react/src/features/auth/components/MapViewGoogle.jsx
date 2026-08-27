@@ -10,7 +10,7 @@ const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", marke
   const { isDarkMode } = useTheme();
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  const GOOGLE_MAPS_API_KEY = "AIzaSyBpSXrBLSge02YgFOiH-rT8FaMUYizwcp4";
+  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
 
   // Cargar Google Maps
   useEffect(() => {

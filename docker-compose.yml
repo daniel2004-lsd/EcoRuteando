@@ -1,0 +1,92 @@
+name: ecoruteando
+
+services:
+
+  postgres:
+    image: postgis/postgis:16-3.5
+
+    environment:
+      POSTGRES_DB: ecoRuteando_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    ports:
+      - "5450:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ecoRuteando_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    restart: unless-stopped
+
+
+  backend:
+    build:
+      context: ../EcoRuteandoBackend
+      dockerfile: dockerfile
+
+    container_name: ecoruteando-backend
+
+    env_file:
+      - ../EcoRuteandoBackend/.env
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:5124
+      EmailSettings__Host: smtp.gmail.com
+      EmailSettings__Port: 587
+      EmailSettings__EnableSsl: "true"
+      EmailSettings__FromName: EcoRuteando
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
+
+    ports:
+      - "5124:5124"
+
+    restart: unless-stopped
+
+
+  liquibase:
+    build:
+      context: ../EcoRuteandoDb
+      dockerfile: docker/liquibase/Dockerfile
+
+    working_dir: /workspace
+
+    volumes:
+      - ../EcoRuteandoDb:/workspace
+
+    command: ["sh", "-c", "sleep 10 && liquibase --changeLogFile=changelog/db.changelog-master.yaml --url=jdbc:postgresql://postgres:5432/ecoRuteando_db --username=postgres --password=postgres update"]
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+
+  frontend:
+    build:
+      context: ./front-end/ecoRuteando-react
+      dockerfile: Dockerfile
+
+    container_name: ecoruteando-frontend
+
+    depends_on:
+      - backend
+
+    ports:
+      - "3007:80"
+
+    restart: unless-stopped
+
+
+volumes:
+  postgres_data:
