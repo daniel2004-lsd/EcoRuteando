@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { LeafIcon, MapIcon, ActivityIcon, HeartIcon, BikeIcon, BusIcon, CloseIcon } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
+import { useAuth } from "../../../hooks/useAuth";
 
 /* ── Ícono globo inline ── */
 const GlobeIcon = () => (
@@ -29,6 +30,7 @@ const LANGUAGES = [
 
 const HomePage = ({ onNavigate }) => {
   const { t, i18n } = useTranslation();
+  const { logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
@@ -72,7 +74,9 @@ const HomePage = ({ onNavigate }) => {
     setLangDropdownOpen(false);
   };
 
-  const handleGuestMode = () => {
+  const handleGuestMode = async () => {
+    // El modo invitado siempre inicia sin sesión activa
+    await logout();
     onNavigate("/dashboard");
   };
 

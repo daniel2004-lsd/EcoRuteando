@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../app/context/ThemeContext";
 import { register } from "../../../services/authService";
+import { redirectToOAuth } from "../../../shared/oauthRedirect";
 import toast from "react-hot-toast";
 
 function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
   const { isDarkMode, toggleTheme } = useTheme();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -52,8 +57,8 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
       password: form.pw
     });
 
-    toast.success("¡Registro exitoso!", {
-      duration: 1500,
+    toast.success(t("auth.register.successMessage", "¡Registro exitoso! Te enviamos un código a tu correo"), {
+      duration: 2500,
       style: {
         background: "#065f46",
         color: "#fff",
@@ -62,13 +67,24 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
     });
 
     setTimeout(() => {
-      goToLogin();
+      navigate(`/verify-email?email=${encodeURIComponent(form.email)}`);
     }, 1500);
 
   } catch (error) {
     console.error(error);
 
-    toast.error("No fue posible registrar el usuario");
+    if (error.response?.status === 429) {
+      toast.error("Demasiadas solicitudes. Espera unos minutos e intenta de nuevo.", {
+        duration: 6000,
+        style: {
+          background: "#78350f",
+          color: "#fef3c7",
+          border: "1px solid #f59e0b"
+        }
+      });
+    } else {
+      toast.error(t("auth.register.errorMessage", "No fue posible registrar el usuario"));
+    }
   }
 };
 
@@ -79,6 +95,9 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
   const goToHome = () => {
     window.location.href = "/";
   };
+
+  const handleGoogleLogin = () => redirectToOAuth("google");
+  const handleFacebookLogin = () => redirectToOAuth("facebook");
 
   const EyeIcon = () => (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -142,15 +161,15 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
           </div>
         </div>
         <h1 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-emerald-700'}`}>EcoRuteando</h1>
-        <p className={`text-[10px] mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Movilidad sostenible</p>
+        <p className={`text-[10px] mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t("auth.register.sustainableMobility", "Movilidad sostenible")}</p>
       </div>
 
       <div className="w-full max-w-md mx-auto">
         <div className={`rounded-xl shadow-lg overflow-hidden transition-all duration-300 ${isDarkMode ? 'bg-gray-800/80 backdrop-blur-sm border border-green-500/20' : 'bg-white border border-gray-100'}`}>
 
           <div className="px-6 pt-5 pb-2 text-center">
-            <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Crear cuenta</h2>
-            <p className={`text-xs mt-0.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Comienza tu viaje sostenible</p>
+            <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{t("auth.register.title", "Crear cuenta")}</h2>
+            <p className={`text-xs mt-0.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t("auth.register.subtitle", "Comienza tu viaje sostenible")}</p>
           </div>
 
           <div className="px-6 pb-6">
@@ -163,7 +182,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                     className={`block text-xs font-medium mb-1 ${isDarkMode ? "text-green-400" : "text-gray-600"
                       }`}
                   >
-                    Nombre
+                    {t("auth.register.firstName", "Nombre")}
                   </label>
 
                   <input
@@ -188,7 +207,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                     className={`block text-xs font-medium mb-1 ${isDarkMode ? "text-green-400" : "text-gray-600"
                       }`}
                   >
-                    Apellido
+                    {t("auth.register.lastName", "Apellido")}
                   </label>
 
                   <input
@@ -256,12 +275,12 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
 
               <div>
                 <label className={`block text-xs font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-green-400' : 'text-gray-600'}`}>
-                  Confirmar contraseña
+                  {t("auth.register.confirmPassword", "Confirmar contraseña")}
                 </label>
                 <div className="relative">
                   <input
                     type={showConfirmPw ? "text" : "password"}
-                    placeholder="Repite tu contraseña"
+                    placeholder={t("auth.register.confirmPasswordPlaceholder", "Repite tu contraseña")}
                     value={form.confirmPw}
                     onChange={(e) => setForm({ ...form, confirmPw: e.target.value })}
                     className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 pr-9 ${isDarkMode
@@ -319,23 +338,32 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
               </div>
 
               <div className="flex gap-2">
-                <button className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${isDarkMode
-                  ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
-                  : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
+                <button
+                  type="button"
+                  onClick={handleGoogleLogin}
+                  className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${isDarkMode
+                    ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
+                    : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
                   }`}>
                   <GoogleIcon />
                   <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Google</span>
                 </button>
-                <button className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${isDarkMode
-                  ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
-                  : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
+                <button
+                  type="button"
+                  onClick={handleFacebookLogin}
+                  className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${isDarkMode
+                    ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
+                    : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
                   }`}>
                   <FacebookIcon />
                   <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Facebook</span>
                 </button>
-                <button className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${isDarkMode
-                  ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
-                  : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
+                <button
+                  type="button"
+                  onClick={() => toast("Inicio de sesión con X próximamente disponible", { icon: "ℹ️" })}
+                  className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${isDarkMode
+                    ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
+                    : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
                   }`}>
                   <XIcon />
                   <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>X</span>

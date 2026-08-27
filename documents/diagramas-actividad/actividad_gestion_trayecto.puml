@@ -1,0 +1,47 @@
+@startuml Actividad_GestionTrayecto
+title <b>Diagrama de Actividad — Ingreso y Gestión de Trayecto</b>\n<size:10>CU03 · RF9 / RF13 · PlanRoute.jsx</size>
+
+|#E8F5E9|Usuario|
+start
+:Accede al módulo "Planear ruta";
+:Ingresa dirección de partida\ny destino;
+
+|#FFFFFF|Sistema|
+if (¿Dirección ya guardada\nen historial?) then (sí)
+  :Sugiere direcciones frecuentes\nautocompletadas (RF13.2);
+  |Usuario|
+  :Selecciona o escribe una nueva;
+else (no)
+endif
+
+|Sistema|
+:Valida direcciones contra\nel servicio de mapas (RF9.2);
+if (¿Direcciones existen en la zona?) then (no)
+  :Muestra "No se encontró la dirección";
+  |Usuario|
+  :Corrige la dirección;
+  detach
+else (sí)
+endif
+
+|Base de Datos|
+:Guarda las direcciones en el\nhistorial del usuario (RF13.1);
+
+|Sistema|
+:Crea el trayecto y muestra\nlas rutas disponibles;
+
+|Usuario|
+if (¿Desea modificar o eliminar\nel trayecto?) then (sí)
+  :Selecciona editar/eliminar;
+  |Sistema|
+  :Aplica el cambio y confirma;
+  |Base de Datos|
+  :Actualiza el registro del trayecto;
+else (no)
+endif
+
+|Usuario|
+:Continúa a la consulta de rutas (CU06);
+stop
+
+@enduml

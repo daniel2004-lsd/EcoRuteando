@@ -19,51 +19,51 @@ const UserAlerts = ({ onNavigate }) => {
     {
       id: 1,
       type: "rain",
-      title: "Lluvia intensa",
-      description: "Se esperan lluvias intensas en el centro de la ciudad durante las próximas 3 horas.",
+      title: t("alerts.rainTitle", "Lluvia intensa"),
+      description: t("alerts.rainDescription", "Se esperan lluvias intensas en el centro de la ciudad durante las próximas 3 horas."),
       severity: "high",
-      time: "Hace 10 min",
-      location: "Centro, Neiva",
+      time: t("alerts.timeAgo10Min", "Hace 10 min"),
+      location: t("alerts.locationCenterNeiva", "Centro, Neiva"),
       icon: "🌧️"
     },
     {
       id: 2,
       type: "storm",
-      title: "Tormenta eléctrica",
-      description: "Posibilidad de tormentas eléctricas en la zona sur. Precaución al circular.",
+      title: t("alerts.stormTitle", "Tormenta eléctrica"),
+      description: t("alerts.stormDescription", "Posibilidad de tormentas eléctricas en la zona sur. Precaución al circular."),
       severity: "medium",
-      time: "Hace 25 min",
-      location: "Zona Sur, Neiva",
+      time: t("alerts.timeAgo25Min", "Hace 25 min"),
+      location: t("alerts.locationSouthZoneNeiva", "Zona Sur, Neiva"),
       icon: "⛈️"
     },
     {
       id: 3,
       type: "heat",
-      title: "Ola de calor",
-      description: "Temperaturas superiores a 35°C. Mantente hidratado y usa protección solar.",
+      title: t("alerts.heatWaveTitle", "Ola de calor"),
+      description: t("alerts.heatWaveDescription", "Temperaturas superiores a 35°C. Mantente hidratado y usa protección solar."),
       severity: "medium",
-      time: "Hace 1 hora",
-      location: "Toda la ciudad",
+      time: t("alerts.timeAgo1Hour", "Hace 1 hora"),
+      location: t("alerts.locationWholeCity", "Toda la ciudad"),
       icon: "☀️"
     },
     {
       id: 4,
       type: "wind",
-      title: "Vientos fuertes",
-      description: "Ráfagas de viento de hasta 40 km/h en el sector norte. Precaución con estructuras.",
+      title: t("alerts.strongWindsTitle", "Vientos fuertes"),
+      description: t("alerts.strongWindsDescription", "Ráfagas de viento de hasta 40 km/h en el sector norte. Precaución con estructuras."),
       severity: "low",
-      time: "Hace 2 horas",
-      location: "Zona Norte, Neiva",
+      time: t("alerts.timeAgo2Hours", "Hace 2 horas"),
+      location: t("alerts.locationNorthZoneNeiva", "Zona Norte, Neiva"),
       icon: "💨"
     },
     {
       id: 5,
       type: "flood",
-      title: "Posible inundación",
-      description: "Zonas bajas podrían presentar inundaciones por acumulación de agua.",
+      title: t("alerts.floodTitle", "Posible inundación"),
+      description: t("alerts.floodDescription", "Zonas bajas podrían presentar inundaciones por acumulación de agua."),
       severity: "high",
-      time: "Hace 3 horas",
-      location: "Comuna 10, Neiva",
+      time: t("alerts.timeAgo3Hours", "Hace 3 horas"),
+      location: t("alerts.locationComuna10Neiva", "Comuna 10, Neiva"),
       icon: "🌊"
     }
   ]);
@@ -73,14 +73,14 @@ const UserAlerts = ({ onNavigate }) => {
     feelsLike: 34,
     humidity: 65,
     windSpeed: 12,
-    condition: "Parcialmente nublado",
+    condition: t("alerts.conditionPartlyCloudy", "Parcialmente nublado"),
     icon: "⛅",
     forecast: [
-      { day: "Hoy", temp: 32, icon: "⛅", rain: "20%" },
-      { day: "Mañana", temp: 31, icon: "🌧️", rain: "60%" },
-      { day: "Miércoles", temp: 30, icon: "☁️", rain: "40%" },
-      { day: "Jueves", temp: 33, icon: "☀️", rain: "10%" },
-      { day: "Viernes", temp: 34, icon: "☀️", rain: "5%" }
+      { day: t("alerts.dayToday", "Hoy"), temp: 32, icon: "⛅", rain: "20%" },
+      { day: t("alerts.dayTomorrow", "Mañana"), temp: 31, icon: "🌧️", rain: "60%" },
+      { day: t("alerts.dayWednesday", "Miércoles"), temp: 30, icon: "☁️", rain: "40%" },
+      { day: t("alerts.dayThursday", "Jueves"), temp: 33, icon: "☀️", rain: "10%" },
+      { day: t("alerts.dayFriday", "Viernes"), temp: 34, icon: "☀️", rain: "5%" }
     ]
   });
 
@@ -98,9 +98,9 @@ const UserAlerts = ({ onNavigate }) => {
 
   const getSeverityText = (severity) => {
     switch(severity) {
-      case "high": return "Alta";
-      case "medium": return "Media";
-      case "low": return "Baja";
+      case "high": return t("alerts.severityHigh", "Alta");
+      case "medium": return t("alerts.severityMedium", "Media");
+      case "low": return t("alerts.severityLow", "Baja");
       default: return "";
     }
   };
@@ -141,8 +141,8 @@ const UserAlerts = ({ onNavigate }) => {
                 <ActivityIcon size={24} className="text-emerald-500" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">Alertas Climáticas</h1>
-                <p className={`text-sm ${isDarkMode ? 'text-emerald-400' : 'text-green-100'}`}>Clima en tiempo real para tu seguridad</p>
+                <h1 className="text-2xl font-bold text-white">{t("alerts.title", "Alertas Climáticas")}</h1>
+                <p className={`text-sm ${isDarkMode ? 'text-emerald-400' : 'text-green-100'}`}>{t("alerts.subtitle", "Clima en tiempo real para tu seguridad")}</p>
               </div>
             </div>
 
@@ -151,7 +151,7 @@ const UserAlerts = ({ onNavigate }) => {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-gray-700/50 text-emerald-400 border border-emerald-500/30 hover:bg-gray-700' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
             >
               <ArrowLeft size={16} />
-              Volver
+              {t("alerts.back", "Volver")}
             </button>
           </div>
         </div>
@@ -170,16 +170,16 @@ const UserAlerts = ({ onNavigate }) => {
             
             <div className="text-center">
               <p className={`text-5xl font-black ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{weatherData.temperature}°C</p>
-              <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Sensación térmica: {weatherData.feelsLike}°C</p>
+              <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("alerts.feelsLike", "Sensación térmica")}: {weatherData.feelsLike}°C</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className={`px-4 py-2 rounded-xl text-center ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Humedad</p>
+                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("alerts.humidity", "Humedad")}</p>
                 <p className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{weatherData.humidity}%</p>
               </div>
               <div className={`px-4 py-2 rounded-xl text-center ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Viento</p>
+                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("alerts.wind", "Viento")}</p>
                 <p className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{weatherData.windSpeed} km/h</p>
               </div>
             </div>
@@ -203,7 +203,7 @@ const UserAlerts = ({ onNavigate }) => {
           <div className={`rounded-xl p-4 shadow-md border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Alerta máxima</p>
+                <p className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("alerts.statMaxSeverity", "Alerta máxima")}</p>
                 <p className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{stats.highSeverity}</p>
               </div>
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-red-500/20' : 'bg-red-100'}`}>
@@ -215,7 +215,7 @@ const UserAlerts = ({ onNavigate }) => {
           <div className={`rounded-xl p-4 shadow-md border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Temperatura promedio</p>
+                <p className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("alerts.statAvgTemperature", "Temperatura promedio")}</p>
                 <p className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{stats.avgTemp}°C</p>
               </div>
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-yellow-500/20' : 'bg-yellow-100'}`}>
@@ -226,30 +226,30 @@ const UserAlerts = ({ onNavigate }) => {
         </div>
 
         {/* Pronóstico extendido */}
-        <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>📅 Pronóstico extendido</h2>
+        <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{t("alerts.extendedForecast", "📅 Pronóstico extendido")}</h2>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
           {weatherData.forecast.map((day, idx) => (
             <div key={idx} className={`rounded-xl p-3 text-center shadow-md border transition-all hover:shadow-lg ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
               <p className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{day.day}</p>
               <div className="text-2xl my-1">{day.icon}</div>
               <p className={`text-lg font-bold ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>{day.temp}°C</p>
-              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Lluvia: {day.rain}</p>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("alerts.rainChance", "Lluvia")}: {day.rain}</p>
             </div>
           ))}
         </div>
 
         {/* Lista de alertas */}
         <div className="flex justify-between items-center mb-4 flex-wrap gap-4">
-          <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>⚠️ Alertas activas</h2>
+          <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{t("alerts.activeAlertsHeading", "⚠️ Alertas activas")}</h2>
           <div className="flex gap-2">
             <button className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${isDarkMode ? 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}>
-              Todas
+              {t("alerts.filterAll", "Todas")}
             </button>
             <button className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${isDarkMode ? 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}>
-              Alta
+              {t("alerts.filterHigh", "Alta")}
             </button>
             <button className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${isDarkMode ? 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}>
-              Media
+              {t("alerts.filterMedium", "Media")}
             </button>
           </div>
         </div>
@@ -286,13 +286,13 @@ const UserAlerts = ({ onNavigate }) => {
                     onClick={() => handleViewDetails(alert)}
                     className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${isDarkMode ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-600/30' : 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100'}`}
                   >
-                    Ver más
+                    {t("alerts.viewMore", "Ver más")}
                   </button>
                   <button
                     onClick={() => handleDismissAlert(alert.id)}
                     className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all ${isDarkMode ? 'bg-gray-700 text-gray-400 border border-gray-600 hover:bg-gray-600' : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200'}`}
                   >
-                    Descartar
+                    {t("alerts.dismiss", "Descartar")}
                   </button>
                 </div>
               </div>
@@ -306,7 +306,7 @@ const UserAlerts = ({ onNavigate }) => {
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-emerald-500/20' : 'bg-white'}`}>
               <LeafIcon size={20} className="text-emerald-500" />
             </div>
-            <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>💡 Recomendaciones para hoy</h3>
+            <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{t("alerts.recommendationsTitle", "💡 Recomendaciones para hoy")}</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className={`flex items-center gap-2 p-3 rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
