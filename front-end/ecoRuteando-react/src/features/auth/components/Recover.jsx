@@ -1,10 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Input from "../../../shared/components/Input";
 import Button from "../../../shared/components/Button";
 import { Logo, MailIcon, ArrowLeft } from "../../../shared/components/Icons";
 import { forgotPassword } from "../../../services/authService";
 
-const Recover = ({ onNavigate }) => {
+const Recover = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -15,7 +19,7 @@ const Recover = ({ onNavigate }) => {
 
   const handleSend = async () => {
     if (!validateEmail(email)) {
-      setError("Ingresa un correo electrónico válido.");
+      setError(t("auth.recover.invalidEmail", "Ingresa un correo electrónico válido."));
       return;
     }
 
@@ -34,10 +38,16 @@ const Recover = ({ onNavigate }) => {
     } catch (error) {
       console.error("Error al solicitar recuperación:", error);
 
-      setError(
-        error.response?.data?.message ||
-        "No fue posible enviar el código. Intenta nuevamente."
-      );
+      if (error.response?.status === 429) {
+        setError(
+          t("auth.recover.rateLimited", "Demasiadas solicitudes. Espera unos minutos e intenta de nuevo.")
+        );
+      } else {
+        setError(
+          error.response?.data?.message ||
+          t("auth.recover.sendCodeError", "No fue posible enviar el código. Intenta nuevamente.")
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -57,11 +67,11 @@ const Recover = ({ onNavigate }) => {
           </div>
 
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Revisa tu correo
+            {t("auth.recover.checkEmailTitle", "Revisa tu correo")}
           </h2>
 
           <p className="text-gray-600">
-            Hemos enviado un código de verificación a:
+            {t("auth.recover.codeSentTo", "Hemos enviado un código de verificación a:")}
           </p>
 
           <p className="font-bold text-gray-800 mt-2">
@@ -70,25 +80,25 @@ const Recover = ({ onNavigate }) => {
         </div>
 
         <Button
-          onClick={() => onNavigate("verify")}
+          onClick={() => navigate("/verify")}
           className="w-full py-3 mb-3"
         >
-          Ya tengo el código →
+          {t("auth.recover.haveCodeButton", "Ya tengo el código →")}
         </Button>
 
         <button
           onClick={() => setSent(false)}
           className="text-green-700 text-sm font-bold hover:underline block mx-auto mb-4"
         >
-          ¿Correo incorrecto? Cambiarlo
+          {t("auth.recover.changeEmail", "¿Correo incorrecto? Cambiarlo")}
         </button>
 
         <button
-          onClick={() => onNavigate("login")}
+          onClick={() => navigate("/login")}
           className="flex items-center gap-1 text-gray-400 text-sm font-medium mx-auto hover:text-gray-600 transition-colors"
         >
           <ArrowLeft />
-          Volver al inicio de sesión
+          {t("auth.recover.backToLogin", "Volver al inicio de sesión")}
         </button>
       </div>
     );
@@ -103,23 +113,22 @@ const Recover = ({ onNavigate }) => {
 
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-3">
-          Recuperar contraseña
+          {t("auth.recover.title", "Recuperar contraseña")}
         </h2>
 
         <p className="text-gray-600 text-sm leading-relaxed">
-          Ingresa tu correo electrónico y te enviaremos un código
-          de verificación de 6 dígitos para restablecer tu contraseña.
+          {t("auth.recover.subtitle", "Ingresa tu correo electrónico y te enviaremos un código de verificación de 6 dígitos para restablecer tu contraseña.")}
         </p>
       </div>
 
       <Input
-        label="Correo electrónico"
-        placeholder="tucorreo@email.com"
+        label={t("auth.recover.emailLabel", "Correo electrónico")}
+        placeholder={t("auth.recover.emailPlaceholder", "tucorreo@email.com")}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         success={
           email.length > 0 && validateEmail(email)
-            ? "Correo válido"
+            ? t("auth.recover.emailValid", "Correo válido")
             : ""
         }
       />
@@ -135,15 +144,15 @@ const Recover = ({ onNavigate }) => {
         disabled={loading || !validateEmail(email)}
         className="w-full py-3 mt-5"
       >
-        {loading ? "Enviando código..." : "Enviar código"}
+        {loading ? t("auth.recover.sendingCode", "Enviando código...") : t("auth.recover.sendCode", "Enviar código")}
       </Button>
 
       <button
-        onClick={() => onNavigate("login")}
+        onClick={() => navigate("/login")}
         className="flex items-center gap-1 text-green-700 text-sm font-bold mt-6 mx-auto hover:underline"
       >
         <ArrowLeft />
-        Volver al inicio de sesión
+        {t("auth.recover.backToLogin", "Volver al inicio de sesión")}
       </button>
     </div>
   );
