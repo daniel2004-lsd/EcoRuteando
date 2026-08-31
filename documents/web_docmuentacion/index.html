@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoRuteando — Documentación del Proyecto</title>
+
+  <!-- Favicon SVG -->
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg"/>
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+  
+
+<!-- ════════════════════════════════════
+     TOP NAV
+════════════════════════════════════ -->
+<nav class="topnav">
+  <a class="brand" href="#">
+    <div class="brand-leaf">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#d8f3dc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 8C8 10 5.9 16.17 3.82 19.44A2 2 0 0 0 5.5 22h.15C17 22 21 14 21 7c0 0-4 1-4 1z"/>
+        <path d="M3.82 19.44C6 15 9.5 10 17 8"/>
+      </svg>
+    </div>
+    <div>
+      <span class="brand-name">EcoRuteando</span>
+      <span class="brand-sub">Documentación del Proyecto · Ficha 3145555</span>
+    </div>
+  </a>
+  <div class="nav-right">
+    <span class="nav-badge">Versión 1.0 &nbsp;·&nbsp; 2026</span>
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menú">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <line x1="3" y1="6"  x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════
+     RAP TABS
+════════════════════════════════════ -->
+<div class="rap-bar">
+
+  <button class="rap-tab active" onclick="selectRap('ra1',this)">
+    <span class="rnum">1</span>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    RA1 &mdash; Interpretar informe de diseño  
+  </button>
+
+  <button class="rap-tab" onclick="selectRap('ra2',this)">
+    <span class="rnum">2</span>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    RA1 &mdash; Seleccionar herramientas de desarrollo 
+  </button>
+
+  <button class="rap-tab" onclick="selectRap('ra3',this)">
+    <span class="rnum">3</span>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+    RA1 &mdash; Configurar herramientas de desarrollo
+  </button>
+
+  <button class="rap-tab" onclick="selectRap('ra4',this)">
+    <span class="rnum">4</span>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    RA1  &mdash; Seleccionar herramientas de versionamiento 
+  </button>
+
+  <button class="rap-tab" onclick="selectRap('ra5',this)">
+    <span class="rnum">5</span>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    RA1 &mdash; Configurar herramientas de versionamiento
+  </button>
+   <button class="rap-tab" onclick="selectRap('ra5',this)">
+    <span class="rnum">6</span>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    RA1 &mdash; Definir estándares de codificación 
+  </button>
+
+</div>
+
+<!-- Overlay móvil -->
+<div id="sb-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:170;" onclick="closeSidebar()"></div>
+<style>#sb-overlay.show{display:block!important;}</style>
+
+<!-- ════════════════════════════════════
+     LAYOUT
+════════════════════════════════════ -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <div class="sb-label" id="sb-label">RA1 — Resultado de Aprendizaje</div>
+      <div class="sb-title" id="sb-title">Informe de Dise&ntilde;o</div>
+    </div>
+    <nav id="sb-nav"></nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ══════════════════════════════════════
+         RA1 — INFORME DE DISEÑO
+    ══════════════════════════════════════ -->
+
+    <!-- RA1-1: Introducción -->
+    <div class="panel active" id="panel-ra1-1">
+      <div class="breadcrumb">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        RA1 — Informe de Dise&ntilde;o
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="bc-current">Introducci&oacute;n</span>
+      </div>
+      <h1 class="sec-title">Introducci&oacute;n</h1>
+      <p class="sec-sub">Prop&oacute;sito, alcance y contexto del sistema EcoRuteando.</p>
+
+      <div class="lead">
+        <strong>EcoRuteando</strong> es una aplicaci&oacute;n m&oacute;vil y web dise&ntilde;ada para la ciudad de <strong>Neiva</strong> que promueve la movilidad urbana sostenible. Permite a sus habitantes planificar recorridos en bicicleta o transporte p&uacute;blico, ofreciendo rutas que contaminan significativamente menos que el uso del autom&oacute;vil particular. Cada kil&oacute;metro recorrido queda documentado con su ahorro real de CO&#8322;, construyendo un historial colectivo del impacto ambiental positivo de la ciudad.
+      </div>
+
+      <div class="grid2">
+        <div class="icard">
+          <div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="icard-title">Prop&oacute;sito del documento</div>
+          <div class="icard-body">Describir la arquitectura t&eacute;cnica, los componentes y las decisiones de construcci&oacute;n del software, sirviendo como gu&iacute;a completa para el equipo de desarrollo.</div>
+        </div>
+        <div class="icard">
+          <div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div class="icard-title">Alcance del sistema</div>
+          <div class="icard-body">Aplicaci&oacute;n web responsiva para Neiva con planificaci&oacute;n de rutas ecol&oacute;gicas, c&aacute;lculo autom&aacute;tico de CO&#8322; evitado, comunidad de ciclistas y alertas clim&aacute;ticas en tiempo real.</div>
+        </div>
+        <div class="icard">
+          <div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="icard-title">Usuarios objetivo</div>
+          <div class="icard-body">Estudiantes universitarios, trabajadores urbanos, ciclistas y ciudadanos comprometidos con el medio ambiente en la ciudad de Neiva, Huila.</div>
+        </div>
+        <div class="icard">
+          <div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+          <div class="icard-title">Documentos relacionados</div>
+          <div class="icard-body">Especificaci&oacute;n de Requisitos (SRS), Script DDL de base de datos, Maquetas Figma, Repositorio GitHub y diagramas UML del sistema.</div>
+        </div>
+      </div>
+
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Definiciones y t&eacute;rminos clave</div>
+        <ul class="blist">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span><strong>CO&#8322;</strong> &mdash; Di&oacute;xido de carbono. Unidad de medida del impacto ambiental. Factor: 0.192 kg/km en auto (Min. Ambiente Colombia).</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span><strong>SRS</strong> &mdash; Documento de Especificaci&oacute;n de Requerimientos del Software.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span><strong>PostGIS</strong> &mdash; Extensi&oacute;n de PostgreSQL para datos geogr&aacute;ficos (coordenadas GPS, trayectos, &aacute;reas de impacto).</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span><strong>JWT</strong> &mdash; JSON Web Token. Mecanismo de autenticaci&oacute;n segura para las sesiones de usuario.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span><strong>API REST</strong> &mdash; Interfaz de Programaci&oacute;n de Aplicaciones basada en arquitectura REST para comunicaci&oacute;n entre servicios.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span><strong>JSONB</strong> &mdash; Formato de almacenamiento binario de JSON en PostgreSQL, usado para guardar respuestas de APIs externas.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RA1-2: Descripción General -->
+    <div class="panel" id="panel-ra1-2">
+      <div class="breadcrumb">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+        RA1 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="bc-current">Descripci&oacute;n General del Sistema</span>
+      </div>
+      <h1 class="sec-title">Descripci&oacute;n General del Sistema</h1>
+      <p class="sec-sub">Objetivo, funcionalidades principales y contexto de operaci&oacute;n en Neiva.</p>
+
+      <div class="lead">
+        EcoRuteando opera en entornos urbanos integrando datos de mapas (Google Maps API), condiciones clim&aacute;ticas (OpenWeather) y transporte p&uacute;blico de Neiva para ofrecer las rutas m&aacute;s sostenibles. El sistema calcula autom&aacute;ticamente el CO&#8322; ahorrado en cada trayecto usando los factores del <strong>Ministerio de Ambiente de Colombia</strong>: 0.192 kg de CO&#8322; por kil&oacute;metro en autom&oacute;vil.
+      </div>
+
+      <div class="grid3">
+        <div class="icard">
+          <div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div>
+          <div class="icard-title">Planificaci&oacute;n de Rutas</div>
+          <div class="icard-body">Calcula trayectos &oacute;ptimos combinando bicicleta y transporte p&uacute;blico con geometr&iacute;a GPS real.</div>
+        </div>
+        <div class="icard">
+          <div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 8C8 10 5.9 16.17 3.82 19.44A2 2 0 0 0 5.5 22h.15C17 22 21 14 21 7c0 0-4 1-4 1z"/></svg></div>
+          <div class="icard-title">C&aacute;lculo de CO&#8322;</div>
+          <div class="icard-body">Trigger autom&aacute;tico en BD calcula el CO&#8322; evitado y las calor&iacute;as quemadas en cada recorrido.</div>
+        </div>
+        <div class="icard">
+          <div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+          <div class="icard-title">Estad&iacute;sticas</div>
+          <div class="icard-body">Historial personal y panel de administrador con totales precalculados de impacto ambiental.</div>
+        </div>
+        <div class="icard">
+          <div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div class="icard-title">Comunidad</div>
+          <div class="icard-body">Reportes ciudadanos de obst&aacute;culos, calificaciones y votos comunitarios para validar informaci&oacute;n.</div>
+        </div>
+        <div class="icard">
+          <div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="icard-title">Alertas Inteligentes</div>
+          <div class="icard-body">Alertas clim&aacute;ticas con &aacute;rea de impacto geogr&aacute;fica; PostGIS detecta qu&eacute; rutas quedan afectadas.</div>
+        </div>
+        <div class="icard">
+          <div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="icard-title">Seguridad</div>
+          <div class="icard-body">Sistema completo de roles/permisos, autenticaci&oacute;n JWT, 2FA y auditor&iacute;a completa de cada acci&oacute;n.</div>
+        </div>
+      </div>
+
+      <div class="ptable-wrap"><table class="ptable">
+        <thead><tr><th>M&oacute;dulo</th><th>Descripci&oacute;n</th><th>Prioridad</th></tr></thead>
+        <tbody>
+          <tr><td>Seguridad y Usuarios</td><td>Registro, autenticaci&oacute;n, roles, permisos y auditor&iacute;a</td><td><span class="pbadge">Alta</span></td></tr>
+          <tr><td>Rutas y Movilidad</td><td>C&aacute;lculo y optimizaci&oacute;n de trayectos sos­te­ni­bles con PostGIS</td><td><span class="pbadge">Alta</span></td></tr>
+          <tr><td>Datos Externos / Cach&eacute;</td><td>Integraci&oacute;n Google Maps, OpenWeather con cach&eacute; de respuestas</td><td><span class="pbadge">Alta</span></td></tr>
+          <tr><td>Comunidad y Reportes</td><td>Obst&aacute;culos, calificaciones, votos y validaci&oacute;n moderada</td><td><span class="pbadge">Media</span></td></tr>
+          <tr><td>Alertas</td><td>Alertas clim&aacute;ticas y de obst&aacute;culos con impacto geogr&aacute;fico</td><td><span class="pbadge">Media</span></td></tr>
+          <tr><td>Notificaciones</td><td>Push, correo, SMS e in-app con plantillas predefinidas</td><td><span class="pbadge">Media</span></td></tr>
+          <tr><td>Soporte</td><td>Tickets de soporte con hilo de conversaci&oacute;n</td><td><span class="pbadge">Baja</span></td></tr>
+          <tr><td>Administraci&oacute;n</td><td>Dashboard, estad&iacute;sticas diarias, configuraci&oacute;n del sistema</td><td><span class="pbadge">Media</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <!-- RA1-3: Arquitectura -->
+    <div class="panel" id="panel-ra1-3">
+      <div class="breadcrumb">RA1 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Arquitectura del Software</span></div>
+      <h1 class="sec-title">Arquitectura del Software</h1>
+      <p class="sec-sub">Estructura general del sistema y organizaci&oacute;n de sus componentes en capas.</p>
+
+      <div class="arch">
+        <div class="arch-layer">
+          <div class="arch-layer-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+          <div>
+            <div class="arch-label">Capa de Presentaci&oacute;n</div>
+            <div class="arch-sub">Frontend &mdash; React &nbsp;&middot;&nbsp; HTML5 &nbsp;&middot;&nbsp; CSS3 &nbsp;&middot;&nbsp; JavaScript &nbsp;|&nbsp; Interfaz de usuario responsiva</div>
+          </div>
+        </div>
+        <div class="arch-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div>
+        <div class="arch-layer">
+          <div class="arch-layer-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
+          <div>
+            <div class="arch-label">Capa de L&oacute;gica de Negocio</div>
+            <div class="arch-sub">Backend &mdash; C# (ASP.NET Core) &nbsp;&middot;&nbsp; API REST &nbsp;|&nbsp; Reglas, triggers y c&aacute;lculos autom&aacute;ticos</div>
+          </div>
+        </div>
+        <div class="arch-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div>
+        <div class="arch-layer">
+          <div class="arch-layer-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+          <div>
+            <div class="arch-label">Capa de Datos</div>
+            <div class="arch-sub">PostgreSQL 16 + PostGIS &nbsp;|&nbsp; Datos geogr&aacute;ficos, sesiones, auditor&iacute;a, cach&eacute; de APIs</div>
+          </div>
+        </div>
+        <div class="arch-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div>
+        <div class="arch-layer">
+          <div class="arch-layer-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <div>
+            <div class="arch-label">APIs Externas</div>
+            <div class="arch-sub">Google Maps API &nbsp;&middot;&nbsp; OpenWeather &nbsp;&middot;&nbsp; OAuth (Google / Facebook) &nbsp;|&nbsp; Con sistema de cach&eacute;</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="icard">
+          <div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+          <div class="icard-title">Patr&oacute;n Cliente-Servidor</div>
+          <div class="icard-body">El frontend React consume los servicios del backend ASP.NET mediante peticiones HTTP/REST con autenticaci&oacute;n JWT.</div>
+        </div>
+        <div class="icard">
+          <div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+          <div class="icard-title">Patr&oacute;n MVC</div>
+          <div class="icard-body">El backend organiza la l&oacute;gica de negocio con el patr&oacute;n Modelo-Vista-Controlador facilitando el mantenimiento.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RA1-4: Componentes -->
+    <div class="panel" id="panel-ra1-4">
+      <div class="breadcrumb">RA1 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Dise&ntilde;o de Componentes o M&oacute;dulos</span></div>
+      <h1 class="sec-title">Dise&ntilde;o de Componentes o M&oacute;dulos</h1>
+      <p class="sec-sub">Descripci&oacute;n detallada de cada m&oacute;dulo del sistema, sus entradas, procesos y salidas.</p>
+
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> M&oacute;dulo 1 — Seguridad y Usuarios</div>
+        <p>Gestiona el ciclo de vida completo del usuario: registro, verificaci&oacute;n de correo, inicio de sesi&oacute;n con JWT, autenticaci&oacute;n OAuth con Google/Facebook, doble factor (2FA) y recuperaci&oacute;n de contrase&ntilde;a. Incluye un sistema completo de roles y permisos (invitado, usuario, moderador, administrador).</p>
+        <ul class="sblock-sub">
+          <li><strong>Entradas:</strong> Datos de registro, credenciales, tokens OAuth</li>
+          <li><strong>Procesos:</strong> Hash de contrase&ntilde;as (bcrypt), generaci&oacute;n JWT, bloqueo autom&aacute;tico tras 5 intentos fallidos</li>
+          <li><strong>Salidas:</strong> Sesi&oacute;n activa, perfil de usuario, log de auditor&iacute;a</li>
+        </ul>
+      </div>
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> M&oacute;dulo 2 — Rutas y Movilidad</div>
+        <p>N&uacute;cleo del sistema. Almacena la geometr&iacute;a real de cada ruta usando PostGIS con coordenadas GPS de cada curva del camino. Un trigger calcula autom&aacute;ticamente el CO&#8322; ahorrado (0.192 kg/km) y las calor&iacute;as quemadas. Los datos completos de Google Maps se guardan en formato JSONB.</p>
+        <ul class="sblock-sub">
+          <li><strong>Entradas:</strong> Origen/destino, tipo de transporte, respuesta de Google Maps API</li>
+          <li><strong>Procesos:</strong> C&aacute;lculo de distancia PostGIS, trigger CO&#8322;, almacenamiento JSONB</li>
+          <li><strong>Salidas:</strong> Ruta con trayecto GPS, CO&#8322; evitado, tiempo estimado, puntos de inter&eacute;s</li>
+        </ul>
+      </div>
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> M&oacute;dulo 3 — Datos Externos / Cach&eacute;</div>
+        <p>Gestiona la integraci&oacute;n con APIs externas (Google Maps, OpenWeather). Para evitar costos excesivos, implementa un sistema de cach&eacute; con TTL configurable: primero busca en <code>cache_apis</code> y solo llama a la API externa si el cach&eacute; venci&oacute;. Tambi&eacute;n almacena datos clim&aacute;ticos y de calidad del aire.</p>
+        <ul class="sblock-sub">
+          <li><strong>Entradas:</strong> Peticiones de rutas, consultas de clima</li>
+          <li><strong>Procesos:</strong> Verificaci&oacute;n TTL, llamada condicional a APIs externas, almacenamiento de respuesta</li>
+          <li><strong>Salidas:</strong> Datos de mapa, condici&oacute;n clim&aacute;tica, &iacute;ndice de calidad del aire</li>
+        </ul>
+      </div>
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg> M&oacute;dulo 4 — Comunidad y Reportes</div>
+        <p>Permite a los usuarios reportar obst&aacute;culos en rutas (baches, obras, inundaciones) con ubicaci&oacute;n exacta en el mapa. Otros usuarios votan para confirmar o descartar el reporte. Los moderadores lo validan, apareciendo en el mapa para advertir a todos los ciclistas. Incluye calificaciones de 1 a 5 estrellas con votos de utilidad.</p>
+      </div>
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> M&oacute;dulo 5 — Alertas</div>
+        <p>Crea alertas con &aacute;rea geogr&aacute;fica de impacto. Gracias a PostGIS, la BD calcula autom&aacute;ticamente qu&eacute; rutas pasan por el &aacute;rea afectada y las marca. Tipos: clima, obst&aacute;culo, mantenimiento, evento y emergencia.</p>
+      </div>
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> M&oacute;dulo 6 — Notificaciones</div>
+        <p>Env&iacute;a alertas al usuario por cuatro canales: in-app, correo electr&oacute;nico, push al celular y SMS. Usa plantillas predefinidas con variables din&aacute;micas como <code>&#123;&#123;nombre&#125;&#125;</code> que el backend reemplaza antes de enviar.</p>
+      </div>
+    </div>
+
+   <!-- RA1-5: Diagramas UML -->
+
+   <div class="panel" id="panel-ra1-5">
+      <div class="breadcrumb">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        RA1 — Informe de Dise&ntilde;o
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="bc-current">Diagramas UML</span>
+      </div>
+      <h1 class="sec-title">Diagramas UML</h1>
+      <p class="sec-sub">Modelado visual de la arquitectura, comportamiento y estructura del sistema.</p>
+
+      <div class="uml-grid">
+        
+        <div class="uml-card">
+          <div class="uml-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="uml-card-title">Diagrama de Casos de Uso</div>
+          <div class="uml-card-desc">Muestra las interacciones entre los actores (invitado, usuario, moderador, administrador) y las funcionalidades del sistema.</div>
+          <a href="https://docs.google.com/document/d/1PBONEgVfg_ZQlI2xMB4qYQ1cONoGI-vE/edit?usp=sharing" target="_blank" class="drive-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Ver en Google Drive</a>
+        </div>
+
+        <div class="uml-card">
+          <div class="uml-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <div class="uml-card-title">Diagrama de Clases</div>
+          <div class="uml-card-desc">Representa la estructura est&aacute;tica del sistema: clases, atributos, m&eacute;todos y relaciones entre entidades.</div>
+          <a href="https://drive.google.com/file/d/1vqinSm_VP3XfIpk3lCuS7KBV579RbJbN/view?usp=sharing" target="_blank" class="drive-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Ver en Google Drive</a>
+        </div>
+
+        <div class="uml-card">
+          <div class="uml-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></div>
+          <div class="uml-card-title">Diagrama de Secuencia</div>
+          <div class="uml-card-desc">Ilustra el flujo de mensajes e interacciones entre objetos del sistema a lo largo del tiempo.</div>
+          <a href="https://docs.google.com/document/d/1rEgi84KZ5EGM-SSk0ArzEHifC9Coqj3K/edit?usp=sharing" target="_blank" class="drive-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Ver en Google Drive</a>
+        </div>
+
+        <div class="uml-card">
+          <div class="uml-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+          <div class="uml-card-title">Diagrama Entidad-Relaci&oacute;n</div>
+          <div class="uml-card-desc">Muestra la estructura completa del modelo de base de datos con todas las tablas y relaciones.</div>
+          <a href="https://drive.google.com/file/d/107OG0JNDSUzBa_3D68UCay7L_c4VMPvj/view?usp=drive_link" target="_blank" class="drive-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Ver en Google Drive</a>
+        </div>
+
+        <div class="uml-card">
+          <div class="uml-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          <div class="uml-card-title">Diagrama de Dominio</div>
+          <div class="uml-card-desc">Define las entidades conceptuales del negocio (Rutas, CO2, Usuarios) y sus relaciones lógicas esenciales.</div>
+          <a href="https://drive.google.com/file/d/1YfrcRPoSiquGimWGYCoT1ffFv0Au-xTW/view?usp=drive_link" target="_blank" class="drive-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Ver en Drive</a>
+        </div>
+
+        <div class="uml-card">
+          <div class="uml-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></div>
+          <div class="uml-card-title">Transición de Datos</div>
+          <div class="uml-card-desc">Modelado del flujo de información entre el frontend, la API y la persistencia en la base de datos.</div>
+          <a href="https://docs.google.com/document/d/1DqFw1ldT6yDGtiFwNjSpQw2CSu7FLZwV/edit?usp=sharing" target="_blank" class="drive-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Ver en Drive</a>
+        </div>
+
+      </div> 
+
+      <div class="ptable-wrap"><table class="ptable">
+        <thead><tr><th>Diagrama</th><th>Prop&oacute;sito</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td>Casos de Uso</td><td>Funcionalidades del sistema por actor</td><td><span class="pbadge">&#10003; Completo</span></td></tr>
+          <tr><td>Clases</td><td>Estructura de clases y relaciones</td><td><span class="pbadge">&#10003; Completo</span></td></tr>
+          <tr><td>Secuencia</td><td>Flujos de interacci&oacute;n entre objetos</td><td><span class="pbadge">&#10003; Completo</span></td></tr>
+          <tr><td>Entidad-Relaci&oacute;n</td><td>Modelo completo de base de datos</td><td><span class="pbadge">&#10003; Completo</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <!-- RA1-6: Diseño de Base de Datos -->
+    <div class="panel" id="panel-ra1-6">
+      <div class="breadcrumb">RA1 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Dise&ntilde;o de Base de Datos</span></div>
+      <h1 class="sec-title">Dise&ntilde;o de Base de Datos</h1>
+      <p class="sec-sub">Modelo relacional PostgreSQL 16 + PostGIS &mdash; 8 m&oacute;dulos, 30+ tablas.</p>
+
+      <div class="lead">
+        La base de datos es el <strong>"cerebro"</strong> de EcoRuteando. Guarda absolutamente todo lo que ocurre en la app: perfiles de usuarios, trayectos GPS completos, c&aacute;lculos de CO&#8322;, reportes ciudadanos, alertas clim&aacute;ticas con &aacute;rea de impacto geogr&aacute;fica y un registro de auditor&iacute;a que captura cada acci&oacute;n. Usa <strong>PostGIS</strong> para manejar geometr&iacute;as reales (puntos, l&iacute;neas, pol&iacute;gonos) en coordenadas GPS.
+      </div>
+
+      <!-- Módulos de la BD -->
+      <div class="ornament"><span>M&oacute;dulos de la Base de Datos</span></div>
+      <div class="sql-modules">
+        <div class="sql-mod-card">
+          <div class="sql-mod-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> M&oacute;dulo 1 — Seguridad y Usuarios</div>
+          <ul class="sql-table-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> usuarios</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> seg_roles / seg_permisos</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> seg_sesiones (JWT)</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> oauth_cuentas</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> seg_2fa</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> seg_auditoria</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> seg_politicas</li>
+          </ul>
+        </div>
+        <div class="sql-mod-card">
+          <div class="sql-mod-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/></svg> M&oacute;dulo 2 — Rutas y Movilidad</div>
+          <ul class="sql-table-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> rutas (PostGIS LINESTRING)</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> uso_rutas (GPS real)</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> puntos_interes</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> rutas_favoritas</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> calificaciones</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> historial_direcciones</li>
+          </ul>
+        </div>
+        <div class="sql-mod-card">
+          <div class="sql-mod-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> M&oacute;dulo 4 — Comunidad</div>
+          <ul class="sql-table-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> reporte_obstaculos</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> reporte_votos</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> calificacion_votos</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> ruta_reporte</li>
+          </ul>
+        </div>
+        <div class="sql-mod-card">
+          <div class="sql-mod-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> M&oacute;dulos 5&ndash;8</div>
+          <ul class="sql-table-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> alertas / alerta_ruta</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> notificaciones</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> soporte_tickets</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> estadisticas_diarias</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> cache_apis</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v5c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> configuracion_sistema</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Scripts SQL principales -->
+      <div class="ornament"><span>Scripts SQL — Tablas Principales</span></div>
+
+      <div class="code-wrap">
+        <div class="code-bar">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> Tabla: usuarios (Módulo Seguridad)</span>
+          <button class="copy-btn" data-copy="sql-usuarios" onclick="copyCode('sql-usuarios')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar</button>
+        </div>
+        <pre id="sql-usuarios">CREATE TABLE usuarios (
+    id_usuario      UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    nombre          VARCHAR(100) NOT NULL,
+    apellido        VARCHAR(100),
+    correo          VARCHAR(150) NOT NULL UNIQUE,
+    password_hash   VARCHAR(255),           -- NULL si usa OAuth
+    telefono        VARCHAR(30),
+    foto_perfil_url VARCHAR(500),
+    acepto_terminos BOOLEAN NOT NULL DEFAULT FALSE,
+    correo_verificado BOOLEAN NOT NULL DEFAULT FALSE,
+    estado          estado_usuario DEFAULT 'ACTIVO',
+    es_invitado     BOOLEAN DEFAULT FALSE,  -- acceso sin registro
+    id_rol_principal INT REFERENCES seg_roles(id_rol) ON DELETE SET NULL,
+    intentos_fallidos INT DEFAULT 0,
+    bloqueado_hasta TIMESTAMP WITH TIME ZONE,
+    ultimo_acceso   TIMESTAMP WITH TIME ZONE,
+    creado_en       TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    actualizado_en  TIMESTAMP WITH TIME ZONE DEFAULT now()
+);</pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-bar">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> Tabla: rutas (Módulo Rutas — tabla principal)</span>
+          <button class="copy-btn" data-copy="sql-rutas" onclick="copyCode('sql-rutas')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar</button>
+        </div>
+        <pre id="sql-rutas">CREATE TABLE rutas (
+    id_ruta             UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    nombre              VARCHAR(150) NOT NULL,
+    descripcion         TEXT,
+    tipo_transporte     tipo_transporte NOT NULL,  -- bicicleta | mixto | ...
+    estado              estado_ruta DEFAULT 'activa',
+    nombre_inicio       VARCHAR(200) NOT NULL,
+    nombre_destino      VARCHAR(200) NOT NULL,
+    geom_inicio         GEOGRAPHY(POINT, 4326),    -- PostGIS punto origen
+    geom_fin            GEOGRAPHY(POINT, 4326),    -- PostGIS punto destino
+    trayecto            GEOGRAPHY(LINESTRING, 4326), -- recorrido GPS completo
+    polyline_encoded    TEXT,                      -- encoded polyline Google Maps
+    distancia_km        NUMERIC(10,2),
+    tiempo_estimado_min INT,
+    co2_ahorrado_kg     NUMERIC(10,4),  -- calculado por trigger automático
+    calorias_estimadas  NUMERIC(8,2),
+    dificultad          SMALLINT CHECK (dificultad BETWEEN 1 AND 5),
+    datos_mapa          JSONB,          -- respuesta completa DirectionsAPI
+    creado_por          UUID REFERENCES usuarios(id_usuario) ON DELETE SET NULL,
+    creado_en           TIMESTAMP WITH TIME ZONE DEFAULT now()
+);</pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-bar">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> Tabla: uso_rutas (historial de trayectos)</span>
+          <button class="copy-btn" data-copy="sql-uso" onclick="copyCode('sql-uso')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar</button>
+        </div>
+        <pre id="sql-uso">CREATE TABLE uso_rutas (
+    id_uso            UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id_usuario        UUID NOT NULL REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+    id_ruta           UUID NOT NULL REFERENCES rutas(id_ruta)       ON DELETE CASCADE,
+    modo_transporte   tipo_transporte,
+    inicio            TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    fin               TIMESTAMP WITH TIME ZONE,
+    finalizado        BOOLEAN DEFAULT FALSE,
+    distancia_real_km NUMERIC(10,2),    -- GPS real del celular
+    duracion_real_min INT,              -- calculado por trigger al finalizar
+    co2_real_kg       NUMERIC(10,4),    -- CO₂ real ahorrado en este trayecto
+    trayecto_real     GEOGRAPHY(LINESTRING, 4326), -- línea GPS real
+    datos_gps         JSONB,            -- [{lat, lon, ts, vel_kmh}]
+    origen            VARCHAR(10) DEFAULT 'web' CHECK (origen IN ('web','movil','pwa'))
+);</pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-bar">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> Tabla: reporte_obstaculos (Módulo Comunidad)</span>
+          <button class="copy-btn" data-copy="sql-reporte" onclick="copyCode('sql-reporte')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar</button>
+        </div>
+        <pre id="sql-reporte">CREATE TABLE reporte_obstaculos (
+    id_reporte      UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id_usuario      UUID NOT NULL REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+    tipo            VARCHAR(100) NOT NULL,   -- bache, obra, inundacion...
+    descripcion     TEXT NOT NULL,
+    ubicacion       GEOGRAPHY(POINT, 4326) NOT NULL, -- coordenadas GPS exactas
+    direccion_texto VARCHAR(300),
+    foto_url        VARCHAR(500),
+    estado          estado_reporte DEFAULT 'pendiente',
+    id_validador    UUID REFERENCES usuarios(id_usuario) ON DELETE SET NULL,
+    nota_validacion TEXT,
+    validado_en     TIMESTAMP WITH TIME ZONE,
+    rutas_afectadas JSONB,  -- UUIDs de rutas que cruzan este punto
+    activo          BOOLEAN DEFAULT TRUE,
+    fecha           TIMESTAMP WITH TIME ZONE DEFAULT now()
+);</pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-bar">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> Tabla: alertas + estadisticas_diarias</span>
+          <button class="copy-btn" data-copy="sql-alertas" onclick="copyCode('sql-alertas')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar</button>
+        </div>
+        <pre id="sql-alertas">CREATE TABLE alertas (
+    id_alerta       UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    tipo            tipo_alerta NOT NULL,  -- clima | obstaculo | evento...
+    titulo          VARCHAR(200) NOT NULL,
+    mensaje         TEXT NOT NULL,
+    area_impacto    GEOGRAPHY(GEOMETRY, 4326), -- polígono o punto PostGIS
+    radio_impacto_m INT,
+    valida_desde    TIMESTAMP WITH TIME ZONE NOT NULL,
+    valida_hasta    TIMESTAMP WITH TIME ZONE,
+    activa          BOOLEAN DEFAULT TRUE,
+    creado_en       TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+-- Dashboard: totales precalculados por cron job nocturno
+CREATE TABLE estadisticas_diarias (
+    id_stat               SERIAL PRIMARY KEY,
+    fecha                 DATE NOT NULL UNIQUE,
+    total_usuarios        INT DEFAULT 0,
+    nuevos_usuarios       INT DEFAULT 0,
+    trayectos_completados INT DEFAULT 0,
+    co2_ahorrado_kg       NUMERIC(14,4) DEFAULT 0,
+    reportes_enviados     INT DEFAULT 0,
+    reportes_validados    INT DEFAULT 0,
+    alertas_activas       INT DEFAULT 0,
+    calculado_en          TIMESTAMP WITH TIME ZONE DEFAULT now()
+);</pre>
+      </div>
+    </div>
+
+    <!-- RA1-7: Interfaces -->
+    <div class="panel" id="panel-ra1-7">
+      <div class="breadcrumb">RA1 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Dise&ntilde;o de Interfaces</span></div>
+      <h1 class="sec-title">Dise&ntilde;o de Interfaces</h1>
+      <p class="sec-sub">Pantallas principales, flujo de navegaci&oacute;n y principios de experiencia de usuario.</p>
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> Pantallas principales</div>
+        <ul class="blist">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg><span><strong>Inicio</strong> &mdash; Hero con buscador de rutas y mapa interactivo de Neiva.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg><span><strong>Planificador</strong> &mdash; Formulario origen/destino con selecci&oacute;n de modo de transporte.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg><span><strong>Detalle de ruta</strong> &mdash; Mapa con trayecto GPS, instrucciones y c&aacute;lculo de CO&#8322; en tiempo real.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg><span><strong>Recorrido activo</strong> &mdash; Seguimiento GPS en vivo, contador de distancia y CO&#8322; acumulado.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg><span><strong>Dashboard personal</strong> &mdash; Estad&iacute;sticas del usuario, historial y logros ambientales.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg><span><strong>Mapa comunitario</strong> &mdash; Reportes de obst&aacute;culos y alertas activas visibles para todos.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg><span><strong>Perfil y ajustes</strong> &mdash; Edici&oacute;n de datos, preferencias de idioma y notificaciones.</span></li>
+        </ul>
+      </div>
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Principios de dise&ntilde;o</div>
+        <ul class="blist">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/></svg><span>Dise&ntilde;o <strong>mobile-first</strong> adaptable a escritorio, pensado para uso mientras se pedalea.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/></svg><span>Paleta verde que refuerza la identidad ecol&oacute;gica y el compromiso ambiental del proyecto.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/></svg><span>Accesibilidad <strong>WCAG 2.1 AA</strong>: contraste m&iacute;nimo 4.5:1, navegaci&oacute;n por teclado, etiquetas ARIA.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/></svg><span>Feedback visual inmediato: estados de carga, confirmaciones y mensajes de error claros.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RA1-8: Reglas de Negocio -->
+    <div class="panel" id="panel-ra1-8">
+      <div class="breadcrumb">RA1 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Reglas de Negocio</span></div>
+      <h1 class="sec-title">Reglas de Negocio</h1>
+      <p class="sec-sub">Restricciones, pol&iacute;ticas y l&oacute;gica que rigen el comportamiento del sistema.</p>
+      <div class="ptable-wrap"><table class="ptable">
+        <thead><tr><th>C&oacute;digo</th><th>Regla</th></tr></thead>
+        <tbody>
+          <tr><td>RN-01</td><td>El usuario invitado solo puede visualizar rutas; para calificar o reportar debe registrarse.</td></tr>
+          <tr><td>RN-02</td><td>El CO&#8322; ahorrado se calcula autom&aacute;ticamente con el factor del Min. Ambiente: 0.192 kg/km en auto.</td></tr>
+          <tr><td>RN-03</td><td>Tras 5 intentos fallidos de contrase&ntilde;a, la cuenta se bloquea autom&aacute;ticamente 30 minutos.</td></tr>
+          <tr><td>RN-04</td><td>Solo el administrador puede eliminar rutas o usuarios del sistema.</td></tr>
+          <tr><td>RN-05</td><td>Un usuario puede votar en el mismo reporte de obst&aacute;culo una sola vez.</td></tr>
+          <tr><td>RN-06</td><td>Las estad&iacute;sticas del dashboard se precalculan cada noche; no se calculan en tiempo real.</td></tr>
+          <tr><td>RN-07</td><td>El cach&eacute; de Google Maps expira en 3600 s y el del clima en 1800 s seg&uacute;n configuraci&oacute;n.</td></tr>
+          <tr><td>RN-08</td><td>Las alertas clim&aacute;ticas vinculan autom&aacute;ticamente (PostGIS) qu&eacute; rutas pasan por el &aacute;rea afectada.</td></tr>
+          <tr><td>RN-09</td><td>Toda acci&oacute;n importante (cambio de estado, validaci&oacute;n, configuraci&oacute;n) queda en seg_auditoria.</td></tr>
+          <tr><td>RN-10</td><td>Un correo no puede registrarse dos veces en el sistema (campo UNIQUE en tabla usuarios).</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <!-- RA1-9: Seguridad -->
+    <div class="panel" id="panel-ra1-9">
+      <div class="breadcrumb">RA1 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Seguridad del Sistema</span></div>
+      <h1 class="sec-title">Seguridad del Sistema</h1>
+      <p class="sec-sub">Mecanismos de protecci&oacute;n, autenticaci&oacute;n, autorizaci&oacute;n y auditor&iacute;a completa.</p>
+      <div class="grid2">
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="icard-title">Autenticaci&oacute;n JWT</div><div class="icard-body">Tokens de sesi&oacute;n con expiraci&oacute;n, refresh token en BD (seg_sesiones) y revocaci&oacute;n en logout. Access token solo en memoria del cliente, nunca persistido.</div></div>
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="icard-title">Roles y Permisos</div><div class="icard-body">4 roles: invitado, usuario, moderador, administrador. Sistema granular de permisos (seg_permisos) con acciones espec&iacute;ficas por rol.</div></div>
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></div><div class="icard-title">Doble Factor (2FA)</div><div class="icard-body">Soporte para TOTP, SMS y correo electr&oacute;nico como segundo factor de autenticaci&oacute;n (tabla seg_2fa).</div></div>
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></div><div class="icard-title">Auditor&iacute;a Completa</div><div class="icard-body">seg_auditoria registra qui&eacute;n hizo qu&eacute;, cu&aacute;ndo, desde qu&eacute; IP y c&oacute;mo estaba el registro antes y despu&eacute;s. Todo autom&aacute;tico mediante triggers.</div></div>
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="icard-title">Pol&iacute;ticas de Contrase&ntilde;a</div><div class="icard-body">Min. 8 caracteres, may&uacute;sculas, n&uacute;meros y especiales requeridos. Expiraci&oacute;n cada 90 d&iacute;as. Bloqueo tras 5 intentos fallidos (seg_politicas).</div></div>
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944a11.955 11.955 0 0 1-8.618 3.04A12.02 12.02 0 0 0 3 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div><div class="icard-title">Protecci&oacute;n de Datos</div><div class="icard-body">Contrase&ntilde;as con bcrypt, HTTPS obligatorio, sanitizaci&oacute;n contra SQL Injection y XSS. APIs secretas en variables de entorno del servidor, nunca en BD.</div></div>
+      </div>
+    </div>
+
+    <!-- RA1-10: Especificaciones Técnicas -->
+    <div class="panel" id="panel-ra1-10">
+      <div class="breadcrumb">RA1 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Especificaciones T&eacute;cnicas</span></div>
+      <h1 class="sec-title">Especificaciones T&eacute;cnicas</h1>
+      <p class="sec-sub">Stack tecnol&oacute;gico completo del proyecto EcoRuteando.</p>
+      <div class="ptable-wrap"><table class="ptable">
+        <thead><tr><th>Capa</th><th>Tecnolog&iacute;a</th><th>Versi&oacute;n</th><th>Funci&oacute;n</th></tr></thead>
+        <tbody>
+          <tr><td>Frontend</td><td>React + HTML5 / CSS3</td><td>18.x</td><td>Interfaz de usuario responsiva</td></tr>
+          <tr><td>Backend</td><td>C# (ASP.NET Core)</td><td>8.x</td><td>API REST y l&oacute;gica de negocio</td></tr>
+          <tr><td>Base de datos</td><td>PostgreSQL + PostGIS</td><td>16.x</td><td>Persistencia y datos geogr&aacute;ficos</td></tr>
+          <tr><td>Mapas</td><td>Google Maps API</td><td>&mdash;</td><td>Geolocalizaci&oacute;n y c&aacute;lculo de rutas</td></tr>
+          <tr><td>Clima</td><td>OpenWeather API</td><td>&mdash;</td><td>Datos clim&aacute;ticos para alertas</td></tr>
+          <tr><td>Autenticaci&oacute;n</td><td>OAuth 2.0 (Google/Facebook)</td><td>&mdash;</td><td>Login con redes sociales</td></tr>
+          <tr><td>Control de versiones</td><td>Git + GitHub</td><td>&mdash;</td><td>Versionamiento del proyecto</td></tr>
+          <tr><td>IDE</td><td>Visual Studio Code</td><td>Latest</td><td>Entorno de desarrollo</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <!-- RA1-11: Consideraciones -->
+    <div class="panel" id="panel-ra1-11">
+      <div class="breadcrumb">RA1 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Consideraciones de Implementaci&oacute;n</span></div>
+      <h1 class="sec-title">Consideraciones de Implementaci&oacute;n</h1>
+      <p class="sec-sub">Factores clave a tener en cuenta durante el desarrollo del proyecto.</p>
+      <ul class="blist">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/></svg><span>Ejecutar los scripts en orden: <code>ddl.sql &rarr; indices.sql &rarr; funciones.sql &rarr; trigger.sql &rarr; vistas.sql &rarr; dml.sql</code>.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/></svg><span>Usar variables de entorno (<code>.env</code>) para credenciales, API keys y configuraciones sensibles. Nunca guardarlas en la BD.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/></svg><span>Documentar la API con <strong>Swagger/OpenAPI</strong> para facilitar la integraci&oacute;n frontend-backend.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/></svg><span>El sistema de cach&eacute; (<code>cache_apis</code>) debe verificar TTL antes de llamar APIs externas para reducir costos.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/></svg><span>El cron job nocturno de <code>estadisticas_diarias</code> debe ejecutarse entre las 2:00 y 3:00 AM para no afectar el rendimiento.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/></svg><span>Implementar pruebas unitarias con cobertura m&iacute;nima del 70%. Los triggers de auditor&iacute;a deben probarse independientemente.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/></svg><span>Realizar copias de seguridad autom&aacute;ticas de PostgreSQL cada 24 horas con retenci&oacute;n de 30 d&iacute;as.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/></svg><span>Est&aacute;ndares de codificaci&oacute;n: <em>camelCase</em> en C#/JS, <em>snake_case</em> en SQL, commits en espa&ntilde;ol siguiendo Conventional Commits.</span></li>
+      </ul>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         RA2 — HERRAMIENTAS DE DESARROLLO
+    ══════════════════════════════════════ -->
+
+    <!-- RA2-1 -->
+    <div class="panel" id="panel-ra2-1">
+      <div class="breadcrumb"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> RA2 — Herramientas <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Analizar el Dise&ntilde;o del Sistema</span></div>
+      <h1 class="sec-title">Analizar el Dise&ntilde;o del Sistema</h1>
+      <p class="sec-sub">Revisi&oacute;n del informe de dise&ntilde;o para identificar los requerimientos tecnol&oacute;gicos.</p>
+      <div class="lead">Antes de seleccionar herramientas, se analiz&oacute; el informe de dise&ntilde;o para identificar el tipo de sistema, la arquitectura propuesta, los lenguajes, el motor de base de datos y los m&oacute;dulos que deben construirse.</div>
+      <div class="grid2">
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div class="icard-title">Tipo de sistema</div><div class="icard-body">Aplicaci&oacute;n web responsiva (mobile-first) con posible extensi&oacute;n m&oacute;vil nativa a futuro.</div></div>
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div><div class="icard-title">Arquitectura</div><div class="icard-body">3 capas: presentaci&oacute;n (React), l&oacute;gica de negocio (C# ASP.NET), datos (PostgreSQL + PostGIS).</div></div>
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div><div class="icard-title">Base de datos</div><div class="icard-body">Relacional con soporte geogr&aacute;fico obligatorio (PostGIS) para trayectos y alertas con coordenadas GPS.</div></div>
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><div class="icard-title">M&oacute;dulos identificados</div><div class="icard-body">8 m&oacute;dulos: Seguridad, Rutas, Datos externos, Comunidad, Alertas, Notificaciones, Soporte y Administraci&oacute;n.</div></div>
+      </div>
+    </div>
+
+    <!-- RA2-2 -->
+    <div class="panel" id="panel-ra2-2">
+      <div class="breadcrumb">RA2 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Identificar Herramientas Necesarias</span></div>
+      <h1 class="sec-title">Identificar las Herramientas Necesarias</h1>
+      <p class="sec-sub">Categor&iacute;as de herramientas requeridas para construir el sistema.</p>
+      <ul class="blist">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span><strong>Editor de c&oacute;digo / IDE</strong> &mdash; Para escribir, depurar y organizar el c&oacute;digo fuente del proyecto.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span><strong>Lenguaje y framework backend</strong> &mdash; Para desarrollar la API REST y la l&oacute;gica de negocio.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span><strong>Framework frontend</strong> &mdash; Para construir la interfaz de usuario interactiva y responsiva.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span><strong>Motor de base de datos</strong> &mdash; Con soporte geogr&aacute;fico obligatorio para trayectos GPS y &aacute;reas de impacto.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span><strong>API de mapas y geolocalizaci&oacute;n</strong> &mdash; Para calcular rutas, tiempos y mostrarlas en el mapa.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span><strong>Control de versiones</strong> &mdash; Para gestionar cambios del c&oacute;digo y trabajo colaborativo en equipo.</span></li>
+      </ul>
+    </div>
+
+    <!-- RA2-3 TABLA PRINCIPAL -->
+    <div class="panel" id="panel-ra2-3">
+      <div class="breadcrumb">RA2 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Herramientas Tecnol&oacute;gicas del Proyecto</span></div>
+      <h1 class="sec-title">Herramientas Tecnol&oacute;gicas del Proyecto</h1>
+      <p class="sec-sub">Tabla completa con las herramientas seleccionadas, su funci&oacute;n y justificaci&oacute;n t&eacute;cnica.</p>
+
+      <div class="tbl-wrap">
+        <div class="tbl-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          <h3>Selecci&oacute;n de Herramientas de Desarrollo &mdash; EcoRuteando v2.0</h3>
+        </div>
+        <table class="ttable">
+          <thead><tr><th>Tipo</th><th>Herramienta</th><th>Funci&oacute;n</th><th>Justificaci&oacute;n</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="tbadge">IDE</span></td>
+              <td>Visual Studio Code</td>
+              <td>Programaci&oacute;n</td>
+              <td>Soporte multiplataforma y extensiones para C#, React, PostgreSQL y Git integrado.</td>
+            </tr>
+            <tr>
+              <td><span class="tbadge">Backend</span></td>
+              <td>C# (ASP.NET Core)</td>
+              <td>L&oacute;gica de Servidor</td>
+              <td>Estabilidad empresarial y facilidad para crear APIs REST seguras con JWT y Entity Framework.</td>
+            </tr>
+            <tr>
+              <td><span class="tbadge">Frontend</span></td>
+              <td>React</td>
+              <td>Interfaz de Usuario</td>
+              <td>Arquitectura de componentes reutilizables para una experiencia moderna, reactiva y adaptable.</td>
+            </tr>
+            <tr>
+              <td><span class="tbadge">Base de Datos</span></td>
+              <td>PostgreSQL + PostGIS</td>
+              <td>Almacenamiento</td>
+              <td>Soporta grandes vol&uacute;menes y consultas geogr&aacute;ficas complejas (trayectos GPS, &aacute;reas de impacto).</td>
+            </tr>
+            <tr>
+              <td><span class="tbadge">Mapas</span></td>
+              <td>Google Maps API</td>
+              <td>Geolocalizaci&oacute;n</td>
+              <td>Mayor cobertura de rutas de transporte p&uacute;blico en Neiva y visualizaci&oacute;n en tiempo real.</td>
+            </tr>
+            <tr>
+              <td><span class="tbadge">Versiones</span></td>
+              <td>Git + GitHub</td>
+              <td>Control de C&oacute;digo</td>
+              <td>Est&aacute;ndar de la industria para seguimiento de versiones, ramas y trabajo colaborativo en equipo.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RA2-4 -->
+    <div class="panel" id="panel-ra2-4">
+      <div class="breadcrumb">RA2 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Justificaci&oacute;n de la Selecci&oacute;n</span></div>
+      <h1 class="sec-title">Justificaci&oacute;n de la Selecci&oacute;n</h1>
+      <p class="sec-sub">Razones t&eacute;cnicas y pr&aacute;cticas que respaldan cada herramienta elegida.</p>
+      <div class="sblock"><div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Visual Studio Code</div><p>Editor gratuito y de c&oacute;digo abierto compatible con Windows, macOS y Linux. Sus extensiones para C# (OmniSharp), React, PostgreSQL y la integraci&oacute;n nativa con Git lo hacen la elecci&oacute;n m&aacute;s eficiente para el equipo.</p></div>
+      <div class="sblock"><div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg> C# &mdash; ASP.NET Core 8</div><p>Framework de Microsoft ampliamente probado en entornos empresariales. Facilita la creaci&oacute;n de APIs REST con autenticaci&oacute;n JWT integrada, Entity Framework para el ORM y excelente rendimiento bajo carga concurrente.</p></div>
+      <div class="sblock"><div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> React 18</div><p>Biblioteca JavaScript de Meta para construir interfaces reactivas basadas en componentes reutilizables. Permite desarrollar el frontend de forma modular con alta interactividad, ideal para el mapa en tiempo real y el seguimiento de recorridos.</p></div>
+      <div class="sblock"><div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> PostgreSQL 16 + PostGIS</div><p>Sistema de gesti&oacute;n de bases de datos relacional open source. La extensi&oacute;n <strong>PostGIS</strong> es imprescindible para EcoRuteando: permite almacenar trayectos GPS como l&iacute;neas reales, calcular intersecciones de rutas con &aacute;reas de alertas y medir distancias geod&eacute;sicas precisas.</p></div>
+      <div class="sblock"><div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Google Maps API</div><p>Servicio de mapas con la mayor cobertura de rutas de transporte p&uacute;blico en ciudades colombianas. Proporciona datos precisos de ciclov&iacute;as, tiempos y tr&aacute;fico en Neiva. Las respuestas se guardan en <code>cache_apis</code> para controlar los costos.</p></div>
+      <div class="sblock"><div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg> Git + GitHub</div><p>Est&aacute;ndar de la industria para control de versiones. Permite trabajo colaborativo en ramas, revisi&oacute;n de c&oacute;digo mediante Pull Requests, registro de todos los cambios y respaldo completo del proyecto en la nube.</p></div>
+    </div>
+
+    <!-- RA2-5 -->
+    <div class="panel" id="panel-ra2-5">
+      <div class="breadcrumb">RA2 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> <span class="bc-current">Herramientas por Actividad</span></div>
+      <h1 class="sec-title">Herramientas por Actividad de Desarrollo</h1>
+      <p class="sec-sub">Asignaci&oacute;n de cada herramienta a su fase espec&iacute;fica del ciclo de desarrollo.</p>
+      <div class="ptable-wrap"><table class="ptable">
+        <thead><tr><th>Actividad de Desarrollo</th><th>Herramienta(s)</th></tr></thead>
+        <tbody>
+          <tr><td>Edici&oacute;n y escritura del c&oacute;digo fuente</td><td>Visual Studio Code</td></tr>
+          <tr><td>Construcci&oacute;n de la interfaz de usuario</td><td>React &middot; HTML5 &middot; CSS3</td></tr>
+          <tr><td>Desarrollo de la API REST (backend)</td><td>C# &middot; ASP.NET Core 8</td></tr>
+          <tr><td>Gesti&oacute;n y dise&ntilde;o de la base de datos</td><td>PostgreSQL &middot; pgAdmin 4 &middot; PostGIS</td></tr>
+          <tr><td>Visualizaci&oacute;n de rutas en mapa</td><td>Google Maps API</td></tr>
+          <tr><td>Alertas clim&aacute;ticas</td><td>OpenWeather API</td></tr>
+          <tr><td>Control de versiones y colaboraci&oacute;n</td><td>Git &middot; GitHub</td></tr>
+          <tr><td>Pruebas de la API REST</td><td>Postman</td></tr>
+          <tr><td>Dise&ntilde;o de interfaces y maquetas</td><td>Figma</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+   <div class="panel" id="panel-ra3-1">
+      <div class="breadcrumb">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        RA3 — Base de Datos y Entorno
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="bc-current">Configuración de Herramientas</span>
+      </div>
+      
+      <h1 class="sec-title">Configurar Herramientas de Desarrollo</h1>
+      <p class="sec-sub">Preparación y puesta a punto del ecosistema tecnológico para el proyecto.</p>
+
+      <div class="lead">
+        El entorno de desarrollo de <strong>EcoRuteando</strong> ha sido diseñado para soportar un stack moderno: <strong>React/React Native</strong> para el frontend y <strong>C# (.NET 8)</strong> para el backend, garantizando la interoperabilidad mediante estándares REST/JSON[cite: 1104, 1111, 1144].
+      </div>
+
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg> 1. Características Técnicas del Stack</div>
+        <p>Se seleccionaron herramientas que permiten la escalabilidad y el mantenimiento eficiente del sistema[cite: 1069, 1135]:</p>
+        <ul class="blist">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/></svg><span><strong>Visual Studio Code:</strong> Editor multiplataforma con extensiones para depuración de C# y React[cite: 1100, 1102].</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/></svg><span><strong>.NET 8 SDK:</strong> Framework de alto rendimiento para la construcción de la API REST[cite: 1104, 1111].</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/></svg><span><strong>PostgreSQL + PostGIS:</strong> Motor de base de datos con soporte nativo para datos geográficos y trayectos GPS[cite: 1117, 1145].</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/></svg><span><strong>Git/GitHub:</strong> Gestión de versiones mediante flujos de Pull Requests[cite: 1100, 1102].</span></li>
+        </ul>
+      </div>
+
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> 2. Procedimientos de Configuración</div>
+        <div class="ptable-wrap">
+          <table class="ptable">
+            <thead>
+              <tr>
+                <th>Herramienta</th>
+                <th>Acción de Configuración</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>IDE (VS Code)</strong></td>
+                <td>Instalación de <em>C# Dev Kit</em>, <em>ESLint</em> y <em>Prettier</em>. Activación de "Format on Save"[cite: 1262].</td>
+                <td><span class="pbadge">Listo</span></td>
+              </tr>
+              <tr>
+                <td><strong>Lenguaje</strong></td>
+                <td>Verificación de versión con <code>dotnet --version</code>. Creación de proyecto Web API[cite: 1184].</td>
+                <td><span class="pbadge">Listo</span></td>
+              </tr>
+              <tr>
+                <td><strong>Base de Datos</strong></td>
+                <td>Creación de DB <code>ecoruteando_db</code> y habilitación de <code>CREATE EXTENSION postgis;</code>[cite: 1117].</td>
+                <td><span class="pbadge">Listo</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sblock">
+        <div class="sblock-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> 3. Pruebas de Funcionamiento</div>
+        <p>Se ejecutó un programa de prueba para validar que el backend puede comunicarse con la base de datos y responder a peticiones HTTP[cite: 1261, 1308]:</p>
+        
+        <div class="code-wrap">
+          <div class="code-bar">
+            <span>SQL - Creación de tabla de prueba</span>
+            <button class="copy-btn" onclick="copyCode('sql-test')">Copiar</button>
+          </div>
+          <pre id="sql-test">
+-- Crear tabla de prueba para verificar entorno
+CREATE TABLE test_env (
+    id SERIAL PRIMARY KEY,
+    mensaje TEXT NOT NULL,
+    creado_at TIMESTAMP DEFAULT now()
+);
+
+INSERT INTO test_env (mensaje) VALUES ('Entorno configurado correctamente');</pre>
+        </div>
+
+        <div class="code-wrap">
+          <div class="code-bar">
+            <span>C# - Endpoint "Hola Mundo" (Program.cs)</span>
+          </div>
+          <pre>
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+app.MapGet("/", () => "EcoRuteando API v1.0 - Entorno Activo");
+
+app.Run();</pre>
+        </div>
+      </div>
+    </div>
+    <div class="panel" id="panel-ra4-1">
+      <div class="coming-soon">
+        <div class="cs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <div class="cs-title">RA4 &mdash; Codificaci&oacute;n de la Soluci&oacute;n</div>
+        <div class="cs-desc">Secci&oacute;n pendiente de completar. Aqu&iacute; ir&aacute; la documentaci&oacute;n sobre la codificaci&oacute;n de la soluci&oacute;n seg&uacute;n el dise&ntilde;o establecido.</div>
+      </div>
+    </div>
+    <div class="panel" id="panel-ra5-1">
+      <div class="coming-soon">
+        <div class="cs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <div class="cs-title">RA5 &mdash; Pruebas al Software</div>
+        <div class="cs-desc">Secci&oacute;n pendiente de completar. Aqu&iacute; ir&aacute; la documentaci&oacute;n sobre las pruebas realizadas para verificar la funcionalidad del software.</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <p>Documentaci&oacute;n t&eacute;cnica &mdash; Proyecto EcoRuteando &middot; Ficha 3145555 &middot; 2026</p>
+  <span class="foot-brand">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 8C8 10 5.9 16.17 3.82 19.44A2 2 0 0 0 5.5 22h.15C17 22 21 14 21 7c0 0-4 1-4 1z"/><path d="M3.82 19.44C6 15 9.5 10 17 8"/></svg>
+    EcoRuteando &mdash; Movilidad Sostenible Neiva
+  </span>
+</footer>
+
+<!-- Scripts -->
+<script src="js/app.js"></script>
+</body>
+</html>
