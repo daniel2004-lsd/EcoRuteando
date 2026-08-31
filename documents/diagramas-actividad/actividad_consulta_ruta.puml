@@ -1,0 +1,49 @@
+@startuml Actividad_ConsultaRuta
+title <b>Diagrama de Actividad — Consulta de Ruta Ecológica</b>\n<size:10>CU06 + CU16 · RF9 / RF10 / RF11 / RF15 / RF19</size>
+
+|#E8F5E9|Usuario|
+start
+:Ingresa punto de partida y destino\n(o selecciona en el mapa);
+:Pulsa "Planear ruta";
+
+|#FFFFFF|Sistema|
+if (¿Direcciones válidas\ny dentro de la zona cubierta?) then (no)
+  :Muestra "Valida las direcciones ingresadas";
+  |Usuario|
+  :Corrige origen/destino;
+  detach
+else (sí)
+endif
+
+:Consulta OpenStreetMap / Leaflet\ny datos de transporte público;
+
+|Base de Datos|
+:Entrega ciclorrutas, paradas\ny puntos de interés guardados;
+
+|Sistema|
+:Combina bicicleta + transporte público;
+fork
+  :Calcula tiempo estimado por tramo (RF11.1);
+fork again
+  :Estima CO₂ ahorrado vs vehículo\nparticular (RF11.2);
+fork again
+  :Evalúa condiciones climáticas\ndel trayecto (RF19);
+end fork
+
+:Dibuja rutas ecológicas diferenciadas\nen el mapa interactivo (RF10);
+:Muestra tiempo, distancia, CO₂ ahorrado\ny alertas climáticas si aplican;
+
+|Usuario|
+:Compara alternativas;
+if (¿Desea guardar la ruta?) then (sí)
+  :La marca como favorita (CU11);
+  |Sistema|
+  :Persiste la ruta favorita;
+else (no)
+endif
+
+|Usuario|
+:Selecciona una ruta y comienza su trayecto;
+stop
+
+@enduml
