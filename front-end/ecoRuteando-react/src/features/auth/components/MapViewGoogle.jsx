@@ -71,7 +71,7 @@ const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", marke
           const newLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
           mapInstanceRef.current.setCenter(newLocation);
           mapInstanceRef.current.setZoom(16);
-        });
+        }, undefined, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
       }
     };
     
@@ -117,7 +117,8 @@ const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", marke
             zIndex: 1000
           });
         },
-        (error) => console.error("Error obteniendo ubicación:", error)
+        (error) => console.error("Error obteniendo ubicación:", error),
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
       );
     }
   }, [mapLoaded, showUserLocation]);
@@ -164,6 +165,8 @@ const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", marke
         iconUrl = "https://maps.google.com/mapfiles/ms/icons/green-dot.png";
       } else if (marker.type === 'destination') {
         iconUrl = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
+      } else if (marker.type === 'poi') {
+        iconUrl = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
       }
       
       const m = new window.google.maps.Marker({
