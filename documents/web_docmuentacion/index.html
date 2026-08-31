@@ -907,17 +907,528 @@ app.Run();</pre>
       </div>
     </div>
     <div class="panel" id="panel-ra4-1">
-      <div class="coming-soon">
-        <div class="cs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-        <div class="cs-title">RA4 &mdash; Codificaci&oacute;n de la Soluci&oacute;n</div>
-        <div class="cs-desc">Secci&oacute;n pendiente de completar. Aqu&iacute; ir&aacute; la documentaci&oacute;n sobre la codificaci&oacute;n de la soluci&oacute;n seg&uacute;n el dise&ntilde;o establecido.</div>
+  <div class="breadcrumb">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    RA4 &mdash; Seleccionar herramientas de versionamiento
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    <span class="bc-current">Herramientas Seleccionadas</span>
+  </div>
+ 
+  <h1 class="sec-title">Seleccionar Herramientas de Versionamiento</h1>
+  <p class="sec-sub">Herramientas de control de versiones, gesti&oacute;n de tareas y colaboraci&oacute;n seleccionadas para el proyecto EcoRuteando.</p>
+ 
+  <div class="lead">
+    Para EcoRuteando usamos <strong>Git</strong> como sistema de control de versiones distribuido y <strong>GitHub</strong> como plataforma de alojamiento del repositorio. Esta combinaci&oacute;n nos permite gestionar el trabajo paralelo del equipo (backend en C# y frontend en React) sin que los cambios de un integrante afecten el trabajo del otro, manteniendo siempre una rama principal estable.
+  </div>
+ 
+  <!-- BLOQUE 1: ¿Qué herramientas seleccionaría y por qué? -->
+  <div class="sblock">
+    <div class="sblock-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      &iquest;Qu&eacute; herramientas de desarrollo seleccionar&iacute;a y por qu&eacute;?
+    </div>
+    <p>
+      Seg&uacute;n lo definido en el SRS usamos: <strong>Visual Studio Code</strong> para el frontend en React con Tailwind CSS, y <strong>Visual Studio</strong> para el backend en C#. La base de datos corre en <strong>PostgreSQL</strong> por su robustez y compatibilidad con datos geoespaciales, clave para almacenar rutas. Para control de versiones usamos <strong>Git con GitHub</strong>, y <strong>Trello</strong> para gestionar tareas. <strong>Google Maps Platform</strong> nos da la base cartogr&aacute;fica, <strong>Recharts.js</strong> los gr&aacute;ficos de estad&iacute;sticas ecol&oacute;gicas, y <strong>Power BI Embedded</strong> para los informes avanzados del gestor de movilidad.
+    </p>
+ 
+    <div class="ptable-wrap">
+      <table class="ptable">
+        <thead>
+          <tr><th>Herramienta</th><th>Rol en el Proyecto</th><th>Justificaci&oacute;n</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Git</strong></td>
+            <td>Control de versiones local</td>
+            <td>Permite gestionar ramas, commits y fusiones de forma eficiente y sin conexi&oacute;n a internet.</td>
+          </tr>
+          <tr>
+            <td><strong>GitHub</strong></td>
+            <td>Repositorio remoto y colaboraci&oacute;n</td>
+            <td>Centraliza el c&oacute;digo del equipo, facilita Pull Requests y el historial de cambios.</td>
+          </tr>
+          <tr>
+            <td><strong>Trello</strong></td>
+            <td>Gesti&oacute;n de tareas</td>
+            <td>Tablero Kanban con columnas &ldquo;Por hacer&rdquo;, &ldquo;En progreso&rdquo; y &ldquo;Listo&rdquo; para seguimiento visual.</td>
+          </tr>
+          <tr>
+            <td><strong>Visual Studio Code</strong></td>
+            <td>Editor &mdash; Frontend</td>
+            <td>Extensiones para React, Tailwind CSS, ESLint y depuraci&oacute;n integrada.</td>
+          </tr>
+          <tr>
+            <td><strong>Visual Studio</strong></td>
+            <td>IDE &mdash; Backend</td>
+            <td>Entorno completo para C# y ASP.NET Core con depurador nativo.</td>
+          </tr>
+          <tr>
+            <td><strong>PostgreSQL + PostGIS</strong></td>
+            <td>Base de datos</td>
+            <td>Robustez, soporte geoespacial y compatibilidad con datos de rutas GPS.</td>
+          </tr>
+          <tr>
+            <td><strong>Google Maps Platform</strong></td>
+            <td>Cartograf&iacute;a y rutas</td>
+            <td>API oficial para c&aacute;lculo de rutas, tiempo estimado y visualizaci&oacute;n en mapa.</td>
+          </tr>
+          <tr>
+            <td><strong>Recharts.js</strong></td>
+            <td>Gr&aacute;ficas de estad&iacute;sticas</td>
+            <td>Biblioteca React nativa para visualizar el impacto de CO&#8322; y tendencias de uso.</td>
+          </tr>
+          <tr>
+            <td><strong>Power BI Embedded</strong></td>
+            <td>Informes avanzados</td>
+            <td>Dashboards para el gestor de movilidad con an&aacute;lisis detallados del sistema.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+ 
+  <!-- BLOQUE 2: ¿Cómo aseguraría que todos los miembros del equipo comprendan el diseño? -->
+  <div class="sblock">
+    <div class="sblock-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      &iquest;C&oacute;mo asegurar&iacute;a que todos los miembros del equipo comprendan el dise&ntilde;o del sistema?
+    </div>
+    <p>
+      Tenemos el SRS compartido en <strong>Google Drive</strong> y hacemos una revisi&oacute;n al inicio de cada semana. Si alguien tiene dudas sobre alg&uacute;n caso de uso o sobre c&oacute;mo funciona la integraci&oacute;n de Google Maps, lo resolvemos antes de ponernos a codificar. Tambi&eacute;n usamos comentarios en el c&oacute;digo para explicar las decisiones t&eacute;cnicas, de modo que cualquier miembro del equipo pueda entender lo que el otro hizo sin tener que preguntar.
+    </p>
+    <ul class="blist">
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span><strong>SRS en Drive:</strong> Documento &uacute;nico de referencia accesible para todo el equipo en todo momento.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span><strong>Reuni&oacute;n semanal:</strong> Revisi&oacute;n del avance y resoluci&oacute;n de dudas antes de cada nueva iteraci&oacute;n.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span><strong>Comentarios en el c&oacute;digo:</strong> Explicaci&oacute;n de decisiones t&eacute;cnicas directamente en el repositorio GitHub.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span><strong>Trello:</strong> Visibilidad del estado de cada tarea para que todos sepan en qu&eacute; trabaja cada quien.</span>
+      </li>
+    </ul>
+  </div>
+ 
+  <!-- BLOQUE 3: Buenas prácticas de programación -->
+  <div class="sblock">
+    <div class="sblock-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      &iquest;Qu&eacute; buenas pr&aacute;cticas de programaci&oacute;n considera necesarias en la fase de construcci&oacute;n?
+    </div>
+    <p>
+      Para EcoRuteando aplicamos un conjunto de pr&aacute;cticas que garantizan un c&oacute;digo limpio, mantenible y comprensible para los tres integrantes del equipo.
+    </p>
+    <ul class="blist">
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span><strong>Manejo de excepciones</strong> en los llamados a Google Maps API por si el servicio falla.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span><strong>Commits frecuentes en GitHub</strong> con mensajes descriptivos del cambio realizado.</span>
+      </li>
+    </ul>
+  </div>
+ 
+  <!-- BLOQUE 4: Aseguramiento de calidad -->
+  <div class="sblock">
+    <div class="sblock-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      &iquest;C&oacute;mo integrar&iacute;a actividades de aseguramiento de calidad durante la construcci&oacute;n?
+    </div>
+    <p>
+      Al terminar cada m&oacute;dulo hacemos pruebas antes de fusionarlo a la rama principal en GitHub. Por ejemplo, cuando terminemos el endpoint de sugerencia de rutas, lo probamos con <strong>Postman</strong> para verificar que devuelve las rutas correctas y calcula bien el CO&#8322;. En el frontend hacemos pruebas manuales en distintos navegadores para verificar que la interfaz responde bien tanto en desktop como en m&oacute;vil, que es uno de los requisitos no funcionales del SRS.
+    </p>
+    <div class="ptable-wrap">
+      <table class="ptable">
+        <thead>
+          <tr><th>Tipo de Prueba</th><th>Herramienta</th><th>Aplicaci&oacute;n en EcoRuteando</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Pruebas de API REST</td>
+            <td>Postman</td>
+            <td>Verificar endpoints de rutas, autenticaci&oacute;n y c&aacute;lculo de CO&#8322;</td>
+          </tr>
+          <tr>
+            <td>Pruebas de interfaz</td>
+            <td>Navegadores (Chrome, Firefox)</td>
+            <td>Compatibilidad responsive en desktop y m&oacute;vil</td>
+          </tr>
+          <tr>
+            <td>Revisi&oacute;n de c&oacute;digo</td>
+            <td>GitHub Pull Requests</td>
+            <td>Revisi&oacute;n cruzada antes de fusionar a rama principal</td>
+          </tr>
+          <tr>
+            <td>Pruebas unitarias</td>
+            <td>xUnit (.NET)</td>
+            <td>M&eacute;todos de c&aacute;lculo de CO&#8322; y optimizaci&oacute;n de rutas</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+ 
+  <!-- BLOQUE 5: Importancia de los estándares de codificación -->
+  <div class="sblock">
+    <div class="sblock-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      &iquest;Qu&eacute; importancia tiene el uso de est&aacute;ndares de codificaci&oacute;n en el desarrollo?
+    </div>
+    <p>
+      En un proyecto como EcoRuteando donde hay tres personas tocando el c&oacute;digo, los est&aacute;ndares son fundamentales. Si cada quien escribe de forma diferente, es muy dif&iacute;cil que alguien m&aacute;s pueda modificar o corregir el trabajo del otro. Usamos las <strong>convenciones de C#</strong> para el backend y las de <strong>React</strong> para el frontend. Eso tambi&eacute;n facilita el mantenimiento futuro de la app cuando haya que agregarle nuevas funcionalidades o corregir errores.
+    </p>
+  </div>
+ 
+</div>
+        <div class="panel" id="panel-ra5-1">
+      <div class="breadcrumb">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        RA5 — Herramientas de versionamiento
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="bc-current">Selección, configuración y estándares</span>
+      </div>
+
+      <h1 class="sec-title">Aplicar criterios técnicos para seleccionar y configurar herramientas de versionamiento, y definir estándares de codificación</h1>
+      <p class="sec-sub">Selección de herramientas de versionamiento, configuración de Git y definición de estándares de codificación que apoyen la planeación en la construcción del software.</p>
+
+      <!-- ACTIVIDAD 1 -->
+      <div class="sblock">
+        <div class="sblock-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4v16h16V4H4zm2 2h12v12H6V6z"/><path d="M9 9h6v6H9z"/></svg>
+          Actividad 1: Características de herramientas de control de versiones
+        </div>
+        <p>Consulta sobre las características principales de <strong>Git</strong>, <strong>Subversion (SVN)</strong> y <strong>Mercurial</strong>.</p>
+        <div class="ptable-wrap">
+          <table class="ptable">
+            <thead><tr><th>Característica</th><th>Git</th><th>Subversion (SVN)</th><th>Mercurial</th></tr></thead>
+            <tbody>
+              <tr><td style="background: #f0fdf4;">Arquitectura</td><td style="background: #f0fdf4;">Distribuida</td><td style="background: #f0fdf4;">Centralizada</td><td style="background: #f0fdf4;">Distribuida</td></tr>
+              <tr><td style="background: #f0fdf4;">Rendimiento proyectos grandes</td><td style="background: #f0fdf4;">Excelente</td><td style="background: #f0fdf4;">Bajo</td><td style="background: #f0fdf4;">Bueno</td></tr>
+              <tr><td style="background: #f0fdf4;">Manejo de ramas</td><td style="background: #f0fdf4;">Ligero y rápido</td><td style="background: #f0fdf4;">Pesado y lento</td><td style="background: #f0fdf4;">Ligero</td></tr>
+              <tr><td style="background: #f0fdf4;">Trabajo offline</td><td style="background: #f0fdf4;">Completo</td><td style="background: #f0fdf4;">Limitado</td><td style="background: #f0fdf4;">Completo</td></tr>
+              <tr><td style="background: #f0fdf4;">Curva de aprendizaje</td><td style="background: #f0fdf4;">Media-Alta</td><td style="background: #f0fdf4;">Baja</td><td style="background: #f0fdf4;">Media</td></tr>
+              <tr><td style="background: #f0fdf4;">Popularidad/Comunidad</td><td style="background: #f0fdf4;">Muy alta</td><td style="background: #f0fdf4;">Media</td><td style="background: #f0fdf4;">Baja</td></tr>
+              <tr><td style="background: #f0fdf4;">Integración continua</td><td style="background: #f0fdf4;">Excelente</td><td style="background: #f0fdf4;">Buena (Jenkins)</td><td style="background: #f0fdf4;">Buena</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ACTIVIDAD 2 -->
+      <div class="sblock">
+        <div class="sblock-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Actividad 2: Selección de herramienta para equipo de desarrollo
+        </div>
+        <p><strong>Escenario:</strong> Empresa de 8 desarrolladores, trabajo remoto, desarrollo simultáneo de módulos, necesidad de integración continua y control de cambios frecuente.</p>
+        <div class="grid2">
+          <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 22 7 22 17 12 22 2 17 2 7 12 2"/></svg></div><div class="icard-title">Herramienta recomendada</div><div class="icard-body"><strong>Git</strong> con repositorio remoto en <strong>GitHub</strong> o <strong>GitLab</strong></div></div>
+          <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg></div><div class="icard-title">¿Por qué es la mejor opción?</div><div class="icard-body">Arquitectura distribuida que permite trabajar offline, excelente manejo de ramas, amplia compatibilidad con CI/CD.</div></div>
+          <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/></svg></div><div class="icard-title">Ventajas para el equipo</div><div class="icard-body">✓ Trabajo paralelo con ramas<br>✓ Integración continua automatizada<br>✓ Respaldo en la nube<br>✓ Pull Requests</div></div>
+        </div>
+      </div>
+
+      <!-- ACTIVIDAD 3 CON VIDEO -->
+      <div class="sblock">
+        <div class="sblock-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          Actividad 3: Instalación y configuración básica de Git
+        </div>
+        <p><strong>Evidencia solicitada:</strong> Video del proceso de instalación y configuración.</p>
+
+        <div style="background: #f0fdf4; border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; border: 1px solid #b2dfb0;">
+          <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px;">
+            <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/xTvUUc-YspQ" title="Video de instalación y configuración de Git" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+          <p style="margin-top: 0.75rem; font-size: 0.85rem; color: #2d6a4f; display: flex; align-items: center; gap: 0.5rem;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Video demostrativo: Instalación y configuración básica de Git
+          </p>
+        </div>
+
+        <div class="code-wrap">
+          <div class="code-bar">
+            <span>Comandos de verificación de Git</span>
+            <button class="copy-btn" onclick="copyCode('git-verify5')">Copiar</button>
+          </div>
+          <pre id="git-verify5"># Verificar versión de Git instalada
+git --version
+
+# Configurar nombre de usuario (global)
+git config --global user.name "Tu Nombre"
+
+# Configurar correo electrónico (global)
+git config --global user.email "tu.correo@example.com"
+
+# Ver configuración actual
+git config --list</pre>
+        </div>
+
+        <div class="ptable-wrap">
+          <table class="ptable">
+            <thead><tr><th>Paso</th><th>Descripción</th><th>Estado de la evidencia</th></tr></thead>
+            <tbody>
+              <tr><td style="background: #f0fdf4;"><strong>✅ Video incluido</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ACTIVIDAD 4 CON VIDEO -->
+      <div class="sblock">
+        <div class="sblock-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18V3H3zm16 16H5V5h14v14z"/><path d="M8 8h8v8H8z"/></svg>
+          Actividad 4: Creación de repositorio local y acciones básicas
+        </div>
+        <p><strong>Evidencia solicitada:</strong> Video del proceso completo.</p>
+
+        <div style="background: #f0fdf4; border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; border: 1px solid #b2dfb0;">
+          <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px;">
+            <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/xTvUUc-YspQ" title="Video de creación de repositorio local Git" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+          <p style="margin-top: 0.75rem; font-size: 0.85rem; color: #2d6a4f; display: flex; align-items: center; gap: 0.5rem;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Video demostrativo: Creación de repositorio local y acciones básicas (init, commit, rama)
+          </p>
+        </div>
+
+        <div class="code-wrap">
+          <div class="code-bar">
+            <span>Comandos para creación de repositorio local</span>
+            <button class="copy-btn" onclick="copyCode('git-repo5')">Copiar</button>
+          </div>
+          <pre id="git-repo5"># 1. Crear carpeta del proyecto
+mkdir proyecto-ecoruteando
+cd proyecto-ecoruteando
+
+# 2. Inicializar repositorio Git
+git init
+
+# 3. Crear archivo README.md
+echo "# EcoRuteando" > README.md
+echo "Proyecto de movilidad sostenible para Neiva" >> README.md
+
+# 4. Realizar primer commit
+git add README.md
+git commit -m "Commit inicial: archivo README.md agregado"
+
+# 5. Crear rama "desarrollo"
+git branch desarrollo
+
+# 6. Verificar ramas existentes
+git branch
+
+# 7. Cambiar a la rama desarrollo
+git checkout desarrollo</pre>
+        </div>
+
+        <div class="ptable-wrap">
+          <table class="ptable">
+            <thead><tr><th>Acción solicitada</th><th>Comando Git</th><th>Estado de la evidencia</th></tr></thead>
+            <tbody>
+              <tr><td style="background: #f0fdf4;"><strong>✅ Video incluido</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ACTIVIDAD 5 -->
+      <div class="sblock">
+        <div class="sblock-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Actividad 5: Buenas prácticas de codificación
+        </div>
+        <p>Consulta sobre buenas prácticas de codificación para el lenguaje de programación de su preferencia (<strong>C# para backend, React/JavaScript para frontend</strong>).</p>
+        <div class="grid2">
+          <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg></div><div class="icard-title">Buenas prácticas C# (.NET)</div><div class="icard-body">✓ Usar PascalCase para clases y métodos<br>✓ camelCase para parámetros<br>✓ Async/await para operaciones I/O<br>✓ Using statements para recursos IDisposable</div></div>
+          <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/></svg></div><div class="icard-title">Buenas prácticas React/JS</div><div class="icard-body">✓ Componentes funcionales con Hooks<br>✓ PascalCase para componentes<br>✓ PropTypes o TypeScript<br>✓ ESLint + Prettier</div></div>
+          <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/></svg></div><div class="icard-title">Buenas prácticas SQL</div><div class="icard-body">✓ snake_case para tablas y columnas<br>✓ Índices en columnas usadas en WHERE<br>✓ Evitar SELECT *<br>✓ Consultas parametrizadas</div></div>
+        </div>
+      </div>
+
+      <!-- ACTIVIDAD 6: Guía de estándares -->
+      <div class="sblock">
+        <div class="sblock-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Actividad 6: Guía de estándares de codificación
+        </div>
+        <p><strong>Mini guía de estándares de codificación para el proyecto EcoRuteando</strong></p>
+        
+        <div class="code-wrap"><div class="code-bar"><span>📌 1. Convenciones de nombres</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;"><strong>C#:</strong> Clases PascalCase, métodos PascalCase, variables camelCase<br><strong>React:</strong> Componentes PascalCase, hooks con prefijo "use", variables camelCase<br><strong>SQL:</strong> Tablas snake_case plural, columnas snake_case</div></div>
+        <div class="code-wrap"><div class="code-bar"><span>📝 2. Uso de comentarios</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;">Comentar el qué y por qué, no el cómo. Usar comentarios XML en C# (summary, param). En React usar JSDoc.</div></div>
+        <div class="code-wrap"><div class="code-bar"><span>📁 3. Organización de carpetas</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;"><strong>Backend (C#):</strong> Controllers, Models, Services, Repositories, DTOs, Data<br><strong>Frontend (React):</strong> components, pages, hooks, services, context, utils, styles, assets</div></div>
+        <div class="code-wrap"><div class="code-bar"><span>⚠️ 4. Manejo de errores</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;">Usar try-catch específico, no Exception genérica. Retornar códigos HTTP apropiados (400, 404, 500). Error Boundaries en React.</div></div>
+        <div class="code-wrap"><div class="code-bar"><span>🔀 5. Control de versiones (Git)</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;"><strong>Ramas:</strong> main (producción), develop (integración), feature/*, fix/*, release/*<br><strong>Commits:</strong> formato "tipo: descripción" (feat, fix, docs, style, refactor, test, chore)</div></div>
+        <div class="code-wrap"><div class="code-bar"><span>👥 6. Revisión de código</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;">Toda fusión a develop o main requiere Pull Request. Al menos 1 aprobador. Verificar: lógica, estándares, legibilidad, pruebas.</div></div>
+        <div class="code-wrap"><div class="code-bar"><span>💻 7. Espacio de desarrollo</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;"><strong>Herramientas:</strong> VS Code / Visual Studio, Git + GitHub, Trello<br><strong>Configuración:</strong> .editorconfig, .gitignore, ESLint, Prettier</div></div>
+      </div>
+
+      <!-- Tabla resumen -->
+      <div class="ornament"><span>Resumen de Evidencias RA5</span></div>
+      <div class="ptable-wrap">
+        <table class="ptable">
+          <thead><tr><th>Actividad</th><th>Descripción</th><th>Evidencia</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td style="background: #f0fdf4;">Actividad 1</td><td style="background: #f0fdf4;">Características Git, SVN, Mercurial</td><td style="background: #f0fdf4;">Tabla comparativa</td><td style="background: #f0fdf4;"><span class="pbadge" style="background: #2d6a4f;">✅ Completada</span></td></tr>
+            <tr><td style="background: #f0fdf4;">Actividad 2</td><td style="background: #f0fdf4;">Selección para equipo de 8 desarrolladores</td><td style="background: #f0fdf4;">Respuesta justificada</td><td style="background: #f0fdf4;"><span class="pbadge" style="background: #2d6a4f;">✅ Completada</span></td></tr>
+            <tr><td style="background: #f0fdf4;">Actividad 3</td><td style="background: #f0fdf4;">Instalación y configuración básica de Git</td><td style="background: #f0fdf4;">Video</td><td style="background: #f0fdf4;"><span class="pbadge" style="background: #2d6a4f;">✅ Completada - Video incluido</span></td></tr>
+            <tr><td style="background: #f0fdf4;">Actividad 4</td><td style="background: #f0fdf4;">Creación repositorio local (init, commit, rama)</td><td style="background: #f0fdf4;">Video</td><td style="background: #f0fdf4;"><span class="pbadge" style="background: #2d6a4f;">✅ Completada - Video incluido</span></td></tr>
+            <tr><td style="background: #f0fdf4;">Actividad 5</td><td style="background: #f0fdf4;">Buenas prácticas de codificación</td><td style="background: #f0fdf4;">Documentación</td><td style="background: #f0fdf4;"><span class="pbadge" style="background: #2d6a4f;">✅ Completada</span></td></tr>
+            <tr><td style="background: #f0fdf4;">Actividad 6</td><td style="background: #f0fdf4;">Mini guía de estándares de codificación</td><td style="background: #f0fdf4;">Guía completa</td><td style="background: #f0fdf4;"><span class="pbadge" style="background: #2d6a4f;">✅ Completada</span></td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="panel" id="panel-ra5-1">
-      <div class="coming-soon">
-        <div class="cs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-        <div class="cs-title">RA5 &mdash; Pruebas al Software</div>
-        <div class="cs-desc">Secci&oacute;n pendiente de completar. Aqu&iacute; ir&aacute; la documentaci&oacute;n sobre las pruebas realizadas para verificar la funcionalidad del software.</div>
+
+      <!-- ACTIVIDAD 2 -->
+      <div class="sblock">
+        <div class="sblock-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Actividad 2: Selección de herramienta para equipo de desarrollo
+        </div>
+        <p><strong>Escenario:</strong> Empresa de 8 desarrolladores, trabajo remoto, desarrollo simultáneo de módulos, necesidad de integración continua y control de cambios frecuente.</p>
+        <div class="grid2">
+          <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 22 7 22 17 12 22 2 17 2 7 12 2"/></svg></div><div class="icard-title">Herramienta recomendada</div><div class="icard-body"><strong>Git</strong> con repositorio remoto en <strong>GitHub</strong> o <strong>GitLab</strong></div></div>
+          <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg></div><div class="icard-title">¿Por qué es la mejor opción?</div><div class="icard-body">Arquitectura distribuida que permite trabajar offline, excelente manejo de ramas, amplia compatibilidad con CI/CD.</div></div>
+          <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/></svg></div><div class="icard-title">Ventajas para el equipo</div><div class="icard-body">✓ Trabajo paralelo con ramas<br>✓ Integración continua automatizada<br>✓ Respaldo en la nube<br>✓ Pull Requests</div></div>
+        </div>
+      </div>
+
+      <!-- ACTIVIDAD 3 -->
+      <div class="sblock">
+        <div class="sblock-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          Actividad 3: Instalación y configuración básica de Git
+        </div>
+        <p><strong>Evidencia solicitada:</strong> Video del proceso de instalación y configuración.</p>
+        <div class="code-wrap">
+          <div class="code-bar"><span>Comandos de verificación</span><button class="copy-btn" onclick="copyCode('git-verify5')">Copiar</button></div>
+          <pre id="git-verify5"># Verificar versión de Git instalada
+git --version
+
+# Configurar nombre de usuario (global)
+git config --global user.name "Tu Nombre"
+
+# Configurar correo electrónico (global)
+git config --global user.email "tu.correo@example.com"
+
+# Ver configuración actual
+git config --list</pre>
+        </div>
+        <div class="ptable-wrap">
+          <table class="ptable">
+            <thead><tr><th>Paso</th><th>Descripción</th><th>Estado evidencia</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Descargar Git desde https://git-scm.com/downloads</td><td><span class="pbadge">📹 Pendiente grabación</span></td></tr>
+              <tr><td>2</td><td>Ejecutar instalador con opciones por defecto</td><td><span class="pbadge">📹 Pendiente grabación</span></td></tr>
+              <tr><td>3</td><td>Configurar nombre de usuario y correo global</td><td><span class="pbadge">📹 Pendiente grabación</span></td></tr>
+              <tr><td>4</td><td>Verificar instalación con git --version</td><td><span class="pbadge">📹 Pendiente grabación</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ACTIVIDAD 4 -->
+      <div class="sblock">
+        <div class="sblock-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18V3H3zm16 16H5V5h14v14z"/><path d="M8 8h8v8H8z"/></svg>
+          Actividad 4: Creación de repositorio local y acciones básicas
+        </div>
+        <p><strong>Evidencia solicitada:</strong> Video del proceso completo.</p>
+        <div class="code-wrap">
+          <div class="code-bar"><span>Comandos para creación de repositorio local</span><button class="copy-btn" onclick="copyCode('git-repo5')">Copiar</button></div>
+          <pre id="git-repo5"># 1. Crear carpeta del proyecto
+mkdir proyecto-ecoruteando
+cd proyecto-ecoruteando
+
+# 2. Inicializar repositorio Git
+git init
+
+# 3. Crear archivo README.md
+echo "# EcoRuteando" > README.md
+echo "Proyecto de movilidad sostenible para Neiva" >> README.md
+
+# 4. Realizar primer commit
+git add README.md
+git commit -m "Commit inicial: archivo README.md agregado"
+
+# 5. Crear rama "desarrollo"
+git branch desarrollo
+
+# 6. Verificar ramas existentes
+git branch
+
+# 7. Cambiar a la rama desarrollo
+git checkout desarrollo</pre>
+        </div>
+        <div class="ptable-wrap">
+          <table class="ptable">
+            <thead><tr><th>Acción solicitada</th><th>Comando Git</th><th>Estado evidencia</th></tr></thead>
+            <tbody>
+              <tr><td>Crear carpeta del proyecto</td><td>mkdir proyecto-ecoruteando</td><td><span class="pbadge">📹 Pendiente grabación</span></td></tr>
+              <tr><td>Inicializar repositorio Git</td><td>git init</td><td><span class="pbadge">📹 Pendiente grabación</span></td></tr>
+              <tr><td>Crear archivo README.md</td><td>echo "# EcoRuteando" > README.md</td><td><span class="pbadge">📹 Pendiente grabación</span></td></tr>
+              <tr><td>Realizar primer commit</td><td>git commit -m "mensaje"</td><td><span class="pbadge">📹 Pendiente grabación</span></td></tr>
+              <tr><td>Crear rama "desarrollo"</td><td>git branch desarrollo</td><td><span class="pbadge">📹 Pendiente grabación</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ACTIVIDAD 5 -->
+      <div class="sblock">
+        <div class="sblock-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Actividad 5: Buenas prácticas de codificación
+        </div>
+        <p>Consulta sobre buenas prácticas de codificación para el lenguaje de programación de su preferencia (<strong>C# para backend, React/JavaScript para frontend</strong>).</p>
+        <div class="grid2">
+          <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg></div><div class="icard-title">Buenas prácticas C# (.NET)</div><div class="icard-body">✓ Usar PascalCase para clases y métodos<br>✓ camelCase para parámetros<br>✓ Async/await para operaciones I/O<br>✓ Using statements para recursos IDisposable</div></div>
+          <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/></svg></div><div class="icard-title">Buenas prácticas React/JS</div><div class="icard-body">✓ Componentes funcionales con Hooks<br>✓ PascalCase para componentes<br>✓ PropTypes o TypeScript<br>✓ ESLint + Prettier</div></div>
+          <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/></svg></div><div class="icard-title">Buenas prácticas SQL</div><div class="icard-body">✓ snake_case para tablas y columnas<br>✓ Índices en columnas usadas en WHERE<br>✓ Evitar SELECT *<br>✓ Consultas parametrizadas</div></div>
+        </div>
+      </div>
+
+      <!-- ACTIVIDAD 6: Guía de estándares -->
+      <div class="sblock">
+        <div class="sblock-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Actividad 6: Guía de estándares de codificación
+        </div>
+        <p><strong>Mini guía de estándares de codificación para el proyecto EcoRuteando</strong></p>
+        
+        <div class="code-wrap"><div class="code-bar"><span>📌 1. Convenciones de nombres</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;"><strong>C#:</strong> Clases PascalCase, métodos PascalCase, variables camelCase<br><strong>React:</strong> Componentes PascalCase, hooks con prefijo "use", variables camelCase<br><strong>SQL:</strong> Tablas snake_case plural, columnas snake_case</div></div>
+        <div class="code-wrap"><div class="code-bar"><span>📝 2. Uso de comentarios</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;">Comentar el qué y por qué, no el cómo. Usar comentarios XML en C# (summary, param). En React usar JSDoc.</div></div>
+        <div class="code-wrap"><div class="code-bar"><span>📁 3. Organización de carpetas</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;"><strong>Backend (C#):</strong> Controllers, Models, Services, Repositories, DTOs, Data<br><strong>Frontend (React):</strong> components, pages, hooks, services, context, utils, styles, assets</div></div>
+        <div class="code-wrap"><div class="code-bar"><span>⚠️ 4. Manejo de errores</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;">Usar try-catch específico, no Exception genérica. Retornar códigos HTTP apropiados (400, 404, 500). Error Boundaries en React.</div></div>
+        <div class="code-wrap"><div class="code-bar"><span>🔀 5. Control de versiones (Git)</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;"><strong>Ramas:</strong> main (producción), develop (integración), feature/*, fix/*, release/*<br><strong>Commits:</strong> formato "tipo: descripción" (feat, fix, docs, style, refactor, test, chore)</div></div>
+        <div class="code-wrap"><div class="code-bar"><span>👥 6. Revisión de código</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;">Toda fusión a develop o main requiere Pull Request. Al menos 1 aprobador. Verificar: lógica, estándares, legibilidad, pruebas.</div></div>
+        <div class="code-wrap"><div class="code-bar"><span>💻 7. Espacio de desarrollo</span></div><div class="code-content" style="padding:1rem; background:#f8f9fa;"><strong>Herramientas:</strong> VS Code / Visual Studio, Git + GitHub, Trello<br><strong>Configuración:</strong> .editorconfig, .gitignore, ESLint, Prettier</div></div>
+      </div>
+
+      <!-- Tabla resumen -->
+      <div class="ornament"><span>Resumen de Evidencias RA5</span></div>
+      <div class="ptable-wrap">
+        <table class="ptable">
+          <thead><tr><th>Actividad</th><th>Descripción</th><th>Evidencia</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td>Actividad 1</td><td>Características Git, SVN, Mercurial</td><td>Tabla comparativa</td><td><span class="pbadge">✅ Completada</span></td></tr>
+            <tr><td>Actividad 2</td><td>Selección para equipo de 8 desarrolladores</td><td>Respuesta justificada</td><td><span class="pbadge">✅ Completada</span></td></tr>
+            <tr><td>Actividad 3</td><td>Instalación y configuración básica de Git</td><td>Video</td><td><span class="pbadge">📹 Pendiente</span></td></tr>
+            <tr><td>Actividad 4</td><td>Creación repositorio local (init, commit, rama)</td><td>Video</td><td><span class="pbadge">📹 Pendiente</span></td></tr>
+            <tr><td>Actividad 5</td><td>Buenas prácticas de codificación</td><td>Documentación</td><td><span class="pbadge">✅ Completada</span></td></tr>
+            <tr><td>Actividad 6</td><td>Mini guía de estándares de codificación</td><td>Guía completa</td><td><span class="pbadge">✅ Completada</span></td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 

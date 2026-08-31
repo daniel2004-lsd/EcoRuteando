@@ -1,86 +1,297 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Input from "../../../shared/components/Input";
 import Button from "../../../shared/components/Button";
-import { Logo, KeyIcon, CheckCircle } from "../../../shared/components/Icons";
+import {
+    Logo,
+    KeyIcon,
+    CheckCircle
+} from "../../../shared/components/Icons";
+import { resetPassword } from "../../../services/authService";
 
-const NewPassword = ({ onNavigate }) => {
-  const [form, setForm] = useState({ pw: "", pw2: "" });
-  const [showPw, setShowPw] = useState(false);
-  const [success, setSuccess] = useState(false);
+const NewPassword = () => {
+    const { t } = useTranslation();
+    const navigate = useNavigate();
+    const [form, setForm] = useState({
+        pw: "",
+        pw2: ""
+    });
 
-  // Lógica de fuerza de contraseña
-  const pwStrength = form.pw.length === 0 ? 0 : form.pw.length < 6 ? 1 : form.pw.length < 10 ? 2 : (/[A-Z]/.test(form.pw) && /[0-9]/.test(form.pw)) ? 4 : 3;
-  const strengthColors = ["bg-gray-200", "bg-red-400", "bg-yellow-400", "bg-green-500", "bg-emerald-600"];
-  const strengthLabels = ["", "Muy débil", "Media", "Fuerte", "Muy fuerte"];
-  const strengthClass = ["", "text-red-500", "text-yellow-600", "text-green-600", "text-emerald-600"];
+    const [showPw, setShowPw] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
-  if (success) return (
-    <div className="min-h-screen bg-[#edf4ef] flex flex-col items-center justify-center px-4 animate-fade-in">
-      <div className="mb-8"><Logo size="md" /></div>
-      <div className="w-full max-w-sm bg-white rounded-3xl shadow-xl p-8 text-center border border-green-50 animate-slide-up">
-        <div className="flex justify-center mb-5"><CheckCircle /></div>
-        <h2 className="text-xl font-bold text-green-900 mb-3">¡Contraseña actualizada!</h2>
-        <p className="text-gray-500 text-sm mb-6 text-center leading-relaxed">Tu contraseña ha sido restablecida exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.</p>
-        <Button onClick={() => onNavigate("login")} className="w-full py-3.5">Iniciar sesión</Button>
-      </div>
-    </div>
-  );
+    const pwStrength =
+        form.pw.length === 0
+            ? 0
+            : form.pw.length < 6
+                ? 1
+                : form.pw.length < 10
+                    ? 2
+                    : /[A-Z]/.test(form.pw) && /[0-9]/.test(form.pw)
+                        ? 4
+                        : 3;
 
-  return (
-    <div className="min-h-screen bg-[#edf4ef] flex flex-col items-center justify-center px-4 animate-fade-in">
-      <div className="mb-8"><Logo size="md" /></div>
-      <div className="w-full max-w-sm bg-white rounded-3xl shadow-xl p-8 border border-green-50 animate-slide-up">
-        
-        {/* Barra de progreso Paso 3 */}
-        <div className="flex items-center justify-between mb-8 px-2">
-          <div className="flex flex-col items-center gap-1"><div className="w-7 h-7 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">✓</div><span className="text-[10px] font-bold text-green-700 uppercase">Correo</span></div>
-          <div className="flex-1 h-[2px] bg-green-600 mx-2 mb-4" />
-          <div className="flex flex-col items-center gap-1"><div className="w-7 h-7 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">✓</div><span className="text-[10px] font-bold text-green-700 uppercase">Código</span></div>
-          <div className="flex-1 h-[2px] bg-green-100 mx-2 mb-4" />
-          <div className="flex flex-col items-center gap-1"><div className="w-7 h-7 rounded-full bg-[#4a7c59] text-white flex items-center justify-center text-xs font-bold">3</div><span className="text-[10px] font-bold text-green-700 uppercase">Contraseña</span></div>
-        </div>
+    const strengthColors = [
+        "bg-gray-200",
+        "bg-red-400",
+        "bg-yellow-400",
+        "bg-green-500",
+        "bg-emerald-600"
+    ];
 
-        <div className="text-center mb-6">
-          <div className="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3 text-green-700 shadow-sm"><KeyIcon /></div>
-          <h2 className="text-xl font-bold text-green-900 mb-2">Nueva contraseña</h2>
-          <p className="text-gray-500 text-sm">Elige una contraseña segura para proteger tu cuenta.</p>
-        </div>
+    const strengthLabels = [
+        "",
+        t("auth.newPassword.strengthVeryWeak", "Muy débil"),
+        t("auth.newPassword.strengthMedium", "Media"),
+        t("auth.newPassword.strengthStrong", "Fuerte"),
+        t("auth.newPassword.strengthVeryStrong", "Muy fuerte")
+    ];
 
-        <div className="space-y-4">
-          <div>
-            <Input 
-              label="Nueva contraseña" 
-              placeholder="Mín. 8 caracteres"
-              showToggle showPw={showPw} onToggle={() => setShowPw(!showPw)}
-              value={form.pw} onChange={e => setForm({...form, pw: e.target.value})}
-              hint="Usa mayúsculas y números"
-            />
-            {form.pw && (
-              <div className="mt-2 animate-fade-in">
-                <div className="flex gap-1 mb-1">
-                  {[1, 2, 3, 4].map(i => (
-                    <div key={i} className={`strength-bar flex-1 h-1.5 rounded-full transition-all duration-300 ${i <= pwStrength ? strengthColors[pwStrength] : "bg-gray-200"}`} />
-                  ))}
+    const strengthClass = [
+        "",
+        "text-red-500",
+        "text-yellow-600",
+        "text-green-600",
+        "text-emerald-600"
+    ];
+
+    const handleResetPassword = async () => {
+        setError("");
+
+        if (form.pw.length < 8) {
+            setError(t("auth.newPassword.minLengthError", "La contraseña debe tener al menos 8 caracteres."));
+            return;
+        }
+
+        if (form.pw !== form.pw2) {
+            setError(t("auth.newPassword.errorMismatch", "Las contraseñas no coinciden."));
+            return;
+        }
+
+        const token = sessionStorage.getItem("passwordRecoveryCode");
+
+        if (!token) {
+            setError(
+                t("auth.newPassword.noCodeError", "No se encontró el código de recuperación. Solicita un nuevo código.")
+            );
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            await resetPassword(token, form.pw);
+
+            // El código ya fue utilizado correctamente.
+            sessionStorage.removeItem("passwordRecoveryCode");
+            sessionStorage.removeItem("passwordRecoveryEmail");
+
+            setSuccess(true);
+        } catch (error) {
+            console.error("Error al restablecer contraseña:", error);
+
+            setError(
+                error.response?.data?.message ||
+                t("auth.newPassword.resetError", "No fue posible restablecer la contraseña. Verifica el código e inténtalo nuevamente.")
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (success) {
+        return (
+            <div className="w-full max-w-md mx-auto text-center">
+
+                <div className="flex justify-center mb-6">
+                    <Logo />
                 </div>
-                <p className={`text-[10px] font-bold uppercase ${strengthClass[pwStrength]}`}>{strengthLabels[pwStrength]}</p>
-              </div>
-            )}
-          </div>
 
-          <Input 
-            label="Confirmar nueva contraseña" 
-            type="password" placeholder="Repite tu contraseña"
-            value={form.pw2} onChange={e => setForm({...form, pw2: e.target.value})}
-            error={form.pw2 && form.pw !== form.pw2 ? "Las contraseñas no coinciden" : ""}
-            success={form.pw2 && form.pw === form.pw2 ? "Las contraseñas coinciden" : ""}
-          />
+                <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-5 text-green-600">
+                    <CheckCircle />
+                </div>
 
-          <Button onClick={() => setSuccess(true)} className="w-full py-3.5 mt-2 shadow-md" disabled={form.pw.length < 8 || form.pw !== form.pw2}>
-            Restablecer contraseña
-          </Button>
+                <h2 className="text-2xl font-bold text-green-900 mb-3">
+                    {t("auth.newPassword.successTitle", "¡Contraseña actualizada!")}
+                </h2>
+
+                <p className="text-gray-500 text-sm mb-8">
+                    {t("auth.newPassword.successMessage", "Tu contraseña ha sido restablecida exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.")}
+                </p>
+
+                <Button
+                    onClick={() => navigate("/login")}
+                    className="w-full py-3.5"
+                >
+                    {t("auth.newPassword.loginButton", "Iniciar sesión")}
+                </Button>
+
+            </div>
+        );
+    }
+
+    return (
+        <div className="w-full max-w-md mx-auto">
+
+            {/* Barra de progreso */}
+            <div className="flex items-center justify-between mb-8 px-2">
+
+                <div className="flex flex-col items-center gap-1">
+                    <div className="w-7 h-7 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">
+                        ✓
+                    </div>
+
+                    <span className="text-[10px] font-bold text-green-700 uppercase">
+                        {t("auth.newPassword.stepEmail", "Correo")}
+                    </span>
+                </div>
+
+                <div className="flex-1 h-[2px] bg-green-600 mx-2 mb-4" />
+
+                <div className="flex flex-col items-center gap-1">
+                    <div className="w-7 h-7 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">
+                        ✓
+                    </div>
+
+                    <span className="text-[10px] font-bold text-green-700 uppercase">
+                        {t("auth.newPassword.stepCode", "Código")}
+                    </span>
+                </div>
+
+                <div className="flex-1 h-[2px] bg-green-100 mx-2 mb-4" />
+
+                <div className="flex flex-col items-center gap-1">
+                    <div className="w-7 h-7 rounded-full bg-[#4a7c59] text-white flex items-center justify-center text-xs font-bold">
+                        3
+                    </div>
+
+                    <span className="text-[10px] font-bold text-green-700 uppercase">
+                        {t("auth.newPassword.stepPassword", "Contraseña")}
+                    </span>
+                </div>
+
+            </div>
+
+            {/* Encabezado */}
+            <div className="text-center mb-6">
+
+                <div className="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3 text-green-700 shadow-sm">
+                    <KeyIcon />
+                </div>
+
+                <h2 className="text-xl font-bold text-green-900 mb-2">
+                    {t("auth.newPassword.title", "Nueva contraseña")}
+                </h2>
+
+                <p className="text-gray-500 text-sm">
+                    {t("auth.newPassword.subtitle", "Elige una contraseña segura para proteger tu cuenta.")}
+                </p>
+
+            </div>
+
+            <div className="space-y-4">
+
+                {/* Nueva contraseña */}
+                <div>
+
+                    <Input
+                        label={t("auth.newPassword.newPasswordLabel", "Nueva contraseña")}
+                        placeholder={t("auth.newPassword.newPasswordPlaceholder", "Mín. 8 caracteres")}
+                        showToggle
+                        showPw={showPw}
+                        onToggle={() => setShowPw(!showPw)}
+                        value={form.pw}
+                        onChange={(e) =>
+                            setForm({
+                                ...form,
+                                pw: e.target.value
+                            })
+                        }
+                        hint={t("auth.newPassword.passwordHint", "Usa mayúsculas y números")}
+                    />
+
+                    {form.pw && (
+                        <div className="mt-2">
+
+                            <div className="flex gap-1 mb-1">
+
+                                {[1, 2, 3, 4].map((i) => (
+                                    <div
+                                        key={i}
+                                        className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${
+                                            i <= pwStrength
+                                                ? strengthColors[pwStrength]
+                                                : "bg-gray-200"
+                                        }`}
+                                    />
+                                ))}
+
+                            </div>
+
+                            <p
+                                className={`text-[10px] font-bold uppercase ${strengthClass[pwStrength]}`}
+                            >
+                                {strengthLabels[pwStrength]}
+                            </p>
+
+                        </div>
+                    )}
+
+                </div>
+
+                {/* Confirmar contraseña */}
+                <Input
+                    label={t("auth.newPassword.confirmLabel", "Confirmar nueva contraseña")}
+                    type="password"
+                    placeholder={t("auth.newPassword.confirmPlaceholder", "Repite tu contraseña")}
+                    value={form.pw2}
+                    onChange={(e) =>
+                        setForm({
+                            ...form,
+                            pw2: e.target.value
+                        })
+                    }
+                    error={
+                        form.pw2 && form.pw !== form.pw2
+                            ? t("auth.newPassword.mismatch", "Las contraseñas no coinciden")
+                            : ""
+                    }
+                    success={
+                        form.pw2 && form.pw === form.pw2
+                            ? t("auth.newPassword.match", "Las contraseñas coinciden")
+                            : ""
+                    }
+                />
+
+                {/* Error */}
+                {error && (
+                    <p className="text-red-600 text-sm text-center">
+                        {error}
+                    </p>
+                )}
+
+                {/* Botón */}
+                <Button
+                    onClick={handleResetPassword}
+                    className="w-full py-3.5 mt-2 shadow-md"
+                    disabled={
+                        loading ||
+                        form.pw.length < 8 ||
+                        form.pw !== form.pw2
+                    }
+                >
+                    {loading
+                        ? t("auth.newPassword.resetting", "Restableciendo...")
+                        : t("auth.newPassword.resetButton", "Restablecer contraseña")}
+                </Button>
+
+            </div>
+
         </div>
-      </div>
-    </div>
-  );
+    );
 };
+
 export default NewPassword;

@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from './app/App'
-import "./index.css";
+import App from "./app/App";
+import { Toaster } from "react-hot-toast";
 
-// Importa i18n para inicializar traducciones
-import "./i18n"; // <-- asegúrate de que este archivo exista y tenga la configuración que te mostré
+import "./index.css";
+import "./i18n";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <React.StrictMode>
+        <App />
+        <Toaster position="bottom-left" />
+    </React.StrictMode>
 );
