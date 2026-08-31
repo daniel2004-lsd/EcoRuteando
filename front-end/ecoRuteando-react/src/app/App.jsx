@@ -23,11 +23,13 @@ import HomePage from "../features/home/pages/HomePage";
 import UserDashboard from "../features/home/pages/UserDashboard";
 import UserProfile from "../features/home/pages/UserProfile";
 import UserHistory from "../features/home/pages/UserHistory";
+import TripDetail from "../features/home/pages/TripDetail";
 import UserStatistics from "../features/home/pages/UserStatistics";
 import UserAlerts from "../features/home/pages/UserAlert";
 import PlanRoute from "../features/home/pages/PlanRoute";
 import ReporterProblem from "../features/home/pages/ReporterProblem";
 import AdminPanel from "../features/admin/pages/AdminPanel";
+import PoiManage from "../features/admin/pages/PoiManage";
 
 import "leaflet/dist/leaflet.css";
 
@@ -128,9 +130,11 @@ function AppContent() {
                     <Route path="/admin/audit" element={<AdminSection title="admin.section.audit" />} />
                     <Route path="/admin/settings" element={<AdminSection title="admin.section.settings" />} />
                     <Route path="/admin/impact" element={<AdminSection title="admin.section.impact" />} />
+                    <Route path="/admin/pois" element={<PoiManage onNavigate={onNavigate} />} />
                     <Route path="/profile" element={<UserProfile userRole={userRole} onNavigate={onNavigate} />} />
                     <Route path="/user/plan-route" element={<PlanRoute onNavigate={onNavigate} />} />
                     <Route path="/user/history" element={<UserHistory onNavigate={onNavigate} />} />
+                    <Route path="/user/history/:usageId" element={<TripDetail onNavigate={onNavigate} />} />
                     <Route path="/user/statistics" element={<UserStatistics onNavigate={onNavigate} />} />
                     <Route path="/user/reporter-problem" element={<ReporterProblem onNavigate={onNavigate} />} />
                     <Route path="/user/alerts" element={<UserAlerts onNavigate={onNavigate} />} />
