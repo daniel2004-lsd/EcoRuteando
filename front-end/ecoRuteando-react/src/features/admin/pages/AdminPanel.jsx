@@ -66,6 +66,13 @@ const AdminPanel = ({ onNavigate, userRole }) => {
       onClick: () => onNavigate("admin/audit")
     },
     {
+      id: "pois",
+      icon: <MapPinIcon size={28} />,
+      title: t("admin.panel.modules.pois.title", "Puntos de Interés"),
+      subtitle: t("admin.panel.modules.pois.subtitle", "Gestionar lugares y marcas"),
+      onClick: () => onNavigate("admin/pois")
+    },
+    {
       id: "settings",
       icon: <SettingsIcon size={28} />,
       title: t("admin.panel.modules.settings.title", "Configuración"),
