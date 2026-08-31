@@ -21,6 +21,13 @@ const mapsService = {
     });
     return data;
   },
+
+  getEstimate: async (originLat, originLng, destLat, destLng, transportMode) => {
+    const { data } = await api.get("/sustainability/estimate", {
+      params: { originLat, originLng, destinationLat: destLat, destinationLng: destLng, transportMode },
+    });
+    return data;
+  },
 };
 
 export default mapsService;
