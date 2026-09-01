@@ -1,0 +1,56 @@
+@startuml Actividad_RecuperacionContrasena
+title <b>Diagrama de Actividad — Recuperación de Contraseña</b>\n<size:10>CU02 · RF3 · Recover.jsx + API /auth/forgot-password</size>
+
+|#E8F5E9|Usuario|
+start
+:Selecciona "¿Olvidaste tu contraseña?";
+:Ingresa su correo electrónico;
+
+|#FFFFFF|Sistema|
+if (¿Formato de correo válido?) then (no)
+  :Muestra error de validación;
+  |Usuario|
+  :Corrige el correo;
+  detach
+else (sí)
+endif
+
+|Base de Datos|
+if (¿Existe cuenta con ese correo?) then (no)
+  |Sistema|
+  :Informa que no existe una cuenta asociada;
+  |Usuario|
+  :Opción de registrarse (CU01);
+  stop
+else (sí)
+endif
+
+|Sistema|
+:Genera token temporal con expiración;
+:Envía enlace/código al correo vía SMTP;
+:Muestra "Revisa tu correo electrónico";
+
+|Usuario|
+:Abre el enlace recibido;
+:Ingresa la nueva contraseña\ny su confirmación;
+
+|Sistema|
+if (¿Contraseña cumple política\n(≥ 8 caracteres, coinciden)?) then (no)
+  :Muestra requisitos incumplidos;
+  |Usuario|
+  :Corrige la contraseña;
+  detach
+else (sí)
+endif
+
+|Base de Datos|
+:Actualiza el hash de la contraseña;
+:Invalida tokens anteriores;
+
+|Sistema|
+:Confirma "Contraseña actualizada";
+|Usuario|
+:Inicia sesión con la nueva contraseña (CU05);
+stop
+
+@enduml
