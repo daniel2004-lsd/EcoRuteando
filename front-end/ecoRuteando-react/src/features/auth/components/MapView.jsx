@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTheme } from "../../../app/context/ThemeContext";
 
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
+
 const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", markers = [], selectedLocation, routeGeometry }) => {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -17,7 +19,7 @@ const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", marke
     }
 
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBpSXrBLSge02YgFOiH-rT8FaMUYizwcp4&libraries=places&language=es`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&language=es`;
     script.async = true;
     script.defer = true;
     script.onload = () => setMapLoaded(true);
