@@ -20,3 +20,5 @@ pnpm-debug.log*
 # editor
 .vscode/
 .idea/git reset
+front-end/ecoRuteando-react/.env
+front-end/ecoRuteando-react/.env
