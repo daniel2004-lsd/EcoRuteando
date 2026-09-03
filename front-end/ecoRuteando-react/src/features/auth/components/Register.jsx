@@ -19,6 +19,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
   });
   const [showPw, setShowPw] = useState(false);
   const [showConfirmPw, setShowConfirmPw] = useState(false);
+  const [registrationError, setRegistrationError] = useState(null);
 
 
   useEffect(() => {
@@ -30,12 +31,19 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
 
   const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 
+  const passwordChecks = [
+    { label: "Mínimo 8 caracteres", ok: form.pw.length >= 8 },
+    { label: "Al menos una mayúscula", ok: /[A-Z]/.test(form.pw) },
+    { label: "Al menos un número", ok: /\d/.test(form.pw) },
+    { label: "Al menos un carácter especial", ok: /[^A-Za-z0-9]/.test(form.pw) }
+  ];
+
   const isFormValid = () => {
     return (
       form.firstName.trim() !== "" &&
       form.lastName.trim() !== "" &&
       validateEmail(form.email) &&
-      form.pw.length >= 8 &&
+      passwordChecks.every((check) => check.ok) &&
       form.pw === form.confirmPw &&
       termsAccepted
     );
@@ -43,6 +51,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
 
   const handleRegister = async () => {
   console.log("Entró a handleRegister");
+  setRegistrationError(null);
 
   if (!isFormValid()) {
     toast.error("Por favor, completa todos los campos correctamente");
@@ -82,6 +91,12 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
           border: "1px solid #f59e0b"
         }
       });
+    } else if (error.response?.status === 409) {
+      setRegistrationError(
+        error.response?.data?.detail ||
+        error.response?.data?.message ||
+        "El correo electrónico ya está registrado."
+      );
     } else {
       toast.error(t("auth.register.errorMessage", "No fue posible registrar el usuario"));
     }
@@ -271,6 +286,23 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                     {showPw ? <EyeOffIcon /> : <EyeIcon />}
                   </button>
                 </div>
+                {form.pw.length > 0 && (
+                  <ul className="mt-2 space-y-1">
+                    {passwordChecks.map((check, i) => (
+                      <li
+                        key={i}
+                        className={`flex items-center gap-1.5 text-[10px] transition-colors duration-200 ${
+                          check.ok
+                            ? "text-emerald-500"
+                            : isDarkMode ? "text-gray-500" : "text-gray-400"
+                        }`}
+                      >
+                        <span>{check.ok ? "✓" : "○"}</span>
+                        {check.label}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
 
               <div>
@@ -319,6 +351,19 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                   </button>
                 </label>
               </div>
+
+              {registrationError && (
+                <div className={`p-3 rounded-lg border text-center ${isDarkMode ? 'bg-amber-500/10 border-amber-500/40' : 'bg-amber-50 border-amber-200'}`}>
+                  <p className={`text-xs ${isDarkMode ? 'text-amber-300' : 'text-amber-700'}`}>{registrationError}</p>
+                  <button
+                    type="button"
+                    onClick={goToLogin}
+                    className={`mt-1 text-xs font-semibold hover:underline transition-colors ${isDarkMode ? 'text-green-400' : 'text-emerald-600'}`}
+                  >
+                    ¿Ya tienes cuenta? Inicia sesión aquí
+                  </button>
+                </div>
+              )}
 
               <button
                 onClick={handleRegister}
