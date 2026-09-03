@@ -11,10 +11,12 @@ import {
   UsersIcon,
   MapIcon,
   ReportIcon,
-  ShieldIcon
+  ShieldIcon,
+  HeartIcon
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import routeService from "../../../services/routeService";
+import tripService from "../../../services/tripService";
 
 const UserDashboard = ({ onNavigate, userRole }) => {
   const { t } = useTranslation();
@@ -43,12 +45,20 @@ const UserDashboard = ({ onNavigate, userRole }) => {
   useEffect(() => {
     const loadStats = async () => {
       try {
-        const routes = await routeService.getAll();
-        const totalCO2 = routes.reduce((sum, r) => sum + (r.co2SavedKg || 0), 0);
-        const totalKm = routes.reduce((sum, r) => sum + (r.distanceKm || 0), 0);
+        // Impacto real basado en los TRAYECTOS del usuario (los viajes completados),
+        // no en el número de rutas guardadas (bug: mostraba routes.length como "viajes").
+        const [routes, trips] = await Promise.all([
+          routeService.getAll(),
+          tripService.getAll(),
+        ]);
+
+        const completedTrips = (Array.isArray(trips) ? trips : []).filter((t) => t.completed);
+        const totalCO2 = completedTrips.reduce((sum, r) => sum + (r.actualCo2Kg || 0), 0);
+        const totalKm = completedTrips.reduce((sum, r) => sum + (r.actualDistanceKm || 0), 0);
+
         setStats({
-          routes: routes.length,
-          trips: routes.length,
+          routes: (Array.isArray(routes) ? routes : []).length,
+          trips: completedTrips.length,
           co2Saved: totalCO2.toFixed(1),
           points: Math.round(totalKm * 10)
         });
@@ -82,6 +92,13 @@ const UserDashboard = ({ onNavigate, userRole }) => {
       titleKey: 'dashboard.modules.history.title',
       subtitleKey: 'dashboard.modules.history.subtitle',
       onClick: () => onNavigate('/user/history')
+    },
+    {
+      id: 'favoritos',
+      icon: <HeartIcon size={26} />,
+      titleKey: 'dashboard.modules.favorites.title',
+      subtitleKey: 'dashboard.modules.favorites.subtitle',
+      onClick: () => onNavigate('/user/favorites')
     },
     {
       id: 'perfil',

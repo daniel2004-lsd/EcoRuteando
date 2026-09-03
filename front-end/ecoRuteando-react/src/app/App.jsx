@@ -26,6 +26,7 @@ import UserHistory from "../features/home/pages/UserHistory";
 import TripDetail from "../features/home/pages/TripDetail";
 import UserStatistics from "../features/home/pages/UserStatistics";
 import UserAlerts from "../features/home/pages/UserAlert";
+import Favorites from "../features/home/pages/Favorites";
 import PlanRoute from "../features/home/pages/PlanRoute";
 import ReporterProblem from "../features/home/pages/ReporterProblem";
 import AdminPanel from "../features/admin/pages/AdminPanel";
@@ -65,9 +66,10 @@ function AppContent() {
     });
 
     // Normaliza rutas relativas ("admin/users" -> "/admin/users")
-    const onNavigate = useCallback((path) => {
+    // Acepta un segundo argumento `state` para pasar datos entre páginas (p.ej. una ruta a "Usar ruta").
+    const onNavigate = useCallback((path, state) => {
         if (typeof path !== "string" || !path) return;
-        navigate(path.startsWith("/") ? path : `/${path}`);
+        navigate(path.startsWith("/") ? path : `/${path}`, state);
     }, [navigate]);
 
     const handleAcceptTerms = () => {
@@ -138,6 +140,7 @@ function AppContent() {
                     <Route path="/user/statistics" element={<UserStatistics onNavigate={onNavigate} />} />
                     <Route path="/user/reporter-problem" element={<ReporterProblem onNavigate={onNavigate} />} />
                     <Route path="/user/alerts" element={<UserAlerts onNavigate={onNavigate} />} />
+                    <Route path="/user/favorites" element={<Favorites onNavigate={onNavigate} />} />
                 </Routes>
             </main>
 
