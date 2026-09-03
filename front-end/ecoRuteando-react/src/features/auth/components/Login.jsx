@@ -77,14 +77,29 @@ function Login() {
 
             navigate("/dashboard", { replace: true });
         } catch (err) {
+            const data = err.response?.data;
+            const retryAfterSeconds = Number(data?.retryAfterSeconds) || 0;
+            const attemptsRemaining = data?.attemptsRemaining;
+
             if (err.response?.status === 429) {
                 const retryAfter = parseInt(err.response?.headers?.["retry-after"], 10) || 900;
                 setRetrySeconds(retryAfter);
                 setError(t("auth.login.rateLimited", "Demasiados intentos. Espera {{time}} antes de intentar de nuevo.", { time: formatTime(retryAfter) }));
+            } else if (retryAfterSeconds > 0) {
+                setRetrySeconds(Math.ceil(retryAfterSeconds));
+                setError(
+                    data?.detail ||
+                    t("auth.login.locked", "Cuenta bloqueada temporalmente. Intenta de nuevo al pasar el tiempo indicado.")
+                );
+            } else if (typeof attemptsRemaining === "number") {
+                setError(
+                    data?.detail ||
+                    t("auth.login.errorInvalidCredentials", "Correo o contraseña incorrectos.")
+                );
             } else {
                 const message =
-                    err.response?.data?.detail ||
-                    err.response?.data?.message ||
+                    data?.detail ||
+                    data?.message ||
                     t("auth.login.errorInvalidCredentials", "Correo o contraseña incorrectos.");
                 setError(message);
             }
