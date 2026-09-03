@@ -69,68 +69,64 @@
     "privacy": "Privacidade",
     "terms": "Termos",
     "contact": "Contato"
-  }
-  ,
-"dashboard": {
-  "title": "Painel do Usuário",
-  "subtitle": "Gerencie sua mobilidade sustentável",
-  "welcome": "Bem-vindo",
-
-  "back": "Voltar",
-
-  "stats": {
-    "routesCreated": "Rotas Criadas",
-    "tripsCompleted": "Viagens Realizadas",
-    "co2Saved": "CO₂ Economizado",
-    "ecoPoints": "EcoPontos"
   },
-
-  "tools": {
-    "title": "Ferramentas",
-    "subtitle": "Selecione uma opção para começar"
-  },
-
-  "modules": {
-    "planRoute": {
-      "title": "Planejar Rota",
-      "subtitle": "Encontre a melhor rota ecológica"
+  "dashboard": {
+    "title": "Painel do Usuário",
+    "subtitle": "Gerencie sua mobilidade sustentável",
+    "welcome": "Bem-vindo",
+    "back": "Voltar",
+    "stats": {
+      "routesCreated": "Rotas Criadas",
+      "tripsCompleted": "Viagens Realizadas",
+      "co2Saved": "CO₂ Economizado",
+      "ecoPoints": "EcoPontos"
     },
-    "history": {
-      "title": "Histórico",
-      "subtitle": "Veja suas viagens anteriores"
+    "tools": {
+      "title": "Ferramentas",
+      "subtitle": "Selecione uma opção para começar"
     },
-    "profile": {
-      "title": "Meu Perfil",
-      "subtitle": "Gerencie suas informações pessoais"
+    "modules": {
+      "planRoute": {
+        "title": "Planejar Rota",
+        "subtitle": "Encontre a melhor rota ecológica"
+      },
+      "history": {
+        "title": "Histórico",
+        "subtitle": "Veja suas viagens anteriores"
+      },
+      "profile": {
+        "title": "Meu Perfil",
+        "subtitle": "Gerencie suas informações pessoais"
+      },
+      "alerts": {
+        "title": "Alertas",
+        "subtitle": "Consulte notificações"
+      },
+      "report": {
+        "title": "Reportar Problema",
+        "subtitle": "Informe incidentes nas rotas"
+      },
+      "admin": {
+        "title": "Painel Administrativo",
+        "subtitle": "Gerencie usuários e permissões"
+      },
+      "favorites": {
+        "title": "Favoritas",
+        "subtitle": "Acesso rápido às suas rotas"
+      }
     },
-    "alerts": {
-      "title": "Alertas",
-      "subtitle": "Consulte notificações"
+    "impact": {
+      "title": "Seu impacto ambiental",
+      "description": "Até agora você evitou emitir",
+      "descriptionEnd": "graças às suas viagens sustentáveis.",
+      "button": "Ver Estatísticas"
     },
-    "report": {
-      "title": "Reportar Problema",
-      "subtitle": "Informe incidentes nas rotas"
-    },
-    "admin": {
-      "title": "Painel Administrativo",
-      "subtitle": "Gerencie usuários e permissões"
+    "footer": "Cada viagem sustentável ajuda a cuidar do planeta 🌱",
+    "modal": {
+      "title": "Deseja voltar?",
+      "message": "Se voltar para a página inicial, será necessário fazer login novamente para acessar o painel.",
+      "cancel": "Cancelar",
+      "confirm": "Voltar"
     }
-  },
-
-  "impact": {
-    "title": "Seu impacto ambiental",
-    "description": "Até agora você evitou emitir",
-    "descriptionEnd": "graças às suas viagens sustentáveis.",
-    "button": "Ver Estatísticas"
-  },
-
-  "footer": "Cada viagem sustentável ajuda a cuidar do planeta 🌱",
-
-  "modal": {
-    "title": "Deseja voltar?",
-    "message": "Se voltar para a página inicial, será necessário fazer login novamente para acessar o painel.",
-    "cancel": "Cancelar",
-    "confirm": "Voltar"
   }
-}
 }
