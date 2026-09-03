@@ -69,69 +69,64 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "contact": "Contact"
-  }
-
-  ,
-"dashboard": {
-  "title": "User Dashboard",
-  "subtitle": "Manage your sustainable mobility",
-  "welcome": "Welcome",
-
-  "back": "Back",
-
-  "stats": {
-    "routesCreated": "Routes Created",
-    "tripsCompleted": "Trips Completed",
-    "co2Saved": "CO₂ Saved",
-    "ecoPoints": "Eco Points"
   },
-
-  "tools": {
-    "title": "Tools",
-    "subtitle": "Choose an option to get started"
-  },
-
-  "modules": {
-    "planRoute": {
-      "title": "Plan Route",
-      "subtitle": "Find the best eco-friendly route"
+  "dashboard": {
+    "title": "User Dashboard",
+    "subtitle": "Manage your sustainable mobility",
+    "welcome": "Welcome",
+    "back": "Back",
+    "stats": {
+      "routesCreated": "Routes Created",
+      "tripsCompleted": "Trips Completed",
+      "co2Saved": "CO₂ Saved",
+      "ecoPoints": "Eco Points"
     },
-    "history": {
-      "title": "History",
-      "subtitle": "Review your previous trips"
+    "tools": {
+      "title": "Tools",
+      "subtitle": "Choose an option to get started"
     },
-    "profile": {
-      "title": "My Profile",
-      "subtitle": "Manage your personal information"
+    "modules": {
+      "planRoute": {
+        "title": "Plan Route",
+        "subtitle": "Find the best eco-friendly route"
+      },
+      "history": {
+        "title": "History",
+        "subtitle": "Review your previous trips"
+      },
+      "profile": {
+        "title": "My Profile",
+        "subtitle": "Manage your personal information"
+      },
+      "alerts": {
+        "title": "Alerts",
+        "subtitle": "Check notifications"
+      },
+      "report": {
+        "title": "Report Problem",
+        "subtitle": "Report route incidents"
+      },
+      "admin": {
+        "title": "Admin Panel",
+        "subtitle": "Manage users and permissions"
+      },
+      "favorites": {
+        "title": "Favorites",
+        "subtitle": "Quick access to your routes"
+      }
     },
-    "alerts": {
-      "title": "Alerts",
-      "subtitle": "Check notifications"
+    "impact": {
+      "title": "Your Environmental Impact",
+      "description": "So far you have avoided emitting",
+      "descriptionEnd": "thanks to your sustainable trips.",
+      "button": "View Statistics"
     },
-    "report": {
-      "title": "Report Problem",
-      "subtitle": "Report route incidents"
-    },
-    "admin": {
-      "title": "Admin Panel",
-      "subtitle": "Manage users and permissions"
+    "footer": "Every sustainable trip helps protect the planet 🌱",
+    "modal": {
+      "title": "Go back?",
+      "message": "If you return to the home page, you'll need to log in again to access the dashboard.",
+      "cancel": "Cancel",
+      "confirm": "Go Back"
     }
-  },
-
-  "impact": {
-    "title": "Your Environmental Impact",
-    "description": "So far you have avoided emitting",
-    "descriptionEnd": "thanks to your sustainable trips.",
-    "button": "View Statistics"
-  },
-
-  "footer": "Every sustainable trip helps protect the planet 🌱",
-
-  "modal": {
-    "title": "Go back?",
-    "message": "If you return to the home page, you'll need to log in again to access the dashboard.",
-    "cancel": "Cancel",
-    "confirm": "Go Back"
   }
-}
 }
