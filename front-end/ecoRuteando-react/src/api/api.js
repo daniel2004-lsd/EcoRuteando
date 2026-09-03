@@ -20,6 +20,19 @@ api.interceptors.request.use((config) => {
 let isRefreshing = false;
 let failedQueue = [];
 
+// Endpoints públicos de autenticación: un 401 aquí es una validación normal
+// (p.ej. "correo o contraseña incorrectos"), NO una sesión expirada. No deben
+// disparar el refresh automático ni la redirección, para que el componente
+// pueda mostrar el mensaje de error al usuario.
+const AUTH_PUBLIC_URLS = [
+    "/auth/login",
+    "/auth/register",
+    "/auth/refresh",
+    "/auth/recover",
+    "/auth/reset-password",
+    "/auth/send-verification",
+];
+
 const processQueue = (error, token = null) => {
     failedQueue.forEach((prom) => {
         if (error) {
@@ -35,6 +48,12 @@ api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
+
+        // Salta el manejo de sesión para endpoints públicos de auth: se deja pasar
+        // el 401 tal cual para que la UI muestre el error.
+        if (originalRequest?.url && AUTH_PUBLIC_URLS.some((u) => originalRequest.url.includes(u))) {
+            return Promise.reject(error);
+        }
 
         if (error.response?.status === 401 && !originalRequest._retry) {
             if (isRefreshing) {

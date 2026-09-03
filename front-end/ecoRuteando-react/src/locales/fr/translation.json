@@ -69,68 +69,64 @@
     "privacy": "Confidentialité",
     "terms": "Conditions",
     "contact": "Contact"
-  }
-  ,
-"dashboard": {
-  "title": "Tableau de bord",
-  "subtitle": "Gérez votre mobilité durable",
-  "welcome": "Bienvenue",
-
-  "back": "Retour",
-
-  "stats": {
-    "routesCreated": "Itinéraires créés",
-    "tripsCompleted": "Voyages effectués",
-    "co2Saved": "CO₂ économisé",
-    "ecoPoints": "ÉcoPoints"
   },
-
-  "tools": {
-    "title": "Outils",
-    "subtitle": "Sélectionnez une option"
-  },
-
-  "modules": {
-    "planRoute": {
-      "title": "Planifier un itinéraire",
-      "subtitle": "Trouvez le meilleur itinéraire écologique"
+  "dashboard": {
+    "title": "Tableau de bord",
+    "subtitle": "Gérez votre mobilité durable",
+    "welcome": "Bienvenue",
+    "back": "Retour",
+    "stats": {
+      "routesCreated": "Itinéraires créés",
+      "tripsCompleted": "Voyages effectués",
+      "co2Saved": "CO₂ économisé",
+      "ecoPoints": "ÉcoPoints"
     },
-    "history": {
-      "title": "Historique",
-      "subtitle": "Consultez vos trajets précédents"
+    "tools": {
+      "title": "Outils",
+      "subtitle": "Sélectionnez une option"
     },
-    "profile": {
-      "title": "Mon Profil",
-      "subtitle": "Gérez vos informations personnelles"
+    "modules": {
+      "planRoute": {
+        "title": "Planifier un itinéraire",
+        "subtitle": "Trouvez le meilleur itinéraire écologique"
+      },
+      "history": {
+        "title": "Historique",
+        "subtitle": "Consultez vos trajets précédents"
+      },
+      "profile": {
+        "title": "Mon Profil",
+        "subtitle": "Gérez vos informations personnelles"
+      },
+      "alerts": {
+        "title": "Alertes",
+        "subtitle": "Consultez les notifications"
+      },
+      "report": {
+        "title": "Signaler un problème",
+        "subtitle": "Signalez des incidents"
+      },
+      "admin": {
+        "title": "Administration",
+        "subtitle": "Gérer les utilisateurs et permissions"
+      },
+      "favorites": {
+        "title": "Favoris",
+        "subtitle": "Accédez rapidement à vos itinéraires"
+      }
     },
-    "alerts": {
-      "title": "Alertes",
-      "subtitle": "Consultez les notifications"
+    "impact": {
+      "title": "Votre impact environnemental",
+      "description": "Jusqu'à présent, vous avez évité d'émettre",
+      "descriptionEnd": "grâce à vos trajets durables.",
+      "button": "Voir les statistiques"
     },
-    "report": {
-      "title": "Signaler un problème",
-      "subtitle": "Signalez des incidents"
-    },
-    "admin": {
-      "title": "Administration",
-      "subtitle": "Gérer les utilisateurs et permissions"
+    "footer": "Chaque trajet durable aide à protéger la planète 🌱",
+    "modal": {
+      "title": "Retourner ?",
+      "message": "Si vous retournez à la page d'accueil, vous devrez vous reconnecter pour accéder au tableau de bord.",
+      "cancel": "Annuler",
+      "confirm": "Retour"
     }
-  },
-
-  "impact": {
-    "title": "Votre impact environnemental",
-    "description": "Jusqu'à présent, vous avez évité d'émettre",
-    "descriptionEnd": "grâce à vos trajets durables.",
-    "button": "Voir les statistiques"
-  },
-
-  "footer": "Chaque trajet durable aide à protéger la planète 🌱",
-
-  "modal": {
-    "title": "Retourner ?",
-    "message": "Si vous retournez à la page d'accueil, vous devrez vous reconnecter pour accéder au tableau de bord.",
-    "cancel": "Annuler",
-    "confirm": "Retour"
   }
 }
-} 

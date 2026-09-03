@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 import { LeafIcon, ArrowLeft, MapIcon, BikeIcon, BusIcon } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import MapViewGoogle from "../../../features/auth/components/MapViewGoogle";
@@ -262,6 +263,46 @@ const PlanRoute = ({ onNavigate }) => {
   const [startingTrip, setStartingTrip] = useState(false);
   const [completing, setCompleting] = useState(false);
   const [tripError, setTripError] = useState(null);
+  const location = useLocation();
+  const presetPendingRef = useRef(false);
+
+  // Si se llega desde "Usar ruta" (favoritos), precargar origen/destino y trazar la ruta
+  useEffect(() => {
+    const fav = location.state?.favoriteRoute;
+    if (
+      fav &&
+      fav.startLat != null &&
+      fav.startLng != null &&
+      fav.endLat != null &&
+      fav.endLng != null
+    ) {
+      const start = {
+        name: fav.routeName || "Origen",
+        address: `${fav.startLat}, ${fav.startLng}`,
+        lat: fav.startLat,
+        lng: fav.startLng,
+      };
+      const end = {
+        name: fav.routeName || "Destino",
+        address: `${fav.endLat}, ${fav.endLng}`,
+        lat: fav.endLat,
+        lng: fav.endLng,
+      };
+      setOrigin(start);
+      setDestination(end);
+      setOriginInputValue(start.name);
+      setMapCenter({
+        lat: (fav.startLat + fav.endLat) / 2,
+        lng: (fav.startLng + fav.endLng) / 2,
+      });
+      // Esta ruta ya está guardada en el backend: reutilizar su id en vez de duplicarla
+      if (fav.routeId) {
+        setRouteSavedId(fav.routeId);
+      }
+      presetPendingRef.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     loadGoogleMapsApi().then(() => {
@@ -395,6 +436,13 @@ const PlanRoute = ({ onNavigate }) => {
   const saveRoute = async () => {
     if (!route || !origin || !destination) return null;
 
+    // Si la ruta ya está guardada (p.ej. vino de favoritos), no crear un duplicado
+    if (routeSavedId) {
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+      return routeSavedId;
+    }
+
     setSaving(true);
     try {
       const modeMap = {
@@ -498,6 +546,15 @@ const PlanRoute = ({ onNavigate }) => {
       calculateRoute();
     }
   }, [transportMode]);
+
+  // Trazar automáticamente la ruta precargada desde favoritos (una sola vez)
+  useEffect(() => {
+    if (presetPendingRef.current && origin?.lat && destination?.lat) {
+      presetPendingRef.current = false;
+      calculateRoute();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [origin, destination]);
 
   const swapLocations = () => {
     setOrigin(destination);
@@ -687,65 +744,64 @@ const PlanRoute = ({ onNavigate }) => {
 
       {/* Tarjeta de resultados */}
       {route && (
-        <div className="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-80 z-20">
-          <div className={`rounded-xl shadow-xl overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
-            <div className="p-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="flex items-center gap-3">
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${
-                      transportMode === 'walking' ? 'bg-green-100 text-green-700' :
-                      transportMode === 'bike' ? 'bg-emerald-100 text-emerald-700' : 'bg-purple-100 text-purple-700'
-                    }`}>
-                      {transportMode === 'walking' ? 'Caminata' : transportMode === 'bike' ? 'Ciclorruta' : 'Transporte público'}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {route.distance} km · {route.duration} min
-                    </span>
-                  </div>
-                  <p className={`text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                    {route.startAddress?.split(',')[0]} → {route.endAddress?.split(',')[0]}
-                  </p>
+        <div className="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 z-20">
+          <div className={`rounded-xl shadow-2xl overflow-hidden border ${isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}>
+            <div className={`px-4 py-3 border-b flex items-center justify-between ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-emerald-50 border-gray-100'}`}>
+              <span className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-emerald-700'}`}>
+                ✅ Ruta calculada
+              </span>
+              <button
+                onClick={() => setRoute(null)}
+                className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <span className="text-gray-400 text-sm">✕</span>
+              </button>
+            </div>
+            <div className="p-4">
+              <div className="flex items-center gap-3">
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                  transportMode === 'walking' ? 'bg-green-100 text-green-700' :
+                  transportMode === 'bike' ? 'bg-emerald-100 text-emerald-700' : 'bg-purple-100 text-purple-700'
+                }`}>
+                  {transportMode === 'walking' ? 'Caminata' : transportMode === 'bike' ? 'Ciclorruta' : 'Transporte público'}
+                </span>
+                <span className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                  {route.distance} km · {route.duration} min
+                </span>
+              </div>
+              <p className={`text-sm mt-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                {route.startAddress?.split(',')[0]} → {route.endAddress?.split(',')[0]}
+              </p>
 
-                  {/* Sostenibilidad */}
-                  <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs">
-                    <span className="flex items-center gap-1 text-emerald-500 font-medium">
-                      <LeafIcon size={13} />
-                      CO₂ ahorrado: {estimate?.co2SavedKg != null ? `${estimate.co2SavedKg} kg` : "—"}
-                    </span>
-                    {estimate?.co2EmissionsKg != null && (
-                      <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        Emisiones: {estimate.co2EmissionsKg} kg
-                      </span>
-                    )}
-                    {estimate?.estimatedCalories != null && (
-                      <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        🔥 {estimate.estimatedCalories} kcal
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setRoute(null)}
-                    className="w-6 h-6 rounded-md flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-                  >
-                    <span className="text-gray-400 text-sm">✕</span>
-                  </button>
-                </div>
+              {/* Sostenibilidad */}
+              <div className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 text-sm">
+                <span className="flex items-center gap-1 text-emerald-500 font-semibold">
+                  <LeafIcon size={14} />
+                  CO₂ ahorrado: {estimate?.co2SavedKg != null ? `${estimate.co2SavedKg} kg` : "—"}
+                </span>
+                {estimate?.co2EmissionsKg != null && (
+                  <span className={`${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
+                    Emisiones: {estimate.co2EmissionsKg} kg
+                  </span>
+                )}
+                {estimate?.estimatedCalories != null && (
+                  <span className={`${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
+                    🔥 {estimate.estimatedCalories} kcal
+                  </span>
+                )}
               </div>
 
               {/* Acciones */}
-              <div className="mt-3 flex gap-2">
+              <div className="mt-4 grid grid-cols-2 gap-2">
                 {activeTripId ? (
                   <>
-                    <span className="flex-1 text-center px-2 py-1.5 rounded-md text-xs font-medium bg-amber-100 text-amber-700">
+                    <span className="flex items-center justify-center px-2 py-2.5 rounded-lg text-sm font-bold bg-amber-100 text-amber-700">
                       ✓ Viaje en curso
                     </span>
                     <button
                       onClick={completeTrip}
                       disabled={completing}
-                      className={`flex-1 px-2 py-1.5 rounded-md text-xs font-medium transition-all ${
+                      className={`flex items-center justify-center px-2 py-2.5 rounded-lg text-sm font-bold transition-all ${
                         completing
                           ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                           : 'bg-emerald-600 text-white hover:bg-emerald-700'
@@ -758,21 +814,21 @@ const PlanRoute = ({ onNavigate }) => {
                   <>
                     <button
                       onClick={saveRoute}
-                      disabled={saving || saved}
-                      className={`flex-1 px-2 py-1.5 rounded-md text-xs font-medium transition-all ${
-                        saved
+                      disabled={saving || saved || !!routeSavedId}
+                      className={`flex items-center justify-center px-2 py-2.5 rounded-lg text-sm font-bold transition-all ${
+                        saved || routeSavedId
                           ? 'bg-green-100 text-green-700'
                           : saving
                           ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                           : 'bg-emerald-600 text-white hover:bg-emerald-700'
                       }`}
                     >
-                      {saved ? '✓ Guardada' : saving ? 'Guardando...' : 'Guardar'}
+                      {saved || routeSavedId ? '✓ Guardada' : saving ? 'Guardando...' : 'Guardar'}
                     </button>
                     <button
                       onClick={startTrip}
                       disabled={startingTrip}
-                      className={`flex-1 px-2 py-1.5 rounded-md text-xs font-medium transition-all ${
+                      className={`flex items-center justify-center px-2 py-2.5 rounded-lg text-sm font-bold transition-all ${
                         startingTrip
                           ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                           : 'bg-blue-600 text-white hover:bg-blue-700'
