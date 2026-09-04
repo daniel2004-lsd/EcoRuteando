@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../../app/context/AuthContext";
 import {
   LeafIcon,
   ActivityIcon,
@@ -14,8 +15,9 @@ import {
   DownloadIcon
 } from "../../../shared/components/Icons.jsx";
 
-const AdminDashboard = ({ onNavigate, userRole }) => {
+const AdminDashboard = ({ onNavigate }) => {
   const { t } = useTranslation();
+  const { userRole } = useAuth();
 
   const [stats] = useState({
     users: 1,

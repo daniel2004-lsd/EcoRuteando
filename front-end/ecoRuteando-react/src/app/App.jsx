@@ -7,6 +7,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { LogoImage } from "../shared/components/Icons";
 import LoadingOverlay from "../shared/components/LoadingOverlay";
 import ConfirmModal from "../shared/components/ConfirmModal";
+import ProtectedRoute from "../shared/components/ProtectedRoute";
 
 // Auth pages
 import Login from "../features/auth/components/Login";
@@ -57,7 +58,6 @@ function AppContent() {
     const { i18n, t } = useTranslation();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
-    const [userRole, setUserRole] = useState(() => localStorage.getItem("userRole") || "user");
     const [showTerms, setShowTerms] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [confirmModal, setConfirmModal] = useState({
@@ -124,23 +124,23 @@ function AppContent() {
                     <Route path="/newpassword" element={<NewPassword />} />
                     <Route path="/auth/callback" element={<OAuthCallback />} />
                     <Route path="/verify-2fa" element={<TwoFactorVerify />} />
-                    <Route path="/dashboard" element={<UserDashboard userRole={userRole} onNavigate={onNavigate} />} />
-                    <Route path="/admin" element={<AdminPanel userRole={userRole} onNavigate={onNavigate} />} />
-                    <Route path="/admin/users" element={<AdminSection title="admin.section.users" />} />
-                    <Route path="/admin/reports" element={<AdminSection title="admin.section.reports" />} />
-                    <Route path="/admin/support" element={<AdminSection title="admin.section.support" />} />
-                    <Route path="/admin/audit" element={<AdminSection title="admin.section.audit" />} />
-                    <Route path="/admin/settings" element={<AdminSection title="admin.section.settings" />} />
-                    <Route path="/admin/impact" element={<AdminSection title="admin.section.impact" />} />
-                    <Route path="/admin/pois" element={<PoiManage onNavigate={onNavigate} />} />
-                    <Route path="/profile" element={<UserProfile userRole={userRole} onNavigate={onNavigate} />} />
-                    <Route path="/user/plan-route" element={<PlanRoute onNavigate={onNavigate} />} />
-                    <Route path="/user/history" element={<UserHistory onNavigate={onNavigate} />} />
-                    <Route path="/user/history/:usageId" element={<TripDetail onNavigate={onNavigate} />} />
-                    <Route path="/user/statistics" element={<UserStatistics onNavigate={onNavigate} />} />
-                    <Route path="/user/reporter-problem" element={<ReporterProblem onNavigate={onNavigate} />} />
-                    <Route path="/user/alerts" element={<UserAlerts onNavigate={onNavigate} />} />
-                    <Route path="/user/favorites" element={<Favorites onNavigate={onNavigate} />} />
+                    <Route path="/dashboard" element={<ProtectedRoute><UserDashboard onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminPanel onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.users" /></ProtectedRoute>} />
+                    <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.reports" /></ProtectedRoute>} />
+                    <Route path="/admin/support" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.support" /></ProtectedRoute>} />
+                    <Route path="/admin/audit" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.audit" /></ProtectedRoute>} />
+                    <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.settings" /></ProtectedRoute>} />
+                    <Route path="/admin/impact" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.impact" /></ProtectedRoute>} />
+                    <Route path="/admin/pois" element={<ProtectedRoute requiredRole="admin"><PoiManage onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/profile" element={<ProtectedRoute><UserProfile onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/plan-route" element={<ProtectedRoute><PlanRoute onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/history" element={<ProtectedRoute><UserHistory onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/history/:usageId" element={<ProtectedRoute><TripDetail onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/statistics" element={<ProtectedRoute><UserStatistics onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/reporter-problem" element={<ProtectedRoute><ReporterProblem onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/alerts" element={<ProtectedRoute><UserAlerts onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/favorites" element={<ProtectedRoute><Favorites onNavigate={onNavigate} /></ProtectedRoute>} />
                 </Routes>
             </main>
 

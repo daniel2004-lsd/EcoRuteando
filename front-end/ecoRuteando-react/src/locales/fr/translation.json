@@ -74,7 +74,7 @@
     "title": "Tableau de bord",
     "subtitle": "Gérez votre mobilité durable",
     "welcome": "Bienvenue",
-    "back": "Retour",
+    "back": "Déconnexion",
     "stats": {
       "routesCreated": "Itinéraires créés",
       "tripsCompleted": "Voyages effectués",
@@ -123,10 +123,10 @@
     },
     "footer": "Chaque trajet durable aide à protéger la planète 🌱",
     "modal": {
-      "title": "Retourner ?",
-      "message": "Si vous retournez à la page d'accueil, vous devrez vous reconnecter pour accéder au tableau de bord.",
+      "title": "Se déconnecter ?",
+      "message": "Êtes-vous sûr de vouloir vous déconnecter ? Vous devrez vous reconnecter pour accéder au tableau de bord.",
       "cancel": "Annuler",
-      "confirm": "Retour"
+      "confirm": "Déconnexion"
     }
   }
 }

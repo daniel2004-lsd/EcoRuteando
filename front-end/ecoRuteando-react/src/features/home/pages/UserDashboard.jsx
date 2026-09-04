@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { me } from "../../../services/authService";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../../../src/app/context/LanguageContext";
+import { useAuth } from "../../../app/context/AuthContext";
 import {
   RouteIcon,
   LeafIcon,
@@ -18,9 +19,10 @@ import { useTheme } from "../../../app/context/ThemeContext";
 import routeService from "../../../services/routeService";
 import tripService from "../../../services/tripService";
 
-const UserDashboard = ({ onNavigate, userRole }) => {
+const UserDashboard = ({ onNavigate }) => {
   const { t } = useTranslation();
   const { isDarkMode, toggleTheme } = useTheme();
+  const { logout, userRole } = useAuth();
   const [showBackModal, setShowBackModal] = useState(false);
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState({
@@ -69,12 +71,13 @@ const UserDashboard = ({ onNavigate, userRole }) => {
     loadStats();
   }, []);
 
-  // Función para volver
+  // Función para cerrar sesión
   const handleBack = () => {
     setShowBackModal(true);
   };
 
-  const confirmBack = () => {
+  const confirmBack = async () => {
+    await logout();
     onNavigate('/');
   };
 
