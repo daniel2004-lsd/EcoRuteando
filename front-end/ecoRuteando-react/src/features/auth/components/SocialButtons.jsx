@@ -2,8 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import { GoogleIcon, FacebookIcon, XIcon } from "../../../shared/components/Icons";
 
-const GOOGLE_CLIENT_ID = "409005111991-f71o4co8afdi7235fk47odktqrmn4uh6.apps.googleusercontent.com";
-const FACEBOOK_APP_ID = "1374060214876328";
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const FACEBOOK_APP_ID = import.meta.env.VITE_FACEBOOK_APP_ID;
 
 function SocialButtons({ label = "Continuar con" }) {
     const { loginWithOAuth } = useAuth();
