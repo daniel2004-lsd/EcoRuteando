@@ -36,7 +36,7 @@ services:
       - ../EcoRuteandoBackend/.env
 
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: http://+:5124
       EmailSettings__Host: smtp.gmail.com
       EmailSettings__Port: 587
@@ -82,7 +82,7 @@ services:
     depends_on:
       - backend
 
-    ports:x
+    ports:
       - "3007:80"
 
     restart: unless-stopped

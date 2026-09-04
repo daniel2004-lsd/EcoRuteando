@@ -59,6 +59,7 @@ function AppContent() {
     const [isLoading, setIsLoading] = useState(false);
     const [userRole, setUserRole] = useState(() => localStorage.getItem("userRole") || "user");
     const [showTerms, setShowTerms] = useState(false);
+    const [recoveryCode, setRecoveryCode] = useState(null);
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false, pendingAction: null, title: "", message: "",
@@ -119,9 +120,9 @@ function AppContent() {
                         />
                     } />
                     <Route path="/recover" element={<Recover />} />
-                    <Route path="/verify" element={<VerifyCode onCodeVerified={(code) => sessionStorage.setItem("passwordRecoveryCode", code)} />} />
+                    <Route path="/verify" element={<VerifyCode onCodeVerified={(code) => setRecoveryCode(code)} />} />
                     <Route path="/verify-email" element={<VerifyEmailCode />} />
-                    <Route path="/newpassword" element={<NewPassword />} />
+                    <Route path="/newpassword" element={<NewPassword recoveryCode={recoveryCode} onClearRecoveryCode={() => setRecoveryCode(null)} />} />
                     <Route path="/auth/callback" element={<OAuthCallback />} />
                     <Route path="/verify-2fa" element={<TwoFactorVerify />} />
                     <Route path="/dashboard" element={<UserDashboard userRole={userRole} onNavigate={onNavigate} />} />
