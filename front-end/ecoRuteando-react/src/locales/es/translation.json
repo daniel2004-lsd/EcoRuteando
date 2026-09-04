@@ -74,7 +74,7 @@
     "title": "Panel de Usuario",
     "subtitle": "Gestiona tu movilidad sostenible",
     "welcome": "Bienvenido",
-    "back": "Volver",
+    "back": "Cerrar sesión",
     "stats": {
       "routesCreated": "Rutas creadas",
       "tripsCompleted": "Viajes completados",
@@ -123,10 +123,10 @@
     },
     "footer": "Cada viaje sostenible ayuda a cuidar el planeta 🌱",
     "modal": {
-      "title": "¿Deseas volver?",
-      "message": "Si vuelves a la página principal, deberás iniciar sesión nuevamente para acceder al Dashboard.",
+      "title": "¿Cerrar sesión?",
+      "message": "¿Estás seguro de que deseas cerrar sesión? Tendrás que volver a iniciar sesión para acceder al Dashboard.",
       "cancel": "Cancelar",
-      "confirm": "Volver"
+      "confirm": "Cerrar sesión"
     }
   }
 }

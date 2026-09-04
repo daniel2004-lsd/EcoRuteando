@@ -74,7 +74,7 @@
     "title": "Painel do Usuário",
     "subtitle": "Gerencie sua mobilidade sustentável",
     "welcome": "Bem-vindo",
-    "back": "Voltar",
+    "back": "Encerrar sessão",
     "stats": {
       "routesCreated": "Rotas Criadas",
       "tripsCompleted": "Viagens Realizadas",
@@ -123,10 +123,10 @@
     },
     "footer": "Cada viagem sustentável ajuda a cuidar do planeta 🌱",
     "modal": {
-      "title": "Deseja voltar?",
-      "message": "Se voltar para a página inicial, será necessário fazer login novamente para acessar o painel.",
+      "title": "Encerrar sessão?",
+      "message": "Tem certeza de que deseja encerrar a sessão? Você precisará fazer login novamente para acessar o Painel.",
       "cancel": "Cancelar",
-      "confirm": "Voltar"
+      "confirm": "Encerrar sessão"
     }
   }
 }

@@ -16,10 +16,12 @@ import {
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../../app/context/AuthContext";
 
-const AdminPanel = ({ onNavigate, userRole }) => {
+const AdminPanel = ({ onNavigate }) => {
   const { isDarkMode, toggleTheme } = useTheme();
   const { t } = useTranslation();
+  const { userRole } = useAuth();
 
   const [stats] = useState({
     users: 245,
