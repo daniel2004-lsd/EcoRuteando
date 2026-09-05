@@ -33,6 +33,7 @@ import ReporterProblem from "../features/home/pages/ReporterProblem";
 import AdminPanel from "../features/admin/pages/AdminPanel";
 import PoiManage from "../features/admin/pages/PoiManage";
 import RouteManage from "../features/home/pages/RouteManage";
+import AdminStatistics from "../features/admin/pages/AdminStatistics";
 
 import "leaflet/dist/leaflet.css";
 
@@ -133,7 +134,7 @@ function AppContent() {
                     <Route path="/admin/support" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.support" /></ProtectedRoute>} />
                     <Route path="/admin/audit" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.audit" /></ProtectedRoute>} />
                     <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.settings" /></ProtectedRoute>} />
-                    <Route path="/admin/impact" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.impact" /></ProtectedRoute>} />
+                    <Route path="/admin/impact" element={<ProtectedRoute requiredRole="admin"><AdminStatistics onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/pois" element={<ProtectedRoute requiredRole="admin"><PoiManage onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/profile" element={<ProtectedRoute><UserProfile onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/plan-route" element={<ProtectedRoute><PlanRoute onNavigate={onNavigate} /></ProtectedRoute>} />

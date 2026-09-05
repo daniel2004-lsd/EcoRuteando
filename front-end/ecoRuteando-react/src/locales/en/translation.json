@@ -193,5 +193,39 @@
       "saveFailed": "Could not save the route",
       "deleteFailed": "Could not delete the route"
     }
+  },
+  "adminStatistics": {
+    "title": "Statistics Portal",
+    "subtitle": "System impact in numbers",
+    "backToPanel": "Back to Panel",
+    "from": "From",
+    "to": "To",
+    "apply": "Apply filter",
+    "clear": "Clear",
+    "loading": "Loading statistics...",
+    "loadError": "Error loading statistics",
+    "emptyTitle": "No information",
+    "emptyMessage": "No data available for the selected range",
+    "kpi": {
+      "routesConsulted": "Routes consulted",
+      "activeUsers": "Active users",
+      "co2Saved": "CO₂ saved",
+      "completedTrips": "Completed trips",
+      "avgDistance": "Average distance"
+    },
+    "chart": {
+      "monthlyCo2": "CO₂ saved per month",
+      "byMode": "Trips by transport mode",
+      "co2Kg": "CO₂",
+      "trips": "Trips"
+    },
+    "transport": {
+      "walking": "Walking",
+      "bike": "Bike",
+      "public_transport": "Public transport",
+      "mixed": "Mixed",
+      "unknown": "Not specified",
+      "car": "Car"
+    }
   }
 }

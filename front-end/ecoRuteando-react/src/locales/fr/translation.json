@@ -193,5 +193,39 @@
       "saveFailed": "Impossible d'enregistrer l'itinéraire",
       "deleteFailed": "Impossible de supprimer l'itinéraire"
     }
+  },
+  "adminStatistics": {
+    "title": "Portail de statistiques",
+    "subtitle": "L'impact du système en chiffres",
+    "backToPanel": "Retour au panneau",
+    "from": "Du",
+    "to": "Au",
+    "apply": "Appliquer le filtre",
+    "clear": "Effacer",
+    "loading": "Chargement des statistiques...",
+    "loadError": "Erreur lors du chargement des statistiques",
+    "emptyTitle": "Aucune information",
+    "emptyMessage": "Aucune donnée disponible pour la plage sélectionnée",
+    "kpi": {
+      "routesConsulted": "Itinéraires consultés",
+      "activeUsers": "Utilisateurs actifs",
+      "co2Saved": "CO₂ économisé",
+      "completedTrips": "Trajets terminés",
+      "avgDistance": "Distance moyenne"
+    },
+    "chart": {
+      "monthlyCo2": "CO₂ économisé par mois",
+      "byMode": "Trajets par mode de transport",
+      "co2Kg": "CO₂",
+      "trips": "Trajets"
+    },
+    "transport": {
+      "walking": "À pied",
+      "bike": "Vélo",
+      "public_transport": "Transport public",
+      "mixed": "Mixte",
+      "unknown": "Non précisé",
+      "car": "Voiture"
+    }
   }
 }
