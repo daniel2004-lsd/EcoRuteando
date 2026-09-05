@@ -4,6 +4,7 @@ import { LeafIcon, ArrowLeft, ClockIcon, MapPinIcon, CalendarIcon } from "../../
 import { useTheme } from "../../../app/context/ThemeContext";
 import MapViewGoogle from "../../../features/auth/components/MapViewGoogle";
 import tripService from "../../../services/tripService";
+import RatingSection from "../components/RatingSection";
 
 const TripDetail = ({ onNavigate }) => {
     const { isDarkMode, toggleTheme } = useTheme();
@@ -193,6 +194,11 @@ const TripDetail = ({ onNavigate }) => {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Calificación (CU09 — solo si el trayecto fue completado) */}
+                        {trip.completed && (
+                            <RatingSection routeId={trip.routeId} />
+                        )}
                     </>
                 )}
             </div>
