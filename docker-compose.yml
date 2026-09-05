@@ -82,7 +82,7 @@ services:
     depends_on:
       - backend
 
-    ports:x
+    ports:
       - "3007:80"
 
     restart: unless-stopped
