@@ -74,7 +74,7 @@
     "title": "User Dashboard",
     "subtitle": "Manage your sustainable mobility",
     "welcome": "Welcome",
-    "back": "Back",
+    "back": "Log out",
     "stats": {
       "routesCreated": "Routes Created",
       "tripsCompleted": "Trips Completed",
@@ -123,10 +123,10 @@
     },
     "footer": "Every sustainable trip helps protect the planet 🌱",
     "modal": {
-      "title": "Go back?",
-      "message": "If you return to the home page, you'll need to log in again to access the dashboard.",
+      "title": "Log out?",
+      "message": "Are you sure you want to log out? You'll need to log in again to access the Dashboard.",
       "cancel": "Cancel",
-      "confirm": "Go Back"
+      "confirm": "Log out"
     }
   }
 }

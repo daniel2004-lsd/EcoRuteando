@@ -908,7 +908,7 @@ const MotivationalFooter = ({ theme, t }) => (
 );
 
 /* ─── COMPONENTE PRINCIPAL ─────────────────────────────────── */
-const UserProfile = ({ onNavigate, userRole }) => {
+const UserProfile = ({ onNavigate }) => {
   const { t } = useTranslation();
   const { isDarkMode, toggleTheme } = useTheme();
   const theme = isDarkMode ? C.dark : C.light;
