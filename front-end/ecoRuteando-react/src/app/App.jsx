@@ -32,6 +32,7 @@ import PlanRoute from "../features/home/pages/PlanRoute";
 import ReporterProblem from "../features/home/pages/ReporterProblem";
 import AdminPanel from "../features/admin/pages/AdminPanel";
 import PoiManage from "../features/admin/pages/PoiManage";
+import RouteManage from "../features/home/pages/RouteManage";
 
 import "leaflet/dist/leaflet.css";
 
@@ -136,6 +137,7 @@ function AppContent() {
                     <Route path="/admin/pois" element={<ProtectedRoute requiredRole="admin"><PoiManage onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/profile" element={<ProtectedRoute><UserProfile onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/plan-route" element={<ProtectedRoute><PlanRoute onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/routes" element={<ProtectedRoute><RouteManage onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/history" element={<ProtectedRoute><UserHistory onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/history/:usageId" element={<ProtectedRoute><TripDetail onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/statistics" element={<ProtectedRoute><UserStatistics onNavigate={onNavigate} /></ProtectedRoute>} />

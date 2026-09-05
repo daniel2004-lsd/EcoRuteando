@@ -1,9 +1,10 @@
 import api from "../api/api";
 
 const routeService = {
-  getAll: async (transportType = null) => {
+  getAll: async (transportType = null, includeInactive = false) => {
     const params = {};
     if (transportType) params.transportType = transportType;
+    if (includeInactive) params.includeInactive = true;
     const { data } = await api.get("/routes", { params });
     return data;
   },

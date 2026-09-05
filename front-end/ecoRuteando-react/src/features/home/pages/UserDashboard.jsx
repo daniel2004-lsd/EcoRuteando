@@ -90,6 +90,13 @@ const UserDashboard = ({ onNavigate }) => {
       onClick: () => onNavigate('/user/plan-route')
     },
     {
+      id: 'mis_rutas',
+      icon: <RouteIcon size={26} />,
+      titleKey: 'dashboard.modules.routes.title',
+      subtitleKey: 'dashboard.modules.routes.subtitle',
+      onClick: () => onNavigate('/user/routes')
+    },
+    {
       id: 'historial',
       icon: <ClockIcon size={26} />,
       titleKey: 'dashboard.modules.history.title',
