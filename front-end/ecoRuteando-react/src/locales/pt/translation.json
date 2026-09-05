@@ -113,6 +113,10 @@
       "favorites": {
         "title": "Favoritas",
         "subtitle": "Acesso rápido às suas rotas"
+      },
+      "routes": {
+        "title": "Minhas Rotas",
+        "subtitle": "Criar, editar e administrar rotas"
       }
     },
     "impact": {
@@ -127,6 +131,67 @@
       "message": "Tem certeza de que deseja encerrar a sessão? Você precisará fazer login novamente para acessar o Painel.",
       "cancel": "Cancelar",
       "confirm": "Encerrar sessão"
+    }
+  },
+  "routeManage": {
+    "title": "Gestão de Rotas",
+    "subtitle": "Criar, editar e administrar as rotas do sistema",
+    "backToDashboard": "Voltar ao Painel",
+    "filterPlaceholder": "Filtrar por nome...",
+    "newRoute": "Nova Rota",
+    "editRoute": "Editar Rota",
+    "loading": "Carregando rotas...",
+    "loadingDetail": "Carregando detalhe...",
+    "loadError": "Não foi possível carregar as rotas",
+    "name": "Nome",
+    "description": "Descrição",
+    "descriptionPlaceholder": "Breve descrição da rota",
+    "transportType": "Tipo de transporte",
+    "transport": {
+      "walking": "A pé",
+      "bike": "Bicicleta",
+      "public_transport": "Transporte público",
+      "mixed": "Misto"
+    },
+    "difficulty": "Dificuldade",
+    "startName": "Origem",
+    "destinationName": "Destino",
+    "startLat": "Lat. origem",
+    "startLng": "Lng. origem",
+    "endLat": "Lat. destino",
+    "endLng": "Lng. destino",
+    "distanceKm": "Distância (km)",
+    "estimatedTimeMin": "Tempo (min)",
+    "co2SavedKg": "CO₂ economizado (kg)",
+    "estimatedCalories": "Calorias",
+    "photoUrl": "URL da foto",
+    "availableDate": "Disponível a partir de",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "deleteConfirm": "Excluir",
+    "deleting": "Excluindo...",
+    "saving": "Salvando...",
+    "saveChanges": "Salvar alterações",
+    "create": "Criar",
+    "cancel": "Cancelar",
+    "status": {
+      "active": "Ativa",
+      "inactive": "Inativa",
+      "under_review": "Em revisão",
+      "archived": "Arquivada"
+    },
+    "noResults": "Nenhuma rota corresponde à pesquisa",
+    "empty": "Nenhuma rota registrada",
+    "createFirst": "Criar a primeira",
+    "footer": "Cada rota ecológica é um passo para um futuro mais verde",
+    "confirmDeleteTitle": "Excluir rota",
+    "confirmDeleteMessage": "Deseja excluir a rota {{name}}? Esta ação não pode ser desfeita.",
+    "errors": {
+      "nameRequired": "O nome da rota é obrigatório",
+      "startRequired": "O ponto de origem é obrigatório",
+      "destinationRequired": "O ponto de destino é obrigatório",
+      "saveFailed": "Não foi possível salvar a rota",
+      "deleteFailed": "Não foi possível excluir a rota"
     }
   }
 }
