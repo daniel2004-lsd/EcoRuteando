@@ -113,6 +113,10 @@
       "favorites": {
         "title": "Favorites",
         "subtitle": "Quick access to your routes"
+      },
+      "routes": {
+        "title": "My Routes",
+        "subtitle": "Create, edit and manage routes"
       }
     },
     "impact": {
@@ -127,6 +131,67 @@
       "message": "Are you sure you want to log out? You'll need to log in again to access the Dashboard.",
       "cancel": "Cancel",
       "confirm": "Log out"
+    }
+  },
+  "routeManage": {
+    "title": "Route Management",
+    "subtitle": "Create, edit and manage system routes",
+    "backToDashboard": "Back to Dashboard",
+    "filterPlaceholder": "Filter by name...",
+    "newRoute": "New Route",
+    "editRoute": "Edit Route",
+    "loading": "Loading routes...",
+    "loadingDetail": "Loading detail...",
+    "loadError": "Could not load routes",
+    "name": "Name",
+    "description": "Description",
+    "descriptionPlaceholder": "Brief description of the route",
+    "transportType": "Transport type",
+    "transport": {
+      "walking": "Walking",
+      "bike": "Bike",
+      "public_transport": "Public transport",
+      "mixed": "Mixed"
+    },
+    "difficulty": "Difficulty",
+    "startName": "Origin",
+    "destinationName": "Destination",
+    "startLat": "Start lat",
+    "startLng": "Start lng",
+    "endLat": "End lat",
+    "endLng": "End lng",
+    "distanceKm": "Distance (km)",
+    "estimatedTimeMin": "Time (min)",
+    "co2SavedKg": "CO₂ saved (kg)",
+    "estimatedCalories": "Calories",
+    "photoUrl": "Photo URL",
+    "availableDate": "Available from",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Delete",
+    "deleting": "Deleting...",
+    "saving": "Saving...",
+    "saveChanges": "Save changes",
+    "create": "Create",
+    "cancel": "Cancel",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "under_review": "Under review",
+      "archived": "Archived"
+    },
+    "noResults": "No routes match your search",
+    "empty": "No routes registered",
+    "createFirst": "Create the first one",
+    "footer": "Every eco route is a step towards a greener future",
+    "confirmDeleteTitle": "Delete route",
+    "confirmDeleteMessage": "Do you want to delete route {{name}}? This action cannot be undone.",
+    "errors": {
+      "nameRequired": "Route name is required",
+      "startRequired": "Origin point is required",
+      "destinationRequired": "Destination point is required",
+      "saveFailed": "Could not save the route",
+      "deleteFailed": "Could not delete the route"
     }
   }
 }
