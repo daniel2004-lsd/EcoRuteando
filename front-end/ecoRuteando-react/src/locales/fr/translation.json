@@ -113,6 +113,10 @@
       "favorites": {
         "title": "Favoris",
         "subtitle": "Accédez rapidement à vos itinéraires"
+      },
+      "routes": {
+        "title": "Mes Itinéraires",
+        "subtitle": "Créer, modifier et gérer les itinéraires"
       }
     },
     "impact": {
@@ -127,6 +131,67 @@
       "message": "Êtes-vous sûr de vouloir vous déconnecter ? Vous devrez vous reconnecter pour accéder au tableau de bord.",
       "cancel": "Annuler",
       "confirm": "Déconnexion"
+    }
+  },
+  "routeManage": {
+    "title": "Gestion des itinéraires",
+    "subtitle": "Créer, modifier et gérer les itinéraires du système",
+    "backToDashboard": "Retour au tableau de bord",
+    "filterPlaceholder": "Filtrer par nom...",
+    "newRoute": "Nouvel itinéraire",
+    "editRoute": "Modifier l'itinéraire",
+    "loading": "Chargement des itinéraires...",
+    "loadingDetail": "Chargement du détail...",
+    "loadError": "Impossible de charger les itinéraires",
+    "name": "Nom",
+    "description": "Description",
+    "descriptionPlaceholder": "Brève description de l'itinéraire",
+    "transportType": "Type de transport",
+    "transport": {
+      "walking": "À pied",
+      "bike": "Vélo",
+      "public_transport": "Transport public",
+      "mixed": "Mixte"
+    },
+    "difficulty": "Difficulté",
+    "startName": "Origine",
+    "destinationName": "Destination",
+    "startLat": "Lat. départ",
+    "startLng": "Lng. départ",
+    "endLat": "Lat. arrivée",
+    "endLng": "Lng. arrivée",
+    "distanceKm": "Distance (km)",
+    "estimatedTimeMin": "Durée (min)",
+    "co2SavedKg": "CO₂ économisé (kg)",
+    "estimatedCalories": "Calories",
+    "photoUrl": "URL de la photo",
+    "availableDate": "Disponible à partir du",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "deleteConfirm": "Supprimer",
+    "deleting": "Suppression...",
+    "saving": "Enregistrement...",
+    "saveChanges": "Enregistrer les modifications",
+    "create": "Créer",
+    "cancel": "Annuler",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "under_review": "En révision",
+      "archived": "Archivé"
+    },
+    "noResults": "Aucun itinéraire ne correspond à la recherche",
+    "empty": "Aucun itinéraire enregistré",
+    "createFirst": "Créer le premier",
+    "footer": "Chaque itinéraire écologique est un pas vers un avenir plus vert",
+    "confirmDeleteTitle": "Supprimer l'itinéraire",
+    "confirmDeleteMessage": "Voulez-vous supprimer l'itinéraire {{name}} ? Cette action est irréversible.",
+    "errors": {
+      "nameRequired": "Le nom de l'itinéraire est obligatoire",
+      "startRequired": "Le point d'origine est obligatoire",
+      "destinationRequired": "Le point de destination est obligatoire",
+      "saveFailed": "Impossible d'enregistrer l'itinéraire",
+      "deleteFailed": "Impossible de supprimer l'itinéraire"
     }
   }
 }
