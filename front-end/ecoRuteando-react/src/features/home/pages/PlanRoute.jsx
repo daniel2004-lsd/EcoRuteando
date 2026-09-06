@@ -364,21 +364,23 @@ const PlanRoute = ({ onNavigate }) => {
     }
   }, []);
 
-  // Función para calcular ruta (usa backend)
-  const calculateRoute = async () => {
-    if (!origin) {
+  // Función para calcular ruta (usa backend).
+  // Acepta puntos opcionales para evitar el problema de closure cuando
+  // el origen/destino se acaban de actualizar (p.ej. "Usar mi ubicación").
+  const calculateRoute = async (nextOrigin = origin, nextDestination = destination) => {
+    if (!nextOrigin) {
       setError("Seleccione un origen");
       return;
     }
-    if (!destination) {
+    if (!nextDestination) {
       setError("Seleccione un destino");
       return;
     }
-    if (!origin.lat || !origin.lng) {
+    if (!nextOrigin.lat || !nextOrigin.lng) {
       setError("El origen no tiene coordenadas válidas");
       return;
     }
-    if (!destination.lat || !destination.lng) {
+    if (!nextDestination.lat || !nextDestination.lng) {
       setError("El destino no tiene coordenadas válidas");
       return;
     }
@@ -388,8 +390,8 @@ const PlanRoute = ({ onNavigate }) => {
 
     try {
       console.log("Calculando ruta via backend...");
-      console.log("Origen:", origin);
-      console.log("Destino:", destination);
+      console.log("Origen:", nextOrigin);
+      console.log("Destino:", nextDestination);
       console.log("Modo:", transportMode);
 
       // Mapear modos de transporte
@@ -401,10 +403,10 @@ const PlanRoute = ({ onNavigate }) => {
       };
 
       const result = await mapsService.getDirections(
-        origin.lat,
-        origin.lng,
-        destination.lat,
-        destination.lng,
+        nextOrigin.lat,
+        nextOrigin.lng,
+        nextDestination.lat,
+        nextDestination.lng,
         modeMap[transportMode] || "walking"
       );
 
@@ -413,25 +415,25 @@ const PlanRoute = ({ onNavigate }) => {
       if (result && result.encodedPolyline) {
         const distance = (result.distance.valueMeters / 1000).toFixed(1);
         const duration = Math.round(result.duration.valueSeconds / 60);
-        
+
         console.log("Ruta calculada:", { distance, duration });
-        
+
         setRoute({
           distance,
           duration,
           geometry: result.encodedPolyline,
-          startAddress: origin.address,
-          endAddress: destination.address,
+          startAddress: nextOrigin.address,
+          endAddress: nextDestination.address,
         });
 
         // Estimar CO₂/calorías con el backend (factores de transporte)
         try {
           const pgModeMap = { walking: "walking", bike: "bike", car: "car", public: "public_transport" };
           const estimateResult = await mapsService.getEstimate(
-            origin.lat,
-            origin.lng,
-            destination.lat,
-            destination.lng,
+            nextOrigin.lat,
+            nextOrigin.lng,
+            nextDestination.lat,
+            nextDestination.lng,
             pgModeMap[transportMode] || "walking"
           );
           console.log("Estimación de sostenibilidad:", estimateResult);
@@ -593,7 +595,7 @@ const PlanRoute = ({ onNavigate }) => {
       console.log("Usando ubicación como origen:", userLocation);
 
       if (destination && destination.lat) {
-        setTimeout(() => calculateRoute(), 100);
+        setTimeout(() => calculateRoute(userLocation, destination), 100);
       }
     } else {
       setError("No se pudo obtener su ubicación. Verifique los permisos del GPS.");
@@ -611,6 +613,10 @@ const PlanRoute = ({ onNavigate }) => {
           setOrigin(location);
           setOriginInputValue(realName);
           setMapCenter({ lat: location.lat, lng: location.lng });
+
+          if (destination && destination.lat) {
+            setTimeout(() => calculateRoute(location, destination), 100);
+          }
         },
         () => setError("No se pudo acceder a su ubicación"),
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
