@@ -8,35 +8,11 @@ import mapsService from "../../../services/mapsService";
 import routeService from "../../../services/routeService";
 import tripService from "../../../services/tripService";
 import poiService from "../../../services/poiService";
-
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
+import { loadGoogleMapsApi } from "../../../services/googleMapsLoader";
 
 // Coordenadas de Neiva (viewport inicial del mapa)
 const NEIVA_LAT = 2.9273;
 const NEIVA_LON = -75.2819;
-
-// Cargar Google Maps (solo para el visualizador del mapa)
-let mapsLoadingPromise = null;
-const loadGoogleMapsApi = () => {
-  if (mapsLoadingPromise) return mapsLoadingPromise;
-  
-  mapsLoadingPromise = new Promise((resolve, reject) => {
-    if (window.google?.maps) {
-      resolve(window.google);
-      return;
-    }
-    
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=es`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => resolve(window.google);
-    script.onerror = reject;
-    document.head.appendChild(script);
-  });
-  
-  return mapsLoadingPromise;
-};
 
 // Componente de búsqueda (Autocompletado de Google Places)
 const LocationSearch = ({ placeholder, onSelect, isDarkMode, type = "origin", externalValue }) => {
