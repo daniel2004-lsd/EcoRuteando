@@ -249,7 +249,6 @@ const PlanRoute = ({ onNavigate }) => {
   const [route, setRoute] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [userLocation, setUserLocation] = useState(null);
   const [originInputValue, setOriginInputValue] = useState("");
   const [mapCenter, setMapCenter] = useState({ lat: NEIVA_LAT, lng: NEIVA_LON });
   const [mapsReady, setMapsReady] = useState(false);
@@ -338,31 +337,6 @@ const PlanRoute = ({ onNavigate }) => {
     }
     return "Mi ubicación";
   };
-
-  // Obtener ubicación actual
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          const location = {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            name: "Mi ubicación",
-            address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`
-          };
-          const realName = await resolveLocationName(location.lat, location.lng);
-          location.name = realName;
-          setUserLocation(location);
-          console.log("Ubicación obtenida:", location);
-        },
-        (err) => {
-          console.error("Error obteniendo ubicación:", err);
-          setError("No se pudo obtener su ubicación. Verifique los permisos.");
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
-      );
-    }
-  }, []);
 
   // Función para calcular ruta (usa backend).
   // Acepta puntos opcionales para evitar el problema de closure cuando
@@ -586,42 +560,44 @@ const PlanRoute = ({ onNavigate }) => {
     setRoute(null);
   };
 
-  // Función para usar mi ubicación como origen
+  // Función para usar mi ubicación como origen.
+  // Siempre solicita GPS fresco en el clic (enableHighAccuracy, sin caché)
+  // para no usar una posición cacheada/imprecisa del primer useEffect.
   const setMyLocation = async () => {
-    if (userLocation && userLocation.lat && userLocation.lng) {
-      setOrigin(userLocation);
-      setOriginInputValue(userLocation.name || "Mi ubicación");
-      setMapCenter({ lat: userLocation.lat, lng: userLocation.lng });
-      console.log("Usando ubicación como origen:", userLocation);
-
-      if (destination && destination.lat) {
-        setTimeout(() => calculateRoute(userLocation, destination), 100);
-      }
-    } else {
-      setError("No se pudo obtener su ubicación. Verifique los permisos del GPS.");
-      navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          const location = {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            name: "Mi ubicación",
-            address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`
-          };
-          const realName = await resolveLocationName(location.lat, location.lng);
-          location.name = realName;
-          setUserLocation(location);
-          setOrigin(location);
-          setOriginInputValue(realName);
-          setMapCenter({ lat: location.lat, lng: location.lng });
-
-          if (destination && destination.lat) {
-            setTimeout(() => calculateRoute(location, destination), 100);
-          }
-        },
-        () => setError("No se pudo acceder a su ubicación"),
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-      );
+    if (!navigator.geolocation) {
+      setError("Su navegador no soporta geolocalización.");
+      return;
     }
+
+    setError("Obteniendo su ubicación…");
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const location = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          name: "Mi ubicación",
+          address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`
+        };
+        const realName = await resolveLocationName(location.lat, location.lng);
+        location.name = realName;
+        location.address = `${realName} (${location.address})`;
+        setUserLocation(location);
+        setOrigin(location);
+        setOriginInputValue(realName);
+        setMapCenter({ lat: location.lat, lng: location.lng });
+        console.log("Usando ubicación como origen:", location);
+
+        if (destination && destination.lat) {
+          setTimeout(() => calculateRoute(location, destination), 100);
+        }
+      },
+      (err) => {
+        console.error("Error obteniendo ubicación:", err);
+        setError("No se pudo obtener su ubicación. Verifique los permisos del GPS.");
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
   };
 
   // Centrar en Neiva
