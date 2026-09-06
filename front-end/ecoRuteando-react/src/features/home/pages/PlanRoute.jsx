@@ -582,7 +582,6 @@ const PlanRoute = ({ onNavigate }) => {
         const realName = await resolveLocationName(location.lat, location.lng);
         location.name = realName;
         location.address = `${realName} (${location.address})`;
-        setUserLocation(location);
         setOrigin(location);
         setOriginInputValue(realName);
         setMapCenter({ lat: location.lat, lng: location.lng });
