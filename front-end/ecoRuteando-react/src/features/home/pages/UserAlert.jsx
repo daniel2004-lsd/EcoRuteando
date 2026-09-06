@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { 
   LeafIcon, 
@@ -9,83 +9,125 @@ import {
   AlertTriangleIcon
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
+import weatherService, { NEIVA_COORDS } from "../../../services/weatherService";
+
+const ALERT_META = {
+  HEAT: { icon: "☀️", title: "Ola de calor", location: "Toda la ciudad" },
+  THUNDERSTORM: { icon: "⛈️", title: "Tormenta eléctrica", location: "Zona Sur, Neiva" },
+  RAIN: { icon: "🌧️", title: "Lluvia intensa", location: "Centro, Neiva" },
+  WIND: { icon: "💨", title: "Vientos fuertes", location: "Zona Norte, Neiva" },
+  FLOOD: { icon: "🌊", title: "Posible inundación", location: "Comuna 10, Neiva" },
+};
+
+const FORECAST_ICONS = {
+  SUNNY: "☀️",
+  CLOUDY: "☁️",
+  PARTLY_CLOUDY: "⛅",
+  RAIN: "🌧️",
+  THUNDERSTORM: "⛈️",
+  OVERCAST: "☁️",
+};
+
+const mapConditionIcon = (condition) => FORECAST_ICONS[condition] || "🌤️";
+
+const mapSeverity = (severity) => {
+  switch ((severity || "").toUpperCase()) {
+    case "EXTREME":
+    case "SEVERE":
+    case "HIGH":
+      return "high";
+    case "MODERATE":
+    case "MEDIUM":
+      return "medium";
+    case "MINOR":
+    case "LOW":
+      return "low";
+    default:
+      return "low";
+  }
+};
 
 const UserAlerts = ({ onNavigate }) => {
   const { t } = useTranslation();
   const { isDarkMode, toggleTheme } = useTheme();
 
-  // Datos de ejemplo para alertas climáticas
-  const [alerts, setAlerts] = useState([
-    {
-      id: 1,
-      type: "rain",
-      title: t("alerts.rainTitle", "Lluvia intensa"),
-      description: t("alerts.rainDescription", "Se esperan lluvias intensas en el centro de la ciudad durante las próximas 3 horas."),
-      severity: "high",
-      time: t("alerts.timeAgo10Min", "Hace 10 min"),
-      location: t("alerts.locationCenterNeiva", "Centro, Neiva"),
-      icon: "🌧️"
-    },
-    {
-      id: 2,
-      type: "storm",
-      title: t("alerts.stormTitle", "Tormenta eléctrica"),
-      description: t("alerts.stormDescription", "Posibilidad de tormentas eléctricas en la zona sur. Precaución al circular."),
-      severity: "medium",
-      time: t("alerts.timeAgo25Min", "Hace 25 min"),
-      location: t("alerts.locationSouthZoneNeiva", "Zona Sur, Neiva"),
-      icon: "⛈️"
-    },
-    {
-      id: 3,
-      type: "heat",
-      title: t("alerts.heatWaveTitle", "Ola de calor"),
-      description: t("alerts.heatWaveDescription", "Temperaturas superiores a 35°C. Mantente hidratado y usa protección solar."),
-      severity: "medium",
-      time: t("alerts.timeAgo1Hour", "Hace 1 hora"),
-      location: t("alerts.locationWholeCity", "Toda la ciudad"),
-      icon: "☀️"
-    },
-    {
-      id: 4,
-      type: "wind",
-      title: t("alerts.strongWindsTitle", "Vientos fuertes"),
-      description: t("alerts.strongWindsDescription", "Ráfagas de viento de hasta 40 km/h en el sector norte. Precaución con estructuras."),
-      severity: "low",
-      time: t("alerts.timeAgo2Hours", "Hace 2 horas"),
-      location: t("alerts.locationNorthZoneNeiva", "Zona Norte, Neiva"),
-      icon: "💨"
-    },
-    {
-      id: 5,
-      type: "flood",
-      title: t("alerts.floodTitle", "Posible inundación"),
-      description: t("alerts.floodDescription", "Zonas bajas podrían presentar inundaciones por acumulación de agua."),
-      severity: "high",
-      time: t("alerts.timeAgo3Hours", "Hace 3 horas"),
-      location: t("alerts.locationComuna10Neiva", "Comuna 10, Neiva"),
-      icon: "🌊"
-    }
-  ]);
-
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
+  const [alerts, setAlerts] = useState([]);
   const [weatherData, setWeatherData] = useState({
-    temperature: 32,
-    feelsLike: 34,
-    humidity: 65,
-    windSpeed: 12,
-    condition: t("alerts.conditionPartlyCloudy", "Parcialmente nublado"),
-    icon: "⛅",
-    forecast: [
-      { day: t("alerts.dayToday", "Hoy"), temp: 32, icon: "⛅", rain: "20%" },
-      { day: t("alerts.dayTomorrow", "Mañana"), temp: 31, icon: "🌧️", rain: "60%" },
-      { day: t("alerts.dayWednesday", "Miércoles"), temp: 30, icon: "☁️", rain: "40%" },
-      { day: t("alerts.dayThursday", "Jueves"), temp: 33, icon: "☀️", rain: "10%" },
-      { day: t("alerts.dayFriday", "Viernes"), temp: 34, icon: "☀️", rain: "5%" }
-    ]
+    temperature: null,
+    feelsLike: null,
+    humidity: null,
+    windSpeed: null,
+    condition: "...",
+    icon: "🌤️",
+    forecast: [],
   });
 
   const [selectedAlert, setSelectedAlert] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [severityFilter, setSeverityFilter] = useState("all");
+
+  // Cargar clima real de Neiva desde la API
+  useEffect(() => {
+    let active = true;
+
+    weatherService
+      .getCurrentWeather(NEIVA_COORDS.lat, NEIVA_COORDS.lng)
+      .then((data) => {
+        if (!active) return;
+
+        const w = data.weather || {};
+        const forecastDays = (data.forecast || []).map((f) => {
+          const d = new Date(f.date + "T00:00:00");
+          const dayLabel = d.toLocaleDateString("es-CO", { weekday: "long" });
+          return {
+            day: dayLabel.charAt(0).toUpperCase() + dayLabel.slice(1),
+            temp: Math.round(f.maxTemperatureC),
+            icon: FORECAST_ICONS[f.condition] || "🌤️",
+            rain: "",
+          };
+        });
+
+        const mappedAlerts = (data.alerts || []).map((a, idx) => {
+          const meta = ALERT_META[a.eventType] || { icon: "⚠️", title: a.alertTitle, location: a.areaName || "Neiva" };
+          return {
+            id: idx,
+            type: a.eventType,
+            title: a.alertTitle || meta.title,
+            description: a.description || meta.title,
+            severity: mapSeverity(a.severity),
+            time: a.startTime ? new Date(a.startTime).toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" }) : t("alerts.timeNow", "Ahora"),
+            location: a.areaName || meta.location,
+            icon: meta.icon,
+            instruction: a.instruction,
+          };
+        });
+
+        setWeatherData({
+          temperature: Math.round(w.temperatureC),
+          feelsLike: Math.round(w.feelsLikeC),
+          humidity: w.relativeHumidity,
+          windSpeed: Math.round(w.windKmh),
+          condition: w.conditionDescription || w.condition || "—",
+          icon: mapConditionIcon(w.condition),
+          forecast: forecastDays,
+        });
+        setAlerts(mappedAlerts);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.warn("No se pudo cargar el clima:", err);
+        if (active) {
+          setLoadError(true);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [t]);
 
   const getSeverityColor = (severity) => {
     switch(severity) {
@@ -120,6 +162,11 @@ const UserAlerts = ({ onNavigate }) => {
     todayForecast: weatherData.condition,
     avgTemp: weatherData.temperature
   };
+
+  const filteredAlerts = useMemo(() => {
+    if (severityFilter === "all") return alerts;
+    return alerts.filter((a) => a.severity === severityFilter);
+  }, [alerts, severityFilter]);
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
@@ -162,28 +209,39 @@ const UserAlerts = ({ onNavigate }) => {
 
         {/* Tarjeta del clima actual */}
         <div className={`rounded-2xl p-6 mb-8 shadow-md border transition-all hover:shadow-lg ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="text-center md:text-left">
-              <div className="text-6xl mb-2">{weatherData.icon}</div>
-              <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{weatherData.condition}</p>
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-8">
+              <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-3" />
+              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("alerts.loading", "Consultando condiciones climáticas de Neiva...")}</p>
             </div>
-            
-            <div className="text-center">
-              <p className={`text-5xl font-black ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{weatherData.temperature}°C</p>
-              <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("alerts.feelsLike", "Sensación térmica")}: {weatherData.feelsLike}°C</p>
+          ) : loadError ? (
+            <div className={`p-4 rounded-xl text-sm text-center ${isDarkMode ? 'bg-amber-900/20 text-amber-300' : 'bg-amber-50 text-amber-700'}`}>
+              {t("alerts.loadError", "El servicio climático no está disponible en este momento. Intenta más tarde.")}
             </div>
+          ) : (
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+              <div className="text-center md:text-left">
+                <div className="text-6xl mb-2">{weatherData.icon}</div>
+                <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{weatherData.condition}</p>
+              </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className={`px-4 py-2 rounded-xl text-center ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("alerts.humidity", "Humedad")}</p>
-                <p className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{weatherData.humidity}%</p>
+              <div className="text-center">
+                <p className={`text-5xl font-black ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{weatherData.temperature}°C</p>
+                <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("alerts.feelsLike", "Sensación térmica")}: {weatherData.feelsLike}°C</p>
               </div>
-              <div className={`px-4 py-2 rounded-xl text-center ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("alerts.wind", "Viento")}</p>
-                <p className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{weatherData.windSpeed} km/h</p>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className={`px-4 py-2 rounded-xl text-center ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                  <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("alerts.humidity", "Humedad")}</p>
+                  <p className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{weatherData.humidity}%</p>
+                </div>
+                <div className={`px-4 py-2 rounded-xl text-center ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                  <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("alerts.wind", "Viento")}</p>
+                  <p className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{weatherData.windSpeed} km/h</p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Stats cards */}
@@ -242,20 +300,39 @@ const UserAlerts = ({ onNavigate }) => {
         <div className="flex justify-between items-center mb-4 flex-wrap gap-4">
           <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{t("alerts.activeAlertsHeading", "⚠️ Alertas activas")}</h2>
           <div className="flex gap-2">
-            <button className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${isDarkMode ? 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}>
+            <div className={`flex px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            severityFilter === "all"
+              ? (isDarkMode ? 'bg-emerald-600 text-white' : 'bg-emerald-600 text-white')
+              : (isDarkMode ? 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50')
+          }`}>
+            <button onClick={() => setSeverityFilter("all")}>
               {t("alerts.filterAll", "Todas")}
             </button>
-            <button className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${isDarkMode ? 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}>
+          </div>
+            <button onClick={() => setSeverityFilter("high")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              severityFilter === "high"
+                ? 'bg-red-600 text-white'
+                : (isDarkMode ? 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50')
+            }`}>
               {t("alerts.filterHigh", "Alta")}
             </button>
-            <button className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${isDarkMode ? 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}>
+            <button onClick={() => setSeverityFilter("medium")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              severityFilter === "medium"
+                ? 'bg-amber-600 text-white'
+                : (isDarkMode ? 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50')
+            }`}>
               {t("alerts.filterMedium", "Media")}
             </button>
           </div>
         </div>
 
         <div className="space-y-4 mb-8">
-          {alerts.map((alert) => (
+          {filteredAlerts.length === 0 && !loading && (
+            <div className={`rounded-xl p-5 text-center text-sm shadow-md border ${isDarkMode ? 'bg-gray-800 border-gray-700 text-gray-400' : 'bg-white border-gray-100 text-gray-500'}`}>
+              🌤️ {t("alerts.noActiveAlerts", "No hay alertas climáticas activas para Neiva en este momento.")}
+            </div>
+          )}
+          {filteredAlerts.map((alert) => (
             <div
               key={alert.id}
               className={`rounded-xl p-5 shadow-md transition-all hover:shadow-lg border ${getSeverityColor(alert.severity)}`}
@@ -353,6 +430,11 @@ const UserAlerts = ({ onNavigate }) => {
             </div>
             <div className="p-5">
               <p className={`mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{selectedAlert.description}</p>
+              {selectedAlert.instruction && (
+                <div className={`mb-4 p-3 rounded-lg text-sm ${isDarkMode ? 'bg-emerald-900/20 text-emerald-300' : 'bg-emerald-50 text-emerald-700'}`}>
+                  💡 {selectedAlert.instruction}
+                </div>
+              )}
               <div className={`p-3 rounded-lg mb-4 ${getSeverityColor(selectedAlert.severity)}`}>
                 <p className="text-sm font-semibold">Nivel de severidad: {getSeverityText(selectedAlert.severity)}</p>
               </div>

@@ -228,5 +228,32 @@
       "unknown": "Not specified",
       "car": "Car"
     }
+  },
+
+  "alerts": {
+    "title": "Climate Alerts",
+    "subtitle": "Real-time weather for your safety",
+    "back": "Back",
+    "loading": "Fetching Neiva weather conditions...",
+    "loadError": "The weather service is temporarily unavailable. Please try later.",
+    "feelsLike": "Feels like",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "extendedForecast": "📅 Extended forecast",
+    "rainChance": "Rain",
+    "activeAlertsHeading": "⚠️ Active alerts",
+    "noActiveAlerts": "There are no active weather alerts for Neiva right now.",
+    "filterAll": "All",
+    "filterHigh": "High",
+    "filterMedium": "Medium",
+    "viewMore": "View more",
+    "dismiss": "Dismiss",
+    "recommendationsTitle": "💡 Recommendations for today",
+    "statMaxSeverity": "Max severity",
+    "statAvgTemperature": "Average temperature",
+    "timeNow": "Now",
+    "severityHigh": "High",
+    "severityMedium": "Medium",
+    "severityLow": "Low"
   }
 }
