@@ -8,6 +8,7 @@ import mapsService from "../../../services/mapsService";
 import routeService from "../../../services/routeService";
 import tripService from "../../../services/tripService";
 import poiService from "../../../services/poiService";
+import weatherService from "../../../services/weatherService";
 import { loadGoogleMapsApi } from "../../../services/googleMapsLoader";
 
 // Coordenadas de Neiva (viewport inicial del mapa)
@@ -234,6 +235,7 @@ const PlanRoute = ({ onNavigate }) => {
   const [showPois, setShowPois] = useState(true);
   const [routeSavedId, setRouteSavedId] = useState(null);
   const [estimate, setEstimate] = useState(null);
+  const [routeWeather, setRouteWeather] = useState(null);
   const [activeTripId, setActiveTripId] = useState(null);
   const [startingTrip, setStartingTrip] = useState(false);
   const [completing, setCompleting] = useState(false);
@@ -391,6 +393,20 @@ const PlanRoute = ({ onNavigate }) => {
         } catch (err) {
           console.warn("Estimación de sostenibilidad no disponible:", err);
           setEstimate(null);
+        }
+
+        // Alertas climáticas del trayecto (no bloqueantes: si fallan, se omiten)
+        try {
+          const weather = await weatherService.getRouteWeather(
+            nextOrigin.lat,
+            nextOrigin.lng,
+            nextDestination.lat,
+            nextDestination.lng
+          );
+          setRouteWeather(weather);
+        } catch (err) {
+          console.warn("Clima no disponible, se omite:", err);
+          setRouteWeather(null);
         }
       } else {
         setError("No se encontró una ruta válida");
@@ -783,6 +799,70 @@ const PlanRoute = ({ onNavigate }) => {
                   </span>
                 )}
               </div>
+
+              {/* Clima y alertas del trayecto */}
+              {routeWeather && (
+                <div className={`mt-3 p-3 rounded-lg border ${
+                  routeWeather.alerts?.length
+                    ? (isDarkMode ? 'bg-amber-900/20 border-amber-500/40' : 'bg-amber-50 border-amber-200')
+                    : (isDarkMode ? 'bg-gray-800/60 border-gray-700' : 'bg-gray-50 border-gray-200')
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <span className={`text-xs font-bold uppercase ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
+                      ⛅ Clima del trayecto
+                    </span>
+                    {(routeWeather.origin || routeWeather.destination) && (
+                      <span className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                        {routeWeather.origin?.temperatureC != null
+                          ? `${Math.round(routeWeather.origin.temperatureC)}°C`
+                          : ''}
+                        {routeWeather.destination?.temperatureC != null
+                          ? ` → ${Math.round(routeWeather.destination.temperatureC)}°C`
+                          : ''}
+                      </span>
+                    )}
+                  </div>
+
+                  {(routeWeather.origin || routeWeather.destination) && (
+                    <div className={`mt-1.5 text-xs flex flex-wrap gap-x-3 gap-y-0.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      {routeWeather.origin?.conditionDescription && (
+                        <span>🌤 {routeWeather.origin.conditionDescription}</span>
+                      )}
+                      {routeWeather.origin?.windKmh != null && (
+                        <span>💨 {Math.round(routeWeather.origin.windKmh)} km/h</span>
+                      )}
+                      {routeWeather.origin?.relativeHumidity != null && (
+                        <span>💧 {routeWeather.origin.relativeHumidity}%</span>
+                      )}
+                      {routeWeather.origin?.precipitationProbability != null && (
+                        <span>🌧 {routeWeather.origin.precipitationProbability}% lluvia</span>
+                      )}
+                    </div>
+                  )}
+
+                  {routeWeather.alerts?.length > 0 && (
+                    <div className="mt-2 space-y-1.5">
+                      {routeWeather.alerts.map((alert, idx) => (
+                        <div key={idx} className={`text-xs rounded-md p-2 ${
+                          alert.severity === 'HIGH' || alert.severity === 'EXTREME'
+                            ? (isDarkMode ? 'bg-red-900/30 text-red-300' : 'bg-red-50 text-red-700')
+                            : (isDarkMode ? 'bg-amber-900/30 text-amber-300' : 'bg-amber-50 text-amber-700')
+                        }`}>
+                          <span className="font-bold">⚠️ {alert.alertTitle}</span>
+                          {alert.description && <p className="mt-0.5">{alert.description}</p>}
+                          {alert.instruction && <p className="mt-0.5 italic">{alert.instruction}</p>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {routeWeather.suggestions?.length > 0 && (
+                    <div className={`mt-2 text-xs ${isDarkMode ? 'text-emerald-300' : 'text-emerald-700'}`}>
+                      💡 {routeWeather.suggestions.join(' ')}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Acciones */}
               <div className="mt-4 grid grid-cols-2 gap-2">

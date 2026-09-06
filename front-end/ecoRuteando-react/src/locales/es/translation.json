@@ -228,5 +228,32 @@
       "unknown": "Sin especificar",
       "car": "Coche"
     }
+  },
+
+  "alerts": {
+    "title": "Alertas Climáticas",
+    "subtitle": "Clima en tiempo real para tu seguridad",
+    "back": "Volver",
+    "loading": "Consultando condiciones climáticas de Neiva...",
+    "loadError": "El servicio climático no está disponible en este momento. Intenta más tarde.",
+    "feelsLike": "Sensación térmica",
+    "humidity": "Humedad",
+    "wind": "Viento",
+    "extendedForecast": "📅 Pronóstico extendido",
+    "rainChance": "Lluvia",
+    "activeAlertsHeading": "⚠️ Alertas activas",
+    "noActiveAlerts": "No hay alertas climáticas activas para Neiva en este momento.",
+    "filterAll": "Todas",
+    "filterHigh": "Alta",
+    "filterMedium": "Media",
+    "viewMore": "Ver más",
+    "dismiss": "Descartar",
+    "recommendationsTitle": "💡 Recomendaciones para hoy",
+    "statMaxSeverity": "Alerta máxima",
+    "statAvgTemperature": "Temperatura promedio",
+    "timeNow": "Ahora",
+    "severityHigh": "Alta",
+    "severityMedium": "Media",
+    "severityLow": "Baja"
   }
 }
