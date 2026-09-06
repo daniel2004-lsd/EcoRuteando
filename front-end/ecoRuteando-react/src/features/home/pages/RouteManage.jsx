@@ -30,7 +30,7 @@ const EMPTY_FORM = {
   availableDate: "",
 };
 
-const TRANSPORT_TYPES = ["walking", "bike", "public_transport", "mixed"];
+const TRANSPORT_TYPES = ["walking", "bike", "car", "public_transport", "mixed"];
 
 const STATUS_BADGES = {
   active: "bg-emerald-500/20 text-emerald-500",
