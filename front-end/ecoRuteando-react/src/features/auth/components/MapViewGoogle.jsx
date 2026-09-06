@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTheme } from "../../../app/context/ThemeContext";
+import { loadGoogleMapsApi } from "../../../services/googleMapsLoader";
 
 const escapeHtml = (str) => str.replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -12,22 +13,11 @@ const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", marke
   const { isDarkMode } = useTheme();
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
-
-  // Cargar Google Maps
+  // Cargar Google Maps (loader singleton para evitar carga múltiple)
   useEffect(() => {
-    if (window.google && window.google.maps) {
-      setMapLoaded(true);
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=es`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => setMapLoaded(true);
-    script.onerror = () => console.error("Error cargando Google Maps");
-    document.head.appendChild(script);
+    loadGoogleMapsApi()
+      .then(() => setMapLoaded(true))
+      .catch((err) => console.error("Error cargando Google Maps:", err));
   }, []);
 
   // Inicializar mapa
