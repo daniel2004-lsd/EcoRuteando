@@ -193,5 +193,39 @@
       "saveFailed": "Não foi possível salvar a rota",
       "deleteFailed": "Não foi possível excluir a rota"
     }
+  },
+  "adminStatistics": {
+    "title": "Portal de Estatísticas",
+    "subtitle": "Impacto do sistema em números",
+    "backToPanel": "Voltar ao Painel",
+    "from": "De",
+    "to": "Até",
+    "apply": "Aplicar filtro",
+    "clear": "Limpar",
+    "loading": "Carregando estatísticas...",
+    "loadError": "Erro ao carregar estatísticas",
+    "emptyTitle": "Sem informações",
+    "emptyMessage": "Não há dados disponíveis para o intervalo selecionado",
+    "kpi": {
+      "routesConsulted": "Rotas consultadas",
+      "activeUsers": "Usuários ativos",
+      "co2Saved": "CO₂ economizado",
+      "completedTrips": "Trajetos concluídos",
+      "avgDistance": "Distância média"
+    },
+    "chart": {
+      "monthlyCo2": "CO₂ economizado por mês",
+      "byMode": "Trajetos por modo de transporte",
+      "co2Kg": "CO₂",
+      "trips": "Trajetos"
+    },
+    "transport": {
+      "walking": "A pé",
+      "bike": "Bicicleta",
+      "public_transport": "Transporte público",
+      "mixed": "Misto",
+      "unknown": "Não especificado",
+      "car": "Carro"
+    }
   }
 }
