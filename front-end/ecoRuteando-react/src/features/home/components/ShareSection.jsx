@@ -20,21 +20,23 @@ const ShareSection = ({ trip }) => {
     const { isDarkMode } = useTheme();
 
     const [selectedNetwork, setSelectedNetwork] = useState("link");
+    const [includeRouteName, setIncludeRouteName] = useState(true);
     const [includeDistance, setIncludeDistance] = useState(true);
     const [includeDuration, setIncludeDuration] = useState(true);
     const [includeCo2, setIncludeCo2] = useState(true);
-    const [includeRouteName, setIncludeRouteName] = useState(true);
     const [shared, setShared] = useState(false);
     const [sharing, setSharing] = useState(false);
     const [error, setError] = useState(null);
 
     const buildMessage = () => {
+        const start = trip.startName || trip.routeName || "Origen";
+        const destination = trip.destinationName || "Destino";
         const items = [];
-        if (includeRouteName && trip.routeName) items.push(trip.routeName);
+        if (includeRouteName) items.push(`${start} → ${destination}`);
         if (includeDistance) items.push(`${trip.actualDistanceKm} km`);
         if (includeDuration) items.push(`${trip.actualDurationMin} min`);
         if (includeCo2) items.push(`${trip.actualCo2Kg} kg CO₂ ahorrados`);
-        return `¡He hecho una ruta ecológica con EcoRuteando! ${items.join(" · ")} 🌿`;
+        return `🌿 EcoRuteando · ${items.join(" · ")}`;
     };
 
     const buildSharedData = () => ({
@@ -42,7 +44,7 @@ const ShareSection = ({ trip }) => {
         distanceKm: includeDistance ? trip.actualDistanceKm : null,
         durationMin: includeDuration ? trip.actualDurationMin : null,
         co2SavedKg: includeCo2 ? trip.actualCo2Kg : null,
-        routeName: includeRouteName ? trip.routeName : null,
+        routeName: includeRouteName ? `${trip.startName || ""} → ${trip.destinationName || ""}` : null,
         privacy: "public-data-requested",
     });
 
@@ -121,7 +123,7 @@ const ShareSection = ({ trip }) => {
                 </p>
                 <div className="flex flex-wrap gap-2">
                     <button type="button" onClick={() => setIncludeRouteName(!includeRouteName)} className={toggleClass(includeRouteName)}>
-                        {trip.routeName ? "Nombre de la ruta" : "Ruta ecológica"}
+                        {trip.routeName ? trip.routeName : "Origen → Destino"}
                     </button>
                     <button type="button" onClick={() => setIncludeDistance(!includeDistance)} className={toggleClass(includeDistance)}>
                         Distancia ({trip.actualDistanceKm ?? "—"} km)

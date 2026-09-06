@@ -323,17 +323,35 @@ const PlanRoute = ({ onNavigate }) => {
       });
   }, []);
 
+  // Obtener ubicación actual y resolver su dirección real (barrio/calle)
+  const resolveLocationName = async (lat, lng) => {
+    try {
+      const data = await mapsService.reverseGeocode(lat, lng);
+      const address = data?.results?.[0]?.formattedAddress;
+      if (address) {
+        // Primer segmento de la dirección (calle + número o nombre de lugar)
+        const parts = address.split(",");
+        return parts[0] || address;
+      }
+    } catch (err) {
+      console.warn("No se pudo resolver la dirección de la ubicación:", err);
+    }
+    return "Mi ubicación";
+  };
+
   // Obtener ubicación actual
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
+        async (pos) => {
           const location = {
             lat: pos.coords.latitude,
             lng: pos.coords.longitude,
             name: "Mi ubicación",
             address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`
           };
+          const realName = await resolveLocationName(location.lat, location.lng);
+          location.name = realName;
           setUserLocation(location);
           console.log("Ubicación obtenida:", location);
         },
@@ -378,6 +396,7 @@ const PlanRoute = ({ onNavigate }) => {
       const modeMap = {
         walking: "walking",
         bike: "bicycling",
+        car: "driving",
         public: "transit",
       };
 
@@ -407,7 +426,7 @@ const PlanRoute = ({ onNavigate }) => {
 
         // Estimar CO₂/calorías con el backend (factores de transporte)
         try {
-          const pgModeMap = { walking: "walking", bike: "bike", public: "public_transport" };
+          const pgModeMap = { walking: "walking", bike: "bike", car: "car", public: "public_transport" };
           const estimateResult = await mapsService.getEstimate(
             origin.lat,
             origin.lng,
@@ -448,6 +467,7 @@ const PlanRoute = ({ onNavigate }) => {
       const modeMap = {
         walking: "walking",
         bike: "bike",
+        car: "car",
         public: "public_transport",
       };
 
@@ -498,6 +518,7 @@ const PlanRoute = ({ onNavigate }) => {
       const modeMap = {
         walking: "walking",
         bike: "bike",
+        car: "car",
         public: "public_transport",
       };
 
@@ -564,29 +585,31 @@ const PlanRoute = ({ onNavigate }) => {
   };
 
   // Función para usar mi ubicación como origen
-  const setMyLocation = () => {
+  const setMyLocation = async () => {
     if (userLocation && userLocation.lat && userLocation.lng) {
       setOrigin(userLocation);
-      setOriginInputValue("Mi ubicación");
+      setOriginInputValue(userLocation.name || "Mi ubicación");
       setMapCenter({ lat: userLocation.lat, lng: userLocation.lng });
       console.log("Usando ubicación como origen:", userLocation);
-      
+
       if (destination && destination.lat) {
         setTimeout(() => calculateRoute(), 100);
       }
     } else {
       setError("No se pudo obtener su ubicación. Verifique los permisos del GPS.");
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
+        async (pos) => {
           const location = {
             lat: pos.coords.latitude,
             lng: pos.coords.longitude,
             name: "Mi ubicación",
             address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`
           };
+          const realName = await resolveLocationName(location.lat, location.lng);
+          location.name = realName;
           setUserLocation(location);
           setOrigin(location);
-          setOriginInputValue("Mi ubicación");
+          setOriginInputValue(realName);
           setMapCenter({ lat: location.lat, lng: location.lng });
         },
         () => setError("No se pudo acceder a su ubicación"),
@@ -698,10 +721,11 @@ const PlanRoute = ({ onNavigate }) => {
             </button>
 
             {/* Modos de transporte */}
-            <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-gray-200 dark:border-gray-800">
+            <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-gray-200 dark:border-gray-800">
               {[
                 { id: "walking", label: "Caminar", icon: "🚶" },
                 { id: "bike", label: "Bicicleta", icon: "🚲" },
+                { id: "car", label: "Carro", icon: "🚗" },
                 { id: "public", label: "Transporte", icon: "🚌" }
               ].map(mode => (
                 <button
@@ -761,9 +785,10 @@ const PlanRoute = ({ onNavigate }) => {
               <div className="flex items-center gap-3">
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                   transportMode === 'walking' ? 'bg-green-100 text-green-700' :
-                  transportMode === 'bike' ? 'bg-emerald-100 text-emerald-700' : 'bg-purple-100 text-purple-700'
+                  transportMode === 'bike' ? 'bg-emerald-100 text-emerald-700' :
+                  transportMode === 'car' ? 'bg-orange-100 text-orange-700' : 'bg-purple-100 text-purple-700'
                 }`}>
-                  {transportMode === 'walking' ? 'Caminata' : transportMode === 'bike' ? 'Ciclorruta' : 'Transporte público'}
+                  {transportMode === 'walking' ? 'Caminata' : transportMode === 'bike' ? 'Ciclorruta' : transportMode === 'car' ? 'Automóvil' : 'Transporte público'}
                 </span>
                 <span className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                   {route.distance} km · {route.duration} min

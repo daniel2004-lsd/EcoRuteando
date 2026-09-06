@@ -150,6 +150,7 @@
     "transport": {
       "walking": "A pé",
       "bike": "Bicicleta",
+      "car": "Automóvel",
       "public_transport": "Transporte público",
       "mixed": "Misto"
     },
