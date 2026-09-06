@@ -700,6 +700,17 @@ const PlanRoute = ({ onNavigate }) => {
               ))}
             </div>
 
+            {/* Aviso de disponibilidad según el modo (depende de los datos de Google Maps) */}
+            {(transportMode === 'bike' || transportMode === 'public') && (
+              <div className={`mt-2 p-2 rounded-md text-xs ${
+                isDarkMode ? 'bg-amber-900/20 text-amber-400' : 'bg-amber-50 text-amber-700'
+              }`}>
+                ⚠️ {transportMode === 'bike'
+                  ? 'En Neiva, Google Maps puede no tener rutas de bicicleta disponibles para algunos trayectos. Si no calcula, prueba a pie o en carro.'
+                  : 'En Neiva, Google Maps puede no tener rutas de transporte público disponibles. Si no calcula, prueba a pie o en carro.'}
+              </div>
+            )}
+
             {/* Botón calcular */}
             <button
               onClick={calculateRoute}
