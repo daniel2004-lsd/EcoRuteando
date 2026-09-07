@@ -322,5 +322,23 @@
       "validated": "Validé",
       "rejected": "Rejeté"
     }
+  },
+
+  "adminExports": {
+    "title": "Exporter les données",
+    "subtitle": "Téléchargez les rapports du système en CSV, Excel ou JSON",
+    "backToPanel": "Retour au panneau",
+    "statsTitle": "Statistiques du portail",
+    "statsSubtitle": "Itinéraires consultés, CO₂ économisé et ventilations par mode de transport et par mois",
+    "from": "Du",
+    "to": "Au",
+    "formatsLabel": "Format du fichier",
+    "formatCsv": "CSV",
+    "formatXlsx": "Excel",
+    "formatJson": "JSON",
+    "exporting": "Génération...",
+    "exportError": "Le fichier n'a pas pu être généré. Réessayez plus tard.",
+    "footnote": "Les fichiers CSV et Excel s'ouvrent directement dans les outils bureautiques ; le JSON est idéal pour les intégrations techniques.",
+    "motivationalPhrase": "Les données ouvertes favorisent une mobilité plus durable"
   }
 }

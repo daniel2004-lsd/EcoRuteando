@@ -322,5 +322,23 @@
       "validated": "Validated",
       "rejected": "Rejected"
     }
+  },
+
+  "adminExports": {
+    "title": "Export Data",
+    "subtitle": "Download system reports as CSV, Excel or JSON",
+    "backToPanel": "Back to Panel",
+    "statsTitle": "Portal statistics",
+    "statsSubtitle": "Routes consulted, CO₂ saved and breakdowns by transport mode and month",
+    "from": "From",
+    "to": "To",
+    "formatsLabel": "File format",
+    "formatCsv": "CSV",
+    "formatXlsx": "Excel",
+    "formatJson": "JSON",
+    "exporting": "Generating...",
+    "exportError": "The file could not be generated. Try again later.",
+    "footnote": "CSV and Excel files open directly in office tools; JSON is ideal for technical integrations.",
+    "motivationalPhrase": "Open data drives more sustainable mobility"
   }
 }

@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { LeafIcon, ArrowLeft, ClockIcon, MapPinIcon, CalendarIcon, DownloadIcon } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import tripService from "../../../services/tripService";
+import exportService from "../../../services/exportService";
+import downloadBlob from "../../../services/downloadFile";
+import toast from "react-hot-toast";
 
 const UserHistory = ({ onNavigate }) => {
     const { isDarkMode, toggleTheme } = useTheme();
@@ -38,12 +41,118 @@ const UserHistory = ({ onNavigate }) => {
         .reduce((sum, trip) => sum + (trip.actualDistanceKm || 0), 0)
         .toFixed(2);
 
-    const exportToPDF = () => {
-        alert("Exportando a PDF...");
+    const [exporting, setExporting] = useState(null);
+    const [fromDate, setFromDate] = useState("");
+    const [toDate, setToDate] = useState("");
+
+    const clearDates = () => {
+        setFromDate("");
+        setToDate("");
     };
 
-    const exportToExcel = () => {
-        alert("Exportando a Excel...");
+    // Filtro por rango de fechas (RF29.2): solo viajes iniciados dentro del período.
+    const filteredTrips = trips.filter((trip) => {
+        if (!trip.startedAt) return true;
+        const d = new Date(trip.startedAt);
+        if (fromDate) {
+            const f = new Date(fromDate);
+            f.setHours(0, 0, 0, 0);
+            if (d < f) return false;
+        }
+        if (toDate) {
+            const t = new Date(toDate);
+            t.setHours(23, 59, 59, 999);
+            if (d > t) return false;
+        }
+        return true;
+    });
+
+    const exportToExcel = async () => {
+        if (exporting || filteredTrips.length === 0) return;
+        setExporting("xlsx");
+        try {
+            const result = await exportService.exportUserTrips("xlsx", { from: fromDate || null, to: toDate || null });
+            downloadBlob(result.blob, result.fileName);
+        } catch (err) {
+            console.error("Error exportando historial:", err);
+            toast.error(err?.detail || "No se pudo exportar el historial");
+        } finally {
+            setExporting(null);
+        }
+    };
+
+    const exportToCsv = async () => {
+        if (exporting || filteredTrips.length === 0) return;
+        setExporting("csv");
+        try {
+            const result = await exportService.exportUserTrips("csv", { from: fromDate || null, to: toDate || null });
+            downloadBlob(result.blob, result.fileName);
+        } catch (err) {
+            console.error("Error exportando historial:", err);
+            toast.error(err?.detail || "No se pudo exportar el historial");
+        } finally {
+            setExporting(null);
+        }
+    };
+
+    const escapeHtml = (value) =>
+        String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+    const exportToPDF = () => {
+        if (exporting || filteredTrips.length === 0) return;
+
+        const rowsHtml = filteredTrips.map((trip) => `<tr>
+            <td>${escapeHtml(trip.routeName)}</td>
+            <td>${escapeHtml(transportLabel(trip.transportMode))}</td>
+            <td>${escapeHtml(formatDate(trip.startedAt))} ${escapeHtml(formatTime(trip.startedAt))}</td>
+            <td>${trip.actualDurationMin != null ? `${trip.actualDurationMin} min` : "—"}</td>
+            <td>${trip.actualDistanceKm != null ? `${trip.actualDistanceKm} km` : "—"}</td>
+            <td>${trip.actualCo2Kg != null ? `${trip.actualCo2Kg} kg CO₂` : "—"}</td>
+            <td>${trip.completed ? "Completado" : "En curso"}</td>
+        </tr>`).join("");
+
+        const win = window.open("", "_blank", "width=960,height=700");
+        if (!win) {
+            toast.error("Permite las ventanas emergentes para generar el PDF.");
+            return;
+        }
+
+        win.document.write(`<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Historial de Trayectos</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; color: #111827; margin: 40px; }
+  h1 { color: #047857; border-bottom: 2px solid #d1fae5; padding-bottom: 8px; }
+  .summary { margin: 12px 0 20px; color: #374151; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { border: 1px solid #d1d5db; padding: 8px 10px; text-align: left; }
+  th { background: #ecfdf5; color: #065f46; }
+  tr:nth-child(even) td { background: #f9fafb; }
+  .footer { margin-top: 24px; font-size: 12px; color: #6b7280; }
+</style>
+</head>
+<body>
+<h1>Historial de Trayectos</h1>
+<p class="summary">
+  CO₂ ahorrado: <strong>${totalCO2} kg</strong> · Distancia recorrida: <strong>${totalKm} km</strong> · Trayectos completados: <strong>${completedTrips.length}</strong>
+</p>
+<table>
+  <thead><tr>
+    <th>Ruta</th><th>Modo</th><th>Fecha</th><th>Duración</th><th>Distancia</th><th>CO₂</th><th>Estado</th>
+  </tr></thead>
+  <tbody>${rowsHtml}</tbody>
+</table>
+<p class="footer">Generado con EcoRuteando · ${escapeHtml(new Date().toLocaleString())}</p>
+</body>
+</html>`);
+        win.document.close();
+        win.focus();
+        setTimeout(() => win.print(), 300);
     };
 
     const formatDate = (dateStr) => {
@@ -135,20 +244,57 @@ const UserHistory = ({ onNavigate }) => {
                 {/* Título del historial */}
                 <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
                     <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Historial de Viajes</h2>
-                    <div className="flex gap-3">
+                    <div className="flex items-center gap-3 flex-wrap">
+                        {/* Filtro por rango de fechas (RF29.2) */}
+                        <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                            <CalendarIcon size={16} className="text-emerald-500" />
+                            <input
+                                type="date"
+                                value={fromDate}
+                                max={toDate || undefined}
+                                onChange={(e) => setFromDate(e.target.value)}
+                                className={`bg-transparent text-sm outline-none ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                            />
+                            <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>→</span>
+                            <input
+                                type="date"
+                                value={toDate}
+                                min={fromDate || undefined}
+                                onChange={(e) => setToDate(e.target.value)}
+                                className={`bg-transparent text-sm outline-none ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                            />
+                            {(fromDate || toDate) && (
+                                <button
+                                    onClick={clearDates}
+                                    className={`text-xs font-medium ml-1 ${isDarkMode ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-600'}`}
+                                >
+                                    Limpiar
+                                </button>
+                            )}
+                        </div>
                         <button
                             onClick={exportToPDF}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${isDarkMode ? 'bg-red-600/20 text-red-400 hover:bg-red-600/30 border border-red-500/30' : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'}`}
+                            disabled={exporting || loading || filteredTrips.length === 0}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${isDarkMode ? 'bg-red-600/20 text-red-400 hover:bg-red-600/30 border border-red-500/30' : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'}`}
                         >
                             <DownloadIcon size={16} />
                             PDF
                         </button>
                         <button
                             onClick={exportToExcel}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${isDarkMode ? 'bg-green-600/20 text-green-400 hover:bg-green-600/30 border border-green-500/30' : 'bg-green-50 text-green-600 hover:bg-green-100 border border-green-200'}`}
+                            disabled={exporting || loading || filteredTrips.length === 0}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${isDarkMode ? 'bg-green-600/20 text-green-400 hover:bg-green-600/30 border border-green-500/30' : 'bg-green-50 text-green-600 hover:bg-green-100 border border-green-200'}`}
                         >
                             <DownloadIcon size={16} />
-                            Excel
+                            {exporting === "xlsx" ? "Generando..." : "Excel"}
+                        </button>
+                        <button
+                            onClick={exportToCsv}
+                            disabled={exporting || loading || filteredTrips.length === 0}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${isDarkMode ? 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 border border-emerald-500/30' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200'}`}
+                        >
+                            <DownloadIcon size={16} />
+                            {exporting === "csv" ? "Generando..." : "CSV"}
                         </button>
                     </div>
                 </div>
@@ -174,7 +320,7 @@ const UserHistory = ({ onNavigate }) => {
                 {/* Lista de viajes */}
                 {!loading && !error && (
                     <div className="space-y-4">
-                        {trips.map((trip) => (
+                        {filteredTrips.map((trip) => (
                             <div
                                 key={trip.usageId}
                                 className={`rounded-2xl p-5 shadow-md hover:shadow-lg transition-all duration-300 border ${isDarkMode ? 'bg-gray-800 border-gray-700 hover:border-emerald-500/50' : 'bg-white border-gray-100 hover:border-emerald-200'}`}
@@ -228,17 +374,30 @@ const UserHistory = ({ onNavigate }) => {
                     </div>
                 )}
 
-                {/* Mensaje si no hay historial */}
-                {!loading && !error && trips.length === 0 && (
+                {/* Mensaje si no hay historial (o el filtro no deja resultados) */}
+                {!loading && !error && filteredTrips.length === 0 && (
                     <div className={`text-center py-12 rounded-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
                         <LeafIcon size={48} className={`mx-auto mb-4 ${isDarkMode ? 'text-gray-600' : 'text-gray-300'}`} />
-                        <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Aún no tienes viajes registrados</p>
-                        <button
-                            onClick={() => onNavigate('/user/plan-route')}
-                            className="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all"
-                        >
-                            Planear mi primera ruta
-                        </button>
+                        <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                            {trips.length === 0
+                                ? "Aún no tienes viajes registrados"
+                                : "Sin información disponible para el período seleccionado"}
+                        </p>
+                        {trips.length === 0 ? (
+                            <button
+                                onClick={() => onNavigate('/user/plan-route')}
+                                className="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all"
+                            >
+                                Planear mi primera ruta
+                            </button>
+                        ) : (
+                            <button
+                                onClick={clearDates}
+                                className="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all"
+                            >
+                                Limpiar filtro
+                            </button>
+                        )}
                     </div>
                 )}
 
