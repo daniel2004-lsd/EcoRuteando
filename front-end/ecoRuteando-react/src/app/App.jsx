@@ -34,6 +34,7 @@ import AdminPanel from "../features/admin/pages/AdminPanel";
 import PoiManage from "../features/admin/pages/PoiManage";
 import RouteManage from "../features/home/pages/RouteManage";
 import AdminStatistics from "../features/admin/pages/AdminStatistics";
+import AdminReports from "../features/admin/pages/AdminReports";
 
 import "leaflet/dist/leaflet.css";
 
@@ -59,7 +60,7 @@ function AppContent() {
     const { isDarkMode, toggleTheme } = useTheme();
     const { i18n, t } = useTranslation();
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading] = useState(false);
     const [showTerms, setShowTerms] = useState(false);
     const [recoveryCode, setRecoveryCode] = useState(null);
     const [termsAccepted, setTermsAccepted] = useState(false);
@@ -130,7 +131,7 @@ function AppContent() {
                     <Route path="/dashboard" element={<ProtectedRoute><UserDashboard onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminPanel onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.users" /></ProtectedRoute>} />
-                    <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.reports" /></ProtectedRoute>} />
+                    <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminReports onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/support" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.support" /></ProtectedRoute>} />
                     <Route path="/admin/audit" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.audit" /></ProtectedRoute>} />
                     <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.settings" /></ProtectedRoute>} />
