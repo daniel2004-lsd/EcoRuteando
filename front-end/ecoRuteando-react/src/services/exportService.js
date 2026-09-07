@@ -59,12 +59,12 @@ const requestExport = async (url, params, fallbackName) => {
 };
 
 const exportService = {
-  exportUserTrips: async (format) =>
-    requestExport(
-      "/exports/trips",
-      { format },
-      defaultName("trayectos", format)
-    ),
+  exportUserTrips: async (format, { from = null, to = null } = {}) => {
+    const params = { format };
+    if (from) params.from = from;
+    if (to) params.to = to;
+    return requestExport("/exports/trips", params, defaultName("trayectos", format));
+  },
 
   exportStats: async (format, { from = null, to = null } = {}) => {
     const params = { format };

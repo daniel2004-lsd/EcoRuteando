@@ -42,12 +42,36 @@ const UserHistory = ({ onNavigate }) => {
         .toFixed(2);
 
     const [exporting, setExporting] = useState(null);
+    const [fromDate, setFromDate] = useState("");
+    const [toDate, setToDate] = useState("");
+
+    const clearDates = () => {
+        setFromDate("");
+        setToDate("");
+    };
+
+    // Filtro por rango de fechas (RF29.2): solo viajes iniciados dentro del período.
+    const filteredTrips = trips.filter((trip) => {
+        if (!trip.startedAt) return true;
+        const d = new Date(trip.startedAt);
+        if (fromDate) {
+            const f = new Date(fromDate);
+            f.setHours(0, 0, 0, 0);
+            if (d < f) return false;
+        }
+        if (toDate) {
+            const t = new Date(toDate);
+            t.setHours(23, 59, 59, 999);
+            if (d > t) return false;
+        }
+        return true;
+    });
 
     const exportToExcel = async () => {
-        if (exporting || trips.length === 0) return;
+        if (exporting || filteredTrips.length === 0) return;
         setExporting("xlsx");
         try {
-            const result = await exportService.exportUserTrips("xlsx");
+            const result = await exportService.exportUserTrips("xlsx", { from: fromDate || null, to: toDate || null });
             downloadBlob(result.blob, result.fileName);
         } catch (err) {
             console.error("Error exportando historial:", err);
@@ -58,10 +82,10 @@ const UserHistory = ({ onNavigate }) => {
     };
 
     const exportToCsv = async () => {
-        if (exporting || trips.length === 0) return;
+        if (exporting || filteredTrips.length === 0) return;
         setExporting("csv");
         try {
-            const result = await exportService.exportUserTrips("csv");
+            const result = await exportService.exportUserTrips("csv", { from: fromDate || null, to: toDate || null });
             downloadBlob(result.blob, result.fileName);
         } catch (err) {
             console.error("Error exportando historial:", err);
@@ -78,9 +102,9 @@ const UserHistory = ({ onNavigate }) => {
             .replace(/>/g, "&gt;");
 
     const exportToPDF = () => {
-        if (exporting || trips.length === 0) return;
+        if (exporting || filteredTrips.length === 0) return;
 
-        const rowsHtml = trips.map((trip) => `<tr>
+        const rowsHtml = filteredTrips.map((trip) => `<tr>
             <td>${escapeHtml(trip.routeName)}</td>
             <td>${escapeHtml(transportLabel(trip.transportMode))}</td>
             <td>${escapeHtml(formatDate(trip.startedAt))} ${escapeHtml(formatTime(trip.startedAt))}</td>
@@ -220,10 +244,37 @@ const UserHistory = ({ onNavigate }) => {
                 {/* Título del historial */}
                 <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
                     <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Historial de Viajes</h2>
-                    <div className="flex gap-3">
+                    <div className="flex items-center gap-3 flex-wrap">
+                        {/* Filtro por rango de fechas (RF29.2) */}
+                        <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                            <CalendarIcon size={16} className="text-emerald-500" />
+                            <input
+                                type="date"
+                                value={fromDate}
+                                max={toDate || undefined}
+                                onChange={(e) => setFromDate(e.target.value)}
+                                className={`bg-transparent text-sm outline-none ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                            />
+                            <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>→</span>
+                            <input
+                                type="date"
+                                value={toDate}
+                                min={fromDate || undefined}
+                                onChange={(e) => setToDate(e.target.value)}
+                                className={`bg-transparent text-sm outline-none ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                            />
+                            {(fromDate || toDate) && (
+                                <button
+                                    onClick={clearDates}
+                                    className={`text-xs font-medium ml-1 ${isDarkMode ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-600'}`}
+                                >
+                                    Limpiar
+                                </button>
+                            )}
+                        </div>
                         <button
                             onClick={exportToPDF}
-                            disabled={exporting || loading || trips.length === 0}
+                            disabled={exporting || loading || filteredTrips.length === 0}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${isDarkMode ? 'bg-red-600/20 text-red-400 hover:bg-red-600/30 border border-red-500/30' : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'}`}
                         >
                             <DownloadIcon size={16} />
@@ -231,7 +282,7 @@ const UserHistory = ({ onNavigate }) => {
                         </button>
                         <button
                             onClick={exportToExcel}
-                            disabled={exporting || loading || trips.length === 0}
+                            disabled={exporting || loading || filteredTrips.length === 0}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${isDarkMode ? 'bg-green-600/20 text-green-400 hover:bg-green-600/30 border border-green-500/30' : 'bg-green-50 text-green-600 hover:bg-green-100 border border-green-200'}`}
                         >
                             <DownloadIcon size={16} />
@@ -239,7 +290,7 @@ const UserHistory = ({ onNavigate }) => {
                         </button>
                         <button
                             onClick={exportToCsv}
-                            disabled={exporting || loading || trips.length === 0}
+                            disabled={exporting || loading || filteredTrips.length === 0}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${isDarkMode ? 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 border border-emerald-500/30' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200'}`}
                         >
                             <DownloadIcon size={16} />
@@ -269,7 +320,7 @@ const UserHistory = ({ onNavigate }) => {
                 {/* Lista de viajes */}
                 {!loading && !error && (
                     <div className="space-y-4">
-                        {trips.map((trip) => (
+                        {filteredTrips.map((trip) => (
                             <div
                                 key={trip.usageId}
                                 className={`rounded-2xl p-5 shadow-md hover:shadow-lg transition-all duration-300 border ${isDarkMode ? 'bg-gray-800 border-gray-700 hover:border-emerald-500/50' : 'bg-white border-gray-100 hover:border-emerald-200'}`}
@@ -323,17 +374,30 @@ const UserHistory = ({ onNavigate }) => {
                     </div>
                 )}
 
-                {/* Mensaje si no hay historial */}
-                {!loading && !error && trips.length === 0 && (
+                {/* Mensaje si no hay historial (o el filtro no deja resultados) */}
+                {!loading && !error && filteredTrips.length === 0 && (
                     <div className={`text-center py-12 rounded-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
                         <LeafIcon size={48} className={`mx-auto mb-4 ${isDarkMode ? 'text-gray-600' : 'text-gray-300'}`} />
-                        <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Aún no tienes viajes registrados</p>
-                        <button
-                            onClick={() => onNavigate('/user/plan-route')}
-                            className="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all"
-                        >
-                            Planear mi primera ruta
-                        </button>
+                        <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                            {trips.length === 0
+                                ? "Aún no tienes viajes registrados"
+                                : "Sin información disponible para el período seleccionado"}
+                        </p>
+                        {trips.length === 0 ? (
+                            <button
+                                onClick={() => onNavigate('/user/plan-route')}
+                                className="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all"
+                            >
+                                Planear mi primera ruta
+                            </button>
+                        ) : (
+                            <button
+                                onClick={clearDates}
+                                className="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all"
+                            >
+                                Limpiar filtro
+                            </button>
+                        )}
                     </div>
                 )}
 
