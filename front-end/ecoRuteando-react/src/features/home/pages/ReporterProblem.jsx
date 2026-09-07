@@ -1,92 +1,122 @@
-// ReporterProblem.js
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  ReportIcon,
+  ArrowLeft,
+  LeafIcon,
+  MapPinIcon,
+} from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
-import { LeafIcon, ArrowLeft } from "../../../shared/components/Icons";
+import obstacleReportService from "../../../services/obstacleReportService";
+
+const REPORT_TYPES = [
+  "obstruction",
+  "pothole",
+  "signage",
+  "traffic_light",
+  "sewer",
+  "lighting",
+  "other",
+];
+
+const TYPE_META = {
+  obstruction: "🚧",
+  pothole: "🕳️",
+  signage: "🚸",
+  traffic_light: "🚦",
+  sewer: "🌊",
+  lighting: "💡",
+  other: "📌",
+};
+
+const formatCoords = (lat, lng) => `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 
 const ReporterProblem = ({ onNavigate }) => {
+  const { t } = useTranslation();
   const { isDarkMode, toggleTheme } = useTheme();
-  
+
   const [formData, setFormData] = useState({
-    tipoProblema: "Obstrucción en la vía",
-    descripcion: ""
+    reportType: "obstruction",
+    description: "",
   });
-  
+  const [location, setLocation] = useState(null);
+  const [gettingLocation, setGettingLocation] = useState(false);
+  const [locationError, setLocationError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
-
-  const tiposProblema = [
-    "Obstrucción en la vía",
-    "Bache / deterioro",
-    "Falta de señalización",
-    "Semáforo dañado",
-    "Alcantarilla tapada",
-    "Iluminación pública",
-    "Otro"
-  ];
-
-  // Colores unificados con el estilo actual
-  const getColors = () => {
-    if (isDarkMode) {
-      return {
-        bgMain: "#111827",        // gray-900
-        bgHeader: "#1f2937",      // gray-800
-        bgCard: "#1f2937",        // gray-800
-        bgInput: "#374151",       // gray-700
-        border: "#374151",        // gray-700
-        textMain: "#f9fafb",      // white
-        textSec: "#9ca3af",       // gray-400
-        accent: "#10b981",        // emerald-500
-        accentHover: "#059669",   // emerald-600
-        warning: "#f59e0b",       // amber-500
-      };
-    } else {
-      return {
-        bgMain: "#ecfdf5",        // emerald-50
-        bgHeader: "#047857",      // emerald-700
-        bgCard: "#ffffff",        // white
-        bgInput: "#f9fafb",       // gray-50
-        border: "#e5e7eb",        // gray-200
-        textMain: "#111827",      // gray-900
-        textSec: "#6b7280",       // gray-500
-        accent: "#059669",        // emerald-600
-        accentHover: "#047857",   // emerald-700
-        warning: "#d97706",       // amber-600
-      };
-    }
-  };
-
-  const colors = getColors();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (!formData.descripcion.trim()) {
-      alert("Por favor describe el problema con detalle.");
+  const useGpsLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError(t("reporterProblem.errors.geolocationUnsupported", "Tu navegador no soporta geolocalización."));
       return;
     }
-    
+
+    setLocationError(null);
+    setGettingLocation(true);
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocation({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        });
+        setGettingLocation(false);
+      },
+      (err) => {
+        console.error("Error obteniendo ubicación:", err);
+        setGettingLocation(false);
+        setLocationError(t("reporterProblem.errors.gpsFailed", "No se pudo obtener tu ubicación. Verifica los permisos del GPS."));
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.description.trim()) {
+      setSubmitError(t("reporterProblem.errors.descriptionRequired", "Por favor describe el problema con detalle."));
+      return;
+    }
+
+    if (!location) {
+      setSubmitError(t("reporterProblem.errors.locationRequired", "Usa el GPS para indicar la ubicación del obstáculo."));
+      return;
+    }
+
+    setSubmitError(null);
     setIsSubmitting(true);
-    
-    setTimeout(() => {
-      console.log("Reporte enviado:", formData);
+
+    try {
+      await obstacleReportService.createReport({
+        reportType: formData.reportType,
+        description: formData.description,
+        latitude: location.lat,
+        longitude: location.lng,
+        addressText: formatCoords(location.lat, location.lng),
+      });
+
       setIsSubmitting(false);
       setSubmitted(true);
-      
+
       setTimeout(() => {
         setSubmitted(false);
-        setFormData({
-          tipoProblema: "Obstrucción en la vía",
-          descripcion: ""
-        });
-      }, 2000);
-    }, 1000);
+        setFormData({ reportType: "obstruction", description: "" });
+        setLocation(null);
+      }, 3000);
+    } catch (err) {
+      console.error("Error enviando reporte:", err);
+      setIsSubmitting(false);
+      setSubmitError(t("reporterProblem.errors.submitFailed", "No se pudo enviar el reporte. Intenta más tarde."));
+    }
   };
 
   return (
@@ -106,11 +136,11 @@ const ReporterProblem = ({ onNavigate }) => {
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${isDarkMode ? 'bg-gray-700 border border-emerald-500/30' : 'bg-white'}`}>
-                <span className="text-2xl">⚠️</span>
+                <ReportIcon size={24} className="text-emerald-500" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">Reportar Problema</h1>
-                <p className={`text-sm ${isDarkMode ? 'text-emerald-400' : 'text-green-100'}`}>Ayúdanos a mejorar las vías</p>
+                <h1 className="text-2xl font-bold text-white">{t("reporterProblem.title", "Reportar Problema")}</h1>
+                <p className={`text-sm ${isDarkMode ? 'text-emerald-400' : 'text-green-100'}`}>{t("reporterProblem.subtitle", "Ayúdanos a mejorar las vías")}</p>
               </div>
             </div>
 
@@ -118,8 +148,8 @@ const ReporterProblem = ({ onNavigate }) => {
               onClick={() => onNavigate("/dashboard")}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-gray-700/50 text-emerald-400 border border-emerald-500/30 hover:bg-gray-700' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
             >
-              <ArrowLeft size={16} />
-              Volver
+              <ArrowLeft />
+              {t("reporterProblem.back", "Volver")}
             </button>
           </div>
         </div>
@@ -127,16 +157,18 @@ const ReporterProblem = ({ onNavigate }) => {
 
       {/* CONTENIDO PRINCIPAL */}
       <div className="max-w-4xl mx-auto px-6 py-8">
-        
+
         {/* Tarjeta del formulario */}
         <div className={`rounded-2xl shadow-md border overflow-hidden ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
-          
+
           {/* Encabezado de la tarjeta */}
           <div className={`px-6 py-4 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
             <h2 className={`text-lg font-bold flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-              <span>⚠️</span> Reportar incidente en la vía
+              <span>⚠️</span> {t("reporterProblem.cardTitle", "Reportar incidente en la vía")}
             </h2>
-            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Tu reporte ayuda a mantener las vías seguras para todos</p>
+            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              {t("reporterProblem.cardSubtitle", "Tu reporte ayuda a mantener las vías seguras para todos")}
+            </p>
           </div>
 
           {/* Formulario */}
@@ -144,57 +176,109 @@ const ReporterProblem = ({ onNavigate }) => {
             {/* Tipo de Problema */}
             <div className="mb-5">
               <label className={`block text-xs font-bold uppercase tracking-wide mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                🚧 Tipo de Problema
+                {t("reporterProblem.reportTypeLabel", "Tipo de Problema")}
               </label>
               <select
-                name="tipoProblema"
-                value={formData.tipoProblema}
+                name="reportType"
+                value={formData.reportType}
                 onChange={handleChange}
                 className={`w-full px-4 py-2.5 rounded-lg text-sm transition-all focus:outline-none ${isDarkMode ? 'bg-gray-700 border border-gray-600 text-white focus:border-emerald-500' : 'bg-gray-50 border border-gray-200 text-gray-800 focus:border-emerald-400'}`}
               >
-                {tiposProblema.map(tipo => (
-                  <option key={tipo} value={tipo}>{tipo}</option>
+                {REPORT_TYPES.map((type) => (
+                  <option key={type} value={type}>
+                    {TYPE_META[type]} {t(`reporterProblem.types.${type}`)}
+                  </option>
                 ))}
               </select>
+            </div>
+
+            {/* Ubicación */}
+            <div className="mb-5">
+              <label className={`block text-xs font-bold uppercase tracking-wide mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                📍 {t("reporterProblem.locationLabel", "Ubicación")}
+              </label>
+              <button
+                type="button"
+                onClick={useGpsLocation}
+                disabled={gettingLocation}
+                className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all disabled:opacity-60 ${isDarkMode ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-600/30' : 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100'}`}
+              >
+                {gettingLocation ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+                    {t("reporterProblem.gettingLocation", "Obteniendo tu ubicación...")}
+                  </>
+                ) : (
+                  <>
+                    <MapPinIcon size={16} />
+                    {t("reporterProblem.useGps", "Usar mi ubicación actual (GPS)")}
+                  </>
+                )}
+              </button>
+
+              {location ? (
+                <div className={`mt-3 flex items-center justify-between gap-2 px-4 py-2.5 rounded-lg text-sm ${isDarkMode ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-500/30' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
+                  <span className="flex items-center gap-2">
+                    <MapPinIcon size={14} />
+                    {t("reporterProblem.locationCaptured", "Ubicación capturada")}: {formatCoords(location.lat, location.lng)}
+                  </span>
+                  <span>✓</span>
+                </div>
+              ) : locationError ? (
+                <div className={`mt-3 px-4 py-2.5 rounded-lg text-sm ${isDarkMode ? 'bg-red-900/30 text-red-400 border border-red-500/30' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                  {locationError}
+                </div>
+              ) : (
+                <p className={`mt-3 px-4 py-2.5 rounded-lg text-xs text-center ${isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-50 text-gray-500'}`}>
+                  {t("reporterProblem.locationHint", "Indica el punto exacto del obstáculo para que nuestro equipo pueda validarlo")}
+                </p>
+              )}
             </div>
 
             {/* Descripción */}
             <div className="mb-5">
               <label className={`block text-xs font-bold uppercase tracking-wide mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                📝 Descripción
+                📝 {t("reporterProblem.descriptionLabel", "Descripción")}
               </label>
               <textarea
-                name="descripcion"
-                value={formData.descripcion}
+                name="description"
+                value={formData.description}
                 onChange={handleChange}
-                placeholder="Describe el problema con detalle (ubicación, magnitud, sugerencias)..."
+                placeholder={t("reporterProblem.descriptionPlaceholder", "Describe el problema con detalle (ubicación, magnitud, sugerencias)...")}
                 rows={5}
                 className={`w-full px-4 py-2.5 rounded-lg text-sm transition-all focus:outline-none resize-vertical ${isDarkMode ? 'bg-gray-700 border border-gray-600 text-white focus:border-emerald-500' : 'bg-gray-50 border border-gray-200 text-gray-800 focus:border-emerald-400'}`}
               />
             </div>
 
+            {/* Error de envío */}
+            {submitError && (
+              <div className={`mb-4 p-3 rounded-lg text-sm text-center ${isDarkMode ? 'bg-red-900/30 text-red-400 border border-red-500/30' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                {submitError}
+              </div>
+            )}
+
             {/* Botón Enviar */}
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || gettingLocation}
               className={`w-full py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${isSubmitting || submitted
                 ? (isDarkMode ? 'bg-gray-600 text-gray-300 cursor-not-allowed' : 'bg-gray-400 text-white cursor-not-allowed')
                 : (isDarkMode ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-emerald-600 text-white hover:bg-emerald-700')
               }`}
             >
               {isSubmitting ? (
-                <>⏳ Enviando...</>
+                <>{t("reporterProblem.submitting", "Enviando...")}</>
               ) : submitted ? (
-                <>✓ ¡Reporte Enviado!</>
+                <>{t("reporterProblem.submitted", "¡Reporte Enviado!")}</>
               ) : (
-                <>📤 Enviar Reporte</>
+                <>{t("reporterProblem.submit", "Enviar Reporte")}</>
               )}
             </button>
 
             {/* Aviso de revisión */}
             <div className={`mt-4 p-3 rounded-lg text-xs text-center flex items-center justify-center gap-2 ${isDarkMode ? 'bg-amber-900/30 text-amber-400 border border-amber-500/30' : 'bg-amber-50 text-amber-700 border border-amber-200'}`}>
               <span>🕒</span>
-              <span>Tu reporte será revisado por nuestro equipo antes de ser publicado.</span>
+              <span>{t("reporterProblem.reviewNotice", "Tu reporte será revisado por nuestro equipo antes de ser publicado.")}</span>
             </div>
           </form>
         </div>
@@ -203,7 +287,7 @@ const ReporterProblem = ({ onNavigate }) => {
         <div className="mt-8 text-center">
           <p className={`text-sm flex items-center justify-center gap-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
             <LeafIcon size={14} className="text-emerald-500" />
-            Reportar problemas ayuda a construir una mejor movilidad para todos
+            {t("reporterProblem.footer", "Reportar problemas ayuda a construir una mejor movilidad para todos")}
             <LeafIcon size={14} className="text-emerald-500" />
           </p>
         </div>
