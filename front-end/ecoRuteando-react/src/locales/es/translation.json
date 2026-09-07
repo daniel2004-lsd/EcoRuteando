@@ -292,5 +292,35 @@
       "locationRequired": "Usa el GPS para indicar la ubicación del obstáculo.",
       "submitFailed": "No se pudo enviar el reporte. Intenta más tarde."
     }
+  },
+
+  "adminReports": {
+    "title": "Verificación de Reportes",
+    "subtitle": "Revisa y valida los reportes ciudadanos",
+    "backToPanel": "Volver al Panel",
+    "loading": "Cargando reportes...",
+    "loadError": "No se pudieron cargar los reportes.",
+    "empty": "No hay reportes en este estado.",
+    "photoAlt": "Foto del reporte",
+    "reviewedOn": "Revisado el",
+    "alreadyReviewed": "Reporte ya revisado",
+    "notePlaceholder": "Nota de revisión (obligatoria si rechazas)...",
+    "noteRequiredReject": "Indica un motivo de rechazo.",
+    "actionFailed": "No se pudo guardar la revisión.",
+    "saving": "Guardando...",
+    "confirmValidated": "Confirmar validación",
+    "confirmRejected": "Confirmar rechazo",
+    "actionValidated": "Validar",
+    "actionRejected": "Rechazar",
+    "cancel": "Cancelar",
+    "filter": {
+      "all": "Todos"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "under_review": "En revisión",
+      "validated": "Validado",
+      "rejected": "Rechazado"
+    }
   }
 }
