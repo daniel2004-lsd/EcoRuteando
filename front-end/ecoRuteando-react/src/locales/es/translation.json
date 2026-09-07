@@ -255,5 +255,42 @@
     "severityHigh": "Alta",
     "severityMedium": "Media",
     "severityLow": "Baja"
+  },
+
+  "reporterProblem": {
+    "title": "Reportar Problema",
+    "subtitle": "Ayúdanos a mejorar las vías",
+    "back": "Volver",
+    "cardTitle": "Reportar incidente en la vía",
+    "cardSubtitle": "Tu reporte ayuda a mantener las vías seguras para todos",
+    "reportTypeLabel": "Tipo de Problema",
+    "types": {
+      "obstruction": "Obstrucción en la vía",
+      "pothole": "Bache / deterioro",
+      "signage": "Falta de señalización",
+      "traffic_light": "Semáforo dañado",
+      "sewer": "Alcantarilla tapada",
+      "lighting": "Iluminación pública",
+      "other": "Otro"
+    },
+    "locationLabel": "Ubicación",
+    "useGps": "Usar mi ubicación actual (GPS)",
+    "gettingLocation": "Obteniendo tu ubicación...",
+    "locationCaptured": "Ubicación capturada",
+    "locationHint": "Indica el punto exacto del obstáculo para que nuestro equipo pueda validarlo",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Describe el problema con detalle (ubicación, magnitud, sugerencias)...",
+    "submit": "Enviar Reporte",
+    "submitting": "Enviando...",
+    "submitted": "¡Reporte Enviado!",
+    "reviewNotice": "Tu reporte será revisado por nuestro equipo antes de ser publicado.",
+    "footer": "Reportar problemas ayuda a construir una mejor movilidad para todos",
+    "errors": {
+      "geolocationUnsupported": "Tu navegador no soporta geolocalización.",
+      "gpsFailed": "No se pudo obtener tu ubicación. Verifica los permisos del GPS.",
+      "descriptionRequired": "Por favor describe el problema con detalle.",
+      "locationRequired": "Usa el GPS para indicar la ubicación del obstáculo.",
+      "submitFailed": "No se pudo enviar el reporte. Intenta más tarde."
+    }
   }
 }
