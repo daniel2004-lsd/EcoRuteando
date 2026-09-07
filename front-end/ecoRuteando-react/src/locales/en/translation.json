@@ -150,6 +150,7 @@
     "transport": {
       "walking": "Walking",
       "bike": "Bike",
+      "car": "Car",
       "public_transport": "Public transport",
       "mixed": "Mixed"
     },
@@ -226,6 +227,70 @@
       "mixed": "Mixed",
       "unknown": "Not specified",
       "car": "Car"
+    }
+  },
+
+  "alerts": {
+    "title": "Climate Alerts",
+    "subtitle": "Real-time weather for your safety",
+    "back": "Back",
+    "loading": "Fetching Neiva weather conditions...",
+    "loadError": "The weather service is temporarily unavailable. Please try later.",
+    "feelsLike": "Feels like",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "extendedForecast": "📅 Extended forecast",
+    "rainChance": "Rain",
+    "activeAlertsHeading": "⚠️ Active alerts",
+    "noActiveAlerts": "There are no active weather alerts for Neiva right now.",
+    "filterAll": "All",
+    "filterHigh": "High",
+    "filterMedium": "Medium",
+    "viewMore": "View more",
+    "dismiss": "Dismiss",
+    "recommendationsTitle": "💡 Recommendations for today",
+    "statMaxSeverity": "Max severity",
+    "statAvgTemperature": "Average temperature",
+    "timeNow": "Now",
+    "severityHigh": "High",
+    "severityMedium": "Medium",
+    "severityLow": "Low"
+  },
+
+  "reporterProblem": {
+    "title": "Report a Problem",
+    "subtitle": "Help us improve the roads",
+    "back": "Back",
+    "cardTitle": "Report a road incident",
+    "cardSubtitle": "Your report helps keep the roads safe for everyone",
+    "reportTypeLabel": "Problem Type",
+    "types": {
+      "obstruction": "Road obstruction",
+      "pothole": "Pothole / deterioration",
+      "signage": "Missing signage",
+      "traffic_light": "Damaged traffic light",
+      "sewer": "Blocked sewer",
+      "lighting": "Public lighting",
+      "other": "Other"
+    },
+    "locationLabel": "Location",
+    "useGps": "Use my current location (GPS)",
+    "gettingLocation": "Getting your location...",
+    "locationCaptured": "Location captured",
+    "locationHint": "Mark the exact spot of the obstacle so our team can validate it",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe the problem in detail (location, magnitude, suggestions)...",
+    "submit": "Submit Report",
+    "submitting": "Submitting...",
+    "submitted": "Report Submitted!",
+    "reviewNotice": "Your report will be reviewed by our team before it is published.",
+    "footer": "Reporting problems helps build better mobility for everyone",
+    "errors": {
+      "geolocationUnsupported": "Your browser does not support geolocation.",
+      "gpsFailed": "Could not get your location. Check your GPS permissions.",
+      "descriptionRequired": "Please describe the problem in detail.",
+      "locationRequired": "Use the GPS to mark the obstacle's location.",
+      "submitFailed": "The report could not be submitted. Please try later."
     }
   }
 }
