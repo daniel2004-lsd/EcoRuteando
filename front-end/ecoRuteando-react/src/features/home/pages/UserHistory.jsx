@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { LeafIcon, ArrowLeft, ClockIcon, MapPinIcon, CalendarIcon, DownloadIcon } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import tripService from "../../../services/tripService";
+import exportService from "../../../services/exportService";
+import downloadBlob from "../../../services/downloadFile";
+import toast from "react-hot-toast";
 
 const UserHistory = ({ onNavigate }) => {
     const { isDarkMode, toggleTheme } = useTheme();
@@ -38,12 +41,94 @@ const UserHistory = ({ onNavigate }) => {
         .reduce((sum, trip) => sum + (trip.actualDistanceKm || 0), 0)
         .toFixed(2);
 
-    const exportToPDF = () => {
-        alert("Exportando a PDF...");
+    const [exporting, setExporting] = useState(null);
+
+    const exportToExcel = async () => {
+        if (exporting || trips.length === 0) return;
+        setExporting("xlsx");
+        try {
+            const result = await exportService.exportUserTrips("xlsx");
+            downloadBlob(result.blob, result.fileName);
+        } catch (err) {
+            console.error("Error exportando historial:", err);
+            toast.error(err?.detail || "No se pudo exportar el historial");
+        } finally {
+            setExporting(null);
+        }
     };
 
-    const exportToExcel = () => {
-        alert("Exportando a Excel...");
+    const exportToCsv = async () => {
+        if (exporting || trips.length === 0) return;
+        setExporting("csv");
+        try {
+            const result = await exportService.exportUserTrips("csv");
+            downloadBlob(result.blob, result.fileName);
+        } catch (err) {
+            console.error("Error exportando historial:", err);
+            toast.error(err?.detail || "No se pudo exportar el historial");
+        } finally {
+            setExporting(null);
+        }
+    };
+
+    const escapeHtml = (value) =>
+        String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+    const exportToPDF = () => {
+        if (exporting || trips.length === 0) return;
+
+        const rowsHtml = trips.map((trip) => `<tr>
+            <td>${escapeHtml(trip.routeName)}</td>
+            <td>${escapeHtml(transportLabel(trip.transportMode))}</td>
+            <td>${escapeHtml(formatDate(trip.startedAt))} ${escapeHtml(formatTime(trip.startedAt))}</td>
+            <td>${trip.actualDurationMin != null ? `${trip.actualDurationMin} min` : "—"}</td>
+            <td>${trip.actualDistanceKm != null ? `${trip.actualDistanceKm} km` : "—"}</td>
+            <td>${trip.actualCo2Kg != null ? `${trip.actualCo2Kg} kg CO₂` : "—"}</td>
+            <td>${trip.completed ? "Completado" : "En curso"}</td>
+        </tr>`).join("");
+
+        const win = window.open("", "_blank", "width=960,height=700");
+        if (!win) {
+            toast.error("Permite las ventanas emergentes para generar el PDF.");
+            return;
+        }
+
+        win.document.write(`<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Historial de Trayectos</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; color: #111827; margin: 40px; }
+  h1 { color: #047857; border-bottom: 2px solid #d1fae5; padding-bottom: 8px; }
+  .summary { margin: 12px 0 20px; color: #374151; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { border: 1px solid #d1d5db; padding: 8px 10px; text-align: left; }
+  th { background: #ecfdf5; color: #065f46; }
+  tr:nth-child(even) td { background: #f9fafb; }
+  .footer { margin-top: 24px; font-size: 12px; color: #6b7280; }
+</style>
+</head>
+<body>
+<h1>Historial de Trayectos</h1>
+<p class="summary">
+  CO₂ ahorrado: <strong>${totalCO2} kg</strong> · Distancia recorrida: <strong>${totalKm} km</strong> · Trayectos completados: <strong>${completedTrips.length}</strong>
+</p>
+<table>
+  <thead><tr>
+    <th>Ruta</th><th>Modo</th><th>Fecha</th><th>Duración</th><th>Distancia</th><th>CO₂</th><th>Estado</th>
+  </tr></thead>
+  <tbody>${rowsHtml}</tbody>
+</table>
+<p class="footer">Generado con EcoRuteando · ${escapeHtml(new Date().toLocaleString())}</p>
+</body>
+</html>`);
+        win.document.close();
+        win.focus();
+        setTimeout(() => win.print(), 300);
     };
 
     const formatDate = (dateStr) => {
@@ -138,17 +223,27 @@ const UserHistory = ({ onNavigate }) => {
                     <div className="flex gap-3">
                         <button
                             onClick={exportToPDF}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${isDarkMode ? 'bg-red-600/20 text-red-400 hover:bg-red-600/30 border border-red-500/30' : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'}`}
+                            disabled={exporting || loading || trips.length === 0}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${isDarkMode ? 'bg-red-600/20 text-red-400 hover:bg-red-600/30 border border-red-500/30' : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'}`}
                         >
                             <DownloadIcon size={16} />
                             PDF
                         </button>
                         <button
                             onClick={exportToExcel}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${isDarkMode ? 'bg-green-600/20 text-green-400 hover:bg-green-600/30 border border-green-500/30' : 'bg-green-50 text-green-600 hover:bg-green-100 border border-green-200'}`}
+                            disabled={exporting || loading || trips.length === 0}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${isDarkMode ? 'bg-green-600/20 text-green-400 hover:bg-green-600/30 border border-green-500/30' : 'bg-green-50 text-green-600 hover:bg-green-100 border border-green-200'}`}
                         >
                             <DownloadIcon size={16} />
-                            Excel
+                            {exporting === "xlsx" ? "Generando..." : "Excel"}
+                        </button>
+                        <button
+                            onClick={exportToCsv}
+                            disabled={exporting || loading || trips.length === 0}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${isDarkMode ? 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 border border-emerald-500/30' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200'}`}
+                        >
+                            <DownloadIcon size={16} />
+                            {exporting === "csv" ? "Generando..." : "CSV"}
                         </button>
                     </div>
                 </div>
