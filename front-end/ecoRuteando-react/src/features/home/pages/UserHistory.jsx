@@ -61,6 +61,7 @@ const UserHistory = ({ onNavigate }) => {
     const transportLabel = (mode) => {
         const labels = {
             bike: "Bicicleta",
+            car: "Automóvil",
             walking: "Caminata",
             public_transport: "Transporte público",
             mixed: "Mixto",

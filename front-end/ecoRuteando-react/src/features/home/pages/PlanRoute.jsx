@@ -8,35 +8,12 @@ import mapsService from "../../../services/mapsService";
 import routeService from "../../../services/routeService";
 import tripService from "../../../services/tripService";
 import poiService from "../../../services/poiService";
-
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
+import weatherService from "../../../services/weatherService";
+import { loadGoogleMapsApi } from "../../../services/googleMapsLoader";
 
 // Coordenadas de Neiva (viewport inicial del mapa)
 const NEIVA_LAT = 2.9273;
 const NEIVA_LON = -75.2819;
-
-// Cargar Google Maps (solo para el visualizador del mapa)
-let mapsLoadingPromise = null;
-const loadGoogleMapsApi = () => {
-  if (mapsLoadingPromise) return mapsLoadingPromise;
-  
-  mapsLoadingPromise = new Promise((resolve, reject) => {
-    if (window.google?.maps) {
-      resolve(window.google);
-      return;
-    }
-    
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=es`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => resolve(window.google);
-    script.onerror = reject;
-    document.head.appendChild(script);
-  });
-  
-  return mapsLoadingPromise;
-};
 
 // Componente de búsqueda (Autocompletado de Google Places)
 const LocationSearch = ({ placeholder, onSelect, isDarkMode, type = "origin", externalValue }) => {
@@ -249,7 +226,6 @@ const PlanRoute = ({ onNavigate }) => {
   const [route, setRoute] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [userLocation, setUserLocation] = useState(null);
   const [originInputValue, setOriginInputValue] = useState("");
   const [mapCenter, setMapCenter] = useState({ lat: NEIVA_LAT, lng: NEIVA_LON });
   const [mapsReady, setMapsReady] = useState(false);
@@ -259,6 +235,7 @@ const PlanRoute = ({ onNavigate }) => {
   const [showPois, setShowPois] = useState(true);
   const [routeSavedId, setRouteSavedId] = useState(null);
   const [estimate, setEstimate] = useState(null);
+  const [routeWeather, setRouteWeather] = useState(null);
   const [activeTripId, setActiveTripId] = useState(null);
   const [startingTrip, setStartingTrip] = useState(false);
   const [completing, setCompleting] = useState(false);
@@ -323,44 +300,39 @@ const PlanRoute = ({ onNavigate }) => {
       });
   }, []);
 
-  // Obtener ubicación actual
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const location = {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            name: "Mi ubicación",
-            address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`
-          };
-          setUserLocation(location);
-          console.log("Ubicación obtenida:", location);
-        },
-        (err) => {
-          console.error("Error obteniendo ubicación:", err);
-          setError("No se pudo obtener su ubicación. Verifique los permisos.");
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
-      );
+  // Obtener ubicación actual y resolver su dirección real (barrio/calle)
+  const resolveLocationName = async (lat, lng) => {
+    try {
+      const data = await mapsService.reverseGeocode(lat, lng);
+      const address = data?.results?.[0]?.formattedAddress;
+      if (address) {
+        // Primer segmento de la dirección (calle + número o nombre de lugar)
+        const parts = address.split(",");
+        return parts[0] || address;
+      }
+    } catch (err) {
+      console.warn("No se pudo resolver la dirección de la ubicación:", err);
     }
-  }, []);
+    return "Mi ubicación";
+  };
 
-  // Función para calcular ruta (usa backend)
-  const calculateRoute = async () => {
-    if (!origin) {
+  // Función para calcular ruta (usa backend).
+  // Acepta puntos opcionales para evitar el problema de closure cuando
+  // el origen/destino se acaban de actualizar (p.ej. "Usar mi ubicación").
+  const calculateRoute = async (nextOrigin = origin, nextDestination = destination) => {
+    if (!nextOrigin) {
       setError("Seleccione un origen");
       return;
     }
-    if (!destination) {
+    if (!nextDestination) {
       setError("Seleccione un destino");
       return;
     }
-    if (!origin.lat || !origin.lng) {
+    if (!nextOrigin.lat || !nextOrigin.lng) {
       setError("El origen no tiene coordenadas válidas");
       return;
     }
-    if (!destination.lat || !destination.lng) {
+    if (!nextDestination.lat || !nextDestination.lng) {
       setError("El destino no tiene coordenadas válidas");
       return;
     }
@@ -370,22 +342,23 @@ const PlanRoute = ({ onNavigate }) => {
 
     try {
       console.log("Calculando ruta via backend...");
-      console.log("Origen:", origin);
-      console.log("Destino:", destination);
+      console.log("Origen:", nextOrigin);
+      console.log("Destino:", nextDestination);
       console.log("Modo:", transportMode);
 
       // Mapear modos de transporte
       const modeMap = {
         walking: "walking",
         bike: "bicycling",
+        car: "driving",
         public: "transit",
       };
 
       const result = await mapsService.getDirections(
-        origin.lat,
-        origin.lng,
-        destination.lat,
-        destination.lng,
+        nextOrigin.lat,
+        nextOrigin.lng,
+        nextDestination.lat,
+        nextDestination.lng,
         modeMap[transportMode] || "walking"
       );
 
@@ -394,25 +367,25 @@ const PlanRoute = ({ onNavigate }) => {
       if (result && result.encodedPolyline) {
         const distance = (result.distance.valueMeters / 1000).toFixed(1);
         const duration = Math.round(result.duration.valueSeconds / 60);
-        
+
         console.log("Ruta calculada:", { distance, duration });
-        
+
         setRoute({
           distance,
           duration,
           geometry: result.encodedPolyline,
-          startAddress: origin.address,
-          endAddress: destination.address,
+          startAddress: nextOrigin.address,
+          endAddress: nextDestination.address,
         });
 
         // Estimar CO₂/calorías con el backend (factores de transporte)
         try {
-          const pgModeMap = { walking: "walking", bike: "bike", public: "public_transport" };
+          const pgModeMap = { walking: "walking", bike: "bike", car: "car", public: "public_transport" };
           const estimateResult = await mapsService.getEstimate(
-            origin.lat,
-            origin.lng,
-            destination.lat,
-            destination.lng,
+            nextOrigin.lat,
+            nextOrigin.lng,
+            nextDestination.lat,
+            nextDestination.lng,
             pgModeMap[transportMode] || "walking"
           );
           console.log("Estimación de sostenibilidad:", estimateResult);
@@ -420,6 +393,20 @@ const PlanRoute = ({ onNavigate }) => {
         } catch (err) {
           console.warn("Estimación de sostenibilidad no disponible:", err);
           setEstimate(null);
+        }
+
+        // Alertas climáticas del trayecto (no bloqueantes: si fallan, se omiten)
+        try {
+          const weather = await weatherService.getRouteWeather(
+            nextOrigin.lat,
+            nextOrigin.lng,
+            nextDestination.lat,
+            nextDestination.lng
+          );
+          setRouteWeather(weather);
+        } catch (err) {
+          console.warn("Clima no disponible, se omite:", err);
+          setRouteWeather(null);
         }
       } else {
         setError("No se encontró una ruta válida");
@@ -448,6 +435,7 @@ const PlanRoute = ({ onNavigate }) => {
       const modeMap = {
         walking: "walking",
         bike: "bike",
+        car: "car",
         public: "public_transport",
       };
 
@@ -498,6 +486,7 @@ const PlanRoute = ({ onNavigate }) => {
       const modeMap = {
         walking: "walking",
         bike: "bike",
+        car: "car",
         public: "public_transport",
       };
 
@@ -563,36 +552,43 @@ const PlanRoute = ({ onNavigate }) => {
     setRoute(null);
   };
 
-  // Función para usar mi ubicación como origen
-  const setMyLocation = () => {
-    if (userLocation && userLocation.lat && userLocation.lng) {
-      setOrigin(userLocation);
-      setOriginInputValue("Mi ubicación");
-      setMapCenter({ lat: userLocation.lat, lng: userLocation.lng });
-      console.log("Usando ubicación como origen:", userLocation);
-      
-      if (destination && destination.lat) {
-        setTimeout(() => calculateRoute(), 100);
-      }
-    } else {
-      setError("No se pudo obtener su ubicación. Verifique los permisos del GPS.");
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const location = {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            name: "Mi ubicación",
-            address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`
-          };
-          setUserLocation(location);
-          setOrigin(location);
-          setOriginInputValue("Mi ubicación");
-          setMapCenter({ lat: location.lat, lng: location.lng });
-        },
-        () => setError("No se pudo acceder a su ubicación"),
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-      );
+  // Función para usar mi ubicación como origen.
+  // Siempre solicita GPS fresco en el clic (enableHighAccuracy, sin caché)
+  // para no usar una posición cacheada/imprecisa del primer useEffect.
+  const setMyLocation = async () => {
+    if (!navigator.geolocation) {
+      setError("Su navegador no soporta geolocalización.");
+      return;
     }
+
+    setError("Obteniendo su ubicación…");
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const location = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          name: "Mi ubicación",
+          address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`
+        };
+        const realName = await resolveLocationName(location.lat, location.lng);
+        location.name = realName;
+        location.address = `${realName} (${location.address})`;
+        setOrigin(location);
+        setOriginInputValue(realName);
+        setMapCenter({ lat: location.lat, lng: location.lng });
+        console.log("Usando ubicación como origen:", location);
+
+        if (destination && destination.lat) {
+          setTimeout(() => calculateRoute(location, destination), 100);
+        }
+      },
+      (err) => {
+        console.error("Error obteniendo ubicación:", err);
+        setError("No se pudo obtener su ubicación. Verifique los permisos del GPS.");
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
   };
 
   // Centrar en Neiva
@@ -698,10 +694,11 @@ const PlanRoute = ({ onNavigate }) => {
             </button>
 
             {/* Modos de transporte */}
-            <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-gray-200 dark:border-gray-800">
+            <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-gray-200 dark:border-gray-800">
               {[
                 { id: "walking", label: "Caminar", icon: "🚶" },
                 { id: "bike", label: "Bicicleta", icon: "🚲" },
+                { id: "car", label: "Carro", icon: "🚗" },
                 { id: "public", label: "Transporte", icon: "🚌" }
               ].map(mode => (
                 <button
@@ -718,6 +715,17 @@ const PlanRoute = ({ onNavigate }) => {
                 </button>
               ))}
             </div>
+
+            {/* Aviso de disponibilidad según el modo (depende de los datos de Google Maps) */}
+            {(transportMode === 'bike' || transportMode === 'public') && (
+              <div className={`mt-2 p-2 rounded-md text-xs ${
+                isDarkMode ? 'bg-amber-900/20 text-amber-400' : 'bg-amber-50 text-amber-700'
+              }`}>
+                ⚠️ {transportMode === 'bike'
+                  ? 'En Neiva, Google Maps puede no tener rutas de bicicleta disponibles para algunos trayectos. Si no calcula, prueba a pie o en carro.'
+                  : 'En Neiva, Google Maps puede no tener rutas de transporte público disponibles. Si no calcula, prueba a pie o en carro.'}
+              </div>
+            )}
 
             {/* Botón calcular */}
             <button
@@ -761,9 +769,10 @@ const PlanRoute = ({ onNavigate }) => {
               <div className="flex items-center gap-3">
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                   transportMode === 'walking' ? 'bg-green-100 text-green-700' :
-                  transportMode === 'bike' ? 'bg-emerald-100 text-emerald-700' : 'bg-purple-100 text-purple-700'
+                  transportMode === 'bike' ? 'bg-emerald-100 text-emerald-700' :
+                  transportMode === 'car' ? 'bg-orange-100 text-orange-700' : 'bg-purple-100 text-purple-700'
                 }`}>
-                  {transportMode === 'walking' ? 'Caminata' : transportMode === 'bike' ? 'Ciclorruta' : 'Transporte público'}
+                  {transportMode === 'walking' ? 'Caminata' : transportMode === 'bike' ? 'Ciclorruta' : transportMode === 'car' ? 'Automóvil' : 'Transporte público'}
                 </span>
                 <span className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                   {route.distance} km · {route.duration} min
@@ -790,6 +799,70 @@ const PlanRoute = ({ onNavigate }) => {
                   </span>
                 )}
               </div>
+
+              {/* Clima y alertas del trayecto */}
+              {routeWeather && (
+                <div className={`mt-3 p-3 rounded-lg border ${
+                  routeWeather.alerts?.length
+                    ? (isDarkMode ? 'bg-amber-900/20 border-amber-500/40' : 'bg-amber-50 border-amber-200')
+                    : (isDarkMode ? 'bg-gray-800/60 border-gray-700' : 'bg-gray-50 border-gray-200')
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <span className={`text-xs font-bold uppercase ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
+                      ⛅ Clima del trayecto
+                    </span>
+                    {(routeWeather.origin || routeWeather.destination) && (
+                      <span className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                        {routeWeather.origin?.temperatureC != null
+                          ? `${Math.round(routeWeather.origin.temperatureC)}°C`
+                          : ''}
+                        {routeWeather.destination?.temperatureC != null
+                          ? ` → ${Math.round(routeWeather.destination.temperatureC)}°C`
+                          : ''}
+                      </span>
+                    )}
+                  </div>
+
+                  {(routeWeather.origin || routeWeather.destination) && (
+                    <div className={`mt-1.5 text-xs flex flex-wrap gap-x-3 gap-y-0.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      {routeWeather.origin?.conditionDescription && (
+                        <span>🌤 {routeWeather.origin.conditionDescription}</span>
+                      )}
+                      {routeWeather.origin?.windKmh != null && (
+                        <span>💨 {Math.round(routeWeather.origin.windKmh)} km/h</span>
+                      )}
+                      {routeWeather.origin?.relativeHumidity != null && (
+                        <span>💧 {routeWeather.origin.relativeHumidity}%</span>
+                      )}
+                      {routeWeather.origin?.precipitationProbability != null && (
+                        <span>🌧 {routeWeather.origin.precipitationProbability}% lluvia</span>
+                      )}
+                    </div>
+                  )}
+
+                  {routeWeather.alerts?.length > 0 && (
+                    <div className="mt-2 space-y-1.5">
+                      {routeWeather.alerts.map((alert, idx) => (
+                        <div key={idx} className={`text-xs rounded-md p-2 ${
+                          alert.severity === 'HIGH' || alert.severity === 'EXTREME'
+                            ? (isDarkMode ? 'bg-red-900/30 text-red-300' : 'bg-red-50 text-red-700')
+                            : (isDarkMode ? 'bg-amber-900/30 text-amber-300' : 'bg-amber-50 text-amber-700')
+                        }`}>
+                          <span className="font-bold">⚠️ {alert.alertTitle}</span>
+                          {alert.description && <p className="mt-0.5">{alert.description}</p>}
+                          {alert.instruction && <p className="mt-0.5 italic">{alert.instruction}</p>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {routeWeather.suggestions?.length > 0 && (
+                    <div className={`mt-2 text-xs ${isDarkMode ? 'text-emerald-300' : 'text-emerald-700'}`}>
+                      💡 {routeWeather.suggestions.join(' ')}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Acciones */}
               <div className="mt-4 grid grid-cols-2 gap-2">

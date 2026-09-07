@@ -5,6 +5,7 @@ import { useTheme } from "../../../app/context/ThemeContext";
 import MapViewGoogle from "../../../features/auth/components/MapViewGoogle";
 import tripService from "../../../services/tripService";
 import RatingSection from "../components/RatingSection";
+import ShareSection from "../components/ShareSection";
 
 const TripDetail = ({ onNavigate }) => {
     const { isDarkMode, toggleTheme } = useTheme();
@@ -50,6 +51,7 @@ const TripDetail = ({ onNavigate }) => {
     const transportLabel = (mode) => {
         const labels = {
             bike: "Bicicleta",
+            car: "Automóvil",
             walking: "Caminata",
             public_transport: "Transporte público",
             mixed: "Mixto",
@@ -198,6 +200,11 @@ const TripDetail = ({ onNavigate }) => {
                         {/* Calificación (CU09 — solo si el trayecto fue completado) */}
                         {trip.completed && (
                             <RatingSection routeId={trip.routeId} />
+                        )}
+
+                        {/* Compartir recorrido (CU20 — solo si el trayecto fue completado) */}
+                        {trip.completed && (
+                            <ShareSection trip={trip} />
                         )}
                     </>
                 )}

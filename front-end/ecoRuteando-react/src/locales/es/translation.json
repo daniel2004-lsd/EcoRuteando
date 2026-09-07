@@ -150,6 +150,7 @@
     "transport": {
       "walking": "A pie",
       "bike": "Bicicleta",
+      "car": "Automóvil",
       "public_transport": "Transporte público",
       "mixed": "Mixto"
     },
@@ -226,6 +227,70 @@
       "mixed": "Mixto",
       "unknown": "Sin especificar",
       "car": "Coche"
+    }
+  },
+
+  "alerts": {
+    "title": "Alertas Climáticas",
+    "subtitle": "Clima en tiempo real para tu seguridad",
+    "back": "Volver",
+    "loading": "Consultando condiciones climáticas de Neiva...",
+    "loadError": "El servicio climático no está disponible en este momento. Intenta más tarde.",
+    "feelsLike": "Sensación térmica",
+    "humidity": "Humedad",
+    "wind": "Viento",
+    "extendedForecast": "📅 Pronóstico extendido",
+    "rainChance": "Lluvia",
+    "activeAlertsHeading": "⚠️ Alertas activas",
+    "noActiveAlerts": "No hay alertas climáticas activas para Neiva en este momento.",
+    "filterAll": "Todas",
+    "filterHigh": "Alta",
+    "filterMedium": "Media",
+    "viewMore": "Ver más",
+    "dismiss": "Descartar",
+    "recommendationsTitle": "💡 Recomendaciones para hoy",
+    "statMaxSeverity": "Alerta máxima",
+    "statAvgTemperature": "Temperatura promedio",
+    "timeNow": "Ahora",
+    "severityHigh": "Alta",
+    "severityMedium": "Media",
+    "severityLow": "Baja"
+  },
+
+  "reporterProblem": {
+    "title": "Reportar Problema",
+    "subtitle": "Ayúdanos a mejorar las vías",
+    "back": "Volver",
+    "cardTitle": "Reportar incidente en la vía",
+    "cardSubtitle": "Tu reporte ayuda a mantener las vías seguras para todos",
+    "reportTypeLabel": "Tipo de Problema",
+    "types": {
+      "obstruction": "Obstrucción en la vía",
+      "pothole": "Bache / deterioro",
+      "signage": "Falta de señalización",
+      "traffic_light": "Semáforo dañado",
+      "sewer": "Alcantarilla tapada",
+      "lighting": "Iluminación pública",
+      "other": "Otro"
+    },
+    "locationLabel": "Ubicación",
+    "useGps": "Usar mi ubicación actual (GPS)",
+    "gettingLocation": "Obteniendo tu ubicación...",
+    "locationCaptured": "Ubicación capturada",
+    "locationHint": "Indica el punto exacto del obstáculo para que nuestro equipo pueda validarlo",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Describe el problema con detalle (ubicación, magnitud, sugerencias)...",
+    "submit": "Enviar Reporte",
+    "submitting": "Enviando...",
+    "submitted": "¡Reporte Enviado!",
+    "reviewNotice": "Tu reporte será revisado por nuestro equipo antes de ser publicado.",
+    "footer": "Reportar problemas ayuda a construir una mejor movilidad para todos",
+    "errors": {
+      "geolocationUnsupported": "Tu navegador no soporta geolocalización.",
+      "gpsFailed": "No se pudo obtener tu ubicación. Verifica los permisos del GPS.",
+      "descriptionRequired": "Por favor describe el problema con detalle.",
+      "locationRequired": "Usa el GPS para indicar la ubicación del obstáculo.",
+      "submitFailed": "No se pudo enviar el reporte. Intenta más tarde."
     }
   }
 }
