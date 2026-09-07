@@ -292,5 +292,35 @@
       "locationRequired": "Use the GPS to mark the obstacle's location.",
       "submitFailed": "The report could not be submitted. Please try later."
     }
+  },
+
+  "adminReports": {
+    "title": "Report Verification",
+    "subtitle": "Review and validate citizen reports",
+    "backToPanel": "Back to Panel",
+    "loading": "Loading reports...",
+    "loadError": "The reports could not be loaded.",
+    "empty": "There are no reports in this status.",
+    "photoAlt": "Report photo",
+    "reviewedOn": "Reviewed on",
+    "alreadyReviewed": "Report already reviewed",
+    "notePlaceholder": "Review note (required if you reject)...",
+    "noteRequiredReject": "Please provide a reason for the rejection.",
+    "actionFailed": "The review could not be saved.",
+    "saving": "Saving...",
+    "confirmValidated": "Confirm validation",
+    "confirmRejected": "Confirm rejection",
+    "actionValidated": "Validate",
+    "actionRejected": "Reject",
+    "cancel": "Cancel",
+    "filter": {
+      "all": "All"
+    },
+    "status": {
+      "pending": "Pending",
+      "under_review": "Under review",
+      "validated": "Validated",
+      "rejected": "Rejected"
+    }
   }
 }

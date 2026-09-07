@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   LeafIcon,
   ActivityIcon,
@@ -16,12 +16,11 @@ import {
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "../../../app/context/AuthContext";
+import obstacleReportService from "../../../services/obstacleReportService";
 
 const AdminPanel = ({ onNavigate }) => {
   const { isDarkMode, toggleTheme } = useTheme();
   const { t } = useTranslation();
-  const { userRole } = useAuth();
 
   const [stats] = useState({
     users: 245,
@@ -30,6 +29,29 @@ const AdminPanel = ({ onNavigate }) => {
     tickets: 8,
     co2Saved: 1245.8
   });
+
+  const [reportCounts, setReportCounts] = useState({ total: 0, pending: 0 });
+
+  useEffect(() => {
+    let active = true;
+
+    obstacleReportService
+      .getReportsForAdmin()
+      .then((reports) => {
+        if (!active) return;
+        setReportCounts({
+          total: reports.length,
+          pending: reports.filter((r) => r.status === "pending").length,
+        });
+      })
+      .catch((err) => {
+        console.error("Error cargando reportes:", err);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const modules = [
     {
@@ -84,7 +106,7 @@ const AdminPanel = ({ onNavigate }) => {
   ];
 
   const pendingActions = [
-    { id: "reports", icon: <ReportIcon size={18} />, label: t("admin.panel.pending.reports.label", "Reportes sin revisar"), desc: t("admin.panel.pending.reports.desc", "Requieren atención inmediata"), count: stats.reports, color: "orange" },
+    { id: "reports", icon: <ReportIcon size={18} />, label: t("admin.panel.pending.reports.label", "Reportes sin revisar"), desc: t("admin.panel.pending.reports.desc", "Requieren atención inmediata"), count: reportCounts.pending, color: "orange" },
     { id: "tickets", icon: <TicketIcon size={18} />, label: t("admin.panel.pending.tickets.label", "Tickets de soporte"), desc: t("admin.panel.pending.tickets.desc", "Esperando respuesta"), count: stats.tickets, color: "purple" }
   ];
 
@@ -164,7 +186,7 @@ const AdminPanel = ({ onNavigate }) => {
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2 ${isDarkMode ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
               <ReportIcon size={20} className="text-emerald-500" />
             </div>
-            <p className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{stats.reports}</p>
+            <p className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{reportCounts.total}</p>
             <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("admin.panel.stats.reports", "Reportes")}</p>
           </div>
 
@@ -215,7 +237,8 @@ const AdminPanel = ({ onNavigate }) => {
           {pendingActions.map((action) => (
             <div
               key={action.id}
-              className={`rounded-2xl p-5 shadow-md transition-all hover:shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700 hover:border-emerald-500/50' : 'bg-white border-gray-100 hover:border-emerald-200'}`}
+              onClick={action.id === "reports" ? () => onNavigate("admin/reports") : undefined}
+              className={`rounded-2xl p-5 shadow-md transition-all hover:shadow-lg border ${action.id === "reports" ? "cursor-pointer" : ""} ${isDarkMode ? 'bg-gray-800 border-gray-700 hover:border-emerald-500/50' : 'bg-white border-gray-100 hover:border-emerald-200'}`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">

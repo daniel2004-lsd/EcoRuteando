@@ -292,5 +292,35 @@
       "locationRequired": "Utilisez le GPS pour indiquer l'emplacement de l'obstacle.",
       "submitFailed": "Le signalement n'a pas pu être envoyé. Réessayez plus tard."
     }
+  },
+
+  "adminReports": {
+    "title": "Vérification des signalements",
+    "subtitle": "Examinez et validez les signalements citoyens",
+    "backToPanel": "Retour au panneau",
+    "loading": "Chargement des signalements...",
+    "loadError": "Impossible de charger les signalements.",
+    "empty": "Aucun signalement dans cet état.",
+    "photoAlt": "Photo du signalement",
+    "reviewedOn": "Examiné le",
+    "alreadyReviewed": "Signalement déjà examiné",
+    "notePlaceholder": "Note d'examen (obligatoire en cas de rejet)...",
+    "noteRequiredReject": "Indiquez un motif de rejet.",
+    "actionFailed": "L'examen n'a pas pu être enregistré.",
+    "saving": "Enregistrement...",
+    "confirmValidated": "Confirmer la validation",
+    "confirmRejected": "Confirmer le rejet",
+    "actionValidated": "Valider",
+    "actionRejected": "Rejeter",
+    "cancel": "Annuler",
+    "filter": {
+      "all": "Tous"
+    },
+    "status": {
+      "pending": "En attente",
+      "under_review": "En cours d'examen",
+      "validated": "Validé",
+      "rejected": "Rejeté"
+    }
   }
 }
