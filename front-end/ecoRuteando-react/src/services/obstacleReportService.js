@@ -16,6 +16,20 @@ const obstacleReportService = {
     const { data } = await api.get("/obstacle-reports/mine");
     return data;
   },
+
+  getReportsForAdmin: async (status) => {
+    const { data } = await api.get("/obstacle-reports", {
+      params: status ? { status } : {},
+    });
+    return data;
+  },
+
+  validateReport: async (reportId, { status, validationNote }) => {
+    await api.patch(`/obstacle-reports/${reportId}/status`, {
+      status,
+      validationNote,
+    });
+  },
 };
 
 export default obstacleReportService;

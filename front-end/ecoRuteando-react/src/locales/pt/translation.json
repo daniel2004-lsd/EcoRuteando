@@ -292,5 +292,35 @@
       "locationRequired": "Use o GPS para indicar a localização do obstáculo.",
       "submitFailed": "Não foi possível enviar o relato. Tente novamente mais tarde."
     }
+  },
+
+  "adminReports": {
+    "title": "Verificação de Relatos",
+    "subtitle": "Revise e valide os relatos cidadãos",
+    "backToPanel": "Voltar ao Painel",
+    "loading": "Carregando relatos...",
+    "loadError": "Não foi possível carregar os relatos.",
+    "empty": "Não há relatos neste estado.",
+    "photoAlt": "Foto do relato",
+    "reviewedOn": "Revisado em",
+    "alreadyReviewed": "Relato já revisado",
+    "notePlaceholder": "Nota de revisão (obrigatória se rejeitar)...",
+    "noteRequiredReject": "Informe um motivo de rejeição.",
+    "actionFailed": "Não foi possível salvar a revisão.",
+    "saving": "Salvando...",
+    "confirmValidated": "Confirmar validação",
+    "confirmRejected": "Confirmar rejeição",
+    "actionValidated": "Validar",
+    "actionRejected": "Rejeitar",
+    "cancel": "Cancelar",
+    "filter": {
+      "all": "Todos"
+    },
+    "status": {
+      "pending": "Pendente",
+      "under_review": "Em revisão",
+      "validated": "Validado",
+      "rejected": "Rejeitado"
+    }
   }
 }
