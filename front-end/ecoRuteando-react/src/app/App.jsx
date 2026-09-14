@@ -44,9 +44,9 @@ function AdminSection({ title }) {
     const { isDarkMode } = useTheme();
     const { t } = useTranslation();
     return (
-        <div className={`min-h-screen flex flex-col items-center justify-center gap-3 ${isDarkMode ? "bg-gray-900" : "bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50"}`}>
-            <h1 className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-gray-700"}`}>{t(title)}</h1>
-            <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>{t("admin.section.underConstruction", "Sección en construcción")}</p>
+        <div className={`min-h-screen flex flex-col items-center justify-center gap-3 ${isDarkMode ? 'bg-[#0B1215]' : "bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50"}`}>
+            <h1 className={`text-xl font-bold ${isDarkMode ? 'text-[#e2e8f0]' : "text-gray-700"}`}>{t(title)}</h1>
+            <p className={`text-sm ${isDarkMode ? 'text-[#94a3b8]' : "text-gray-500"}`}>{t("admin.section.underConstruction", "Sección en construcción")}</p>
             <button
                 onClick={() => navigate("/admin")}
                 className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
@@ -58,7 +58,7 @@ function AdminSection({ title }) {
 }
 
 function AppContent() {
-    const { isDarkMode, toggleTheme } = useTheme();
+    const { isDarkMode } = useTheme();
     const { i18n, t } = useTranslation();
     const navigate = useNavigate();
     const [isLoading] = useState(false);
@@ -91,14 +91,7 @@ function AppContent() {
     };
 
     return (
-        <div className={`relative min-h-screen font-sans antialiased ${isDarkMode ? "dark" : ""}`}>
-            <button
-                onClick={toggleTheme}
-                className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
-            >
-                {isDarkMode ? "☀️" : "🌙"}
-            </button>
-
+        <div className={`relative min-h-screen font-sans antialiased ${isDarkMode ? 'dark' : ""}`}>
             <LoadingOverlay isLoading={isLoading} isDarkMode={isDarkMode} message="Cargando..." />
 
             <ConfirmModal
@@ -129,7 +122,7 @@ function AppContent() {
                     <Route path="/newpassword" element={<NewPassword recoveryCode={recoveryCode} onClearRecoveryCode={() => setRecoveryCode(null)} />} />
                     <Route path="/auth/callback" element={<OAuthCallback />} />
                     <Route path="/verify-2fa" element={<TwoFactorVerify />} />
-                    <Route path="/dashboard" element={<ProtectedRoute><UserDashboard onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/dashboard" element={<ProtectedRoute allowGuest><UserDashboard onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminPanel onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.users" /></ProtectedRoute>} />
                     <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminReports onNavigate={onNavigate} /></ProtectedRoute>} />
@@ -140,7 +133,7 @@ function AppContent() {
                     <Route path="/admin/exports" element={<ProtectedRoute requiredRole="admin"><AdminExports onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/pois" element={<ProtectedRoute requiredRole="admin"><PoiManage onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/profile" element={<ProtectedRoute><UserProfile onNavigate={onNavigate} /></ProtectedRoute>} />
-                    <Route path="/user/plan-route" element={<ProtectedRoute><PlanRoute onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/plan-route" element={<ProtectedRoute allowGuest><PlanRoute onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/routes" element={<ProtectedRoute><RouteManage onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/history" element={<ProtectedRoute><UserHistory onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/history/:usageId" element={<ProtectedRoute><TripDetail onNavigate={onNavigate} /></ProtectedRoute>} />

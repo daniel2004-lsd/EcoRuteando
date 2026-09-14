@@ -38,6 +38,8 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: http://+:5124
+      GoogleMaps__ApiKey: ${GOOGLE_MAPS_API_KEY}
+      GoogleMaps__PlacesBaseUrl: https://maps.googleapis.com/maps/api/place/nearbysearch/json
       EmailSettings__Host: smtp.gmail.com
       EmailSettings__Port: 587
       EmailSettings__EnableSsl: "true"
