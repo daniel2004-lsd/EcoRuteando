@@ -12,19 +12,19 @@ import { useTheme } from "../../../app/context/ThemeContext";
 /* ─── CONSTANTES ────────────────────────────────────────────── */
 const C = {
   dark: {
-    bgMain: "linear-gradient(135deg, #0a0f1a 0%, #0f172a 100%)",
-    bgSurface: "rgba(30, 41, 59, 0.7)",
-    bgCard: "rgba(15, 23, 42, 0.8)",
-    bgHeader: "rgba(10, 15, 26, 0.95)",
-    border: "rgba(56, 189, 248, 0.15)",
-    textMain: "#f1f5f9",
+    bgMain: "linear-gradient(135deg, #0B1215 0%, #0D1A20 100%)",
+    bgSurface: "rgba(17, 28, 32, 0.7)",
+    bgCard: "rgba(22, 35, 41, 0.8)",
+    bgHeader: "rgba(11, 18, 21, 0.95)",
+    border: "rgba(38, 56, 61, 0.3)",
+    textMain: "#e2e8f0",
     textSec: "#94a3b8",
-    accent: "#38bdf8",
-    accentHover: "#0ea5e9",
+    accent: "#34D399",
+    accentHover: "#064E3B",
     success: "#10b981",
     danger: "#ef4444",
-    gradientStart: "#38bdf8",
-    gradientEnd: "#2dd4bf"
+    gradientStart: "#34D399",
+    gradientEnd: "#064E3B"
   },
   light: {
     bgMain: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
@@ -68,7 +68,7 @@ const ThemeToggle = ({ isDarkMode, toggleTheme, theme }) => (
       justifyContent: "center"
     }}
   >
-    {isDarkMode ? "☀️" : "🌙"}
+    {isDarkMode ? '☀️' : "🌙"}
   </button>
 );
 
