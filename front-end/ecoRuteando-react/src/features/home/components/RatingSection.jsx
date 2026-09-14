@@ -72,11 +72,11 @@ const RatingSection = ({ routeId }) => {
     };
 
     const cardClass = `rounded-2xl p-6 shadow-md border ${
-        isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-100"
+        isDarkMode ? 'bg-[#162329] border-[#26383D]' : "bg-white border-gray-100"
     }`;
 
-    const labelClass = isDarkMode ? "text-gray-400" : "text-gray-500";
-    const textClass = isDarkMode ? "text-white" : "text-gray-800";
+    const labelClass = isDarkMode ? 'text-[#94a3b8]' : "text-gray-500";
+    const textClass = isDarkMode ? 'text-[#e2e8f0]' : "text-gray-800";
 
     const renderStars = (value, interactive = false) => (
         <div className="flex items-center gap-1">
@@ -97,7 +97,7 @@ const RatingSection = ({ routeId }) => {
                         className={
                             star <= (interactive ? hoverRating || rating : value)
                                 ? "text-amber-400"
-                                : isDarkMode ? "text-gray-600" : "text-gray-300"
+                                : isDarkMode ? 'text-gray-600' : "text-gray-300"
                         }
                     >
                         ★

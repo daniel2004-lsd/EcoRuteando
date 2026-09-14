@@ -69,22 +69,22 @@ const TripDetail = ({ onNavigate }) => {
         : null;
 
     return (
-        <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
+        <div className={`min-h-screen ${isDarkMode ? 'bg-[#0B1215]' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
 
             {/* Botón modo oscuro */}
             <button
                 onClick={toggleTheme}
                 className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
             >
-                {isDarkMode ? "☀️" : "🌙"}
+                {isDarkMode ? '☀️' : "🌙"}
             </button>
 
             {/* HEADER */}
-            <header className={`relative ${isDarkMode ? 'bg-gray-800 border-b border-emerald-500/30' : 'bg-gradient-to-r from-green-700 via-emerald-700 to-teal-700'} shadow-lg overflow-hidden`}>
+            <header className={`relative ${isDarkMode ? 'bg-[#162329] border-b border-emerald-500/30' : 'bg-gradient-to-r from-green-700 via-emerald-700 to-teal-700'} shadow-lg overflow-hidden`}>
                 <div className="max-w-7xl mx-auto px-6 py-6">
                     <div className="flex items-center justify-between flex-wrap gap-4">
                         <div className="flex items-center gap-4">
-                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${isDarkMode ? 'bg-gray-700 border border-emerald-500/30' : 'bg-white'}`}>
+                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${isDarkMode ? 'bg-[#162329] border border-emerald-500/30' : 'bg-white'}`}>
                                 <MapPinIcon size={24} className="text-emerald-500" />
                             </div>
                             <div>
@@ -97,7 +97,7 @@ const TripDetail = ({ onNavigate }) => {
 
                         <button
                             onClick={() => onNavigate?.('/user/history')}
-                            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-gray-700/50 text-emerald-400 border border-emerald-500/30 hover:bg-gray-700' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
+                            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-[#162329]/50 text-emerald-400 border border-emerald-500/30 hover:bg-[#1e293b]' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
                         >
                             <ArrowLeft size={16} />
                             Volver
@@ -113,7 +113,7 @@ const TripDetail = ({ onNavigate }) => {
                 {loading && (
                     <div className="text-center py-12">
                         <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                        <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Cargando detalle...</p>
+                        <p className={`${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Cargando detalle...</p>
                     </div>
                 )}
 
@@ -136,7 +136,7 @@ const TripDetail = ({ onNavigate }) => {
                 {!loading && !error && trip && (
                     <>
                         {/* Mapa del recorrido */}
-                        <div className={`rounded-2xl overflow-hidden shadow-lg border mb-8 ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
+                        <div className={`rounded-2xl overflow-hidden shadow-lg border mb-8 ${isDarkMode ? 'border-emerald-800/20' : 'border-gray-100'}`}>
                             <MapViewGoogle
                                 height="420px"
                                 center={mapCenter || { lat: 4.7110, lng: -74.0721 }}
@@ -148,35 +148,35 @@ const TripDetail = ({ onNavigate }) => {
 
                         {/* Métricas */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                            <div className={`rounded-2xl p-5 text-center shadow-md border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
-                                <p className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Distancia</p>
-                                <p className={`text-2xl font-bold mt-1 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                            <div className={`rounded-2xl p-5 text-center shadow-md border ${isDarkMode ? 'bg-[#162329] border-emerald-800/20' : 'bg-white border-gray-100'}`}>
+                                <p className={`text-xs font-medium ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Distancia</p>
+                                <p className={`text-2xl font-bold mt-1 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>
                                     {trip.actualDistanceKm != null ? `${trip.actualDistanceKm} km` : "—"}
                                 </p>
                             </div>
-                            <div className={`rounded-2xl p-5 text-center shadow-md border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
-                                <p className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Duración</p>
-                                <p className={`text-2xl font-bold mt-1 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                            <div className={`rounded-2xl p-5 text-center shadow-md border ${isDarkMode ? 'bg-[#162329] border-emerald-800/20' : 'bg-white border-gray-100'}`}>
+                                <p className={`text-xs font-medium ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Duración</p>
+                                <p className={`text-2xl font-bold mt-1 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>
                                     {trip.actualDurationMin != null ? `${trip.actualDurationMin} min` : "—"}
                                 </p>
                             </div>
-                            <div className={`rounded-2xl p-5 text-center shadow-md border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
-                                <p className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>CO₂ Ahorrado</p>
+                            <div className={`rounded-2xl p-5 text-center shadow-md border ${isDarkMode ? 'bg-[#162329] border-emerald-800/20' : 'bg-white border-gray-100'}`}>
+                                <p className={`text-xs font-medium ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>CO₂ Ahorrado</p>
                                 <p className={`text-2xl font-bold mt-1 text-emerald-500`}>
                                     {trip.actualCo2Kg != null ? `${trip.actualCo2Kg} kg` : "—"}
                                 </p>
                             </div>
-                            <div className={`rounded-2xl p-5 text-center shadow-md border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
-                                <p className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Modo</p>
-                                <p className={`text-2xl font-bold mt-1 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                            <div className={`rounded-2xl p-5 text-center shadow-md border ${isDarkMode ? 'bg-[#162329] border-emerald-800/20' : 'bg-white border-gray-100'}`}>
+                                <p className={`text-xs font-medium ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Modo</p>
+                                <p className={`text-2xl font-bold mt-1 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>
                                     {transportLabel(trip.transportMode)}
                                 </p>
                             </div>
                         </div>
 
                         {/* Información */}
-                        <div className={`rounded-2xl p-6 shadow-md border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
-                            <h2 className={`text-lg font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Información del viaje</h2>
+                        <div className={`rounded-2xl p-6 shadow-md border ${isDarkMode ? 'bg-[#162329] border-emerald-800/20' : 'bg-white border-gray-100'}`}>
+                            <h2 className={`text-lg font-bold mb-4 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>Información del viaje</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                 <div className="flex items-center gap-2">
                                     <CalendarIcon size={16} className="text-emerald-500" />
