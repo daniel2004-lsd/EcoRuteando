@@ -89,6 +89,7 @@ export function AuthProvider({ children }) {
     }, [refreshToken]);
 
     const isAuthenticated = !!accessToken && !!user;
+    const isGuest = !accessToken && !user && !loading;
     const userRole = user?.role?.toLowerCase() || "user";
 
     return (
@@ -99,8 +100,9 @@ export function AuthProvider({ children }) {
                 user,
                 loading,
                 isAuthenticated,
+                isGuest,
                 userRole,
-                saveTokens,
+                saveTokens:
                 loginUser,
                 loginWithOAuth,
                 logout,

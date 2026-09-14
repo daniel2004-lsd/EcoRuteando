@@ -1,8 +1,8 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../app/context/AuthContext";
 
-export default function ProtectedRoute({ children, requiredRole }) {
-    const { isAuthenticated, loading, userRole } = useAuth();
+export default function ProtectedRoute({ children, requiredRole, allowGuest }) {
+    const { isAuthenticated, isGuest, loading, userRole } = useAuth();
     const location = useLocation();
 
     if (loading) {
@@ -16,8 +16,14 @@ export default function ProtectedRoute({ children, requiredRole }) {
         );
     }
 
-    if (!isAuthenticated) {
+    if (!isAuthenticated && !allowGuest) {
         return <Navigate to="/login" state={{ from: location }} replace />;
+    }
+    
+    // Si allowGuest es true y el usuario no está autenticado, es invitado
+    if (!isAuthenticated && allowGuest) {
+        // Renderizar los hijos sin protección adicional
+        return children;
     }
 
     if (requiredRole && userRole !== requiredRole) {
