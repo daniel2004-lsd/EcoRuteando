@@ -23,6 +23,14 @@ const tripService = {
     });
     return data;
   },
+
+  interrupt: async (usageId, payload) => {
+    const { data } = await api.post(`/trips/${usageId}/interrupt`, {
+      usageId,
+      ...payload,
+    });
+    return data;
+  },
 };
 
 export default tripService;
