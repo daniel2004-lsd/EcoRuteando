@@ -71,7 +71,7 @@ function TwoFactorVerify() {
                         value={code}
                         onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
                         placeholder="000000"
-                        className="mt-4 w-full px-4 py-3 text-center text-2xl font-mono tracking-[0.5em] border border-gray-200 rounded-lg focus:outline-none focus:border-emerald-400 transition-all"
+                        className="otp-input mt-4 w-full px-4 py-3 text-center text-2xl font-mono tracking-[0.5em] border border-gray-200 rounded-lg focus:outline-none focus:border-emerald-400 transition-all"
                         autoFocus
                     />
 

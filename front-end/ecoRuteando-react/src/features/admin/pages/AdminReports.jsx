@@ -123,22 +123,22 @@ const AdminReports = ({ onNavigate }) => {
   };
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
+    <div className={`min-h-screen ${isDarkMode ? 'bg-[#0B1215]' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
 
       {/* Botón modo oscuro/claro */}
       <button
         onClick={toggleTheme}
         className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
       >
-        {isDarkMode ? "☀️" : "🌙"}
+        {isDarkMode ? '☀️' : "🌙"}
       </button>
 
       {/* HEADER */}
-      <header className={`relative ${isDarkMode ? 'bg-gray-800 border-b border-emerald-500/30' : 'bg-gradient-to-r from-green-700 via-emerald-700 to-teal-700'} shadow-lg overflow-hidden`}>
+      <header className={`relative ${isDarkMode ? 'bg-[#162329] border-b border-emerald-500/30' : 'bg-gradient-to-r from-green-700 via-emerald-700 to-teal-700'} shadow-lg overflow-hidden`}>
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${isDarkMode ? 'bg-gray-700 border border-emerald-500/30' : 'bg-white'}`}>
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${isDarkMode ? 'bg-[#162329] border border-emerald-500/30' : 'bg-white'}`}>
                 <ReportIcon size={24} className="text-emerald-500" />
               </div>
               <div>
@@ -149,7 +149,7 @@ const AdminReports = ({ onNavigate }) => {
 
             <button
               onClick={() => onNavigate?.("/admin")}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-gray-700/50 text-emerald-400 border border-emerald-500/30 hover:bg-gray-700' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-[#162329]/50 text-emerald-400 border border-emerald-500/30 hover:bg-[#162329]' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
             >
               <ArrowLeft size={16} />
               {t("adminReports.backToPanel", "Volver al Panel")}
@@ -162,12 +162,12 @@ const AdminReports = ({ onNavigate }) => {
       <div className="max-w-7xl mx-auto px-6 py-8">
 
         {/* Filtros por estado */}
-        <div className={`rounded-2xl p-4 mb-8 shadow-md border flex flex-wrap gap-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+        <div className={`rounded-2xl p-4 mb-8 shadow-md border flex flex-wrap gap-2 ${isDarkMode ? 'bg-[#162329] border-[#26383D]' : 'bg-white border-gray-100'}`}>
           <button
             onClick={() => setStatusFilter("all")}
             className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${statusFilter === "all"
-              ? (isDarkMode ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-emerald-600 text-white border-emerald-600')
-              : (isDarkMode ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50')}`}
+              ? (isDarkMode ? 'bg-emerald-600 text-[#e2e8f0] border-emerald-600' : 'bg-emerald-600 text-white border-emerald-600')
+              : (isDarkMode ? 'bg-[#162329] text-gray-300 border-gray-600 hover:bg-[#26383D]' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50')}`}
           >
             {t("adminReports.filter.all", "Todos")} ({reports.length})
           </button>
@@ -176,8 +176,8 @@ const AdminReports = ({ onNavigate }) => {
               key={status}
               onClick={() => setStatusFilter(status)}
               className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${statusFilter === status
-                ? (isDarkMode ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-emerald-600 text-white border-emerald-600')
-                : (isDarkMode ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50')}`}
+                ? (isDarkMode ? 'bg-emerald-600 text-[#e2e8f0] border-emerald-600' : 'bg-emerald-600 text-white border-emerald-600')
+                : (isDarkMode ? 'bg-[#162329] text-gray-300 border-gray-600 hover:bg-[#26383D]' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50')}`}
             >
               {t(`adminReports.status.${status}`)} ({counts[status] || 0})
             </button>
@@ -196,15 +196,15 @@ const AdminReports = ({ onNavigate }) => {
         {loading && (
           <div className="text-center py-16">
             <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("adminReports.loading", "Cargando reportes...")}</p>
+            <p className={`${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{t("adminReports.loading", "Cargando reportes...")}</p>
           </div>
         )}
 
         {/* Vacío */}
         {!loading && !error && visibleReports.length === 0 && (
-          <div className={`text-center py-20 rounded-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className={`text-center py-20 rounded-2xl ${isDarkMode ? 'bg-[#162329]' : 'bg-white'}`}>
             <ReportIcon size={48} className="mx-auto mb-4 text-gray-300" />
-            <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t("adminReports.empty", "No hay reportes en este estado.")}</p>
+            <p className={`${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{t("adminReports.empty", "No hay reportes en este estado.")}</p>
           </div>
         )}
 
@@ -212,19 +212,19 @@ const AdminReports = ({ onNavigate }) => {
         {!loading && !error && visibleReports.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {visibleReports.map((report) => (
-              <div key={report.id} className={`rounded-2xl p-6 shadow-md border flex flex-col ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+              <div key={report.id} className={`rounded-2xl p-6 shadow-md border flex flex-col ${isDarkMode ? 'bg-[#162329] border-[#26383D]' : 'bg-white border-gray-100'}`}>
 
                 {/* Encabezado de la tarjeta */}
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="flex items-center gap-3">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${isDarkMode ? 'bg-[#162329]' : 'bg-gray-100'}`}>
                       {TYPE_META[report.reportType] || "📌"}
                     </div>
                     <div>
-                      <h3 className={`font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                      <h3 className={`font-bold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>
                         {t(`reporterProblem.types.${report.reportType}`, report.reportType)}
                       </h3>
-                      <p className={`text-xs flex items-center gap-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                      <p className={`text-xs flex items-center gap-1 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
                         <ClockIcon size={12} /> {formatDate(report.createdAt)}
                       </p>
                     </div>
@@ -238,7 +238,7 @@ const AdminReports = ({ onNavigate }) => {
                 <p className={`text-sm mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{report.description}</p>
 
                 {/* Ubicación */}
-                <div className={`flex items-start gap-2 px-4 py-3 rounded-lg text-xs mb-4 ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-50 text-gray-500'}`}>
+                <div className={`flex items-start gap-2 px-4 py-3 rounded-lg text-xs mb-4 ${isDarkMode ? 'bg-[#162329] text-gray-300' : 'bg-gray-50 text-gray-500'}`}>
                   <MapPinIcon size={14} className="mt-0.5 text-emerald-500" />
                   <div>
                     <p>{report.addressText || formatCoords(report.latitude, report.longitude)}</p>
@@ -271,7 +271,7 @@ const AdminReports = ({ onNavigate }) => {
 
                 {/* Interfaz de revisión (solo pendientes) */}
                 {reviewingId === report.id && (
-                  <div className={`mt-auto mb-4 rounded-lg p-4 border ${isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
+                  <div className={`mt-auto mb-4 rounded-lg p-4 border ${isDarkMode ? 'bg-[#162329] border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex gap-2">
                         <button
@@ -293,7 +293,7 @@ const AdminReports = ({ onNavigate }) => {
                       </div>
                       <button
                         onClick={() => setReviewingId(null)}
-                        className={`p-1.5 rounded-lg text-xs font-bold ${isDarkMode ? 'text-gray-400 hover:bg-gray-600' : 'text-gray-500 hover:bg-gray-100'}`}
+                        className={`p-1.5 rounded-lg text-xs font-bold ${isDarkMode ? 'text-[#94a3b8] hover:bg-[#26383D]' : 'text-gray-500 hover:bg-gray-100'}`}
                         aria-label={t("adminReports.cancel", "Cancelar")}
                       >
                         <XIcon />
@@ -304,7 +304,7 @@ const AdminReports = ({ onNavigate }) => {
                       onChange={(e) => setNote(e.target.value)}
                       placeholder={t("adminReports.notePlaceholder", "Nota de revisión (obligatoria si rechazas)...")}
                       rows={2}
-                      className={`w-full px-3 py-2 rounded-lg text-sm border focus:outline-none ${isDarkMode ? 'bg-gray-800 border-gray-600 text-white focus:border-emerald-500' : 'bg-white border-gray-300 text-gray-800 focus:border-emerald-400'}`}
+                      className={`w-full px-3 py-2 rounded-lg text-sm border focus:outline-none ${isDarkMode ? 'bg-[#162329] border-gray-600 text-[#e2e8f0] focus:border-emerald-500' : 'bg-white border-gray-300 text-gray-800 focus:border-emerald-400'}`}
                     />
                     {actionError && (
                       <p className={`mt-2 text-xs ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>{actionError}</p>
@@ -344,7 +344,7 @@ const AdminReports = ({ onNavigate }) => {
                 {/* Reportes ya revisados */}
                 {reviewingId !== report.id && (report.status === "validated" || report.status === "rejected") && (
                   <div className="mt-auto pt-2 text-center">
-                    <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t("adminReports.alreadyReviewed", "Reporte ya revisado")}</p>
+                    <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>{t("adminReports.alreadyReviewed", "Reporte ya revisado")}</p>
                   </div>
                 )}
               </div>

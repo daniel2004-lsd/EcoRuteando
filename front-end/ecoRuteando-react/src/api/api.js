@@ -73,10 +73,12 @@ api.interceptors.response.use(
             if (!refreshToken) {
                 // Sin sesión: /auth/me falla en silencio (modo invitado)
                 if (originalRequest.url === "/auth/me") {
+                    isRefreshing = false;
                     return Promise.reject(error);
                 }
                 localStorage.clear();
                 window.location.href = "/login";
+                isRefreshing = false;
                 return Promise.reject(error);
             }
 
