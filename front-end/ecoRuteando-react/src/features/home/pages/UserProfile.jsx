@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../../../src/app/context/LanguageContext"; // Importar el hook
+import { me, updateProfile, changePassword } from "../../../services/authService";
 import { 
   LeafIcon, ArrowLeft, UserIcon, LockIcon, SettingsIcon, 
   MailIcon, PhoneIcon, MapPinIcon, CalendarIcon, 
@@ -464,21 +465,30 @@ const SecurityPanel = ({ theme, t }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [savingPassword, setSavingPassword] = useState(false);
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
       alert(t("profile.security.passwordsNotMatch"));
       return;
     }
-    if (newPassword.length < 6) {
+    if (newPassword.length < 8) {
       alert(t("profile.security.passwordMinLength"));
       return;
     }
-    alert(t("profile.security.passwordUpdated"));
-    setShowPasswordModal(false);
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
+    setSavingPassword(true);
+    try {
+      await changePassword(currentPassword, newPassword);
+      alert(t("profile.security.passwordUpdated"));
+      setShowPasswordModal(false);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      alert(err.response?.data?.detail || err.response?.data?.errors?.NewPassword?.[0] || t("profile.security.passwordUpdateFailed", "No se pudo actualizar la contraseña."));
+    } finally {
+      setSavingPassword(false);
+    }
   };
 
   return (
@@ -715,14 +725,15 @@ const SecurityPanel = ({ theme, t }) => {
                 color: theme.textSec,
                 cursor: "pointer"
               }}>{t("profile.personal.cancel")}</button>
-              <button onClick={handleChangePassword} style={{
+              <button onClick={handleChangePassword} disabled={savingPassword} style={{
                 padding: "8px 16px",
                 borderRadius: "8px",
                 background: `linear-gradient(135deg, ${theme.gradientStart}, ${theme.gradientEnd})`,
                 color: "#fff",
                 border: "none",
-                cursor: "pointer"
-              }}>{t("profile.security.update")}</button>
+                cursor: savingPassword ? "wait" : "pointer",
+                opacity: savingPassword ? 0.7 : 1
+              }}>{savingPassword ? "..." : t("profile.security.update")}</button>
             </div>
           </div>
         </div>
@@ -915,21 +926,72 @@ const UserProfile = ({ onNavigate }) => {
   
   const [activeTab, setActiveTab] = useState("personal");
   const [isEditing, setIsEditing] = useState(false);
-  
+
   const [profile, setProfile] = useState({
-    name: "Daniel Salazar Vargas",
-    email: "danielsalazarvargas953@gmail.com",
-    phone: "+57 300 123 4567",
-    location: "Neiva, Huila, Colombia",
+    name: "",
+    email: "",
+    phone: "",
+    location: "",
     birthday: t("profile.personal.defaultBirthday", "15 de mayo, 1995"),
     bio: t("profile.personal.defaultBio", "Apasionado por la movilidad sostenible y el cuidado del medio ambiente.")
   });
 
   const [formData, setFormData] = useState(profile);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [identityPassword, setIdentityPassword] = useState("");
+  const [savingProfile, setSavingProfile] = useState(false);
   const userStats = { routes: 47, co2Saved: 32.5 };
 
+  useEffect(() => {
+    me()
+      .then((u) => {
+        setProfile((prev) => ({
+          ...prev,
+          name: [u.firstName, u.lastName].filter(Boolean).join(" "),
+          email: u.email,
+          phone: u.phoneNumber ?? ""
+        }));
+      })
+      .catch(() => {});
+  }, []);
+
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-  const handleSave = () => { setProfile(formData); setIsEditing(false); alert(t("profile.changesSaved")); };
+
+  // CU12 paso 3: antes de guardar se solicita la contraseña actual.
+  const handleSave = () => {
+    setIdentityPassword("");
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmSave = async () => {
+    setSavingProfile(true);
+    try {
+      const parts = formData.name.trim().split(/\s+/);
+      const firstName = parts[0] ?? formData.name;
+      const lastName = parts.slice(1).join(" ") || null;
+      const updated = await updateProfile({
+        firstName,
+        lastName,
+        email: formData.email,
+        phoneNumber: formData.phone || null,
+        currentPassword: identityPassword
+      });
+      setProfile((prev) => ({
+        ...prev,
+        name: [updated.firstName, updated.lastName].filter(Boolean).join(" "),
+        email: updated.email,
+        phone: updated.phoneNumber ?? ""
+      }));
+      setIsEditing(false);
+      setShowConfirmModal(false);
+      setIdentityPassword("");
+      alert(t("profile.changesSaved"));
+    } catch (err) {
+      alert(err.response?.data?.detail || t("profile.saveError", "No se pudieron actualizar los datos."));
+    } finally {
+      setSavingProfile(false);
+    }
+  };
   const handleCancel = () => { setFormData(profile); setIsEditing(false); };
 
   return (
@@ -968,6 +1030,69 @@ const UserProfile = ({ onNavigate }) => {
         
         <MotivationalFooter theme={theme} t={t} />
       </div>
+
+      {/* CU12: confirmación de identidad con la contraseña actual */}
+      {showConfirmModal && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "rgba(0,0,0,0.5)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000,
+          padding: "16px"
+        }} onClick={() => setShowConfirmModal(false)}>
+          <div style={{
+            background: theme.bgCard,
+            borderRadius: "24px",
+            padding: "24px",
+            maxWidth: "400px",
+            width: "100%"
+          }} onClick={(e) => e.stopPropagation()}>
+            <h3 style={{ margin: "0 0 8px", color: theme.textMain }}>{t("profile.confirmIdentity.title", "Confirmar identidad")}</h3>
+            <p style={{ margin: "0 0 16px", fontSize: "13px", color: theme.textSec }}>{t("profile.confirmIdentity.subtitle", "Ingresa tu contraseña actual para guardar los cambios.")}</p>
+            <input
+              type="password"
+              placeholder={t("profile.security.currentPassword")}
+              value={identityPassword}
+              onChange={(e) => setIdentityPassword(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "12px",
+                marginBottom: "20px",
+                borderRadius: "8px",
+                border: `1px solid ${theme.border}`,
+                background: theme.bgSurface,
+                color: theme.textMain,
+                boxSizing: "border-box"
+              }}
+            />
+            <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
+              <button onClick={() => setShowConfirmModal(false)} style={{
+                padding: "8px 16px",
+                borderRadius: "8px",
+                background: theme.bgSurface,
+                border: `1px solid ${theme.border}`,
+                color: theme.textSec,
+                cursor: "pointer"
+              }}>{t("profile.personal.cancel")}</button>
+              <button onClick={handleConfirmSave} disabled={savingProfile || !identityPassword} style={{
+                padding: "8px 16px",
+                borderRadius: "8px",
+                background: `linear-gradient(135deg, ${theme.gradientStart}, ${theme.gradientEnd})`,
+                color: "#fff",
+                border: "none",
+                cursor: savingProfile ? "wait" : "pointer",
+                opacity: savingProfile || !identityPassword ? 0.7 : 1
+              }}>{savingProfile ? "..." : t("profile.security.update")}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
