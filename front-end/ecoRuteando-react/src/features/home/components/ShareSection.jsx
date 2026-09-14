@@ -92,10 +92,10 @@ const ShareSection = ({ trip }) => {
     };
 
     const cardClass = `rounded-2xl p-6 shadow-md border ${
-        isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-100"
+        isDarkMode ? 'bg-[#162329] border-[#26383D]' : "bg-white border-gray-100"
     }`;
-    const labelClass = isDarkMode ? "text-gray-400" : "text-gray-500";
-    const textClass = isDarkMode ? "text-white" : "text-gray-800";
+    const labelClass = isDarkMode ? 'text-[#94a3b8]' : "text-gray-500";
+    const textClass = isDarkMode ? 'text-[#e2e8f0]' : "text-gray-800";
 
     const toggleClass = (active) =>
         `px-2 py-1 rounded-lg text-xs font-semibold transition-all ${
@@ -138,7 +138,7 @@ const ShareSection = ({ trip }) => {
             </div>
 
             {/* Vista previa */}
-            <div className={`mb-4 p-4 rounded-xl text-sm ${isDarkMode ? "bg-gray-900 border border-gray-700" : "bg-gray-50 border border-gray-200"}`}>
+            <div className={`mb-4 p-4 rounded-xl text-sm ${isDarkMode ? 'bg-[#0B1215] border border-[#26383D]' : "bg-gray-50 border border-gray-200"}`}>
                 <p className={`text-xs mb-1 ${labelClass}`}>Vista previa</p>
                 <p className={textClass}>{buildMessage()}</p>
             </div>

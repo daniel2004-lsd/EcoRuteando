@@ -120,22 +120,22 @@ const ReporterProblem = ({ onNavigate }) => {
   };
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
+    <div className={`min-h-screen ${isDarkMode ? 'bg-[#0B1215]' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
 
       {/* Botón modo oscuro/claro */}
       <button
         onClick={toggleTheme}
         className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
       >
-        {isDarkMode ? "☀️" : "🌙"}
+        {isDarkMode ? '☀️' : "🌙"}
       </button>
 
       {/* HEADER */}
-      <header className={`relative ${isDarkMode ? 'bg-gray-800 border-b border-emerald-500/30' : 'bg-gradient-to-r from-emerald-700 via-green-700 to-teal-700'} shadow-lg overflow-hidden`}>
+      <header className={`relative ${isDarkMode ? 'bg-[#162329] border-b border-emerald-500/30' : 'bg-gradient-to-r from-emerald-700 via-green-700 to-teal-700'} shadow-lg overflow-hidden`}>
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${isDarkMode ? 'bg-gray-700 border border-emerald-500/30' : 'bg-white'}`}>
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${isDarkMode ? 'bg-[#162329] border border-emerald-500/30' : 'bg-white'}`}>
                 <ReportIcon size={24} className="text-emerald-500" />
               </div>
               <div>
@@ -146,7 +146,7 @@ const ReporterProblem = ({ onNavigate }) => {
 
             <button
               onClick={() => onNavigate("/dashboard")}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-gray-700/50 text-emerald-400 border border-emerald-500/30 hover:bg-gray-700' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-[#162329]/50 text-emerald-400 border border-emerald-500/30 hover:bg-[#1e293b]' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
             >
               <ArrowLeft />
               {t("reporterProblem.back", "Volver")}
@@ -159,14 +159,14 @@ const ReporterProblem = ({ onNavigate }) => {
       <div className="max-w-4xl mx-auto px-6 py-8">
 
         {/* Tarjeta del formulario */}
-        <div className={`rounded-2xl shadow-md border overflow-hidden ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+        <div className={`rounded-2xl shadow-md border overflow-hidden ${isDarkMode ? 'bg-[#162329] border-emerald-800/20' : 'bg-white border-gray-100'}`}>
 
           {/* Encabezado de la tarjeta */}
-          <div className={`px-6 py-4 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
-            <h2 className={`text-lg font-bold flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          <div className={`px-6 py-4 border-b ${isDarkMode ? 'border-emerald-800/20' : 'border-gray-100'}`}>
+            <h2 className={`text-lg font-bold flex items-center gap-2 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>
               <span>⚠️</span> {t("reporterProblem.cardTitle", "Reportar incidente en la vía")}
             </h2>
-            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+            <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
               {t("reporterProblem.cardSubtitle", "Tu reporte ayuda a mantener las vías seguras para todos")}
             </p>
           </div>
@@ -175,14 +175,14 @@ const ReporterProblem = ({ onNavigate }) => {
           <form onSubmit={handleSubmit} className="p-6">
             {/* Tipo de Problema */}
             <div className="mb-5">
-              <label className={`block text-xs font-bold uppercase tracking-wide mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <label className={`block text-xs font-bold uppercase tracking-wide mb-2 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
                 {t("reporterProblem.reportTypeLabel", "Tipo de Problema")}
               </label>
               <select
                 name="reportType"
                 value={formData.reportType}
                 onChange={handleChange}
-                className={`w-full px-4 py-2.5 rounded-lg text-sm transition-all focus:outline-none ${isDarkMode ? 'bg-gray-700 border border-gray-600 text-white focus:border-emerald-500' : 'bg-gray-50 border border-gray-200 text-gray-800 focus:border-emerald-400'}`}
+                className={`w-full px-4 py-2.5 rounded-lg text-sm transition-all focus:outline-none ${isDarkMode ? 'bg-[#162329] border border-gray-600 text-[#e2e8f0] focus:border-emerald-500' : 'bg-gray-50 border border-gray-200 text-gray-800 focus:border-emerald-400'}`}
               >
                 {REPORT_TYPES.map((type) => (
                   <option key={type} value={type}>
@@ -194,7 +194,7 @@ const ReporterProblem = ({ onNavigate }) => {
 
             {/* Ubicación */}
             <div className="mb-5">
-              <label className={`block text-xs font-bold uppercase tracking-wide mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <label className={`block text-xs font-bold uppercase tracking-wide mb-2 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
                 📍 {t("reporterProblem.locationLabel", "Ubicación")}
               </label>
               <button
@@ -229,7 +229,7 @@ const ReporterProblem = ({ onNavigate }) => {
                   {locationError}
                 </div>
               ) : (
-                <p className={`mt-3 px-4 py-2.5 rounded-lg text-xs text-center ${isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-50 text-gray-500'}`}>
+                <p className={`mt-3 px-4 py-2.5 rounded-lg text-xs text-center ${isDarkMode ? 'bg-[#162329] text-[#94a3b8]' : 'bg-gray-50 text-gray-500'}`}>
                   {t("reporterProblem.locationHint", "Indica el punto exacto del obstáculo para que nuestro equipo pueda validarlo")}
                 </p>
               )}
@@ -237,7 +237,7 @@ const ReporterProblem = ({ onNavigate }) => {
 
             {/* Descripción */}
             <div className="mb-5">
-              <label className={`block text-xs font-bold uppercase tracking-wide mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <label className={`block text-xs font-bold uppercase tracking-wide mb-2 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
                 📝 {t("reporterProblem.descriptionLabel", "Descripción")}
               </label>
               <textarea
@@ -246,7 +246,7 @@ const ReporterProblem = ({ onNavigate }) => {
                 onChange={handleChange}
                 placeholder={t("reporterProblem.descriptionPlaceholder", "Describe el problema con detalle (ubicación, magnitud, sugerencias)...")}
                 rows={5}
-                className={`w-full px-4 py-2.5 rounded-lg text-sm transition-all focus:outline-none resize-vertical ${isDarkMode ? 'bg-gray-700 border border-gray-600 text-white focus:border-emerald-500' : 'bg-gray-50 border border-gray-200 text-gray-800 focus:border-emerald-400'}`}
+                className={`w-full px-4 py-2.5 rounded-lg text-sm transition-all focus:outline-none resize-vertical ${isDarkMode ? 'bg-[#162329] border border-gray-600 text-[#e2e8f0] focus:border-emerald-500' : 'bg-gray-50 border border-gray-200 text-gray-800 focus:border-emerald-400'}`}
               />
             </div>
 
@@ -263,7 +263,7 @@ const ReporterProblem = ({ onNavigate }) => {
               disabled={isSubmitting || gettingLocation}
               className={`w-full py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${isSubmitting || submitted
                 ? (isDarkMode ? 'bg-gray-600 text-gray-300 cursor-not-allowed' : 'bg-gray-400 text-white cursor-not-allowed')
-                : (isDarkMode ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-emerald-600 text-white hover:bg-emerald-700')
+                : (isDarkMode ? 'bg-emerald-600 text-[#e2e8f0] hover:bg-emerald-700' : 'bg-emerald-600 text-white hover:bg-emerald-700')
               }`}
             >
               {isSubmitting ? (
@@ -285,7 +285,7 @@ const ReporterProblem = ({ onNavigate }) => {
 
         {/* Frase motivacional */}
         <div className="mt-8 text-center">
-          <p className={`text-sm flex items-center justify-center gap-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+          <p className={`text-sm flex items-center justify-center gap-2 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
             <LeafIcon size={14} className="text-emerald-500" />
             {t("reporterProblem.footer", "Reportar problemas ayuda a construir una mejor movilidad para todos")}
             <LeafIcon size={14} className="text-emerald-500" />

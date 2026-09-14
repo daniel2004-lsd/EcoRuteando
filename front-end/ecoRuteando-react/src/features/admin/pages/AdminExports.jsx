@@ -61,22 +61,22 @@ const AdminExports = ({ onNavigate }) => {
   }`;
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
+    <div className={`min-h-screen ${isDarkMode ? 'bg-[#0B1215]' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
 
       {/* Botón modo oscuro/claro */}
       <button
         onClick={toggleTheme}
         className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
       >
-        {isDarkMode ? "☀️" : "🌙"}
+        {isDarkMode ? '☀️' : "🌙"}
       </button>
 
       {/* HEADER */}
-      <header className={`relative ${isDarkMode ? 'bg-gray-800 border-b border-emerald-500/30' : 'bg-gradient-to-r from-green-700 via-emerald-700 to-teal-700'} shadow-lg overflow-hidden`}>
+      <header className={`relative ${isDarkMode ? 'bg-[#162329] border-b border-emerald-500/30' : 'bg-gradient-to-r from-green-700 via-emerald-700 to-teal-700'} shadow-lg overflow-hidden`}>
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${isDarkMode ? 'bg-gray-700 border border-emerald-500/30' : 'bg-white'}`}>
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${isDarkMode ? 'bg-[#162329] border border-emerald-500/30' : 'bg-white'}`}>
                 <DownloadIcon size={24} className="text-emerald-500" />
               </div>
               <div>
@@ -87,7 +87,7 @@ const AdminExports = ({ onNavigate }) => {
 
             <button
               onClick={() => onNavigate?.("/admin")}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-gray-700/50 text-emerald-400 border border-emerald-500/30 hover:bg-gray-700' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-[#162329]/50 text-emerald-400 border border-emerald-500/30 hover:bg-[#162329]' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
             >
               <ArrowLeft size={16} />
               {t("adminExports.backToPanel", "Volver al Panel")}
@@ -100,16 +100,16 @@ const AdminExports = ({ onNavigate }) => {
       <div className="max-w-4xl mx-auto px-6 py-8">
 
         {/* Tarjeta de exportación de estadísticas */}
-        <div className={`rounded-2xl p-6 shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+        <div className={`rounded-2xl p-6 shadow-lg border ${isDarkMode ? 'bg-[#162329] border-[#26383D]' : 'bg-white border-gray-100'}`}>
           <div className="flex items-center gap-4 mb-1">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
               <LeafIcon size={24} className="text-emerald-500" />
             </div>
             <div>
-              <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+              <h2 className={`text-lg font-bold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>
                 {t("adminExports.statsTitle", "Estadísticas del portal")}
               </h2>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p className={`text-sm ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
                 {t("adminExports.statsSubtitle", "Rutas consultadas, CO₂ ahorrado y desgloses por modo de transporte y mes")}
               </p>
             </div>
@@ -118,11 +118,11 @@ const AdminExports = ({ onNavigate }) => {
           {/* Filtro por rango de fechas */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 mb-6">
             <div>
-              <label className={`block text-xs font-semibold mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <label className={`block text-xs font-semibold mb-1 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
                 {t("adminExports.from", "Desde")}
               </label>
               <div className="relative">
-                <CalendarIcon size={16} className={`absolute left-3 top-1/2 -translate-y-1/2 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                <CalendarIcon size={16} className={`absolute left-3 top-1/2 -translate-y-1/2 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`} />
                 <input
                   type="date"
                   value={from}
@@ -132,11 +132,11 @@ const AdminExports = ({ onNavigate }) => {
               </div>
             </div>
             <div>
-              <label className={`block text-xs font-semibold mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <label className={`block text-xs font-semibold mb-1 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
                 {t("adminExports.to", "Hasta")}
               </label>
               <div className="relative">
-                <CalendarIcon size={16} className={`absolute left-3 top-1/2 -translate-y-1/2 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                <CalendarIcon size={16} className={`absolute left-3 top-1/2 -translate-y-1/2 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`} />
                 <input
                   type="date"
                   value={to}
@@ -148,7 +148,7 @@ const AdminExports = ({ onNavigate }) => {
           </div>
 
           {/* Formato de descarga */}
-          <div className={`rounded-xl p-4 border ${isDarkMode ? 'bg-gray-900/40 border-gray-700' : 'bg-gray-50 border-gray-100'}`}>
+          <div className={`rounded-xl p-4 border ${isDarkMode ? 'bg-[#0B1215]/40 border-[#26383D]' : 'bg-gray-50 border-gray-100'}`}>
             <p className={`text-sm font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               {t("adminExports.formatsLabel", "Formato del archivo")}
             </p>
@@ -170,13 +170,13 @@ const AdminExports = ({ onNavigate }) => {
           </div>
         </div>
 
-        <p className={`text-sm mt-8 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+        <p className={`text-sm mt-8 text-center ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
           {t("adminExports.footnote", "Los archivos CSV y Excel abren directamente en herramientas de oficina; el JSON es ideal para integraciones técnicas.")}
         </p>
 
         {/* Frase motivacional */}
         <div className="mt-6 text-center">
-          <p className={`text-sm flex items-center justify-center gap-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+          <p className={`text-sm flex items-center justify-center gap-2 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
             <LeafIcon size={14} className="text-emerald-500" />
             {t("adminExports.motivationalPhrase", "Los datos abiertos impulsan una movilidad más sostenible")}
             <LeafIcon size={14} className="text-emerald-500" />

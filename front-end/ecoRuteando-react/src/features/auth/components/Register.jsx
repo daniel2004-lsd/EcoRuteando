@@ -150,13 +150,13 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
   );
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-green-950 to-emerald-950' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'} flex flex-col items-center justify-center px-4 py-6`}>
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gradient-to-br from-[#0B1215] to-[#111C20]' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'} flex flex-col items-center justify-center px-4 py-6`}>
 
       <button
         onClick={toggleTheme}
         className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
       >
-        {isDarkMode ? "☀️" : "🌙"}
+        {isDarkMode ? '☀️' : "🌙"}
       </button>
 
       <button
@@ -171,20 +171,20 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
 
       <div className="text-center mb-6">
         <div className="flex justify-center mb-2">
-          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-md transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border border-green-500/30' : 'bg-white'}`}>
+          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-md transition-all duration-300 ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white'}`}>
             <img src="/logo.png" alt="Logo" className="w-10 h-10" />
           </div>
         </div>
-        <h1 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-emerald-700'}`}>EcoRuteando</h1>
-        <p className={`text-[10px] mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t("auth.register.sustainableMobility", "Movilidad sostenible")}</p>
+        <h1 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-emerald-700'}`}>EcoRuteando</h1>
+        <p className={`text-[10px] mt-1 transition-colors duration-300 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>{t("auth.register.sustainableMobility", "Movilidad sostenible")}</p>
       </div>
 
       <div className="w-full max-w-md mx-auto">
-        <div className={`rounded-xl shadow-lg overflow-hidden transition-all duration-300 ${isDarkMode ? 'bg-gray-800/80 backdrop-blur-sm border border-green-500/20' : 'bg-white border border-gray-100'}`}>
+        <div className={`rounded-xl shadow-lg overflow-hidden transition-all duration-300 ${isDarkMode ? 'bg-[#162329]/80 backdrop-blur-sm border border-[#26383D]' : 'bg-white border border-gray-100'}`}>
 
           <div className="px-6 pt-5 pb-2 text-center">
-            <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{t("auth.register.title", "Crear cuenta")}</h2>
-            <p className={`text-xs mt-0.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t("auth.register.subtitle", "Comienza tu viaje sostenible")}</p>
+            <h2 className={`text-lg font-bold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{t("auth.register.title", "Crear cuenta")}</h2>
+            <p className={`text-xs mt-0.5 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>{t("auth.register.subtitle", "Comienza tu viaje sostenible")}</p>
           </div>
 
           <div className="px-6 pb-6">
@@ -194,7 +194,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
 
                 <div>
                   <label
-                    className={`block text-xs font-medium mb-1 ${isDarkMode ? "text-green-400" : "text-gray-600"
+                    className={`block text-xs font-medium mb-1 ${isDarkMode ? 'text-green-400' : "text-gray-600"
                       }`}
                   >
                     {t("auth.register.firstName", "Nombre")}
@@ -202,7 +202,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
 
                   <input
                     type="text"
-                    placeholder="Daniel"
+                    placeholder={t("auth.register.firstNamePlaceholder", "Tu nombre")}
                     value={form.firstName}
                     onChange={(e) =>
                       setForm({
@@ -219,7 +219,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
 
                 <div>
                   <label
-                    className={`block text-xs font-medium mb-1 ${isDarkMode ? "text-green-400" : "text-gray-600"
+                    className={`block text-xs font-medium mb-1 ${isDarkMode ? 'text-green-400' : "text-gray-600"
                       }`}
                   >
                     {t("auth.register.lastName", "Apellido")}
@@ -245,7 +245,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
               </div>
 
               <div>
-                <label className={`block text-xs font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-green-400' : 'text-gray-600'}`}>
+                <label className={`block text-xs font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-[#34D399]' : 'text-gray-600'}`}>
                   Correo electrónico
                 </label>
                 <input
@@ -254,7 +254,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 ${isDarkMode
-                    ? 'bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500'
+                    ? 'bg-[#162329]/50 border-[#26383D] text-[#e2e8f0] placeholder-[#94a3b8] focus:border-[#34D399]'
                     : 'border-gray-200 focus:border-emerald-400'
                     }`}
                 />
@@ -264,7 +264,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
               </div>
 
               <div>
-                <label className={`block text-xs font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-green-400' : 'text-gray-600'}`}>
+                <label className={`block text-xs font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-[#34D399]' : 'text-gray-600'}`}>
                   Contraseña
                 </label>
                 <div className="relative">
@@ -274,7 +274,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                     value={form.pw}
                     onChange={(e) => setForm({ ...form, pw: e.target.value })}
                     className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 pr-9 ${isDarkMode
-                      ? 'bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500'
+                      ? 'bg-[#162329]/50 border-[#26383D] text-[#e2e8f0] placeholder-[#94a3b8] focus:border-[#34D399]'
                       : 'border-gray-200 focus:border-emerald-400'
                       }`}
                   />
@@ -294,7 +294,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                         className={`flex items-center gap-1.5 text-[10px] transition-colors duration-200 ${
                           check.ok
                             ? "text-emerald-500"
-                            : isDarkMode ? "text-gray-500" : "text-gray-400"
+                            : isDarkMode ? 'text-[#94a3b8]' : "text-gray-400"
                         }`}
                       >
                         <span>{check.ok ? "✓" : "○"}</span>
@@ -306,7 +306,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
               </div>
 
               <div>
-                <label className={`block text-xs font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-green-400' : 'text-gray-600'}`}>
+                <label className={`block text-xs font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-[#34D399]' : 'text-gray-600'}`}>
                   {t("auth.register.confirmPassword", "Confirmar contraseña")}
                 </label>
                 <div className="relative">
@@ -316,7 +316,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                     value={form.confirmPw}
                     onChange={(e) => setForm({ ...form, confirmPw: e.target.value })}
                     className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 pr-9 ${isDarkMode
-                      ? 'bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500'
+                      ? 'bg-[#162329]/50 border-[#26383D] text-[#e2e8f0] placeholder-[#94a3b8] focus:border-[#34D399]'
                       : 'border-gray-200 focus:border-emerald-400'
                       }`}
                   />
@@ -342,11 +342,11 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                   id="terms"
                   checked={termsAccepted}
                   onChange={(e) => setTermsAccepted(e.target.checked)}
-                  className={`w-4 h-4 rounded focus:ring-2 transition-colors ${isDarkMode ? 'text-emerald-600 focus:ring-emerald-500 bg-gray-700 border-gray-600' : 'text-emerald-600 focus:ring-emerald-500 border-gray-300'}`}
+                  className={`w-4 h-4 rounded focus:ring-2 transition-colors ${isDarkMode ? 'text-emerald-600 focus:ring-emerald-500 bg-[#162329] border-gray-600' : 'text-emerald-600 focus:ring-emerald-500 border-gray-300'}`}
                 />
-                <label className={`text-xs transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                <label className={`text-xs transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
                   Acepto los{" "}
-                  <button type="button" onClick={onShowTerms} className={`font-medium hover:underline transition-colors ${isDarkMode ? 'text-green-400' : 'text-emerald-600'}`}>
+                  <button type="button" onClick={onShowTerms} className={`font-medium hover:underline transition-colors ${isDarkMode ? 'text-[#34D399]' : 'text-emerald-600'}`}>
                     Términos y Condiciones
                   </button>
                 </label>
@@ -358,7 +358,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                   <button
                     type="button"
                     onClick={goToLogin}
-                    className={`mt-1 text-xs font-semibold hover:underline transition-colors ${isDarkMode ? 'text-green-400' : 'text-emerald-600'}`}
+                    className={`mt-1 text-xs font-semibold hover:underline transition-colors ${isDarkMode ? 'text-[#34D399]' : 'text-emerald-600'}`}
                   >
                     ¿Ya tienes cuenta? Inicia sesión aquí
                   </button>
@@ -378,7 +378,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
 
               <div className="relative flex items-center gap-2 my-4">
                 <div className={`flex-1 h-px ${isDarkMode ? 'bg-green-500/20' : 'bg-gray-200'}`} />
-                <span className={`text-[10px] font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>O regístrate con</span>
+                <span className={`text-[10px] font-medium uppercase tracking-wider ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>O regístrate con</span>
                 <div className={`flex-1 h-px ${isDarkMode ? 'bg-green-500/20' : 'bg-gray-200'}`} />
               </div>
 
@@ -391,7 +391,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                     : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
                   }`}>
                   <GoogleIcon />
-                  <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Google</span>
+                  <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Google</span>
                 </button>
                 <button
                   type="button"
@@ -401,7 +401,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                     : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
                   }`}>
                   <FacebookIcon />
-                  <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Facebook</span>
+                  <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Facebook</span>
                 </button>
                 <button
                   type="button"
@@ -411,15 +411,15 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                     : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
                   }`}>
                   <XIcon />
-                  <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>X</span>
+                  <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>X</span>
                 </button>
               </div>
             </div>
 
             <div className="text-center mt-5 pt-3 border-t border-gray-100 dark:border-green-500/20">
-              <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>
                 ¿Ya tienes cuenta?{" "}
-                <button onClick={goToLogin} className={`font-medium text-xs hover:underline transition-colors ${isDarkMode ? 'text-green-400' : 'text-emerald-600'}`}>
+                <button onClick={goToLogin} className={`font-medium text-xs hover:underline transition-colors ${isDarkMode ? 'text-[#34D399]' : 'text-emerald-600'}`}>
                   Inicia sesión aquí
                 </button>
               </p>
@@ -429,7 +429,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
       </div>
 
       <div className="mt-5 text-center">
-        <p className={`text-[10px] flex items-center justify-center gap-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+        <p className={`text-[10px] flex items-center justify-center gap-1 transition-colors duration-300 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>
           Únete a la comunidad que cuida el planeta
         </p>
       </div>

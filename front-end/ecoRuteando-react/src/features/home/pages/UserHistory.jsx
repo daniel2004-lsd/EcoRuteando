@@ -126,7 +126,7 @@ const UserHistory = ({ onNavigate }) => {
 <meta charset="utf-8" />
 <title>Historial de Trayectos</title>
 <style>
-  body { font-family: Arial, Helvetica, sans-serif; color: #111827; margin: 40px; }
+  body { color: #111827; margin: 40px; }
   h1 { color: #047857; border-bottom: 2px solid #d1fae5; padding-bottom: 8px; }
   .summary { margin: 12px 0 20px; color: #374151; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -179,22 +179,22 @@ const UserHistory = ({ onNavigate }) => {
     };
 
     return (
-        <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
+        <div className={`min-h-screen ${isDarkMode ? 'bg-[#0B1215]' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
 
             {/* Botón modo oscuro */}
             <button
                 onClick={toggleTheme}
                 className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
             >
-                {isDarkMode ? "☀️" : "🌙"}
+                {isDarkMode ? '☀️' : "🌙"}
             </button>
 
             {/* HEADER */}
-            <header className={`relative ${isDarkMode ? 'bg-gray-800 border-b border-emerald-500/30' : 'bg-gradient-to-r from-green-700 via-emerald-700 to-teal-700'} shadow-lg overflow-hidden`}>
+            <header className={`relative ${isDarkMode ? 'bg-[#162329] border-b border-emerald-500/30' : 'bg-gradient-to-r from-green-700 via-emerald-700 to-teal-700'} shadow-lg overflow-hidden`}>
                 <div className="max-w-7xl mx-auto px-6 py-6">
                     <div className="flex items-center justify-between flex-wrap gap-4">
                         <div className="flex items-center gap-4">
-                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${isDarkMode ? 'bg-gray-700 border border-emerald-500/30' : 'bg-white'}`}>
+                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${isDarkMode ? 'bg-[#162329] border border-emerald-500/30' : 'bg-white'}`}>
                                 <ClockIcon size={24} className="text-emerald-500" />
                             </div>
                             <div>
@@ -204,8 +204,8 @@ const UserHistory = ({ onNavigate }) => {
                         </div>
 
                         <button
-                            onClick={() => window.history.back()}
-                            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-gray-700/50 text-emerald-400 border border-emerald-500/30 hover:bg-gray-700' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
+                            onClick={() => onNavigate('/dashboard')}
+                            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-[#162329]/50 text-emerald-400 border border-emerald-500/30 hover:bg-[#1e293b]' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
                         >
                             <ArrowLeft size={16} />
                             Volver
@@ -227,7 +227,7 @@ const UserHistory = ({ onNavigate }) => {
                         </div>
                         <h3 className={`text-sm font-medium ${isDarkMode ? 'text-emerald-300' : 'text-emerald-600'}`}>CO₂ Ahorrado</h3>
                         <p className={`text-4xl md:text-5xl font-black mt-2 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-700'}`}>{totalCO2} kg</p>
-                        <p className={`text-xs mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Equivalente a plantar {Math.round(totalCO2 * 2)} árboles</p>
+                        <p className={`text-xs mt-2 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Equivalente a plantar {Math.round(totalCO2 * 2)} árboles</p>
                     </div>
                     <div className={`rounded-2xl p-6 text-center shadow-lg border ${isDarkMode ? 'bg-gradient-to-br from-teal-900/50 to-emerald-900/50 border-teal-500/30' : 'bg-gradient-to-br from-teal-100 to-emerald-100 border-teal-200'}`}>
                         <div className="flex justify-center mb-3">
@@ -237,16 +237,16 @@ const UserHistory = ({ onNavigate }) => {
                         </div>
                         <h3 className={`text-sm font-medium ${isDarkMode ? 'text-teal-300' : 'text-teal-600'}`}>Distancia Recorrida</h3>
                         <p className={`text-4xl md:text-5xl font-black mt-2 ${isDarkMode ? 'text-teal-400' : 'text-teal-700'}`}>{totalKm} km</p>
-                        <p className={`text-xs mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{completedTrips.length} viaje(s) completado(s)</p>
+                        <p className={`text-xs mt-2 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{completedTrips.length} viaje(s) completado(s)</p>
                     </div>
                 </div>
 
                 {/* Título del historial */}
                 <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
-                    <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Historial de Viajes</h2>
+                    <h2 className={`text-xl font-bold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>Historial de Viajes</h2>
                     <div className="flex items-center gap-3 flex-wrap">
                         {/* Filtro por rango de fechas (RF29.2) */}
-                        <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                        <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 border ${isDarkMode ? 'bg-[#162329] border-emerald-800/20' : 'bg-white border-gray-200'}`}>
                             <CalendarIcon size={16} className="text-emerald-500" />
                             <input
                                 type="date"
@@ -255,7 +255,7 @@ const UserHistory = ({ onNavigate }) => {
                                 onChange={(e) => setFromDate(e.target.value)}
                                 className={`bg-transparent text-sm outline-none ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
                             />
-                            <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>→</span>
+                            <span className={`${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>→</span>
                             <input
                                 type="date"
                                 value={toDate}
@@ -303,7 +303,7 @@ const UserHistory = ({ onNavigate }) => {
                 {loading && (
                     <div className="text-center py-12">
                         <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                        <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Cargando viajes...</p>
+                        <p className={`${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Cargando viajes...</p>
                     </div>
                 )}
 
@@ -323,24 +323,24 @@ const UserHistory = ({ onNavigate }) => {
                         {filteredTrips.map((trip) => (
                             <div
                                 key={trip.usageId}
-                                className={`rounded-2xl p-5 shadow-md hover:shadow-lg transition-all duration-300 border ${isDarkMode ? 'bg-gray-800 border-gray-700 hover:border-emerald-500/50' : 'bg-white border-gray-100 hover:border-emerald-200'}`}
+                                className={`rounded-2xl p-5 shadow-md hover:shadow-lg transition-all duration-300 border ${isDarkMode ? 'bg-[#162329] border-emerald-800/20 hover:border-emerald-500/50' : 'bg-white border-gray-100 hover:border-emerald-200'}`}
                             >
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                     {/* Viaje */}
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-2 flex-wrap">
                                             <LeafIcon size={18} className="text-emerald-500" />
-                                            <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{trip.routeName}</span>
+                                            <span className={`font-semibold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{trip.routeName}</span>
                                             <span className={`text-xs px-2 py-0.5 rounded-full ${isDarkMode ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600'}`}>
                                                 {transportLabel(trip.transportMode)}
                                             </span>
                                         </div>
                                         <div className="flex flex-wrap gap-4 text-sm">
-                                            <div className={`flex items-center gap-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            <div className={`flex items-center gap-1 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
                                                 <ClockIcon size={14} />
                                                 <span>{trip.actualDurationMin != null ? `${trip.actualDurationMin} min` : "—"}</span>
                                             </div>
-                                            <div className={`flex items-center gap-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            <div className={`flex items-center gap-1 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
                                                 <span>📏</span>
                                                 <span>{trip.actualDistanceKm != null ? `${trip.actualDistanceKm} km` : "—"}</span>
                                             </div>
@@ -348,7 +348,7 @@ const UserHistory = ({ onNavigate }) => {
                                                 <LeafIcon size={14} />
                                                 <span className="font-medium">{trip.actualCo2Kg != null ? `${trip.actualCo2Kg} kg CO₂` : "—"}</span>
                                             </div>
-                                            <div className={`flex items-center gap-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            <div className={`flex items-center gap-1 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
                                                 <CalendarIcon size={14} />
                                                 <span>{formatDate(trip.startedAt)} · {formatTime(trip.startedAt)}</span>
                                             </div>
@@ -376,9 +376,9 @@ const UserHistory = ({ onNavigate }) => {
 
                 {/* Mensaje si no hay historial (o el filtro no deja resultados) */}
                 {!loading && !error && filteredTrips.length === 0 && (
-                    <div className={`text-center py-12 rounded-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                    <div className={`text-center py-12 rounded-2xl ${isDarkMode ? 'bg-[#162329]' : 'bg-white'}`}>
                         <LeafIcon size={48} className={`mx-auto mb-4 ${isDarkMode ? 'text-gray-600' : 'text-gray-300'}`} />
-                        <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        <p className={`${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
                             {trips.length === 0
                                 ? "Aún no tienes viajes registrados"
                                 : "Sin información disponible para el período seleccionado"}
@@ -403,7 +403,7 @@ const UserHistory = ({ onNavigate }) => {
 
                 {/* Frase motivacional */}
                 <div className="mt-8 text-center">
-                    <p className={`text-sm flex items-center justify-center gap-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    <p className={`text-sm flex items-center justify-center gap-2 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
                         <LeafIcon size={14} className="text-emerald-500" />
                         Sigue así, cada viaje cuenta para un futuro más verde
                         <LeafIcon size={14} className="text-emerald-500" />
