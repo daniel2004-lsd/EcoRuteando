@@ -1,0 +1,33 @@
+@startuml Actividad_HistorialTrayectos
+title <b>Diagrama de Actividad — Historial de Trayectos</b>\n<size:10>CU04 · RF4 / RF12 · UserHistory.jsx</size>
+
+|#E8F5E9|Usuario|
+start
+:Inicia sesión;
+:Accede a "Historial de trayectos";
+
+|#FFFFFF|Sistema|
+if (¿Sesión válida?) then (no)
+  :Redirige a login "Sesión expirada";
+  stop
+else (sí)
+endif
+:Consulta uso_rutas del usuario;
+
+|Base de Datos|
+:Retorna trayectos con fecha/hora/distancia;
+
+|Sistema|
+if (¿Existen registros?) then (no)
+  :Muestra "Sin información disponible";
+  stop
+else (sí)
+  :Renderiza lista paginada;
+endif
+
+|Usuario|
+:Selecciona un trayecto;
+|Sistema|
+:Muestra detalle: mapa, métricas y CO₂;
+stop
+@enduml

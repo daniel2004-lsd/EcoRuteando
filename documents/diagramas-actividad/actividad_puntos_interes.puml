@@ -1,0 +1,19 @@
+@startuml Actividad_PuntosInteres
+title <b>Diagrama de Actividad — Consulta Puntos de Interés</b>\n<size:10>CU17 · RF15 · MapView.jsx</size>
+
+|#E8F5E9|Usuario|
+start
+:Visualiza ruta en mapa;
+|Sistema|
+:Dibuja íconos POI sostenibles (RF15.3);
+|Usuario|
+:Selecciona un punto;
+|Sistema|
+:Muestra nombre/tipo/distancia;
+:Sugiere puntos cercanos adicionales (RF15.2);
+if (¿Sin POIs en zona?) then (sí)
+  :Muestra "Sin puntos disponibles";
+else (no)
+endif
+stop
+@enduml
