@@ -27,6 +27,21 @@ export const me = async () => {
     return response.data;
 };
 
+// ── Perfil (CU12) ──────────────────────────────────────────────
+
+export const updateProfile = async (payload) => {
+    const response = await api.put("/users/me", payload);
+    return response.data;
+};
+
+export const changePassword = async (currentPassword, newPassword) => {
+    const response = await api.post("/auth/change-password", {
+        currentPassword,
+        newPassword,
+    });
+    return response.data;
+};
+
 // ── Password Recovery ──────────────────────────────────────────
 
 export const forgotPassword = async (email) => {
@@ -51,6 +66,11 @@ export const sendVerificationEmail = async (email) => {
 
 export const verifyEmail = async (code) => {
     const response = await api.post("/auth/verify-email", { code });
+    return response.data;
+};
+
+export const deleteAccount = async () => {
+    const response = await api.delete("/users/me");
     return response.data;
 };
 

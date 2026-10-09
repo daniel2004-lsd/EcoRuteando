@@ -20,3 +20,8 @@ pnpm-debug.log*
 # editor
 .vscode/
 .idea/git reset
+front-end/ecoRuteando-react/.env
+front-end/ecoRuteando-react/.env
+
+# memoria de trabajo del agente (no parte del proyecto)
+.project-memory/

@@ -2,7 +2,7 @@
 
 > Requisito asociado: **RF15** · SRS EcoRuteando, sección 4.2
 
-**Descripción:** Muestra sobre el mapa puntos de interés sostenibles (parques, ciclorrutas, estaciones) cercanos a la ruta del usuario.
+**Descripción:** Muestra sobre el mapa puntos de interés sostenibles (parques, estaciones, zonas peatonales) cercanos a la ruta del usuario — transporte público y ciclorrutas fuera de alcance.
 
 | Campo | Descripción |
 |---|---|
@@ -24,11 +24,15 @@ Los puntos de interés quedan visibles e identificados con íconos en el mapa (R
 
 ## Excepciones (flujo alterno)
 
-| Paso | Acción |
-|:---:|---|
-| 1 | Si no existen puntos en la zona, el sistema muestra “sin puntos de interés disponibles”. |
+| Paso | Condición | Respuesta del sistema |
+|:---:|---|---|
+| E1 | No existen puntos en la zona/modo (vehículo/a pie). | Muestra “Sin puntos de interés disponibles”. |
+| E2 | Fallo del servicio de mapas al cargar POIs. | Muestra “No fue posible cargar puntos” con reintento. |
+| E3 | Datos PostGIS inconsistentes o coordenadas inválidas. | Registra error y omite el punto afectado. |
+| E4 | Límite de cuota de API excedido. | Usa caché local y notifica “Datos aproximados”. |
 
 | Campo | Descripción |
 |---|---|
 | **Actores** | Usuario |
-| **Comentarios** | Aplica tanto para usuarios registrados como para modo invitado. |
+| **Comentarios** | Aplica para registrados y modo invitado. Trazabilidad: RF15 → CU17. |
+

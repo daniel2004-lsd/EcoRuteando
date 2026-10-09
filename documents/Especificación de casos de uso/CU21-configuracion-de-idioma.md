@@ -24,11 +24,15 @@ La interfaz se muestra en el idioma elegido y la preferencia persiste tras cerra
 
 ## Excepciones (flujo alterno)
 
-| Paso | Acción |
-|:---:|---|
-| 1 | Si un idioma no está disponible temporalmente, el sistema conserva el idioma actual y lo informa. |
+| Paso | Condición | Respuesta del sistema |
+|:---:|---|---|
+| E1 | Idioma no disponible temporalmente. | Conserva el idioma actual e informa “Idioma no disponible”. |
+| E2 | Fallo al cargar paquete de traducción (i18n). | Mantiene idioma previo y registra el error. |
+| E3 | Preferencia corrupta en localStorage/DB. | Restaura al idioma por defecto (es) y notifica. |
+| E4 | Error de persistencia al guardar preferencia. | Muestra “No fue posible guardar la preferencia”. |
 
 | Campo | Descripción |
 |---|---|
 | **Actores** | Usuario |
-| **Comentarios** | Traducción gestionada con i18n (react-i18next) en el frontend. |
+| **Comentarios** | Traducción con react-i18next. Trazabilidad: RF34 → CU21. |
+

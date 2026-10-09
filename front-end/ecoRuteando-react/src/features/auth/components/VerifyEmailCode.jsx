@@ -163,7 +163,7 @@ const VerifyEmailCode = () => {
                         onKeyDown={(event) =>
                             handleKey(event, index)
                         }
-                        className="w-11 h-14 text-center text-xl font-bold bg-[#f9f6f0] border-2 border-transparent rounded-xl focus:border-green-600 focus:bg-white outline-none transition-all"
+                        className="otp-input w-11 h-14 text-center text-xl font-bold bg-[#f9f6f0] border-2 border-transparent rounded-xl focus:border-green-600 focus:bg-white outline-none transition-all"
                     />
                 ))}
 

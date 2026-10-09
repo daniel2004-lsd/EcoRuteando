@@ -69,68 +69,276 @@
     "privacy": "Confidentialité",
     "terms": "Conditions",
     "contact": "Contact"
-  }
-  ,
-"dashboard": {
-  "title": "Tableau de bord",
-  "subtitle": "Gérez votre mobilité durable",
-  "welcome": "Bienvenue",
-
-  "back": "Retour",
-
-  "stats": {
-    "routesCreated": "Itinéraires créés",
-    "tripsCompleted": "Voyages effectués",
-    "co2Saved": "CO₂ économisé",
-    "ecoPoints": "ÉcoPoints"
   },
-
-  "tools": {
-    "title": "Outils",
-    "subtitle": "Sélectionnez une option"
+  "dashboard": {
+    "title": "Tableau de bord",
+    "subtitle": "Gérez votre mobilité durable",
+    "welcome": "Bienvenue",
+    "back": "Déconnexion",
+    "stats": {
+      "routesCreated": "Itinéraires créés",
+      "tripsCompleted": "Voyages effectués",
+      "co2Saved": "CO₂ économisé",
+      "ecoPoints": "ÉcoPoints"
+    },
+    "tools": {
+      "title": "Outils",
+      "subtitle": "Sélectionnez une option"
+    },
+    "modules": {
+      "planRoute": {
+        "title": "Planifier un itinéraire",
+        "subtitle": "Trouvez le meilleur itinéraire écologique"
+      },
+      "history": {
+        "title": "Historique",
+        "subtitle": "Consultez vos trajets précédents"
+      },
+      "profile": {
+        "title": "Mon Profil",
+        "subtitle": "Gérez vos informations personnelles"
+      },
+      "alerts": {
+        "title": "Alertes",
+        "subtitle": "Consultez les notifications"
+      },
+      "report": {
+        "title": "Signaler un problème",
+        "subtitle": "Signalez des incidents"
+      },
+      "admin": {
+        "title": "Administration",
+        "subtitle": "Gérer les utilisateurs et permissions"
+      },
+      "favorites": {
+        "title": "Favoris",
+        "subtitle": "Accédez rapidement à vos itinéraires"
+      },
+      "routes": {
+        "title": "Mes Itinéraires",
+        "subtitle": "Créer, modifier et gérer les itinéraires"
+      }
+    },
+    "impact": {
+      "title": "Votre impact environnemental",
+      "description": "Jusqu'à présent, vous avez évité d'émettre",
+      "descriptionEnd": "grâce à vos trajets durables.",
+      "button": "Voir les statistiques"
+    },
+    "footer": "Chaque trajet durable aide à protéger la planète 🌱",
+    "modal": {
+      "title": "Se déconnecter ?",
+      "message": "Êtes-vous sûr de vouloir vous déconnecter ? Vous devrez vous reconnecter pour accéder au tableau de bord.",
+      "cancel": "Annuler",
+      "confirm": "Déconnexion"
+    }
   },
-
-  "modules": {
-    "planRoute": {
-      "title": "Planifier un itinéraire",
-      "subtitle": "Trouvez le meilleur itinéraire écologique"
+  "routeManage": {
+    "title": "Gestion des itinéraires",
+    "subtitle": "Créer, modifier et gérer les itinéraires du système",
+    "backToDashboard": "Retour au tableau de bord",
+    "filterPlaceholder": "Filtrer par nom...",
+    "newRoute": "Nouvel itinéraire",
+    "editRoute": "Modifier l'itinéraire",
+    "loading": "Chargement des itinéraires...",
+    "loadingDetail": "Chargement du détail...",
+    "loadError": "Impossible de charger les itinéraires",
+    "name": "Nom",
+    "description": "Description",
+    "descriptionPlaceholder": "Brève description de l'itinéraire",
+    "transportType": "Type de transport",
+    "transport": {
+      "walking": "À pied",
+      "bike": "Vélo",
+      "car": "Voiture",
+      "public_transport": "Transport public",
+      "mixed": "Mixte"
     },
-    "history": {
-      "title": "Historique",
-      "subtitle": "Consultez vos trajets précédents"
+    "difficulty": "Difficulté",
+    "startName": "Origine",
+    "destinationName": "Destination",
+    "startLat": "Lat. départ",
+    "startLng": "Lng. départ",
+    "endLat": "Lat. arrivée",
+    "endLng": "Lng. arrivée",
+    "distanceKm": "Distance (km)",
+    "estimatedTimeMin": "Durée (min)",
+    "co2SavedKg": "CO₂ économisé (kg)",
+    "estimatedCalories": "Calories",
+    "photoUrl": "URL de la photo",
+    "availableDate": "Disponible à partir du",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "deleteConfirm": "Supprimer",
+    "deleting": "Suppression...",
+    "saving": "Enregistrement...",
+    "saveChanges": "Enregistrer les modifications",
+    "create": "Créer",
+    "cancel": "Annuler",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "under_review": "En révision",
+      "archived": "Archivé"
     },
-    "profile": {
-      "title": "Mon Profil",
-      "subtitle": "Gérez vos informations personnelles"
+    "noResults": "Aucun itinéraire ne correspond à la recherche",
+    "empty": "Aucun itinéraire enregistré",
+    "createFirst": "Créer le premier",
+    "footer": "Chaque itinéraire écologique est un pas vers un avenir plus vert",
+    "confirmDeleteTitle": "Supprimer l'itinéraire",
+    "confirmDeleteMessage": "Voulez-vous supprimer l'itinéraire {{name}} ? Cette action est irréversible.",
+    "errors": {
+      "nameRequired": "Le nom de l'itinéraire est obligatoire",
+      "startRequired": "Le point d'origine est obligatoire",
+      "destinationRequired": "Le point de destination est obligatoire",
+      "saveFailed": "Impossible d'enregistrer l'itinéraire",
+      "deleteFailed": "Impossible de supprimer l'itinéraire"
+    }
+  },
+  "adminStatistics": {
+    "title": "Portail de statistiques",
+    "subtitle": "L'impact du système en chiffres",
+    "backToPanel": "Retour au panneau",
+    "from": "Du",
+    "to": "Au",
+    "apply": "Appliquer le filtre",
+    "clear": "Effacer",
+    "loading": "Chargement des statistiques...",
+    "loadError": "Erreur lors du chargement des statistiques",
+    "emptyTitle": "Aucune information",
+    "emptyMessage": "Aucune donnée disponible pour la plage sélectionnée",
+    "kpi": {
+      "routesConsulted": "Itinéraires consultés",
+      "activeUsers": "Utilisateurs actifs",
+      "co2Saved": "CO₂ économisé",
+      "completedTrips": "Trajets terminés",
+      "avgDistance": "Distance moyenne"
     },
-    "alerts": {
-      "title": "Alertes",
-      "subtitle": "Consultez les notifications"
+    "chart": {
+      "monthlyCo2": "CO₂ économisé par mois",
+      "byMode": "Trajets par mode de transport",
+      "co2Kg": "CO₂",
+      "trips": "Trajets"
     },
-    "report": {
-      "title": "Signaler un problème",
-      "subtitle": "Signalez des incidents"
-    },
-    "admin": {
-      "title": "Administration",
-      "subtitle": "Gérer les utilisateurs et permissions"
+    "transport": {
+      "walking": "À pied",
+      "bike": "Vélo",
+      "public_transport": "Transport public",
+      "mixed": "Mixte",
+      "unknown": "Non précisé",
+      "car": "Voiture"
     }
   },
 
-  "impact": {
-    "title": "Votre impact environnemental",
-    "description": "Jusqu'à présent, vous avez évité d'émettre",
-    "descriptionEnd": "grâce à vos trajets durables.",
-    "button": "Voir les statistiques"
+  "alerts": {
+    "title": "Alertes météo",
+    "subtitle": "Météo en temps réel pour votre sécurité",
+    "back": "Retour",
+    "loading": "Consultation des conditions météo de Neiva...",
+    "loadError": "Le service météo est temporairement indisponible. Réessayez plus tard.",
+    "feelsLike": "Ressenti",
+    "humidity": "Humidité",
+    "wind": "Vent",
+    "extendedForecast": "📅 Prévisions étendues",
+    "rainChance": "Pluie",
+    "activeAlertsHeading": "⚠️ Alertes actives",
+    "noActiveAlerts": "Aucune alerte météo active pour Neiva pour le moment.",
+    "filterAll": "Toutes",
+    "filterHigh": "Haute",
+    "filterMedium": "Moyenne",
+    "viewMore": "Voir plus",
+    "dismiss": "Ignorer",
+    "recommendationsTitle": "💡 Recommandations du jour",
+    "statMaxSeverity": "Sévérité max",
+    "statAvgTemperature": "Température moyenne",
+    "timeNow": "Maintenant",
+    "severityHigh": "Haute",
+    "severityMedium": "Moyenne",
+    "severityLow": "Basse"
   },
 
-  "footer": "Chaque trajet durable aide à protéger la planète 🌱",
+  "reporterProblem": {
+    "title": "Signaler un problème",
+    "subtitle": "Aidez-nous à améliorer les voies",
+    "back": "Retour",
+    "cardTitle": "Signaler un incident sur la voie",
+    "cardSubtitle": "Votre signalement aide à garder les voies sûres pour tous",
+    "reportTypeLabel": "Type de problème",
+    "types": {
+      "obstruction": "Obstruction de la voie",
+      "pothole": "Nid-de-poule / détérioration",
+      "signage": "Signalisation manquante",
+      "traffic_light": "Feu de circulation endommagé",
+      "sewer": "Égout bouché",
+      "lighting": "Éclairage public",
+      "other": "Autre"
+    },
+    "locationLabel": "Emplacement",
+    "useGps": "Utiliser ma position actuelle (GPS)",
+    "gettingLocation": "Obtention de votre position...",
+    "locationCaptured": "Position capturée",
+    "locationHint": "Indiquez le point exact de l'obstacle pour que notre équipe puisse le valider",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Décrivez le problème en détail (emplacement, ampleur, suggestions)...",
+    "submit": "Envoyer le signalement",
+    "submitting": "Envoi en cours...",
+    "submitted": "Signalement envoyé !",
+    "reviewNotice": "Votre signalement sera vérifié par notre équipe avant publication.",
+    "footer": "Signaler les problèmes aide à construire une meilleure mobilité pour tous",
+    "errors": {
+      "geolocationUnsupported": "Votre navigateur ne prend pas en charge la géolocalisation.",
+      "gpsFailed": "Impossible d'obtenir votre position. Vérifiez les autorisations GPS.",
+      "descriptionRequired": "Veuillez décrire le problème en détail.",
+      "locationRequired": "Utilisez le GPS pour indiquer l'emplacement de l'obstacle.",
+      "submitFailed": "Le signalement n'a pas pu être envoyé. Réessayez plus tard."
+    }
+  },
 
-  "modal": {
-    "title": "Retourner ?",
-    "message": "Si vous retournez à la page d'accueil, vous devrez vous reconnecter pour accéder au tableau de bord.",
+  "adminReports": {
+    "title": "Vérification des signalements",
+    "subtitle": "Examinez et validez les signalements citoyens",
+    "backToPanel": "Retour au panneau",
+    "loading": "Chargement des signalements...",
+    "loadError": "Impossible de charger les signalements.",
+    "empty": "Aucun signalement dans cet état.",
+    "photoAlt": "Photo du signalement",
+    "reviewedOn": "Examiné le",
+    "alreadyReviewed": "Signalement déjà examiné",
+    "notePlaceholder": "Note d'examen (obligatoire en cas de rejet)...",
+    "noteRequiredReject": "Indiquez un motif de rejet.",
+    "actionFailed": "L'examen n'a pas pu être enregistré.",
+    "saving": "Enregistrement...",
+    "confirmValidated": "Confirmer la validation",
+    "confirmRejected": "Confirmer le rejet",
+    "actionValidated": "Valider",
+    "actionRejected": "Rejeter",
     "cancel": "Annuler",
-    "confirm": "Retour"
+    "filter": {
+      "all": "Tous"
+    },
+    "status": {
+      "pending": "En attente",
+      "under_review": "En cours d'examen",
+      "validated": "Validé",
+      "rejected": "Rejeté"
+    }
+  },
+
+  "adminExports": {
+    "title": "Exporter les données",
+    "subtitle": "Téléchargez les rapports du système en CSV, Excel ou JSON",
+    "backToPanel": "Retour au panneau",
+    "statsTitle": "Statistiques du portail",
+    "statsSubtitle": "Itinéraires consultés, CO₂ économisé et ventilations par mode de transport et par mois",
+    "from": "Du",
+    "to": "Au",
+    "formatsLabel": "Format du fichier",
+    "formatCsv": "CSV",
+    "formatXlsx": "Excel",
+    "formatJson": "JSON",
+    "exporting": "Génération...",
+    "exportError": "Le fichier n'a pas pu être généré. Réessayez plus tard.",
+    "footnote": "Les fichiers CSV et Excel s'ouvrent directement dans les outils bureautiques ; le JSON est idéal pour les intégrations techniques.",
+    "motivationalPhrase": "Les données ouvertes favorisent une mobilité plus durable"
   }
 }
-} 

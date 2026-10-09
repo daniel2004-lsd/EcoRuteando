@@ -34,7 +34,7 @@ const RutaMapa = ({ origin, destination, routeCoordinates, height = "400px" }) =
 
     const mtLayer = new MaptilerLayer({
       apiKey: MAPTILER_API_KEY,
-      style: isDarkMode ? "streets-v2-dark" : "streets-v2",
+      style: isDarkMode ? 'streets-v2-dark' : "streets-v2",
     }).addTo(map.current);
 
     L.control.scale({ metric: true, imperial: false, position: 'bottomright' }).addTo(map.current);
