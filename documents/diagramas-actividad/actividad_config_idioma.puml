@@ -1,0 +1,19 @@
+@startuml Actividad_ConfigIdioma
+title <b>Diagrama de Actividad — Configuración de Idioma</b>\n<size:10>CU21 · RF34 · LanguageContext.jsx</size>
+
+|#E8F5E9|Usuario|
+start
+:Accede a configuración;
+|Sistema|
+:Lista idiomas es/en/pt/fr (RF34.1);
+|Usuario|
+:Selecciona idioma;
+|Sistema|
+:Apica traducción i18next (RF34.2);
+:Guarda preferencia localStorage/DB (RF34.3);
+if (¿Paquete no disponible?) then (sí)
+  :Mantiene idioma actual;
+else (no)
+endif
+stop
+@enduml

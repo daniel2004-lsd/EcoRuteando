@@ -9,7 +9,7 @@ function Input({ label, error, success, showToggle, onToggle, showPw, ...props }
         <input
           {...props}
           type={showToggle ? (showPw ? "text" : "password") : props.type || "text"}
-          className={`w-full px-4 py-3 rounded-xl border-2 input-eco text-sm outline-none transition-all
+          className={`auth-input w-full px-4 py-3 rounded-xl border-2 input-eco text-sm outline-none transition-all
             ${error ? "input-error" : success ? "input-ok" : "border-transparent"}`}
         />
         {showToggle && (

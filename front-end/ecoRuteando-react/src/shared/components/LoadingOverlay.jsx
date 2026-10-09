@@ -32,9 +32,9 @@ const LoadingOverlay = ({ message = "Cargando...", isLoading = false, isDarkMode
     ? "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
     : "bg-gradient-to-br from-emerald-900 via-green-800 to-teal-900";
 
-  const textColor = isDarkMode ? "text-gray-200" : "text-white";
-  const subTextColor = isDarkMode ? "text-gray-400" : "text-emerald-200";
-  const leafColor = isDarkMode ? "text-emerald-400" : "text-emerald-600";
+  const textColor = isDarkMode ? 'text-[#e2e8f0]' : "text-white";
+  const subTextColor = isDarkMode ? 'text-[#94a3b8]' : "text-emerald-200";
+  const leafColor = isDarkMode ? 'text-emerald-400' : "text-emerald-600";
 
   return (
     <div className={`fixed inset-0 z-[200] ${bgGradient} flex flex-col items-center justify-center`}>

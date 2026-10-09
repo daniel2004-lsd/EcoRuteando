@@ -1,14 +1,15 @@
 # Documento de Arquitectura — EcoRuteando
 
 > **Proyecto:** Software para la creación de la aplicación "EcoRuteando"
-> **Versión:** 1.0 · Agosto 2026 · Rama `develop`
+> **Versión:** 1.1 · 2026-09-15 · Rama `develop` · Última revisión: 2026-09-15
 > **Basado en:** SRS EcoRuteando, código fuente (`EcoRuteandoBackend`, `EcoRuteando/front-end`) e infraestructura (`docker-compose.yml`)
+> **Cambios v1.1:** Alcance reducido a vehículo y a pie (ADR-8), trazabilidad RF corregida, 10 diagramas de actividad nuevos, normalización de naming.
 
 ---
 
 ## 1. Introducción y propósito
 
-Este documento describe la arquitectura de software de **EcoRuteando**, portal web que sugiere rutas urbanas sostenibles combinando transporte público y bicicleta, con cálculo de impacto ambiental (CO₂ ahorrado) y tiempo estimado de recorrido.
+Este documento describe la arquitectura de software de **EcoRuteando**, portal web que sugiere rutas urbanas sostenibles en modos **vehículo y a pie (caminando)** — alcance reducido por decisión de alcance 2026-09: se descartan bus y bicicleta — con cálculo de impacto ambiental (CO₂ ahorrado) y tiempo estimado de recorrido.
 
 Su propósito es servir de referencia técnica para desarrolladores, gestores de movilidad y evaluadores académicos, complementando el SRS y los diagramas UML (despliegue, casos de uso y actividad).
 
@@ -109,7 +110,7 @@ Registro con verificación de correo, inicio de sesión con JWT, refresh/logout,
 
 ## 7. Arquitectura de datos
 
-- **PostgreSQL 16 + extensión PostGIS 3.5**: soporte geoespacial nativo para rutas, ciclorrutas y puntos de interés.
+- **PostgreSQL 16 + extensión PostGIS 3.5**: soporte geoespacial nativo para rutas vehiculares/peatonales y puntos de interés (alcance actual: solo vehículo y a pie; ciclorrutas y transporte público fuera de alcance).
 - **Esquema gestionado por Liquibase** (`changelog/db.changelog-master.yaml`): versiona el DDL y se ejecuta como tarea *one-shot* antes de levantar el backend (`service_completed_successfully`), garantizando que la API nunca corre contra un esquema obsoleto.
 - Persistencia mediante **volumen nombrado** `postgres_data`.
 - Acceso externo de administración expuesto en el puerto **5450** (solo desarrollo).
@@ -142,11 +143,12 @@ Políticas: `restart: unless-stopped` en servicios persistentes; variables sensi
 |---|---|---|
 | ADR-1 | Arquitectura modular por capas (DDD-lite) | Separar lógica de negocio de infraestructura; facilita agregar módulos futuros (Routes, Reports, Admin) replicando el patrón Security |
 | ADR-2 | CQRS-lite con MediatR | Casos de uso aislados y testeables; pipeline único para validación/logging |
-| ADR-3 | PostGIS en lugar de PostgreSQL simple | Consultas geoespaciales eficientes (distancias, cercanía) requeridas por RF10–RF15 |
+| ADR-3 | PostGIS en lugar de PostgreSQL simple | Consultas geoespaciales eficientes (distancias, cercanía) requeridas por RF10–RF15; vigente aun con alcance reducido a vehículo/a pie |
 | ADR-4 | Liquibase sobre migraciones EF | Migraciones versionadas e independientes del ORM; ejecución determinista en CI/CD |
 | ADR-5 | SPA + nginx proxy inverso | Desacopla front/back, elimina CORS, permite escalarlos por separado |
 | ADR-6 | JWT stateless | Escalabilidad horizontal sin sesiones de servidor; compatible con futuras apps móviles (RF móvil) |
 | ADR-7 | Docker Compose como orquestador | Simplicidad para fase académica/inicial; camino natural a Kubernetes si crece |
+| ADR-8 | Alcance de modos de movilidad reducido a vehículo y a pie (2026-09) | Se descartan bus y bicicleta para simplificar integración con APIs y cálculo CO₂; decisión reversible si se reincorpora PostGIS de transporte público |
 
 ## 11. Riesgos y deuda técnica
 
