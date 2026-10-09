@@ -69,6 +69,11 @@ export const verifyEmail = async (code) => {
     return response.data;
 };
 
+export const deleteAccount = async () => {
+    const response = await api.delete("/users/me");
+    return response.data;
+};
+
 // ── OAuth ──────────────────────────────────────────────────────
 
 export const oauthLogin = async (provider, accessToken) => {

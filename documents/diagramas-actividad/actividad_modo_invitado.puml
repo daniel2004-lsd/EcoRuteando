@@ -1,5 +1,5 @@
 @startuml Actividad_ModoInvitado
-title <b>Diagrama de Actividad — Modo Invitado</b>\n<size:10>CU14 · RF7</size>
+title <b>Diagrama de Actividad — Modo Invitado</b>\n<size:10>CU14 · RF17 (vehículo y a pie)</size>
 
 |#E8F5E9|Visitante|
 start
@@ -13,7 +13,7 @@ start
 :Selecciona "Continuar como invitado";
 
 |Sistema|
-:Crea sesión limitada sin datos personales (RF7.1);
+:Crea sesión limitada sin datos personales (RF17.1);
 :Habilita solo funciones públicas;
 
 |Visitante|
@@ -25,7 +25,7 @@ fork again
   |Visitante|
   :Consulta puntos de interés;
   |Sistema|
-  :Muestra parques y ciclorrutas cercanos;
+   :Muestra parques y rutas peatonales cercanas;
 end fork
 
 |Visitante|

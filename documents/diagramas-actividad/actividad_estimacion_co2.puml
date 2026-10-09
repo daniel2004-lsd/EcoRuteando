@@ -1,0 +1,24 @@
+@startuml Actividad_EstimacionCO2
+title <b>Diagrama de Actividad — Estimación Tiempo y CO₂</b>\n<size:10>CU16 · RF11 · PlanRoute.jsx (solo vehículo y a pie)</size>
+
+|#E8F5E9|Usuario|
+start
+:Ingresa origen y destino;
+|Sistema|
+:Consulta API mapas para modo vehículo y a pie;
+fork
+  :Calcula tiempo estimado vehículo/a pie (RF11.1);
+fork again
+  :Estima CO₂ ahorrado a pie vs vehículo (RF11.2);
+fork again
+  :Consulta caché o calcula distancia PostGIS;
+end fork
+if (¿Datos disponibles?) then (no)
+  :Muestra "Datos aproximados";
+else (sí)
+endif
+:Renderiza resultados junto a cada ruta (RF11.3);
+|Usuario|
+:Compara y selecciona ruta;
+stop
+@enduml
