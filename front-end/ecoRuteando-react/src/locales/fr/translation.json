@@ -1,0 +1,136 @@
+{
+  "nav": {
+    "features": "Caractéristiques",
+    "benefits": "Avantages",
+    "join": "Rejoindre",
+    "login": "Se connecter",
+    "register": "S'inscrire",
+    "guest": "Mode Invité",
+    "language": "Langue"
+  },
+  "hero": {
+    "subtitle": "Votre guide pour la mobilité durable",
+    "description": "Découvrez des itinéraires écologiques combinant transports en commun et vélo. Chaque voyage est une opportunité de prendre soin de la planète et de réduire votre empreinte carbone.",
+    "registerBtn": "Inscrivez-vous maintenant",
+    "loginBtn": "Se connecter",
+    "guestBtn": "Mode Invité",
+    "badge": "Mobilité Durable · SENA Neiva",
+    "chips": {
+      "bike": "Vélo, bus ou à pied",
+      "co2": "-30% d'empreinte CO₂",
+      "routes": "Itinéraires en quelques secondes"
+    }
+  },
+  "features": {
+    "tag": "Caractéristiques",
+    "title": "Trois étapes vers un voyage durable",
+    "description": "Conçu pour vous aider à planifier des itinéraires écologiques rapidement et facilement",
+    "stop": "Arrêt",
+    "cards": [
+      {
+        "title": "Itinéraires Intelligents",
+        "desc": "Combinez vélo et transports en commun avec des horaires précis et des alternatives vertes."
+      },
+      {
+        "title": "Économie de CO₂",
+        "desc": "Chaque trajet compte. Visualisez l'impact positif de vos choix de mobilité."
+      },
+      {
+        "title": "Communauté Active",
+        "desc": "Rejoignez un réseau de personnes engagées pour la mobilité durable dans votre ville."
+      }
+    ]
+  },
+  "why": {
+    "tag": "Avantages",
+    "title": "Pourquoi choisir EcoRuteando?",
+    "co2": "ÉMISSIONS DE CO₂",
+    "reasons": [
+      {
+        "title": "Mobilité intégrée",
+        "desc": "Connectez facilement les segments à vélo avec les itinéraires de transport en commun."
+      },
+      {
+        "title": "Santé et bien-être",
+        "desc": "Favorisez l'exercice quotidien et améliorez votre qualité de vie en vous déplaçant."
+      },
+      {
+        "title": "Impact environnemental réel",
+        "desc": "Chaque kilomètre à vélo évite des émissions. Votre contribution compte."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Commencez votre itinéraire durable aujourd'hui",
+    "description": "Rejoignez EcoRuteando et faites en sorte que chaque trajet compte pour la planète",
+    "button": "Rejoignez la révolution verte →"
+  },
+  "footer": {
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "contact": "Contact"
+  }
+  ,
+"dashboard": {
+  "title": "Tableau de bord",
+  "subtitle": "Gérez votre mobilité durable",
+  "welcome": "Bienvenue",
+
+  "back": "Retour",
+
+  "stats": {
+    "routesCreated": "Itinéraires créés",
+    "tripsCompleted": "Voyages effectués",
+    "co2Saved": "CO₂ économisé",
+    "ecoPoints": "ÉcoPoints"
+  },
+
+  "tools": {
+    "title": "Outils",
+    "subtitle": "Sélectionnez une option"
+  },
+
+  "modules": {
+    "planRoute": {
+      "title": "Planifier un itinéraire",
+      "subtitle": "Trouvez le meilleur itinéraire écologique"
+    },
+    "history": {
+      "title": "Historique",
+      "subtitle": "Consultez vos trajets précédents"
+    },
+    "profile": {
+      "title": "Mon Profil",
+      "subtitle": "Gérez vos informations personnelles"
+    },
+    "alerts": {
+      "title": "Alertes",
+      "subtitle": "Consultez les notifications"
+    },
+    "report": {
+      "title": "Signaler un problème",
+      "subtitle": "Signalez des incidents"
+    },
+    "admin": {
+      "title": "Administration",
+      "subtitle": "Gérer les utilisateurs et permissions"
+    }
+  },
+
+  "impact": {
+    "title": "Votre impact environnemental",
+    "description": "Jusqu'à présent, vous avez évité d'émettre",
+    "descriptionEnd": "grâce à vos trajets durables.",
+    "button": "Voir les statistiques"
+  },
+
+  "footer": "Chaque trajet durable aide à protéger la planète 🌱",
+
+  "modal": {
+    "title": "Retourner ?",
+    "message": "Si vous retournez à la page d'accueil, vous devrez vous reconnecter pour accéder au tableau de bord.",
+    "cancel": "Annuler",
+    "confirm": "Retour"
+  }
+}
+} 
