@@ -8,7 +8,7 @@ import { redirectToOAuth } from "../../../shared/oauthRedirect";
 function Login() {
     const { t } = useTranslation();
     const { isDarkMode, toggleTheme } = useTheme();
-    const { loginUser, isAuthenticated } = useAuth();
+    const { loginUser } = useAuth();
     const navigate = useNavigate();
     const [form, setForm] = useState({ email: "", pw: "" });
     const [showPw, setShowPw] = useState(false);
@@ -16,11 +16,9 @@ function Login() {
     const [loading, setLoading] = useState(false);
     const [retrySeconds, setRetrySeconds] = useState(0);
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate("/dashboard", { replace: true });
-        }
-    }, [isAuthenticated, navigate]);
+    // Si el usuario ya está autenticado y llega aquí por redirect interno,
+    // se le permite ver el formulario para cambiar de cuenta.
+    // El logout se hace desde el dashboard (botón "Cerrar sesión").
 
     useEffect(() => {
         if (retrySeconds <= 0) return;
@@ -77,14 +75,29 @@ function Login() {
 
             navigate("/dashboard", { replace: true });
         } catch (err) {
+            const data = err.response?.data;
+            const retryAfterSeconds = Number(data?.retryAfterSeconds) || 0;
+            const attemptsRemaining = data?.attemptsRemaining;
+
             if (err.response?.status === 429) {
                 const retryAfter = parseInt(err.response?.headers?.["retry-after"], 10) || 900;
                 setRetrySeconds(retryAfter);
                 setError(t("auth.login.rateLimited", "Demasiados intentos. Espera {{time}} antes de intentar de nuevo.", { time: formatTime(retryAfter) }));
+            } else if (retryAfterSeconds > 0) {
+                setRetrySeconds(Math.ceil(retryAfterSeconds));
+                setError(
+                    data?.detail ||
+                    t("auth.login.locked", "Cuenta bloqueada temporalmente. Intenta de nuevo al pasar el tiempo indicado.")
+                );
+            } else if (typeof attemptsRemaining === "number") {
+                setError(
+                    data?.detail ||
+                    t("auth.login.errorInvalidCredentials", "Correo o contraseña incorrectos.")
+                );
             } else {
                 const message =
-                    err.response?.data?.detail ||
-                    err.response?.data?.message ||
+                    data?.detail ||
+                    data?.message ||
                     t("auth.login.errorInvalidCredentials", "Correo o contraseña incorrectos.");
                 setError(message);
             }
@@ -127,13 +140,13 @@ function Login() {
     );
 
     return (
-        <div className={`min-h-screen ${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-green-950 to-emerald-950' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'} flex flex-col items-center justify-center px-4 py-6`}>
+        <div className={`min-h-screen ${isDarkMode ? 'bg-gradient-to-br from-[#0B1215] to-[#111C20]' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'} flex flex-col items-center justify-center px-4 py-6`}>
 
             <button
                 onClick={toggleTheme}
                 className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
             >
-                {isDarkMode ? "☀️" : "🌙"}
+                {isDarkMode ? '☀️' : "🌙"}
             </button>
 
             <button
@@ -148,20 +161,20 @@ function Login() {
 
             <div className="text-center mb-6">
                 <div className="flex justify-center mb-2">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-md transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border border-green-500/30' : 'bg-white'}`}>
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-md transition-all duration-300 ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white'}`}>
                         <img src="/logo.png" alt={t("auth.login.logoAlt", "Logo")} className="w-10 h-10" />
                     </div>
                 </div>
-                <h1 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-emerald-700'}`}>EcoRuteando</h1>
-                <p className={`text-[10px] mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t("auth.login.sustainableMobility", "Movilidad sostenible")}</p>
+                <h1 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-emerald-700'}`}>EcoRuteando</h1>
+                <p className={`text-[10px] mt-1 transition-colors duration-300 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>{t("auth.login.sustainableMobility", "Movilidad sostenible")}</p>
             </div>
 
             <div className="w-full max-w-sm mx-auto">
-                <div className={`rounded-xl shadow-lg overflow-hidden transition-all duration-300 ${isDarkMode ? 'bg-gray-800/80 backdrop-blur-sm border border-green-500/20' : 'bg-white border border-gray-100'}`}>
+                <div className={`rounded-xl shadow-lg overflow-hidden transition-all duration-300 ${isDarkMode ? 'bg-[#162329]/80 backdrop-blur-sm border border-[#26383D]' : 'bg-white border border-gray-100'}`}>
 
                     <div className="px-6 pt-5 pb-2 text-center">
-                        <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{t("auth.login.title", "Iniciar sesión")}</h2>
-                        <p className={`text-xs mt-0.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t("auth.login.welcomeBack", "Bienvenido de vuelta")}</p>
+                        <h2 className={`text-lg font-bold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{t("auth.login.title", "Iniciar sesión")}</h2>
+                        <p className={`text-xs mt-0.5 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>{t("auth.login.welcomeBack", "Bienvenido de vuelta")}</p>
                     </div>
 
                     <div className="px-6 pb-6">
@@ -176,7 +189,7 @@ function Login() {
 
                         <div className="space-y-4">
                             <div>
-                                <label className={`block text-xs font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-green-400' : 'text-gray-600'}`}>
+                                <label className={`block text-xs font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-[#34D399]' : 'text-gray-600'}`}>
                                     {t("auth.login.email", "Correo electrónico")}
                                 </label>
                                 <input
@@ -186,14 +199,14 @@ function Login() {
                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                     className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 ${
                                         isDarkMode
-                                            ? 'bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500'
+                                            ? 'bg-[#162329]/50 border-[#26383D] text-[#e2e8f0] placeholder-[#94a3b8] focus:border-[#34D399]'
                                             : 'border-gray-200 focus:border-emerald-400'
                                     }`}
                                 />
                             </div>
 
                             <div>
-                                <label className={`block text-xs font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-green-400' : 'text-gray-600'}`}>
+                                <label className={`block text-xs font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-[#34D399]' : 'text-gray-600'}`}>
                                     {t("auth.login.password", "Contraseña")}
                                 </label>
                                 <div className="relative">
@@ -204,20 +217,20 @@ function Login() {
                                         onChange={(e) => setForm({ ...form, pw: e.target.value })}
                                         className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none transition-all duration-300 pr-9 ${
                                             isDarkMode
-                                                ? 'bg-gray-700/50 border-green-500/30 text-white placeholder-gray-400 focus:border-green-500'
+                                                ? 'bg-[#162329]/50 border-[#26383D] text-[#e2e8f0] placeholder-[#94a3b8] focus:border-[#34D399]'
                                                 : 'border-gray-200 focus:border-emerald-400'
                                         }`}
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPw(!showPw)}
-                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-emerald-500"
+                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#94a3b8] hover:text-[#34D399]"
                                     >
                                         {showPw ? <EyeOffIcon /> : <EyeIcon />}
                                     </button>
                                 </div>
                                 <div className="text-right mt-1">
-                                    <button onClick={() => navigate("/recover")} className={`text-[10px] hover:underline transition-colors ${isDarkMode ? 'text-green-400' : 'text-emerald-500'}`}>
+                                    <button onClick={() => navigate("/recover")} className={`text-[10px] hover:underline transition-colors ${isDarkMode ? 'text-[#34D399]' : 'text-emerald-500'}`}>
                                         {t("auth.login.forgotPassword", "¿Olvidaste tu contraseña?")}
                                     </button>
                                 </div>
@@ -236,9 +249,9 @@ function Login() {
                             </button>
 
                             <div className="relative flex items-center gap-2 my-4">
-                                <div className={`flex-1 h-px ${isDarkMode ? 'bg-green-500/20' : 'bg-gray-200'}`} />
-                                <span className={`text-[10px] font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t("auth.login.orContinueWith", "O continúa con")}</span>
-                                <div className={`flex-1 h-px ${isDarkMode ? 'bg-green-500/20' : 'bg-gray-200'}`} />
+                                <div className={`flex-1 h-px ${isDarkMode ? 'bg-[#26383D]' : 'bg-gray-200'}`} />
+                                <span className={`text-[10px] font-medium uppercase tracking-wider ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>{t("auth.login.orContinueWith", "O continúa con")}</span>
+                                <div className={`flex-1 h-px ${isDarkMode ? 'bg-[#26383D]' : 'bg-gray-200'}`} />
                             </div>
 
                             <div className="flex gap-2">
@@ -252,7 +265,7 @@ function Login() {
                                     }`}
                                 >
                                     <GoogleIcon />
-                                    <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Google</span>
+                                    <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Google</span>
                                 </button>
                                 <button
                                     type="button"
@@ -264,15 +277,15 @@ function Login() {
                                     }`}
                                 >
                                     <FacebookIcon />
-                                    <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Facebook</span>
+                                    <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Facebook</span>
                                 </button>
                             </div>
                         </div>
 
                         <div className="text-center mt-5 pt-3 border-t border-gray-100">
-                            <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                            <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>
                                 {t("auth.login.noAccount", "¿No tienes cuenta?")}{" "}
-                                <button onClick={() => navigate("/register")} className={`font-medium text-xs hover:underline transition-colors ${isDarkMode ? 'text-green-400' : 'text-emerald-600'}`}>
+                                <button onClick={() => navigate("/register")} className={`font-medium text-xs hover:underline transition-colors ${isDarkMode ? 'text-[#34D399]' : 'text-emerald-600'}`}>
                                     {t("auth.login.registerHere", "Regístrate aquí")}
                                 </button>
                             </p>
@@ -282,7 +295,7 @@ function Login() {
             </div>
 
             <div className="mt-5 text-center">
-                <p className={`text-[10px] flex items-center justify-center gap-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                <p className={`text-[10px] flex items-center justify-center gap-1 transition-colors duration-300 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>
                     {t("auth.login.tagline", "Cada viaje sostenible comienza con un paso")}
                 </p>
             </div>

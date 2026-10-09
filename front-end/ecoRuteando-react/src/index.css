@@ -14,6 +14,18 @@
   --ivory-dark:  #ede8df;
 }
 
+/* ─── PALETA MODO OSCURO ─── */
+.dark {
+  --eco-dark-bg:    #0B1215;
+  --eco-card:       #162329;
+  --eco-surface:    #111C20;
+  --eco-border:     #26383D;
+  --eco-text:       #e2e8f0;
+  --eco-text-sec:   #94a3b8;
+  --eco-accent:     #34D399;
+  --eco-accent-hover: #064E3B;
+}
+
 * { font-family: 'Playfair Display', 'Times New Roman', serif; scroll-behavior: smooth; }
 
 .gradient-hero { background: linear-gradient(150deg, #3d6b4f 0%, #4e8866 40%, #5ea87a 100%); }
@@ -188,15 +200,64 @@ body.menu-open {
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: #1f2937;
+  background: var(--eco-dark-bg);
   border-radius: 10px;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #4ade80;
+  background: var(--eco-border);
   border-radius: 10px;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #22c55e;
+  background: #34D399;
+}
+
+/* Auth inputs — explicit readable text/caret on light backgrounds (scoped, no global form changes) */
+.auth-input {
+  color: #143d28;
+  caret-color: #143d28;
+  color-scheme: light;
+}
+.auth-input::placeholder {
+  color: #6b7d73;
+  opacity: 1;
+}
+.auth-input:hover {
+  color: #143d28;
+  background: #e8f0eb;
+}
+.auth-input:focus {
+  color: #143d28;
+  caret-color: #143d28;
+  background: #e8f0eb;
+}
+.auth-input:-webkit-autofill,
+.auth-input:-webkit-autofill:hover,
+.auth-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #143d28;
+  caret-color: #143d28;
+  -webkit-box-shadow: 0 0 0 1000px #e8f0eb inset;
+  box-shadow: 0 0 0 1000px #e8f0eb inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* OTP inputs — explicit readable digits on light backgrounds (scoped, no global form changes) */
+.otp-input {
+  color: #143d28;
+  caret-color: #143d28;
+  color-scheme: light;
+}
+.otp-input::placeholder {
+  color: #9aa5a0;
+  opacity: 1;
+}
+.otp-input:-webkit-autofill,
+.otp-input:-webkit-autofill:hover,
+.otp-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #143d28;
+  caret-color: #143d28;
+  -webkit-box-shadow: 0 0 0 1000px #f9f6f0 inset;
+  box-shadow: 0 0 0 1000px #f9f6f0 inset;
+  transition: background-color 9999s ease-in-out 0s;
 }

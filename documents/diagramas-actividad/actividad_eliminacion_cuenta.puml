@@ -1,0 +1,27 @@
+@startuml Actividad_EliminacionCuenta
+title <b>Diagrama de Actividad — Eliminación de Cuenta</b>\n<size:10>CU13 · RF13 · UserProfile.jsx</size>
+
+|#E8F5E9|Usuario|
+start
+:Accede a configuración de cuenta;
+:Selecciona "Eliminar cuenta";
+|Sistema|
+:Advierte consecuencias y solicita contraseña;
+|Usuario|
+:Ingresa contraseña y confirma;
+|Sistema|
+if (¿Contraseña correcta?) then (no)
+  :Muestra "Contraseña incorrecta";
+  stop
+else (sí)
+endif
+if (¿Sesión válida?) then (no)
+  :Muestra "Sesión expirada";
+  stop
+else (sí)
+endif
+:Elimina datos personales y desactiva cuenta (soft delete);
+:Revoca sesiones JWT;
+:Cierra sesión y confirma eliminación;
+stop
+@enduml
