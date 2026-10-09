@@ -1,0 +1,46 @@
+@startuml Actividad_CalificarRuta
+title <b>Diagrama de Actividad — Calificar Rutas</b>\n<size:10>CU09 · RF16</size>
+
+|#E8F5E9|Usuario|
+start
+:Finaliza un trayecto;
+:Accede a la ruta completada\nen su historial;
+
+|#FFFFFF|Sistema|
+if (¿Ruta completada\n(estado = finalizada)?) then (no)
+  :No habilita la calificación;\ninforma que debe completar la ruta;
+  stop
+else (sí)
+endif
+
+:Habilita el formulario de calificación;
+
+|Usuario|
+:Asigna puntuación (1–5 estrellas)\ny escribe un comentario opcional;
+:Envía la calificación;
+
+|Sistema|
+if (¿Puntuación válida y campos OK?) then (no)
+  :Muestra "debe completar todos los campos";
+  |Usuario|
+  :Corrige y reenvía;
+  detach
+else (sí)
+endif
+
+|Base de Datos|
+:Guarda la calificación vinculada\nal usuario y a la ruta;
+
+|Sistema|
+:Actualiza el promedio de la ruta;
+:Confirma "¡Gracias por tu valoración!";
+
+|Usuario|
+if (¿La ruta tiene buenas reseñas?) then (sí)
+  |Sistema|
+  :La prioriza como sugerida\npara otros usuarios (RF16.3);
+else (no)
+endif
+stop
+
+@enduml
