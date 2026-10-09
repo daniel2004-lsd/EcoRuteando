@@ -69,69 +69,276 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "contact": "Contact"
-  }
-
-  ,
-"dashboard": {
-  "title": "User Dashboard",
-  "subtitle": "Manage your sustainable mobility",
-  "welcome": "Welcome",
-
-  "back": "Back",
-
-  "stats": {
-    "routesCreated": "Routes Created",
-    "tripsCompleted": "Trips Completed",
-    "co2Saved": "CO₂ Saved",
-    "ecoPoints": "Eco Points"
   },
-
-  "tools": {
-    "title": "Tools",
-    "subtitle": "Choose an option to get started"
+  "dashboard": {
+    "title": "User Dashboard",
+    "subtitle": "Manage your sustainable mobility",
+    "welcome": "Welcome",
+    "back": "Log out",
+    "stats": {
+      "routesCreated": "Routes Created",
+      "tripsCompleted": "Trips Completed",
+      "co2Saved": "CO₂ Saved",
+      "ecoPoints": "Eco Points"
+    },
+    "tools": {
+      "title": "Tools",
+      "subtitle": "Choose an option to get started"
+    },
+    "modules": {
+      "planRoute": {
+        "title": "Plan Route",
+        "subtitle": "Find the best eco-friendly route"
+      },
+      "history": {
+        "title": "History",
+        "subtitle": "Review your previous trips"
+      },
+      "profile": {
+        "title": "My Profile",
+        "subtitle": "Manage your personal information"
+      },
+      "alerts": {
+        "title": "Alerts",
+        "subtitle": "Check notifications"
+      },
+      "report": {
+        "title": "Report Problem",
+        "subtitle": "Report route incidents"
+      },
+      "admin": {
+        "title": "Admin Panel",
+        "subtitle": "Manage users and permissions"
+      },
+      "favorites": {
+        "title": "Favorites",
+        "subtitle": "Quick access to your routes"
+      },
+      "routes": {
+        "title": "My Routes",
+        "subtitle": "Create, edit and manage routes"
+      }
+    },
+    "impact": {
+      "title": "Your Environmental Impact",
+      "description": "So far you have avoided emitting",
+      "descriptionEnd": "thanks to your sustainable trips.",
+      "button": "View Statistics"
+    },
+    "footer": "Every sustainable trip helps protect the planet 🌱",
+    "modal": {
+      "title": "Log out?",
+      "message": "Are you sure you want to log out? You'll need to log in again to access the Dashboard.",
+      "cancel": "Cancel",
+      "confirm": "Log out"
+    }
   },
-
-  "modules": {
-    "planRoute": {
-      "title": "Plan Route",
-      "subtitle": "Find the best eco-friendly route"
+  "routeManage": {
+    "title": "Route Management",
+    "subtitle": "Create, edit and manage system routes",
+    "backToDashboard": "Back to Dashboard",
+    "filterPlaceholder": "Filter by name...",
+    "newRoute": "New Route",
+    "editRoute": "Edit Route",
+    "loading": "Loading routes...",
+    "loadingDetail": "Loading detail...",
+    "loadError": "Could not load routes",
+    "name": "Name",
+    "description": "Description",
+    "descriptionPlaceholder": "Brief description of the route",
+    "transportType": "Transport type",
+    "transport": {
+      "walking": "Walking",
+      "bike": "Bike",
+      "car": "Car",
+      "public_transport": "Public transport",
+      "mixed": "Mixed"
     },
-    "history": {
-      "title": "History",
-      "subtitle": "Review your previous trips"
+    "difficulty": "Difficulty",
+    "startName": "Origin",
+    "destinationName": "Destination",
+    "startLat": "Start lat",
+    "startLng": "Start lng",
+    "endLat": "End lat",
+    "endLng": "End lng",
+    "distanceKm": "Distance (km)",
+    "estimatedTimeMin": "Time (min)",
+    "co2SavedKg": "CO₂ saved (kg)",
+    "estimatedCalories": "Calories",
+    "photoUrl": "Photo URL",
+    "availableDate": "Available from",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Delete",
+    "deleting": "Deleting...",
+    "saving": "Saving...",
+    "saveChanges": "Save changes",
+    "create": "Create",
+    "cancel": "Cancel",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "under_review": "Under review",
+      "archived": "Archived"
     },
-    "profile": {
-      "title": "My Profile",
-      "subtitle": "Manage your personal information"
+    "noResults": "No routes match your search",
+    "empty": "No routes registered",
+    "createFirst": "Create the first one",
+    "footer": "Every eco route is a step towards a greener future",
+    "confirmDeleteTitle": "Delete route",
+    "confirmDeleteMessage": "Do you want to delete route {{name}}? This action cannot be undone.",
+    "errors": {
+      "nameRequired": "Route name is required",
+      "startRequired": "Origin point is required",
+      "destinationRequired": "Destination point is required",
+      "saveFailed": "Could not save the route",
+      "deleteFailed": "Could not delete the route"
+    }
+  },
+  "adminStatistics": {
+    "title": "Statistics Portal",
+    "subtitle": "System impact in numbers",
+    "backToPanel": "Back to Panel",
+    "from": "From",
+    "to": "To",
+    "apply": "Apply filter",
+    "clear": "Clear",
+    "loading": "Loading statistics...",
+    "loadError": "Error loading statistics",
+    "emptyTitle": "No information",
+    "emptyMessage": "No data available for the selected range",
+    "kpi": {
+      "routesConsulted": "Routes consulted",
+      "activeUsers": "Active users",
+      "co2Saved": "CO₂ saved",
+      "completedTrips": "Completed trips",
+      "avgDistance": "Average distance"
     },
-    "alerts": {
-      "title": "Alerts",
-      "subtitle": "Check notifications"
+    "chart": {
+      "monthlyCo2": "CO₂ saved per month",
+      "byMode": "Trips by transport mode",
+      "co2Kg": "CO₂",
+      "trips": "Trips"
     },
-    "report": {
-      "title": "Report Problem",
-      "subtitle": "Report route incidents"
-    },
-    "admin": {
-      "title": "Admin Panel",
-      "subtitle": "Manage users and permissions"
+    "transport": {
+      "walking": "Walking",
+      "bike": "Bike",
+      "public_transport": "Public transport",
+      "mixed": "Mixed",
+      "unknown": "Not specified",
+      "car": "Car"
     }
   },
 
-  "impact": {
-    "title": "Your Environmental Impact",
-    "description": "So far you have avoided emitting",
-    "descriptionEnd": "thanks to your sustainable trips.",
-    "button": "View Statistics"
+  "alerts": {
+    "title": "Climate Alerts",
+    "subtitle": "Real-time weather for your safety",
+    "back": "Back",
+    "loading": "Fetching Neiva weather conditions...",
+    "loadError": "The weather service is temporarily unavailable. Please try later.",
+    "feelsLike": "Feels like",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "extendedForecast": "📅 Extended forecast",
+    "rainChance": "Rain",
+    "activeAlertsHeading": "⚠️ Active alerts",
+    "noActiveAlerts": "There are no active weather alerts for Neiva right now.",
+    "filterAll": "All",
+    "filterHigh": "High",
+    "filterMedium": "Medium",
+    "viewMore": "View more",
+    "dismiss": "Dismiss",
+    "recommendationsTitle": "💡 Recommendations for today",
+    "statMaxSeverity": "Max severity",
+    "statAvgTemperature": "Average temperature",
+    "timeNow": "Now",
+    "severityHigh": "High",
+    "severityMedium": "Medium",
+    "severityLow": "Low"
   },
 
-  "footer": "Every sustainable trip helps protect the planet 🌱",
+  "reporterProblem": {
+    "title": "Report a Problem",
+    "subtitle": "Help us improve the roads",
+    "back": "Back",
+    "cardTitle": "Report a road incident",
+    "cardSubtitle": "Your report helps keep the roads safe for everyone",
+    "reportTypeLabel": "Problem Type",
+    "types": {
+      "obstruction": "Road obstruction",
+      "pothole": "Pothole / deterioration",
+      "signage": "Missing signage",
+      "traffic_light": "Damaged traffic light",
+      "sewer": "Blocked sewer",
+      "lighting": "Public lighting",
+      "other": "Other"
+    },
+    "locationLabel": "Location",
+    "useGps": "Use my current location (GPS)",
+    "gettingLocation": "Getting your location...",
+    "locationCaptured": "Location captured",
+    "locationHint": "Mark the exact spot of the obstacle so our team can validate it",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe the problem in detail (location, magnitude, suggestions)...",
+    "submit": "Submit Report",
+    "submitting": "Submitting...",
+    "submitted": "Report Submitted!",
+    "reviewNotice": "Your report will be reviewed by our team before it is published.",
+    "footer": "Reporting problems helps build better mobility for everyone",
+    "errors": {
+      "geolocationUnsupported": "Your browser does not support geolocation.",
+      "gpsFailed": "Could not get your location. Check your GPS permissions.",
+      "descriptionRequired": "Please describe the problem in detail.",
+      "locationRequired": "Use the GPS to mark the obstacle's location.",
+      "submitFailed": "The report could not be submitted. Please try later."
+    }
+  },
 
-  "modal": {
-    "title": "Go back?",
-    "message": "If you return to the home page, you'll need to log in again to access the dashboard.",
+  "adminReports": {
+    "title": "Report Verification",
+    "subtitle": "Review and validate citizen reports",
+    "backToPanel": "Back to Panel",
+    "loading": "Loading reports...",
+    "loadError": "The reports could not be loaded.",
+    "empty": "There are no reports in this status.",
+    "photoAlt": "Report photo",
+    "reviewedOn": "Reviewed on",
+    "alreadyReviewed": "Report already reviewed",
+    "notePlaceholder": "Review note (required if you reject)...",
+    "noteRequiredReject": "Please provide a reason for the rejection.",
+    "actionFailed": "The review could not be saved.",
+    "saving": "Saving...",
+    "confirmValidated": "Confirm validation",
+    "confirmRejected": "Confirm rejection",
+    "actionValidated": "Validate",
+    "actionRejected": "Reject",
     "cancel": "Cancel",
-    "confirm": "Go Back"
+    "filter": {
+      "all": "All"
+    },
+    "status": {
+      "pending": "Pending",
+      "under_review": "Under review",
+      "validated": "Validated",
+      "rejected": "Rejected"
+    }
+  },
+
+  "adminExports": {
+    "title": "Export Data",
+    "subtitle": "Download system reports as CSV, Excel or JSON",
+    "backToPanel": "Back to Panel",
+    "statsTitle": "Portal statistics",
+    "statsSubtitle": "Routes consulted, CO₂ saved and breakdowns by transport mode and month",
+    "from": "From",
+    "to": "To",
+    "formatsLabel": "File format",
+    "formatCsv": "CSV",
+    "formatXlsx": "Excel",
+    "formatJson": "JSON",
+    "exporting": "Generating...",
+    "exportError": "The file could not be generated. Try again later.",
+    "footnote": "CSV and Excel files open directly in office tools; JSON is ideal for technical integrations.",
+    "motivationalPhrase": "Open data drives more sustainable mobility"
   }
-}
 }

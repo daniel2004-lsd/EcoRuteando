@@ -89,6 +89,8 @@ export function AuthProvider({ children }) {
     }, [refreshToken]);
 
     const isAuthenticated = !!accessToken && !!user;
+    const isGuest = !accessToken && !user && !loading;
+    const userRole = user?.role?.toLowerCase() || "user";
 
     return (
         <AuthContext.Provider
@@ -98,7 +100,9 @@ export function AuthProvider({ children }) {
                 user,
                 loading,
                 isAuthenticated,
-                saveTokens,
+                isGuest,
+                userRole,
+                saveTokens:
                 loginUser,
                 loginWithOAuth,
                 logout,

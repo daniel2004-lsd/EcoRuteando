@@ -10,7 +10,7 @@ import {
 } from "../../../shared/components/Icons";
 import { resetPassword } from "../../../services/authService";
 
-const NewPassword = () => {
+const NewPassword = ({ recoveryCode, onClearRecoveryCode }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [form, setForm] = useState({
@@ -71,7 +71,7 @@ const NewPassword = () => {
             return;
         }
 
-        const token = sessionStorage.getItem("passwordRecoveryCode");
+        const token = recoveryCode;
 
         if (!token) {
             setError(
@@ -85,8 +85,7 @@ const NewPassword = () => {
         try {
             await resetPassword(token, form.pw);
 
-            // El código ya fue utilizado correctamente.
-            sessionStorage.removeItem("passwordRecoveryCode");
+            if (onClearRecoveryCode) onClearRecoveryCode();
             sessionStorage.removeItem("passwordRecoveryEmail");
 
             setSuccess(true);

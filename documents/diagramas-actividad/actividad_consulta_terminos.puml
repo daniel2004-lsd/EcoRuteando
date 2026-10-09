@@ -1,0 +1,25 @@
+@startuml Actividad_ConsultaTerminos
+title <b>Diagrama de Actividad — Consulta y Aceptación de Términos</b>\n<size:10>CU15 · RF18 · Register.jsx</size>
+
+|#E8F5E9|Usuario|
+start
+:Abre formulario de registro;
+|Sistema|
+:Muestra casilla deshabilitada "Acepto términos";
+|Usuario|
+:Pulsa enlace "Términos y Condiciones";
+|Sistema|
+:Despliega modal con documento completo (RF18.1);
+|Usuario|
+if (¿Acepta términos?) then (sí)
+  :Marca casilla;
+  |Sistema|
+  :Habilita botón "Registrarse" (RF18.2);
+else (no)
+  |Sistema|
+  :Mantiene botón deshabilitado;
+  stop
+endif
+:Continúa con registro (CU01);
+stop
+@enduml
