@@ -1,0 +1,42 @@
+@startuml Actividad_EstadisticasAdmin
+title <b>Diagrama de Actividad — Portal de Estadísticas (Administrador)</b>\n<size:10>CU08 · RF20 / RF22</size>
+
+|#F3E5F5|Administrador|
+start
+:Inicia sesión con rol administrador;
+:Accede al panel "/admin";
+
+|#FFFFFF|Sistema|
+if (¿Rol válido?) then (no)
+  :Niega el acceso (403) y redirige;
+  stop
+else (sí)
+endif
+
+|Sistema|
+:Muestra el dashboard de estadísticas;
+
+|Base de Datos|
+:Agrega métricas: rutas consultadas,\nusuarios activos, CO₂ total ahorrado,\nreportes por validar;
+
+|Sistema|
+:Renderiza gráficos interactivos\n(Chart.js / Recharts) (RF20.2);
+
+|Administrador|
+:Selecciona filtros\n(fechas, módulo, tipo de dato);
+|Sistema|
+:Recalcula y actualiza las gráficas;
+
+|Administrador|
+if (¿Desea exportar datos?) then (sí)
+  :Elige formato PDF / Excel;
+  |Sistema|
+  :Genera y descarga el informe (RF22);
+else (no)
+endif
+
+|Administrador|
+:Analiza los indicadores para\nplanes de movilidad sostenible;
+stop
+
+@enduml
