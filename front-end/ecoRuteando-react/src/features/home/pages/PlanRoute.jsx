@@ -1,44 +1,30 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { LeafIcon, ArrowLeft, MapIcon, BikeIcon, BusIcon } from "../../../shared/components/Icons";
+import { useLocation } from "react-router-dom";
+import { LeafIcon, ArrowLeft, MapIcon, SearchIcon, TargetIcon } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import MapViewGoogle from "../../../features/auth/components/MapViewGoogle";
 import mapsService from "../../../services/mapsService";
 import routeService from "../../../services/routeService";
 import tripService from "../../../services/tripService";
-import poiService from "../../../services/poiService";
-
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
+import { loadGoogleMapsApi } from "../../../services/googleMapsLoader";
 
 // Coordenadas de Neiva (viewport inicial del mapa)
 const NEIVA_LAT = 2.9273;
 const NEIVA_LON = -75.2819;
 
-// Cargar Google Maps (solo para el visualizador del mapa)
-let mapsLoadingPromise = null;
-const loadGoogleMapsApi = () => {
-  if (mapsLoadingPromise) return mapsLoadingPromise;
-  
-  mapsLoadingPromise = new Promise((resolve, reject) => {
-    if (window.google?.maps) {
-      resolve(window.google);
-      return;
-    }
-    
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=es`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => resolve(window.google);
-    script.onerror = reject;
-    document.head.appendChild(script);
-  });
-  
-  return mapsLoadingPromise;
+// Orden de los tipos de mapa de Google y claves i18n de sus etiquetas
+const MAP_TYPE_ORDER = ["roadmap", "satellite", "hybrid", "terrain"];
+const MAP_TYPE_LABELS = {
+  roadmap: "planRoute.mapType.roadmap",
+  satellite: "planRoute.mapType.satellite",
+  hybrid: "planRoute.mapType.hybrid",
+  terrain: "planRoute.mapType.terrain",
 };
 
 // Componente de búsqueda (Autocompletado de Google Places)
-const LocationSearch = ({ placeholder, onSelect, isDarkMode, type = "origin", externalValue }) => {
+const LocationSearch = ({ placeholder, onSelect, isDarkMode, externalValue }) => {
+  const { t } = useTranslation();
   const [query, setQuery] = useState(externalValue || "");
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,12 +34,6 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, type = "origin", ex
   const skipNextSearchRef = useRef(false);
   const serviceHostRef = useRef(null);
   const placesServiceRef = useRef(null);
-
-  useEffect(() => {
-    if (externalValue && externalValue !== query) {
-      setQuery(externalValue);
-    }
-  }, [externalValue]);
 
   const getPlacesService = () => {
     if (!placesServiceRef.current) {
@@ -71,7 +51,7 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, type = "origin", ex
 
     if (!window.google?.maps?.places) {
       setSuggestions([]);
-      setHint("Google Maps aún se está cargando…");
+      setHint(t("planRoute.search.mapsLoading"));
       return;
     }
 
@@ -104,8 +84,8 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, type = "origin", ex
           setSuggestions([]);
           setHint(
             status === window.google.maps.places.PlacesServiceStatus.ZERO_RESULTS
-              ? "Sin resultados"
-              : "No se pudo completar la búsqueda en Google Maps"
+              ? t("planRoute.search.noResults")
+              : t("planRoute.search.failed")
           );
         }
       }
@@ -151,7 +131,7 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, type = "origin", ex
           setQuery(selected.name);
           setSuggestions([]);
         } else {
-          setHint("No se pudo obtener el detalle del lugar seleccionado");
+          setHint(t("planRoute.search.detailFailed"));
         }
       }
     );
@@ -178,11 +158,6 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, type = "origin", ex
   return (
     <div className="relative w-full" ref={serviceHostRef}>
       <div className="relative">
-        <span className={`absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium ${
-          type === "origin" ? "text-green-600" : "text-red-600"
-        }`}>
-          {type === "origin" ? "A" : "B"}
-        </span>
         <input
           type="text"
           placeholder={placeholder}
@@ -190,11 +165,10 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, type = "origin", ex
           onChange={(e) => { setQuery(e.target.value); setShowDropdown(true); }}
           onFocus={() => setShowDropdown(true)}
           onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-          className={`w-full pl-8 pr-8 py-2.5 rounded-lg text-sm border transition-all focus:outline-none ${
-            isDarkMode
-              ? 'bg-gray-800 border-gray-700 text-white focus:border-blue-500'
-              : 'bg-white border-gray-300 text-gray-800 focus:border-blue-500'
-          }`}
+          className={isDarkMode
+            ? "w-full pl-8 pr-4 py-3 rounded-full text-sm bg-[#111C20] border border-[#26383D] text-[#e2e8f0] placeholder:text-[#94a3b8]/60 focus:outline-none focus:ring-2 focus:ring-[#34D399]/30"
+            : "w-full pl-8 pr-4 py-3 rounded-full text-sm bg-[#f5f0e8] border-0 text-[#2d2d2d] placeholder:text-[#8b7355]/60 focus:outline-none focus:ring-2 focus:ring-[#1a5c2a]/20"
+          }
         />
         {isLoading && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -205,22 +179,22 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, type = "origin", ex
 
       {showDropdown && (suggestions.length > 0 || hint) && (
         <div className={`absolute z-50 w-full mt-1 rounded-lg shadow-lg overflow-hidden max-h-64 overflow-y-auto ${
-          isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'
+          isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white border border-gray-200'
         }`}>
           {suggestions.map((suggestion, idx) => (
             <button
               key={`${suggestion.placeId}-${idx}`}
               onClick={() => selectPlace(suggestion)}
               className={`w-full text-left px-3 py-2 text-sm transition-colors border-b last:border-b-0 ${
-                isDarkMode ? 'hover:bg-gray-700 text-gray-300 border-gray-700' : 'hover:bg-gray-50 text-gray-700 border-gray-100'
+                isDarkMode ? 'hover:bg-[#111C20] text-[#e2e8f0] border-[#26383D]' : 'hover:bg-gray-50 text-gray-700 border-gray-100'
               }`}
             >
               <div className="flex items-start gap-2">
-                <span className={`mt-0.5 text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>📍</span>
+                <span className={`mt-0.5 text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>📍</span>
                 <div className="min-w-0">
                   <div>{renderName(suggestion)}</div>
                   {suggestion.address && (
-                    <div className={`text-xs mt-0.5 truncate ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                    <div className={`text-xs mt-0.5 truncate ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>
                       {suggestion.address}
                     </div>
                   )}
@@ -229,7 +203,7 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, type = "origin", ex
             </button>
           ))}
           {suggestions.length === 0 && hint && (
-            <div className={`px-3 py-2 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+            <div className={`px-3 py-2 text-sm ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
               {hint}
             </div>
           )}
@@ -242,85 +216,127 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, type = "origin", ex
 // Componente principal
 const PlanRoute = ({ onNavigate }) => {
   const { isDarkMode, toggleTheme } = useTheme();
+  const { t } = useTranslation();
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [transportMode, setTransportMode] = useState("walking");
   const [route, setRoute] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [userLocation, setUserLocation] = useState(null);
   const [originInputValue, setOriginInputValue] = useState("");
   const [mapCenter, setMapCenter] = useState({ lat: NEIVA_LAT, lng: NEIVA_LON });
-  const [mapsReady, setMapsReady] = useState(false);
+  const [mapFocus, setMapFocus] = useState(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [pois, setPois] = useState([]);
-  const [showPois, setShowPois] = useState(true);
+  const [nearbyPois, setNearbyPois] = useState([]);
+  const [nearbyType, setNearbyType] = useState("restaurant");
+  const [showNearbySearch, setShowNearbySearch] = useState(false);
+  const [mapTypeId, setMapTypeId] = useState("roadmap");
   const [routeSavedId, setRouteSavedId] = useState(null);
   const [estimate, setEstimate] = useState(null);
   const [activeTripId, setActiveTripId] = useState(null);
   const [startingTrip, setStartingTrip] = useState(false);
   const [completing, setCompleting] = useState(false);
   const [tripError, setTripError] = useState(null);
+  const location = useLocation();
+  const presetPendingRef = useRef(false);
+  const [actionMessage, setActionMessage] = useState(null);
+  const actionTimeoutRef = useRef(null);
+  const showActionMessage = (message) => {
+    if (actionTimeoutRef.current) clearTimeout(actionTimeoutRef.current);
+    setActionMessage(message);
+    actionTimeoutRef.current = setTimeout(() => setActionMessage(null), 2600);
+  };
 
   useEffect(() => {
-    loadGoogleMapsApi().then(() => {
-      setMapsReady(true);
-    }).catch(() => setError("Error cargando Google Maps"));
+    return () => {
+      if (actionTimeoutRef.current) clearTimeout(actionTimeoutRef.current);
+    };
   }, []);
 
-  // Cargar puntos de interés activos desde el backend
+  // Si se llega desde "Usar ruta" (favoritos), precargar origen/destino y trazar la ruta
   useEffect(() => {
-    poiService
-      .getAll()
-      .then((data) => {
-        setPois(Array.isArray(data) ? data : []);
-      })
-      .catch((err) => {
-        console.error("Error cargando puntos de interés:", err);
-        setPois([]);
+    const fav = location.state?.favoriteRoute;
+    if (
+      fav &&
+      fav.startLat != null &&
+      fav.startLng != null &&
+      fav.endLat != null &&
+      fav.endLng != null
+    ) {
+      const start = {
+        name: fav.routeName || t("planRoute.defaultOrigin"),
+        address: `${fav.startLat}, ${fav.startLng}`,
+        lat: fav.startLat,
+        lng: fav.startLng,
+      };
+      const end = {
+        name: fav.routeName || t("planRoute.defaultDestination"),
+        address: `${fav.endLat}, ${fav.endLng}`,
+        lat: fav.endLat,
+        lng: fav.endLng,
+      };
+      setOrigin(start);
+      setDestination(end);
+      setOriginInputValue(start.name);
+      setMapCenter({
+        lat: (fav.startLat + fav.endLat) / 2,
+        lng: (fav.startLng + fav.endLng) / 2,
       });
+      // Esta ruta ya está guardada en el backend: reutilizar su id en vez de duplicarla
+      if (fav.routeId) {
+        setRouteSavedId(fav.routeId);
+      }
+      presetPendingRef.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Obtener ubicación actual
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const location = {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            name: "Mi ubicación",
-            address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`
-          };
-          setUserLocation(location);
-          console.log("Ubicación obtenida:", location);
-        },
-        (err) => {
-          console.error("Error obteniendo ubicación:", err);
-          setError("No se pudo obtener su ubicación. Verifique los permisos.");
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
-      );
-    }
+    loadGoogleMapsApi().catch(() => setError(t("planRoute.errors.loadMaps")));
+    // HU-23: Cargar historial de direcciones guardadas
+    routeService.getUserAddressHistory().then((history) => {
+      // Las direcciones se pueden usar aquí o almacenar en state
+      // Por ahora, solo guardamos el estado para posible uso futuro
+      setOriginInputValue(originInputValue); // Forzar re-render si es necesario
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Función para calcular ruta (usa backend)
-  const calculateRoute = async () => {
-    if (!origin) {
-      setError("Seleccione un origen");
+  // Obtener ubicación actual y resolver su dirección real (barrio/calle)
+  const resolveLocationName = async (lat, lng) => {
+    try {
+      const data = await mapsService.reverseGeocode(lat, lng);
+      const address = data?.results?.[0]?.formattedAddress;
+      if (address) {
+        // Primer segmento de la dirección (calle + número o nombre de lugar)
+        const parts = address.split(",");
+        return parts[0] || address;
+      }
+    } catch (err) {
+      console.warn("No se pudo resolver la dirección de la ubicación:", err);
+    }
+    return t("planRoute.myLocation");
+  };
+
+  // Función para calcular ruta (usa backend).
+  // Acepta puntos opcionales para evitar el problema de closure cuando
+  // el origen/destino se acaban de actualizar (p.ej. "Usar mi ubicación").
+  const calculateRoute = async (nextOrigin = origin, nextDestination = destination) => {
+    if (!nextOrigin) {
+      setError(t("planRoute.errors.selectOrigin"));
       return;
     }
-    if (!destination) {
-      setError("Seleccione un destino");
+    if (!nextDestination) {
+      setError(t("planRoute.errors.selectDestination"));
       return;
     }
-    if (!origin.lat || !origin.lng) {
-      setError("El origen no tiene coordenadas válidas");
+    if (!nextOrigin.lat || !nextOrigin.lng) {
+      setError(t("planRoute.errors.originInvalidCoords"));
       return;
     }
-    if (!destination.lat || !destination.lng) {
-      setError("El destino no tiene coordenadas válidas");
+    if (!nextDestination.lat || !nextDestination.lng) {
+      setError(t("planRoute.errors.destinationInvalidCoords"));
       return;
     }
 
@@ -329,22 +345,21 @@ const PlanRoute = ({ onNavigate }) => {
 
     try {
       console.log("Calculando ruta via backend...");
-      console.log("Origen:", origin);
-      console.log("Destino:", destination);
+      console.log("Origen:", nextOrigin);
+      console.log("Destino:", nextDestination);
       console.log("Modo:", transportMode);
 
       // Mapear modos de transporte
       const modeMap = {
         walking: "walking",
-        bike: "bicycling",
-        public: "transit",
+        car: "driving",
       };
 
       const result = await mapsService.getDirections(
-        origin.lat,
-        origin.lng,
-        destination.lat,
-        destination.lng,
+        nextOrigin.lat,
+        nextOrigin.lng,
+        nextDestination.lat,
+        nextDestination.lng,
         modeMap[transportMode] || "walking"
       );
 
@@ -353,25 +368,25 @@ const PlanRoute = ({ onNavigate }) => {
       if (result && result.encodedPolyline) {
         const distance = (result.distance.valueMeters / 1000).toFixed(1);
         const duration = Math.round(result.duration.valueSeconds / 60);
-        
+
         console.log("Ruta calculada:", { distance, duration });
-        
+
         setRoute({
           distance,
           duration,
           geometry: result.encodedPolyline,
-          startAddress: origin.address,
-          endAddress: destination.address,
+          startAddress: nextOrigin.address,
+          endAddress: nextDestination.address,
         });
 
         // Estimar CO₂/calorías con el backend (factores de transporte)
         try {
-          const pgModeMap = { walking: "walking", bike: "bike", public: "public_transport" };
+          const pgModeMap = { walking: "walking", car: "car" };
           const estimateResult = await mapsService.getEstimate(
-            origin.lat,
-            origin.lng,
-            destination.lat,
-            destination.lng,
+            nextOrigin.lat,
+            nextOrigin.lng,
+            nextDestination.lat,
+            nextDestination.lng,
             pgModeMap[transportMode] || "walking"
           );
           console.log("Estimación de sostenibilidad:", estimateResult);
@@ -380,12 +395,13 @@ const PlanRoute = ({ onNavigate }) => {
           console.warn("Estimación de sostenibilidad no disponible:", err);
           setEstimate(null);
         }
+
       } else {
-        setError("No se encontró una ruta válida");
+        setError(t("planRoute.errors.noValidRoute"));
       }
     } catch (err) {
       console.error("Error:", err);
-      setError(err?.response?.data?.message || err?.message || "Error calculando la ruta");
+      setError(err?.response?.data?.message || err?.message || t("planRoute.errors.calculateRoute"));
     } finally {
       setLoading(false);
     }
@@ -395,17 +411,23 @@ const PlanRoute = ({ onNavigate }) => {
   const saveRoute = async () => {
     if (!route || !origin || !destination) return null;
 
+    // Si la ruta ya está guardada (p.ej. vino de favoritos), no crear un duplicado
+    if (routeSavedId) {
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+      return routeSavedId;
+    }
+
     setSaving(true);
     try {
       const modeMap = {
         walking: "walking",
-        bike: "bike",
-        public: "public_transport",
+        car: "car",
       };
 
       const savedRoute = await routeService.create({
         name: `${origin.name} → ${destination.name}`,
-        description: `Ruta calculada desde ${origin.name} hasta ${destination.name}`,
+        description: t("planRoute.saveDescription", { from: origin.name, to: destination.name }),
         transportType: modeMap[transportMode] || "walking",
         startName: origin.name,
         destinationName: destination.name,
@@ -444,13 +466,12 @@ const PlanRoute = ({ onNavigate }) => {
         routeId = await saveRoute();
       }
       if (!routeId) {
-        throw new Error("No se pudo guardar la ruta para iniciar el viaje.");
+        throw new Error(t("planRoute.errors.saveForTrip"));
       }
 
       const modeMap = {
         walking: "walking",
-        bike: "bike",
-        public: "public_transport",
+        car: "car",
       };
 
       const started = await tripService.start({
@@ -463,7 +484,7 @@ const PlanRoute = ({ onNavigate }) => {
       setTripError(null);
     } catch (err) {
       console.error("Error iniciando viaje:", err);
-      setTripError(err?.response?.data?.message || err?.message || "Error iniciando el viaje");
+      setTripError(err?.response?.data?.message || err?.message || t("planRoute.errors.startTrip"));
     } finally {
       setStartingTrip(false);
     }
@@ -486,7 +507,7 @@ const PlanRoute = ({ onNavigate }) => {
       onNavigate?.("/user/history");
     } catch (err) {
       console.error("Error completando viaje:", err);
-      setTripError(err?.response?.data?.message || err?.message || "Error completando el viaje");
+      setTripError(err?.response?.data?.message || err?.message || t("planRoute.errors.completeTrip"));
     } finally {
       setCompleting(false);
     }
@@ -499,337 +520,367 @@ const PlanRoute = ({ onNavigate }) => {
     }
   }, [transportMode]);
 
-  const swapLocations = () => {
-    setOrigin(destination);
-    setDestination(origin);
-    setOriginInputValue(destination?.name || "");
-    setRoute(null);
+  // Trazar automáticamente la ruta precargada desde favoritos (una sola vez)
+  useEffect(() => {
+    if (presetPendingRef.current && origin?.lat && destination?.lat) {
+      presetPendingRef.current = false;
+      calculateRoute();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [origin, destination]);
+
+  // Función para usar mi ubicación como origen.
+  // Siempre solicita GPS fresco en el clic (enableHighAccuracy, sin caché)
+  // para no usar una posición cacheada/imprecisa del primer useEffect.
+  const setMyLocation = async () => {
+    if (!navigator.geolocation) {
+      setError(t("planRoute.errors.geoUnsupported"));
+      return;
+    }
+
+    setError(t("planRoute.errors.gettingLocation"));
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const location = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          name: t("planRoute.myLocation"),
+          address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`
+        };
+        const realName = await resolveLocationName(location.lat, location.lng);
+        location.name = realName;
+        location.address = `${realName} (${location.address})`;
+        setOrigin(location);
+        setOriginInputValue(realName);
+        setMapCenter({ lat: location.lat, lng: location.lng });
+        console.log("Usando ubicación como origen:", location);
+
+        if (destination && destination.lat) {
+          setTimeout(() => calculateRoute(location, destination), 100);
+        }
+      },
+      (err) => {
+        console.error("Error obteniendo ubicación:", err);
+        setError(t("planRoute.errors.locationFailed"));
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
   };
 
-  // Función para usar mi ubicación como origen
-  const setMyLocation = () => {
-    if (userLocation && userLocation.lat && userLocation.lng) {
-      setOrigin(userLocation);
-      setOriginInputValue("Mi ubicación");
-      setMapCenter({ lat: userLocation.lat, lng: userLocation.lng });
-      console.log("Usando ubicación como origen:", userLocation);
-      
-      if (destination && destination.lat) {
-        setTimeout(() => calculateRoute(), 100);
-      }
-    } else {
-      setError("No se pudo obtener su ubicación. Verifique los permisos del GPS.");
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const location = {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            name: "Mi ubicación",
-            address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`
-          };
-          setUserLocation(location);
-          setOrigin(location);
-          setOriginInputValue("Mi ubicación");
-          setMapCenter({ lat: location.lat, lng: location.lng });
-        },
-        () => setError("No se pudo acceder a su ubicación"),
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-      );
+  const loadNearbyPois = async (type) => {
+    try {
+      const result = await mapsService.getPlacesNearby(mapCenter.lat, mapCenter.lng, type, 2000);
+      if (result?.results) setNearbyPois(result.results);
+    } catch (err) {
+      console.error("Error cargando lugares cercanos:", err);
     }
   };
 
-  // Centrar en Neiva
-  const centerOnNeiva = () => {
-    setMapCenter({ lat: NEIVA_LAT, lng: NEIVA_LON });
+  const selectNearbyPoi = (poi) => {
+    const rawLat = poi.lat ?? poi.geometry?.location?.lat;
+    const rawLng = poi.lng ?? poi.geometry?.location?.lng;
+    const lat = typeof rawLat === "function" ? rawLat() : Number(rawLat);
+    const lng = typeof rawLng === "function" ? rawLng() : Number(rawLng);
+    const address = poi.vicinity || poi.address || poi.formatted_address || "";
+    const name = poi.name || address;
+
+    if (!name || !Number.isFinite(lat) || !Number.isFinite(lng)) {
+      setError(t("planRoute.errors.placeAsDestination"));
+      return;
+    }
+
+    const selected = {
+      name,
+      address,
+      lat,
+      lng,
+      placeId: poi.placeId || poi.place_id,
+    };
+
+    setDestination(selected);
+    setMapCenter({ lat, lng });
+    setShowNearbySearch(false);
+
+    const hasValidOrigin =
+      origin != null &&
+      Number.isFinite(Number(origin.lat)) &&
+      Number.isFinite(Number(origin.lng));
+
+    if (hasValidOrigin) {
+      calculateRoute(origin, selected);
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      setError(t("planRoute.errors.selectOriginOrLocation"));
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const geoLocation = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          name: t("planRoute.myLocation"),
+          address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`,
+        };
+        const realName = await resolveLocationName(geoLocation.lat, geoLocation.lng);
+        geoLocation.name = realName;
+        geoLocation.address = `${realName} (${geoLocation.address})`;
+        setOrigin(geoLocation);
+        setOriginInputValue(realName);
+        calculateRoute(geoLocation, selected);
+      },
+      () => {
+        setError(t("planRoute.errors.selectOriginOrLocation"));
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  };
+
+  const handleNearbyToggle = () => {
+    const opening = !showNearbySearch;
+    setShowNearbySearch(opening);
+    if (opening) {
+      if (nearbyPois.length === 0) loadNearbyPois(nearbyType);
+      showActionMessage(t("planRoute.action.chooseType"));
+    } else {
+      showActionMessage(t("planRoute.action.searchPanelClosed"));
+    }
+  };
+
+  const handleMapTypeCycle = () => {
+    const currentIndex = MAP_TYPE_ORDER.indexOf(mapTypeId);
+    const next = MAP_TYPE_ORDER[(currentIndex + 1 + MAP_TYPE_ORDER.length) % MAP_TYPE_ORDER.length];
+    setMapTypeId(next);
+    showActionMessage(t("planRoute.mapView", { view: t(MAP_TYPE_LABELS[next]) }));
+  };
+
+  const handleCenterAction = () => {
+    if (!navigator.geolocation) {
+      showActionMessage(t("planRoute.action.geoUnsupported"));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = Number(pos.coords.latitude);
+        const lng = Number(pos.coords.longitude);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+          showActionMessage(t("planRoute.action.locationUnavailable"));
+          return;
+        }
+        setMapCenter({ lat, lng });
+        setMapFocus({ lat, lng, zoom: 17, at: Date.now() });
+        showActionMessage(t("planRoute.action.centeredOnLocation"));
+      },
+      (err) => {
+        if (typeof window !== "undefined" && window.isSecureContext === false) {
+          showActionMessage(t("planRoute.action.insecureConnection"));
+          return;
+        }
+        if (err?.code === 1) {
+          showActionMessage(t("planRoute.action.allowLocation"));
+        } else {
+          showActionMessage(t("planRoute.action.locationUnavailable"));
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
   };
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
-      {/* Mapa */}
+    <div className={`relative h-screen w-full overflow-hidden ${isDarkMode ? "bg-[#0B1215]" : "bg-[#f5f0e8]"}`}>
       <div className="absolute inset-0">
         <MapViewGoogle
           height="100vh"
           center={mapCenter}
+          mapFocus={mapFocus}
           zoom={14}
+          mapTypeId={mapTypeId}
           selectedLocation={origin}
           routeGeometry={route?.geometry}
           showUserLocation={true}
+          onLocationSelect={null}
           markers={[
-            origin && { lat: origin.lat, lng: origin.lng, popup: `Origen: ${origin.name}`, type: "origin" },
-            destination && { lat: destination.lat, lng: destination.lng, popup: `Destino: ${destination.name}`, type: "destination" },
-            ...(!showPois ? [] : pois.map((poi) => ({
-              lat: poi.lat,
-              lng: poi.lng,
-              popup: `${poi.name}${poi.address ? ` — ${poi.address}` : ""}`,
-              type: "poi",
-            }))),
+            origin && { lat: origin.lat, lng: origin.lng, popup: t("planRoute.popupOrigin", { name: origin.name }), type: "origin" },
+            destination && { lat: destination.lat, lng: destination.lng, popup: t("planRoute.popupDestination", { name: destination.name }), type: "destination" },
+            ...nearbyPois.map((poi) => ({
+              lat: poi.lat, lng: poi.lng,
+              popup: `${poi.name}${poi.vicinity ? ` — ${poi.vicinity}` : ""}${poi.rating ? ` ⭐ ${poi.rating}` : ""}`,
+              type: "nearby",
+            })),
           ].filter(Boolean)}
         />
       </div>
 
-      {/* Panel de control */}
-      <div className="absolute top-4 left-4 right-4 md:left-4 md:right-auto md:w-96 z-20">
-        <div className={`rounded-xl shadow-xl overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
-          
-          {/* Encabezado */}
-          <div className={`px-4 py-3 border-b ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-md bg-emerald-600 flex items-center justify-center">
-                <LeafIcon size={14} white={true} />
+      <div className="absolute top-0 left-0 right-0 z-30 px-6 py-4 flex items-center justify-between pointer-events-none">
+        <div className="flex items-center gap-3 pointer-events-auto">
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg ${isDarkMode ? "bg-[#064E3B]" : "bg-[#1a5c2a]"}`}>
+            <span className="text-white font-black text-lg">e</span>
+          </div>
+          <div>
+            <h1 className={`text-lg font-black leading-tight ${isDarkMode ? "text-[#34D399]" : "text-[#1a5c2a]"}`}>EcoRuteando</h1>
+            <p className={`text-[10px] font-medium tracking-wider ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>NEIVA · HUILA · COLOMBIA</p>
+          </div>
+        </div>
+        <button onClick={toggleTheme} className={`pointer-events-auto w-10 h-10 rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition-all ${isDarkMode ? "bg-[#162329] border border-[#26383D]" : "bg-white"}`}>
+          <span className="text-lg">{isDarkMode ? "☀️" : "🌙"}</span>
+        </button>
+      </div>
+
+      <div className="absolute top-20 left-4 md:left-6 z-20 w-[calc(100%-2rem)] max-w-[380px] max-h-[calc(100vh-6rem)] overflow-y-auto">
+        <div className={`rounded-3xl shadow-xl overflow-hidden mb-4 ${isDarkMode ? "bg-[#162329] border border-[#26383D]" : "bg-white"}`}>
+          <div className="px-6 pt-6 pb-4">
+            <p className={`text-[10px] font-bold tracking-[0.2em] uppercase mb-1 ${isDarkMode ? "text-[#34D399]/80" : "text-[#1a5c2a]/70"}`}>{t("planRoute.plannerTitle")}</p>
+            <h2 className={`text-2xl font-black leading-snug ${isDarkMode ? "text-[#e2e8f0]" : "text-[#2d2d2d]"}`}>
+              {t("planRoute.heroLead")} <em className={`not-italic ${isDarkMode ? "text-[#34D399]" : "text-[#1a5c2a]"}`}>{t("planRoute.heroHighlight")}</em>
+            </h2>
+          </div>
+          <div className="px-6 pb-6 space-y-4">
+            <div>
+              <label className={`block text-[10px] font-bold tracking-[0.15em] uppercase mb-1.5 ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>{t("planRoute.origin")}</label>
+              <LocationSearch key={`origin-search-${originInputValue}`} placeholder={t("planRoute.addressOrPlace")} onSelect={setOrigin} isDarkMode={isDarkMode} value={origin?.name} externalValue={originInputValue} type="origin" />
+            </div>
+            <div>
+              <label className={`block text-[10px] font-bold tracking-[0.15em] uppercase mb-1.5 ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>{t("planRoute.destination")}</label>
+              <LocationSearch placeholder={t("planRoute.addressOrPlace")} onSelect={setDestination} isDarkMode={isDarkMode} value={destination?.name} type="destination" />
+            </div>
+            <button onClick={setMyLocation} className={`w-full py-2.5 rounded-full border-2 text-xs font-bold flex items-center justify-center gap-2 transition-all ${isDarkMode ? "border-[#26383D] text-[#34D399] hover:bg-[#111C20]" : "border-[#1a5c2a]/20 text-[#1a5c2a] hover:bg-[#1a5c2a]/5"}`}>
+              {t("planRoute.useMyLocation")}
+            </button>
+            <div>
+              <label className={`block text-[10px] font-bold tracking-[0.15em] uppercase mb-2 ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>{t("planRoute.transportMode")}</label>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { id: "walking", icon: "🚶", label: t("planRoute.modeWalking") },
+                  { id: "bike", icon: "🚲", label: t("planRoute.modeBike") },
+                  { id: "public", icon: "🚌", label: t("planRoute.modePublic") },
+                  { id: "car", icon: "🚗", label: t("planRoute.modeCar") }
+                ].map((mode) => (
+                  <button key={mode.id} onClick={() => setTransportMode(mode.id)}
+                    className={`py-3 rounded-2xl flex flex-col items-center gap-1 text-[10px] font-bold transition-all ${
+                      transportMode === mode.id
+                        ? isDarkMode ? "bg-[#064E3B] text-white shadow-lg" : "bg-[#1a5c2a] text-white shadow-lg shadow-[#1a5c2a]/30"
+                        : isDarkMode ? "bg-[#111C20] text-[#94a3b8] border border-[#26383D] hover:bg-[#162329]" : "bg-[#f5f0e8] text-[#8b7355] hover:bg-[#ebe4d5]"
+                    }`}>
+                    <span className="text-lg">{mode.icon}</span>
+                    <span>{mode.label}</span>
+                  </button>
+                ))}
               </div>
-              <span className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                Planificador de rutas
-              </span>
-              <span className={`text-xs ml-auto ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                Neiva
-              </span>
+            </div>
+            <button onClick={() => calculateRoute()} disabled={!origin?.lat || !destination?.lat || loading}
+              className={`w-full py-3.5 rounded-2xl text-sm font-bold transition-all ${
+                origin?.lat && destination?.lat && !loading
+                  ? isDarkMode ? "bg-[#064E3B] text-white hover:bg-[#065f46] shadow-lg" : "bg-[#1a5c2a] text-white hover:bg-[#145223] shadow-lg shadow-[#1a5c2a]/30"
+                  : isDarkMode ? "bg-[#111C20] text-[#94a3b8]/60 border border-[#26383D] cursor-not-allowed" : "bg-[#e8e0d4] text-[#b8a898] cursor-not-allowed"
+              }`}>
+              {loading ? t("planRoute.calculating") : t("planRoute.calculate")}
+            </button>
+            {(transportMode === "bike" || transportMode === "public") && (
+              <div className={`p-3 rounded-xl text-xs border ${isDarkMode ? "bg-[#111C20] border-[#26383D] text-[#e2e8f0]" : "bg-amber-50 border-amber-100 text-amber-700"}`}>
+                {transportMode === "bike"
+                  ? t("planRoute.hintBike")
+                  : t("planRoute.hintPublic")}
+              </div>
+            )}
+            {error && <div className={`p-3 rounded-xl text-xs text-center border ${isDarkMode ? "bg-[#111C20] border-[#26383D] text-red-400" : "bg-red-50 border-red-100 text-red-600"}`}>{error}</div>}
+          </div>
+        </div>
+
+        {route && (
+          <div className={`rounded-3xl shadow-xl overflow-hidden mb-4 ${isDarkMode ? "bg-[#162329] border border-[#26383D]" : "bg-white"}`}>
+            <div className="px-6 pt-5 pb-3">
+              <p className={`text-[10px] font-bold tracking-[0.2em] uppercase mb-1 ${isDarkMode ? "text-[#34D399]/80" : "text-[#1a5c2a]/70"}`}>{t("planRoute.suggestedRoute")}</p>
+              <p className={`text-sm font-bold leading-snug ${isDarkMode ? "text-[#e2e8f0]" : "text-[#2d2d2d]"}`}>
+                {route.startAddress?.split(",")[0]} → {route.endAddress?.split(",")[0]}
+              </p>
+            </div>
+            <div className="px-6 pb-5">
+              <div className="flex gap-2">
+                <div className={`flex-1 rounded-2xl p-3 text-center ${isDarkMode ? "bg-[#111C20] border border-[#26383D]" : "bg-[#f5f0e8]"}`}>
+                  <p className={`text-lg font-black ${isDarkMode ? "text-[#e2e8f0]" : "text-[#2d2d2d]"}`}>{route.duration}</p>
+                  <p className={`text-[10px] font-bold tracking-wider uppercase ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>{transportMode === "car" ? t("planRoute.modeCar") : transportMode === "bike" ? t("planRoute.modeBike") : transportMode === "public" ? t("planRoute.modePublic") : t("planRoute.onFoot")}</p>
+                </div>
+                <div className={`flex-1 rounded-2xl p-3 text-center ${isDarkMode ? "bg-[#111C20] border border-[#26383D]" : "bg-[#f5f0e8]"}`}>
+                  <p className={`text-lg font-black ${isDarkMode ? "text-[#e2e8f0]" : "text-[#2d2d2d]"}`}>{route.distance} km</p>
+                  <p className={`text-[10px] font-bold tracking-wider uppercase ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>{t("planRoute.distance")}</p>
+                </div>
+                {estimate?.co2SavedKg != null && (
+                  <div className={`flex-1 rounded-2xl p-3 text-center ${isDarkMode ? "bg-[#111C20] border border-[#26383D]" : "bg-[#f5f0e8]"}`}>
+                    <p className={`text-lg font-black ${isDarkMode ? "text-[#34D399]" : "text-[#1a5c2a]"}`}>-{estimate.co2SavedKg} kg</p>
+                    <p className={`text-[10px] font-bold tracking-wider uppercase ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>{t("planRoute.co2Avoided")}</p>
+                  </div>
+                )}
+              </div>
+              <div className="mt-4 space-y-2">
+                {activeTripId ? (
+                  <>
+                    <div className="grid grid-cols-2 gap-2">
+                      <span className={`flex items-center justify-center py-2.5 rounded-xl text-xs font-bold ${isDarkMode ? "bg-[#111C20] text-[#34D399] border border-[#26383D]" : "bg-amber-50 text-amber-700"}`}>{t("planRoute.inProgress")}</span>
+                      <button onClick={completeTrip} disabled={completing} className={`py-2.5 rounded-xl text-xs font-bold ${completing ? isDarkMode ? "bg-[#111C20] text-[#94a3b8]/60 border border-[#26383D]" : "bg-[#e8e0d4] text-[#b8a898]" : isDarkMode ? "bg-[#064E3B] text-white hover:bg-[#065f46]" : "bg-[#1a5c2a] text-white hover:bg-[#145223]"}`}>{completing ? t("planRoute.completing") : t("planRoute.complete")}</button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2">
+                    <button onClick={saveRoute} disabled={saving || saved || !!routeSavedId} className={`py-2.5 rounded-xl text-xs font-bold ${saved || routeSavedId ? isDarkMode ? "bg-[#111C20] text-[#34D399] border border-[#26383D]" : "bg-green-50 text-green-700" : saving ? isDarkMode ? "bg-[#111C20] text-[#94a3b8]/60 border border-[#26383D]" : "bg-[#e8e0d4] text-[#b8a898]" : isDarkMode ? "bg-[#064E3B] text-white hover:bg-[#065f46]" : "bg-[#1a5c2a] text-white hover:bg-[#145223]"}`}>{saved || routeSavedId ? t("planRoute.savedRoute") : saving ? t("planRoute.saving") : t("planRoute.save")}</button>
+                    <button onClick={startTrip} disabled={startingTrip} className={`py-2.5 rounded-xl text-xs font-bold ${startingTrip ? isDarkMode ? "bg-[#111C20] text-[#94a3b8]/60 border border-[#26383D]" : "bg-[#e8e0d4] text-[#b8a898]" : isDarkMode ? "bg-[#064E3B] text-white hover:bg-[#065f46]" : "bg-[#1a5c2a] text-white hover:bg-[#145223]"}`}>{startingTrip ? t("planRoute.starting") : t("planRoute.start")}</button>
+                  </div>
+                )}
+                {tripError && <p className={`text-center text-xs ${isDarkMode ? "text-red-400" : "text-red-500"}`}>{tripError}</p>}
+              </div>
             </div>
           </div>
+        )}
+      </div>
 
-          {/* Contenido */}
-          <div className="p-4">
-            {/* Origen */}
-            <div className="space-y-1">
-              <label className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                Origen
-              </label>
-              <LocationSearch
-                placeholder="Dirección o lugar"
-                onSelect={setOrigin}
-                isDarkMode={isDarkMode}
-                value={origin?.name}
-                externalValue={originInputValue}
-                type="origin"
-              />
+      <div className="absolute bottom-24 right-4 md:bottom-6 md:right-6 z-20 flex flex-col gap-2">
+        <button onClick={handleNearbyToggle} className={`w-12 h-12 rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#34D399]/40 ${showNearbySearch ? "bg-[#064E3B] text-white border border-[#064E3B]" : isDarkMode ? "bg-[#162329] border border-[#26383D] text-[#e2e8f0] hover:bg-[#111C20]" : "bg-white text-[#2d2d2d] hover:bg-gray-50"}`} title={t("planRoute.searchPlaces")} aria-label={t("planRoute.searchPlaces")}><SearchIcon size={22} /></button>
+        <button onClick={handleMapTypeCycle} className={`w-12 h-12 rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#34D399]/40 ${isDarkMode ? "bg-[#162329] border border-[#26383D] text-[#e2e8f0] hover:bg-[#111C20]" : "bg-white text-[#2d2d2d] hover:bg-gray-50"}`} title={t("planRoute.mapTypeHint", { type: t(MAP_TYPE_LABELS[mapTypeId]) })} aria-label={t("planRoute.mapTypeHint", { type: t(MAP_TYPE_LABELS[mapTypeId]) })}><MapIcon size={22} /></button>
+        <button onClick={handleCenterAction} className={`w-12 h-12 rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#34D399]/40 ${isDarkMode ? "bg-[#162329] border border-[#26383D] text-[#e2e8f0] hover:bg-[#111C20]" : "bg-white text-[#2d2d2d] hover:bg-gray-50"}`} title={t("planRoute.centerMyLocation")} aria-label={t("planRoute.centerMyLocation")}><TargetIcon size={22} /></button>
+        <button onClick={() => onNavigate?.("/dashboard")} className={`w-12 h-12 rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#34D399]/40 ${isDarkMode ? "bg-[#162329] border border-[#26383D] text-[#e2e8f0] hover:bg-[#111C20]" : "bg-white text-[#1a5c2a] hover:bg-gray-50"}`} title={t("planRoute.back")} aria-label={t("planRoute.back")}><ArrowLeft size={22} /></button>
+      </div>
+
+      {actionMessage && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={`absolute bottom-6 left-4 md:left-6 z-30 max-w-[calc(100%-6rem)] px-4 py-2.5 rounded-full shadow-lg text-xs font-bold pointer-events-none ${isDarkMode ? "bg-[#162329] border border-[#26383D] text-[#e2e8f0]" : "bg-white border border-black/5 text-[#2d2d2d]"}`}
+        >
+          {actionMessage}
+        </div>
+      )}
+
+      {showNearbySearch && (
+        <div className="absolute z-20 left-4 right-4 top-[380px] md:top-20 md:left-[400px] md:right-auto">
+          <div className={`rounded-2xl shadow-2xl p-4 w-full md:w-72 ${isDarkMode ? "bg-[#162329] border border-[#26383D]" : "bg-white border border-black/5"}`}>
+            <div className="flex items-center justify-between mb-3">
+              <h4 className={`text-sm font-bold ${isDarkMode ? "text-[#e2e8f0]" : "text-black"}`}>{t("planRoute.nearbyTitle")}</h4>
+              <button onClick={() => setShowNearbySearch(false)} className={`text-xs font-bold ${isDarkMode ? "text-[#94a3b8] hover:text-[#e2e8f0]" : "text-black/60 hover:text-black"}`}>{t("planRoute.close")}</button>
             </div>
-
-            {/* Botón intercambiar */}
-            <div className="flex justify-center my-2">
-              <button
-                onClick={swapLocations}
-                className={`w-7 h-7 rounded-md flex items-center justify-center transition-all ${
-                  isDarkMode ? 'bg-gray-800 text-gray-400 hover:bg-gray-700' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                }`}
-              >
-                ↕
-              </button>
-            </div>
-
-            {/* Destino */}
-            <div className="space-y-1">
-              <label className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                Destino
-              </label>
-              <LocationSearch
-                placeholder="Dirección o lugar"
-                onSelect={setDestination}
-                isDarkMode={isDarkMode}
-                value={destination?.name}
-                type="destination"
-              />
-            </div>
-
-            {/* Mi ubicación */}
-            <button
-              onClick={setMyLocation}
-              className={`w-full mt-3 py-2 rounded-md text-sm font-medium transition-all flex items-center justify-center gap-2 ${
-                isDarkMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              <span className="text-base">📍</span>
-              Usar mi ubicación
-            </button>
-
-            {/* Modos de transporte */}
-            <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-gray-200 dark:border-gray-800">
-              {[
-                { id: "walking", label: "Caminar", icon: "🚶" },
-                { id: "bike", label: "Bicicleta", icon: "🚲" },
-                { id: "public", label: "Transporte", icon: "🚌" }
-              ].map(mode => (
-                <button
-                  key={mode.id}
-                  onClick={() => setTransportMode(mode.id)}
-                  className={`py-2 rounded-md text-sm font-medium transition-all ${
-                    transportMode === mode.id
-                      ? 'bg-emerald-600 text-white'
-                      : isDarkMode ? 'bg-gray-800 text-gray-400 hover:bg-gray-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}
-                >
-                  <span className="text-base">{mode.icon}</span>
-                  <span className="ml-1">{mode.label}</span>
-                </button>
+            <div className="flex flex-wrap gap-1.5">
+              {["restaurant", "hotel", "church", "park", "cafe", "bar", "museum"].map((type) => (
+                <button key={type} onClick={() => { setNearbyType(type); loadNearbyPois(type); }}
+                  className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold capitalize ${nearbyType === type ? isDarkMode ? "bg-[#064E3B] text-white" : "bg-[#1a5c2a] text-white" : isDarkMode ? "bg-[#111C20] text-[#e2e8f0] border border-[#26383D] hover:bg-[#162329]" : "bg-[#f5f0e8] text-black hover:bg-[#ebe4d5]"                    }`}>{t(`planRoute.poiTypes.${type}`)}</button>
               ))}
             </div>
-
-            {/* Botón calcular */}
-            <button
-              onClick={calculateRoute}
-              disabled={!origin?.lat || !destination?.lat || loading}
-              className={`w-full mt-4 py-2.5 rounded-md text-sm font-medium transition-all ${
-                origin?.lat && destination?.lat && !loading
-                  ? 'bg-blue-600 text-white hover:bg-blue-700'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              {loading ? 'Calculando...' : 'Calcular ruta'}
-            </button>
-
-            {/* Error */}
-            {error && (
-              <div className="mt-3 p-2 rounded-md bg-red-50 dark:bg-red-900/20 text-red-600 text-xs text-center">
-                {error}
+            {nearbyPois.length > 0 && (
+              <div className="mt-3 max-h-52 overflow-y-auto space-y-1.5">
+                {nearbyPois.slice(0, 10).map((poi, idx) => (
+                  <button key={idx} type="button" onClick={() => selectNearbyPoi(poi)} className={`w-full text-left p-2.5 rounded-lg border transition-colors ${isDarkMode ? "bg-[#111C20] border-[#26383D] hover:border-[#34D399]" : "bg-white border-black/10 hover:border-[#1a5c2a]"}`}>
+                    <p className={`text-[13px] font-bold leading-snug ${isDarkMode ? "text-[#e2e8f0]" : "text-black"}`}>{poi.name}</p>
+                    {poi.vicinity && <p className={`text-[11px] font-medium leading-snug ${isDarkMode ? "text-[#94a3b8]" : "text-black/70"}`}>{poi.vicinity}</p>}
+                    <p className={`text-[11px] font-bold mt-0.5 ${isDarkMode ? "text-[#e2e8f0]" : "text-black"}`}>
+                      {poi.rating ? `⭐ ${poi.rating} · ` : ""}{t("planRoute.tapToGo")}
+                    </p>
+                  </button>
+                ))}
               </div>
             )}
           </div>
         </div>
-      </div>
-
-      {/* Tarjeta de resultados */}
-      {route && (
-        <div className="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-80 z-20">
-          <div className={`rounded-xl shadow-xl overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
-            <div className="p-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="flex items-center gap-3">
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${
-                      transportMode === 'walking' ? 'bg-green-100 text-green-700' :
-                      transportMode === 'bike' ? 'bg-emerald-100 text-emerald-700' : 'bg-purple-100 text-purple-700'
-                    }`}>
-                      {transportMode === 'walking' ? 'Caminata' : transportMode === 'bike' ? 'Ciclorruta' : 'Transporte público'}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {route.distance} km · {route.duration} min
-                    </span>
-                  </div>
-                  <p className={`text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                    {route.startAddress?.split(',')[0]} → {route.endAddress?.split(',')[0]}
-                  </p>
-
-                  {/* Sostenibilidad */}
-                  <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs">
-                    <span className="flex items-center gap-1 text-emerald-500 font-medium">
-                      <LeafIcon size={13} />
-                      CO₂ ahorrado: {estimate?.co2SavedKg != null ? `${estimate.co2SavedKg} kg` : "—"}
-                    </span>
-                    {estimate?.co2EmissionsKg != null && (
-                      <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        Emisiones: {estimate.co2EmissionsKg} kg
-                      </span>
-                    )}
-                    {estimate?.estimatedCalories != null && (
-                      <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        🔥 {estimate.estimatedCalories} kcal
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setRoute(null)}
-                    className="w-6 h-6 rounded-md flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
-                  >
-                    <span className="text-gray-400 text-sm">✕</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Acciones */}
-              <div className="mt-3 flex gap-2">
-                {activeTripId ? (
-                  <>
-                    <span className="flex-1 text-center px-2 py-1.5 rounded-md text-xs font-medium bg-amber-100 text-amber-700">
-                      ✓ Viaje en curso
-                    </span>
-                    <button
-                      onClick={completeTrip}
-                      disabled={completing}
-                      className={`flex-1 px-2 py-1.5 rounded-md text-xs font-medium transition-all ${
-                        completing
-                          ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                          : 'bg-emerald-600 text-white hover:bg-emerald-700'
-                      }`}
-                    >
-                      {completing ? 'Completando...' : 'Completar viaje'}
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      onClick={saveRoute}
-                      disabled={saving || saved}
-                      className={`flex-1 px-2 py-1.5 rounded-md text-xs font-medium transition-all ${
-                        saved
-                          ? 'bg-green-100 text-green-700'
-                          : saving
-                          ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                          : 'bg-emerald-600 text-white hover:bg-emerald-700'
-                      }`}
-                    >
-                      {saved ? '✓ Guardada' : saving ? 'Guardando...' : 'Guardar'}
-                    </button>
-                    <button
-                      onClick={startTrip}
-                      disabled={startingTrip}
-                      className={`flex-1 px-2 py-1.5 rounded-md text-xs font-medium transition-all ${
-                        startingTrip
-                          ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                          : 'bg-blue-600 text-white hover:bg-blue-700'
-                      }`}
-                    >
-                      {startingTrip ? 'Iniciando...' : '🚀 Iniciar viaje'}
-                    </button>
-                  </>
-                )}
-              </div>
-
-              {/* Error de viaje */}
-              {tripError && (
-                <div className="mt-2 p-2 rounded-md bg-red-50 dark:bg-red-900/20 text-red-600 text-xs text-center">
-                  {tripError}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
       )}
-
-      {/* Botones flotantes */}
-      <div className="absolute bottom-4 right-4 z-20 flex flex-col gap-2">
-        <button
-          onClick={() => setShowPois(!showPois)}
-          className="w-9 h-9 rounded-md bg-white shadow-md flex items-center justify-center hover:bg-gray-50 transition-all"
-          title={showPois ? "Ocultar puntos de interés" : "Mostrar puntos de interés"}
-        >
-          <span className="text-sm">📍</span>
-        </button>
-        <button
-          onClick={centerOnNeiva}
-          className="w-9 h-9 rounded-md bg-white shadow-md flex items-center justify-center hover:bg-gray-50 transition-all"
-          title="Centrar en Neiva"
-        >
-          <span className="text-sm">🏙️</span>
-        </button>
-        <button
-          onClick={toggleTheme}
-          className="w-9 h-9 rounded-md bg-white shadow-md flex items-center justify-center hover:bg-gray-50 transition-all"
-        >
-          <span className="text-sm">{isDarkMode ? "☀️" : "🌙"}</span>
-        </button>
-      </div>
-
-      {/* Botón volver */}
-      <div className="absolute top-4 right-4 z-20">
-        <button
-          onClick={() => onNavigate?.("/dashboard")}
-          className={`px-3 py-1.5 rounded-md text-sm shadow-md transition-all ${
-            isDarkMode ? 'bg-gray-900 text-white hover:bg-gray-800' : 'bg-white text-gray-700 hover:bg-gray-50'
-          }`}
-        >
-          ← Volver
-        </button>
-      </div>
     </div>
   );
 };

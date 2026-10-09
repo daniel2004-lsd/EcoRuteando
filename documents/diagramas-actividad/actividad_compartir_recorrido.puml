@@ -1,0 +1,26 @@
+@startuml Actividad_CompartirRecorrido
+title <b>Diagrama de Actividad — Compartir Recorridos</b>\n<size:10>CU20 · RF32 · ShareSection.jsx</size>
+
+|#E8F5E9|Usuario|
+start
+:Selecciona recorrido del historial;
+|Sistema|
+:Muestra opción "Compartir" (RF32.1);
+|Usuario|
+:Elige datos a incluir;
+|Sistema|
+:Genera vista previa ocultando privados (RF32.5);
+|Usuario|
+:Selecciona red social/enlace (RF32.3);
+|Sistema|
+:Prepara contenido;
+|Usuario|
+:Confirma publicación (RF32.4);
+|Sistema|
+if (¿Red disponible?) then (no)
+  :Sugiere otra red o copiar enlace;
+else (sí)
+  :Publica y confirma éxito;
+endif
+stop
+@enduml

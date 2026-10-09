@@ -28,6 +28,13 @@ const mapsService = {
     });
     return data;
   },
+
+  getPlacesNearby: async (lat, lng, type, radius) => {
+    const { data } = await api.get("/maps/places", {
+      params: { lat, lng, type, radius },
+    });
+    return data;
+  },
 };
 
 export default mapsService;

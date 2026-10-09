@@ -1,0 +1,21 @@
+@startuml Actividad_AlertasClimaticas
+title <b>Diagrama de Actividad — Alertas Climáticas</b>\n<size:10>CU18 · RF19 · UserAlert.jsx</size>
+
+|#E8F5E9|Usuario|
+start
+:Consulta una ruta (vehículo/a pie);
+|Sistema|
+:Conecta a servicio climático (RF19.1);
+if (¿Servicio disponible?) then (no)
+  :Omite alertas sin bloquear ruta;
+  stop
+else (sí)
+endif
+:Evalúa lluvia/tormenta/temperaturas;
+if (¿Condición adversa?) then (sí)
+  :Muestra alerta y sugiere alternativa (RF19.2);
+else (no)
+  :Muestra "Condiciones favorables";
+endif
+stop
+@enduml

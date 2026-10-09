@@ -1,0 +1,31 @@
+@startuml Actividad_EnvioNotificaciones
+title <b>Diagrama de Actividad — Envío de Notificaciones</b>\n<size:10>CU10 · RF10 · AdminPanel.jsx</size>
+
+|#E8F5E9|Administrador|
+start
+:Accede al módulo de notificaciones;
+|Sistema|
+:Muestra formulario y plantillas;
+|Administrador|
+:Redacta mensaje y selecciona destinatarios;
+|Sistema|
+if (¿Mensaje vacío o destinatarios vacíos?) then (sí)
+  :Muestra "Seleccione destinatarios y contenido";
+  detach
+else (no)
+endif
+if (¿Permisos admin?) then (no)
+  :Denegar 403 "No autorizado";
+  stop
+else (sí)
+endif
+:Prepara contenido con variables {{nombre}};
+:Envía por canales (in-app/correo/push);
+if (¿Fallo envío SMTP/push?) then (sí)
+  :Registra error y muestra "Fallo en el envío";
+  stop
+else (no)
+endif
+:Registra en notificaciones y confirma éxito;
+stop
+@enduml
