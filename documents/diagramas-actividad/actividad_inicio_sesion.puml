@@ -1,0 +1,50 @@
+@startuml Actividad_InicioSesion
+title <b>Diagrama de Actividad — Inicio de Sesión</b>\n<size:10>CU05 · RF2 / RF4 · Login.jsx + API /auth/login</size>
+
+|#E8F5E9|Usuario|
+start
+:Abre la pantalla de inicio de sesión;
+:Ingresa correo y contraseña;
+
+|#FFFFFF|Sistema|
+:Recibe POST /auth/login;
+if (¿Credenciales válidas\ny cuenta verificada?) then (no)
+  if (¿Cuenta sin verificar?) then (sí)
+    :Ofrece reenviar código de verificación;
+    stop
+  else (credenciales inválidas)
+    :Muestra mensaje de error;
+    |Usuario|
+    :Reintenta o recupera contraseña (CU02);
+    stop
+  endif
+else (sí)
+endif
+
+if (¿2FA activado en la cuenta?) then (sí)
+  :Solicita código de segundo factor;
+  |Usuario|
+  :Ingresa código del autenticador;
+  |Sistema|
+  if (¿Código 2FA válido?) then (no)
+    :Muestra error y reintenta;
+    |Usuario|
+    :Reintenta;
+    detach
+  else (sí)
+  endif
+else (no)
+endif
+
+|Base de Datos|
+:Registra la sesión activa;
+
+|Sistema|
+:Emite JWT (access + refresh token);
+:Guarda sesión en localStorage;
+
+|Usuario|
+:Accede al panel principal\n(dashboard / home);
+stop
+
+@enduml

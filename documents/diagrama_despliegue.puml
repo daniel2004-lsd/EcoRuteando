@@ -1,0 +1,85 @@
+@startuml DiagramaDeDespliegue_EcoRuteando
+' ============================================================
+'  Diagrama de Despliegue - EcoRuteando
+'  Stack: React+Vite/Nginx · .NET 9 · Liquibase · PostGIS
+' ============================================================
+
+title <b>Diagrama de Despliegue — EcoRuteando</b>\n<size:10>Docker Compose · Orquestación de contenedores</size>
+
+skinparam backgroundColor #FDFDFD
+skinparam defaultFontName Segoe UI
+skinparam node {
+    BackgroundColor<<docker>> #E3F2FD
+    BorderColor<<docker>> #1976D2
+    BackgroundColor<<client>> #E8F5E9
+    BorderColor<<client>> #2E7D32
+    BackgroundColor<<ext>> #FFF3E0
+    BorderColor<<ext>> #EF6C00
+}
+skinparam artifactBackgroundColor #FFFFFF
+skinparam databaseBackgroundColor #F3E5F5
+skinparam databaseBorderColor #6A1B9A
+skinparam ArrowColor #37474F
+
+actor "Usuario\n<<human>>" as user #E8F5E9
+
+node "**PC Cliente**\n<<device>>" as client <<client>> {
+    artifact "Navegador Web\n(Chrome / Firefox / Edge)" as browser
+}
+
+node "**Servidor / Docker Host**\n<<execution environment>>" as host <<docker>> {
+
+    node "Contenedor: **ecoruteando-frontend**\n<<docker container>>" as frontend {
+        artifact "nginx:alpine\n<<web server / reverse proxy>>" as nginx
+        artifact "SPA React + Vite\n(build estático: HTML/CSS/JS)\n<<artifact>>" as spa
+        nginx *-- spa : sirve archivos\nestáticos
+    }
+
+    node "Contenedor: **ecoruteando-backend**\n<<docker container>>" as backend {
+        artifact "API REST .NET 9\n(ASP.NET Core)\npuerto interno 5124\n<<artifact>>" as api
+    }
+
+    node "Contenedor: **liquibase**\n<<docker container>>" as liquibase {
+        artifact "Liquibase 5.0.2\n+ JDBC postgresql-42.7.8\n(migraciones de BD)\n<<artifact>>" as lb
+    }
+
+    node "Contenedor: **postgres**\n<<docker container>>" as postgres {
+        database "PostgreSQL 16 + PostGIS 3.5\nBD: ecoRuteando_db\nusuario: postgres\npuerto interno 5432" as db
+    }
+
+    database "**Volumen Docker**\npostgres_data\n(persistencia)" as volume #EDE7F6
+}
+
+node "Servicio Externo: **Gmail SMTP**\nsmtp.gmail.com\n<<external system>>" as smtp <<ext>>
+
+' ── Relaciones / Protocolos ──────────────────────────────────
+user --> browser : usa
+
+browser --> nginx : HTTPS/HTTP :3007\n<carga de la SPA>
+
+nginx --> api : HTTP (proxy inverso)\n/api/** → backend:5124\n<<REST / JSON>>
+
+api --> db : TCP 5432\n<<Npgsql / SQL>>
+
+lb --> db : JDBC :5432\n<<migraciones DDL>>\n(se ejecuta antes del backend)
+
+api --> smtp : SMTP :587 (TLS)\n<<envío códigos de verificación>>
+
+db --- volume : monta\n<<persistencia de datos>>
+
+' ── Notas ────────────────────────────────────────────────────
+note bottom of host
+    <b>docker-compose.yml</b> (proyecto: ecoruteando)
+    · frontend  → 3007:80
+    · backend   → 5124:5124
+    · postgres  → 5450:5432 (acceso externo p/ admin)
+    · liquibase → tarea one-shot (service_completed_successfully)
+end note
+
+note right of backend
+    depends_on:
+      postgres (healthy)
+      liquibase (completed)
+end note
+
+@enduml

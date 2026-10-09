@@ -1,0 +1,137 @@
+{
+  "nav": {
+    "features": "Características",
+    "benefits": "Beneficios",
+    "join": "Unirse",
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "guest": "Modo Invitado",
+    "language": "Idioma"
+  },
+  "hero": {
+    "subtitle": "Tu guía para la movilidad sostenible",
+    "description": "Descubre rutas ecológicas combinando transporte público y bicicleta. Cada viaje es una oportunidad para cuidar el planeta y reducir tu huella de carbono.",
+    "registerBtn": "Regístrate ahora",
+    "loginBtn": "Iniciar sesión",
+    "guestBtn": "Modo Invitado",
+    "badge": "Movilidad sostenible · SENA Neiva",
+    "chips": {
+      "bike": "Bici, bus o a pie",
+      "co2": "-30% huella de CO₂",
+      "routes": "Rutas en segundos"
+    }
+  },
+  "features": {
+    "tag": "Características",
+    "title": "Tres pasos hacia un viaje sostenible",
+    "description": "Diseñado para que planifiques rutas ecológicas de forma rápida y sencilla",
+    "stop": "Parada",
+    "cards": [
+      {
+        "title": "Rutas Inteligentes",
+        "desc": "Combina bicicleta y transporte público con tiempos exactos y alternativas verdes."
+      },
+      {
+        "title": "Ahorro de CO₂",
+        "desc": "Cada trayecto suma. Visualiza el impacto positivo de tus decisiones de movilidad."
+      },
+      {
+        "title": "Comunidad Activa",
+        "desc": "Únete a una red de personas comprometidas con la movilidad sostenible en tu ciudad."
+      }
+    ]
+  },
+  "why": {
+    "tag": "Beneficios",
+    "title": "¿Por qué elegir EcoRuteando?",
+    "co2": "EMISIONES DE CO₂",
+    "reasons": [
+      {
+        "title": "Movilidad integrada",
+        "desc": "Conecta fácilmente tramos en bicicleta con rutas de transporte público."
+      },
+      {
+        "title": "Salud y bienestar",
+        "desc": "Fomenta el ejercicio diario y mejora tu calidad de vida mientras te desplazas."
+      },
+      {
+        "title": "Impacto ambiental real",
+        "desc": "Cada kilómetro en bicicleta evita emisiones. Tu contribución cuenta."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Empieza hoy tu ruta sostenible",
+    "description": "Únete a EcoRuteando y haz que cada trayecto cuente para el planeta",
+    "button": "Unirme a la revolución verde →"
+  },
+  "footer": {
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "contact": "Contacto"
+  }
+
+  ,
+"dashboard": {
+  "title": "Panel de Usuario",
+  "subtitle": "Gestiona tu movilidad sostenible",
+  "welcome": "Bienvenido",
+
+  "back": "Volver",
+
+  "stats": {
+    "routesCreated": "Rutas creadas",
+    "tripsCompleted": "Viajes completados",
+    "co2Saved": "CO₂ ahorrado",
+    "ecoPoints": "EcoPuntos"
+  },
+
+  "tools": {
+    "title": "Herramientas",
+    "subtitle": "Selecciona una opción para comenzar"
+  },
+
+  "modules": {
+    "planRoute": {
+      "title": "Planificar Ruta",
+      "subtitle": "Encuentra la mejor ruta ecológica"
+    },
+    "history": {
+      "title": "Historial",
+      "subtitle": "Consulta tus viajes anteriores"
+    },
+    "profile": {
+      "title": "Mi Perfil",
+      "subtitle": "Administra tu información personal"
+    },
+    "alerts": {
+      "title": "Alertas",
+      "subtitle": "Consulta las notificaciones"
+    },
+    "report": {
+      "title": "Reportar Problema",
+      "subtitle": "Reporta incidencias en las rutas"
+    },
+    "admin": {
+      "title": "Panel Administrativo",
+      "subtitle": "Gestiona usuarios y permisos"
+    }
+  },
+
+  "impact": {
+    "title": "Tu impacto ambiental",
+    "description": "Hasta el momento has evitado emitir",
+    "descriptionEnd": "gracias a tus rutas sostenibles.",
+    "button": "Ver estadísticas"
+  },
+
+  "footer": "Cada viaje sostenible ayuda a cuidar el planeta 🌱",
+
+  "modal": {
+    "title": "¿Deseas volver?",
+    "message": "Si vuelves a la página principal, deberás iniciar sesión nuevamente para acceder al Dashboard.",
+    "cancel": "Cancelar",
+    "confirm": "Volver"
+  }
+}
+}
