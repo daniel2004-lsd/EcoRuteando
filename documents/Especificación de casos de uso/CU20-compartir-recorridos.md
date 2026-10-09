@@ -2,7 +2,7 @@
 
 > Requisito asociado: **RF32** · SRS EcoRuteando, sección 4.2
 
-**Descripción:** Permite al usuario compartir un recorrido en redes sociales seleccionando qué información hacer pública.
+**Descripción:** Permite al usuario compartir un recorrido (vehículo o a pie) en redes sociales seleccionando qué información hacer pública.
 
 | Campo | Descripción |
 |---|---|
@@ -25,12 +25,16 @@ El recorrido queda compartido únicamente con los datos autorizados por el usuar
 
 ## Excepciones (flujo alterno)
 
-| Paso | Acción |
-|:---:|---|
-| 1 | Si el usuario incluye datos privados, el sistema los oculta automáticamente antes de publicar. |
-| 2 | Si la red social no está disponible, el sistema sugiere otra red o copiar el enlace. |
+| Paso | Condición | Respuesta del sistema |
+|:---:|---|---|
+| E1 | El usuario intenta incluir datos privados. | Los oculta automáticamente antes de publicar (RF32.5). |
+| E2 | Red social no disponible o API falla. | Sugiere otra red o copiar el enlace. |
+| E3 | Permisos de la red denegados por el usuario. | Muestra “Autorización requerida” y cancela. |
+| E4 | Sesión expirada durante el flujo. | Guarda borrador y redirige a login. |
+| E5 | Contenido excede límites de la plataforma. | Trunca y avisa “Contenido ajustado a límites”. |
 
 | Campo | Descripción |
 |---|---|
 | **Actores** | Usuario |
-| **Comentarios** | La protección de datos personales tiene prioridad sobre el contenido compartido (RF32.5). |
+| **Comentarios** | Protección de datos privados prioritaria (RF32.5). Trazabilidad: RF32 → CU20. |
+
