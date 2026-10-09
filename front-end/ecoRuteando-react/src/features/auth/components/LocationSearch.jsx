@@ -65,7 +65,7 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode }) => {
       
       {suggestions.length > 0 && (
         <div className={`absolute z-50 w-full mt-1 rounded-lg shadow-lg overflow-hidden ${
-          isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'
+          isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white border border-gray-200'
         }`}>
           {suggestions.map((place, idx) => (
             <button
@@ -78,7 +78,7 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode }) => {
               }`}
             >
               <div className="font-medium">{place.display_name.split(',')[0]}</div>
-              <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+              <div className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>
                 {place.display_name.split(',').slice(1, 4).join(', ')}
               </div>
             </button>

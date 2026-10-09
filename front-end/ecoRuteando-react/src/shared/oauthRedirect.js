@@ -1,7 +1,5 @@
-const GOOGLE_CLIENT_ID =
-  "409005111991-f71o4co8afdi7235fk47odktqrmn4uh6.apps.googleusercontent.com";
-
-const FACEBOOK_APP_ID = "1374060214876328";
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const FACEBOOK_APP_ID = import.meta.env.VITE_FACEBOOK_APP_ID;
 
 // Flujo implícito: Google/Facebook devuelven el access_token en el
 // fragmento de la URL (#access_token=...) y el backend lo valida

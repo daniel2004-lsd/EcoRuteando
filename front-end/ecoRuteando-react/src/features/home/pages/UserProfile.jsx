@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../../../src/app/context/LanguageContext"; // Importar el hook
+import { me, updateProfile, changePassword, deleteAccount } from "../../../services/authService";
 import { 
   LeafIcon, ArrowLeft, UserIcon, LockIcon, SettingsIcon, 
   MailIcon, PhoneIcon, MapPinIcon, CalendarIcon, 
@@ -11,19 +12,19 @@ import { useTheme } from "../../../app/context/ThemeContext";
 /* ─── CONSTANTES ────────────────────────────────────────────── */
 const C = {
   dark: {
-    bgMain: "linear-gradient(135deg, #0a0f1a 0%, #0f172a 100%)",
-    bgSurface: "rgba(30, 41, 59, 0.7)",
-    bgCard: "rgba(15, 23, 42, 0.8)",
-    bgHeader: "rgba(10, 15, 26, 0.95)",
-    border: "rgba(56, 189, 248, 0.15)",
-    textMain: "#f1f5f9",
+    bgMain: "linear-gradient(135deg, #0B1215 0%, #0D1A20 100%)",
+    bgSurface: "rgba(17, 28, 32, 0.7)",
+    bgCard: "rgba(22, 35, 41, 0.8)",
+    bgHeader: "rgba(11, 18, 21, 0.95)",
+    border: "rgba(38, 56, 61, 0.3)",
+    textMain: "#e2e8f0",
     textSec: "#94a3b8",
-    accent: "#38bdf8",
-    accentHover: "#0ea5e9",
+    accent: "#34D399",
+    accentHover: "#064E3B",
     success: "#10b981",
     danger: "#ef4444",
-    gradientStart: "#38bdf8",
-    gradientEnd: "#2dd4bf"
+    gradientStart: "#34D399",
+    gradientEnd: "#064E3B"
   },
   light: {
     bgMain: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
@@ -67,7 +68,7 @@ const ThemeToggle = ({ isDarkMode, toggleTheme, theme }) => (
       justifyContent: "center"
     }}
   >
-    {isDarkMode ? "☀️" : "🌙"}
+    {isDarkMode ? '☀️' : "🌙"}
   </button>
 );
 
@@ -274,7 +275,9 @@ const Avatar = ({ name, theme }) => (
   </div>
 );
 
-const FormField = ({ labelKey, icon: Icon, name, value, isEditing, onChange, theme, type = "text", rows = null, t }) => (
+const FormField = ({ labelKey, icon, name, value, isEditing, onChange, theme, type = "text", rows = null, t }) => {
+  const FieldIcon = icon;
+  return (
   <div>
     <label style={{
       display: "flex",
@@ -286,7 +289,7 @@ const FormField = ({ labelKey, icon: Icon, name, value, isEditing, onChange, the
       marginBottom: "6px",
       textTransform: "uppercase"
     }}>
-      <Icon size={12} /> {t(labelKey)}
+      <FieldIcon size={12} /> {t(labelKey)}
     </label>
     {isEditing ? (
       rows ? (
@@ -340,7 +343,8 @@ const FormField = ({ labelKey, icon: Icon, name, value, isEditing, onChange, the
       </div>
     )}
   </div>
-);
+  );
+};
 
 const PersonalPanel = ({ theme, profile, formData, isEditing, handleChange, handleSave, handleCancel, setIsEditing, t }) => (
   <div style={{
@@ -464,21 +468,30 @@ const SecurityPanel = ({ theme, t }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [savingPassword, setSavingPassword] = useState(false);
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
       alert(t("profile.security.passwordsNotMatch"));
       return;
     }
-    if (newPassword.length < 6) {
+    if (newPassword.length < 8) {
       alert(t("profile.security.passwordMinLength"));
       return;
     }
-    alert(t("profile.security.passwordUpdated"));
-    setShowPasswordModal(false);
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
+    setSavingPassword(true);
+    try {
+      await changePassword(currentPassword, newPassword);
+      alert(t("profile.security.passwordUpdated"));
+      setShowPasswordModal(false);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      alert(err.response?.data?.detail || err.response?.data?.errors?.NewPassword?.[0] || t("profile.security.passwordUpdateFailed", "No se pudo actualizar la contraseña."));
+    } finally {
+      setSavingPassword(false);
+    }
   };
 
   return (
@@ -591,9 +604,15 @@ const SecurityPanel = ({ theme, t }) => {
         </button>
 
         <button
-          onClick={() => {
+          onClick={async () => {
             if (window.confirm(t("profile.security.confirmDelete"))) {
-              alert(t("profile.security.accountDeleted"));
+              try {
+                await deleteAccount();
+                alert(t("profile.security.accountDeleted"));
+                onNavigate("/");
+              } catch (err) {
+                alert(err.response?.data?.detail || t("profile.security.accountDeleteFailed", "No se pudo eliminar la cuenta"));
+              }
             }
           }}
           style={{
@@ -715,14 +734,15 @@ const SecurityPanel = ({ theme, t }) => {
                 color: theme.textSec,
                 cursor: "pointer"
               }}>{t("profile.personal.cancel")}</button>
-              <button onClick={handleChangePassword} style={{
+              <button onClick={handleChangePassword} disabled={savingPassword} style={{
                 padding: "8px 16px",
                 borderRadius: "8px",
                 background: `linear-gradient(135deg, ${theme.gradientStart}, ${theme.gradientEnd})`,
                 color: "#fff",
                 border: "none",
-                cursor: "pointer"
-              }}>{t("profile.security.update")}</button>
+                cursor: savingPassword ? "wait" : "pointer",
+                opacity: savingPassword ? 0.7 : 1
+              }}>{savingPassword ? "..." : t("profile.security.update")}</button>
             </div>
           </div>
         </div>
@@ -908,28 +928,79 @@ const MotivationalFooter = ({ theme, t }) => (
 );
 
 /* ─── COMPONENTE PRINCIPAL ─────────────────────────────────── */
-const UserProfile = ({ onNavigate, userRole }) => {
+const UserProfile = ({ onNavigate }) => {
   const { t } = useTranslation();
   const { isDarkMode, toggleTheme } = useTheme();
   const theme = isDarkMode ? C.dark : C.light;
   
   const [activeTab, setActiveTab] = useState("personal");
   const [isEditing, setIsEditing] = useState(false);
-  
+
   const [profile, setProfile] = useState({
-    name: "Daniel Salazar Vargas",
-    email: "danielsalazarvargas953@gmail.com",
-    phone: "+57 300 123 4567",
-    location: "Neiva, Huila, Colombia",
+    name: "",
+    email: "",
+    phone: "",
+    location: "",
     birthday: t("profile.personal.defaultBirthday", "15 de mayo, 1995"),
     bio: t("profile.personal.defaultBio", "Apasionado por la movilidad sostenible y el cuidado del medio ambiente.")
   });
 
   const [formData, setFormData] = useState(profile);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [identityPassword, setIdentityPassword] = useState("");
+  const [savingProfile, setSavingProfile] = useState(false);
   const userStats = { routes: 47, co2Saved: 32.5 };
 
+  useEffect(() => {
+    me()
+      .then((u) => {
+        setProfile((prev) => ({
+          ...prev,
+          name: [u.firstName, u.lastName].filter(Boolean).join(" "),
+          email: u.email,
+          phone: u.phoneNumber ?? ""
+        }));
+      })
+      .catch(() => {});
+  }, []);
+
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-  const handleSave = () => { setProfile(formData); setIsEditing(false); alert(t("profile.changesSaved")); };
+
+  // CU12 paso 3: antes de guardar se solicita la contraseña actual.
+  const handleSave = () => {
+    setIdentityPassword("");
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmSave = async () => {
+    setSavingProfile(true);
+    try {
+      const parts = formData.name.trim().split(/\s+/);
+      const firstName = parts[0] ?? formData.name;
+      const lastName = parts.slice(1).join(" ") || null;
+      const updated = await updateProfile({
+        firstName,
+        lastName,
+        email: formData.email,
+        phoneNumber: formData.phone || null,
+        currentPassword: identityPassword
+      });
+      setProfile((prev) => ({
+        ...prev,
+        name: [updated.firstName, updated.lastName].filter(Boolean).join(" "),
+        email: updated.email,
+        phone: updated.phoneNumber ?? ""
+      }));
+      setIsEditing(false);
+      setShowConfirmModal(false);
+      setIdentityPassword("");
+      alert(t("profile.changesSaved"));
+    } catch (err) {
+      alert(err.response?.data?.detail || t("profile.saveError", "No se pudieron actualizar los datos."));
+    } finally {
+      setSavingProfile(false);
+    }
+  };
   const handleCancel = () => { setFormData(profile); setIsEditing(false); };
 
   return (
@@ -968,6 +1039,69 @@ const UserProfile = ({ onNavigate, userRole }) => {
         
         <MotivationalFooter theme={theme} t={t} />
       </div>
+
+      {/* CU12: confirmación de identidad con la contraseña actual */}
+      {showConfirmModal && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "rgba(0,0,0,0.5)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000,
+          padding: "16px"
+        }} onClick={() => setShowConfirmModal(false)}>
+          <div style={{
+            background: theme.bgCard,
+            borderRadius: "24px",
+            padding: "24px",
+            maxWidth: "400px",
+            width: "100%"
+          }} onClick={(e) => e.stopPropagation()}>
+            <h3 style={{ margin: "0 0 8px", color: theme.textMain }}>{t("profile.confirmIdentity.title", "Confirmar identidad")}</h3>
+            <p style={{ margin: "0 0 16px", fontSize: "13px", color: theme.textSec }}>{t("profile.confirmIdentity.subtitle", "Ingresa tu contraseña actual para guardar los cambios.")}</p>
+            <input
+              type="password"
+              placeholder={t("profile.security.currentPassword")}
+              value={identityPassword}
+              onChange={(e) => setIdentityPassword(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "12px",
+                marginBottom: "20px",
+                borderRadius: "8px",
+                border: `1px solid ${theme.border}`,
+                background: theme.bgSurface,
+                color: theme.textMain,
+                boxSizing: "border-box"
+              }}
+            />
+            <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
+              <button onClick={() => setShowConfirmModal(false)} style={{
+                padding: "8px 16px",
+                borderRadius: "8px",
+                background: theme.bgSurface,
+                border: `1px solid ${theme.border}`,
+                color: theme.textSec,
+                cursor: "pointer"
+              }}>{t("profile.personal.cancel")}</button>
+              <button onClick={handleConfirmSave} disabled={savingProfile || !identityPassword} style={{
+                padding: "8px 16px",
+                borderRadius: "8px",
+                background: `linear-gradient(135deg, ${theme.gradientStart}, ${theme.gradientEnd})`,
+                color: "#fff",
+                border: "none",
+                cursor: savingProfile ? "wait" : "pointer",
+                opacity: savingProfile || !identityPassword ? 0.7 : 1
+              }}>{savingProfile ? "..." : t("profile.security.update")}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

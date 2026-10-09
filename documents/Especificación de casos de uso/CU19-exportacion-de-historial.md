@@ -2,7 +2,7 @@
 
 > Requisito asociado: **RF29** · SRS EcoRuteando, sección 4.2
 
-**Descripción:** Permite al usuario exportar su historial de trayectos dentro de un rango de fechas en formato PDF o Excel.
+**Descripción:** Permite al usuario exportar su historial de trayectos (vehículo y a pie) dentro de un rango de fechas en formato PDF o Excel.
 
 | Campo | Descripción |
 |---|---|
@@ -14,7 +14,7 @@
 
 | Paso | Acción | Sistema |
 |:---:|---|---|
-| 1 | El usuario accede a su historial | El sistema muestra los trayectos registrados. |
+| 1 | El usuario accede a su historial | El sistema muestra los trayectos registrados (vehículo/a pie). |
 | 2 | El usuario selecciona un rango de fechas | El sistema filtra los trayectos del período (RF29.2). |
 | 3 | El usuario pulsa “Exportar” y elige PDF o Excel | El sistema genera el archivo con los datos filtrados. |
 | 4 | — | El sistema descarga el archivo al dispositivo del usuario. |
@@ -25,12 +25,16 @@ El archivo con el historial queda guardado en el dispositivo del usuario (RF29.1
 
 ## Excepciones (flujo alterno)
 
-| Paso | Acción |
-|:---:|---|
-| 1 | Si no hay trayectos en el rango elegido, el sistema muestra “sin información disponible”. |
-| 2 | Si ocurre un error al generar el archivo, el sistema informa “error al exportar”. |
+| Paso | Condición | Respuesta del sistema |
+|:---:|---|---|
+| E1 | No hay trayectos en el rango elegido. | Muestra “Sin información disponible”. |
+| E2 | Error al generar el archivo (librería PDF/Excel). | Informa “Error al exportar” y sugiere reintentar. |
+| E3 | Rango de fechas inválido. | Muestra “Seleccione un rango válido”. |
+| E4 | Sesión expirada durante la exportación. | Redirige a login y cancela la descarga. |
+| E5 | Fallo de escritura/BD timeout. | Registra el error y muestra mensaje genérico. |
 
 | Campo | Descripción |
 |---|---|
 | **Actores** | Usuario |
-| **Comentarios** | Formatos soportados: PDF y Excel (ver también RF22.2). |
+| **Comentarios** | Formatos: PDF y Excel (RF22.2). Trazabilidad: RF29 → CU19. |
+
