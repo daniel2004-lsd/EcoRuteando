@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../../../src/app/context/LanguageContext"; // Importar el hook
-import { me, updateProfile, changePassword } from "../../../services/authService";
+import { me, updateProfile, changePassword, deleteAccount } from "../../../services/authService";
 import { 
   LeafIcon, ArrowLeft, UserIcon, LockIcon, SettingsIcon, 
   MailIcon, PhoneIcon, MapPinIcon, CalendarIcon, 
@@ -275,7 +275,9 @@ const Avatar = ({ name, theme }) => (
   </div>
 );
 
-const FormField = ({ labelKey, icon: Icon, name, value, isEditing, onChange, theme, type = "text", rows = null, t }) => (
+const FormField = ({ labelKey, icon, name, value, isEditing, onChange, theme, type = "text", rows = null, t }) => {
+  const FieldIcon = icon;
+  return (
   <div>
     <label style={{
       display: "flex",
@@ -287,7 +289,7 @@ const FormField = ({ labelKey, icon: Icon, name, value, isEditing, onChange, the
       marginBottom: "6px",
       textTransform: "uppercase"
     }}>
-      <Icon size={12} /> {t(labelKey)}
+      <FieldIcon size={12} /> {t(labelKey)}
     </label>
     {isEditing ? (
       rows ? (
@@ -341,7 +343,8 @@ const FormField = ({ labelKey, icon: Icon, name, value, isEditing, onChange, the
       </div>
     )}
   </div>
-);
+  );
+};
 
 const PersonalPanel = ({ theme, profile, formData, isEditing, handleChange, handleSave, handleCancel, setIsEditing, t }) => (
   <div style={{
@@ -601,9 +604,15 @@ const SecurityPanel = ({ theme, t }) => {
         </button>
 
         <button
-          onClick={() => {
+          onClick={async () => {
             if (window.confirm(t("profile.security.confirmDelete"))) {
-              alert(t("profile.security.accountDeleted"));
+              try {
+                await deleteAccount();
+                alert(t("profile.security.accountDeleted"));
+                onNavigate("/");
+              } catch (err) {
+                alert(err.response?.data?.detail || t("profile.security.accountDeleteFailed", "No se pudo eliminar la cuenta"));
+              }
             }
           }}
           style={{

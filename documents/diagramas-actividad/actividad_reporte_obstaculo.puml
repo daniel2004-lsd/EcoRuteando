@@ -1,0 +1,30 @@
+@startuml Actividad_ReporteObstaculo
+title <b>Diagrama de Actividad — Reporte Ciudadano de Obstáculos</b>\n<size:10>CU07 · RF7 · ReporterProblem.jsx</size>
+
+|#E8F5E9|Usuario|
+start
+:Selecciona "Reportar obstáculo";
+|Sistema|
+:Muestra formulario (tipo, ubicación GPS, descripción);
+|Usuario|
+:Ingresa datos y confirma;
+|Sistema|
+if (¿Datos completos y ubicación válida en Neiva?) then (no)
+  :Muestra error por campo;
+  |Usuario|
+  :Corrige datos;
+  detach
+else (sí)
+endif
+if (¿Reporte duplicado cercano?) then (sí)
+  :Advierte "Reporte similar existente";
+  |Usuario|
+  :Confirma o cancela;
+  detach
+else (no)
+endif
+:Guarda en reporte_obstaculos (PostGIS POINT);
+:Notifica al administrador;
+:Confirma "Reporte en espera de validación";
+stop
+@enduml
