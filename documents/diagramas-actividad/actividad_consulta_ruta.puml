@@ -15,13 +15,13 @@ if (¿Direcciones válidas\ny dentro de la zona cubierta?) then (no)
 else (sí)
 endif
 
-:Consulta OpenStreetMap / Leaflet\ny datos de transporte público;
+:Consulta OpenStreetMap / Leaflet\n(rutas vehículo y a pie — bus/bici descartados 2026-09);
 
 |Base de Datos|
-:Entrega ciclorrutas, paradas\ny puntos de interés guardados;
+:Entrega rutas vehiculares/peatonales\ny puntos de interés guardados;
 
 |Sistema|
-:Combina bicicleta + transporte público;
+:Calcula alternativas solo vehículo y a pie;
 fork
   :Calcula tiempo estimado por tramo (RF11.1);
 fork again

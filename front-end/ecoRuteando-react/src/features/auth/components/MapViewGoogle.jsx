@@ -1,90 +1,152 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTheme } from "../../../app/context/ThemeContext";
+import { loadGoogleMapsApi } from "../../../services/googleMapsLoader";
 
-const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", markers = [], selectedLocation, routeGeometry, showUserLocation = true }) => {
+const escapeHtml = (str) => str.replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// Dark map styles tuned to the custom dark palette
+// (background #0B1215, surface #162329, elevated #111C20, border #26383D,
+// primary text #e2e8f0, secondary #94a3b8, accent #34D399).
+const DARK_MAP_STYLES = [
+  { elementType: "geometry", stylers: [{ color: "#0B1215" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#e2e8f0" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#0B1215" }] },
+  { featureType: "administrative", elementType: "geometry", stylers: [{ color: "#162329" }] },
+  { featureType: "administrative", elementType: "labels.text.fill", stylers: [{ color: "#94a3b8" }] },
+  { featureType: "landscape", elementType: "geometry", stylers: [{ color: "#0B1215" }] },
+  { featureType: "poi", elementType: "geometry", stylers: [{ color: "#111C20" }] },
+  { featureType: "poi", elementType: "labels.text.fill", stylers: [{ color: "#94a3b8" }] },
+  { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#064E3B" }] },
+  { featureType: "poi.park", elementType: "labels.text.fill", stylers: [{ color: "#34D399" }] },
+  { featureType: "road", elementType: "geometry", stylers: [{ color: "#162329" }] },
+  { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#26383D" }] },
+  { featureType: "road", elementType: "labels.text.fill", stylers: [{ color: "#94a3b8" }] },
+  { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#1b2f35" }] },
+  { featureType: "road.highway", elementType: "geometry.stroke", stylers: [{ color: "#26383D" }] },
+  { featureType: "transit", elementType: "geometry", stylers: [{ color: "#111C20" }] },
+  { featureType: "transit.station", elementType: "labels.text.fill", stylers: [{ color: "#34D399" }] },
+  { featureType: "water", elementType: "geometry", stylers: [{ color: "#0e2127" }] },
+  { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#94a3b8" }] },
+];
+
+const VALID_MAP_TYPE_IDS = ["roadmap", "satellite", "hybrid", "terrain"];
+
+const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", markers = [], selectedLocation, routeGeometry, showUserLocation = true, mapFocus = null, mapTypeId = "roadmap" }) => {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
   const routeRef = useRef(null);
   const userMarkerRef = useRef(null);
+  const focusMarkerRef = useRef(null);
   const { isDarkMode } = useTheme();
   const [mapLoaded, setMapLoaded] = useState(false);
+  const onLocationSelectRef = useRef(onLocationSelect);
 
-  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
+  useEffect(() => { onLocationSelectRef.current = onLocationSelect; }, [onLocationSelect]);
 
-  // Cargar Google Maps
+  // Cargar Google Maps (loader singleton para evitar carga múltiple)
   useEffect(() => {
-    if (window.google && window.google.maps) {
-      setMapLoaded(true);
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=es`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => setMapLoaded(true);
-    script.onerror = () => console.error("Error cargando Google Maps");
-    document.head.appendChild(script);
+    loadGoogleMapsApi()
+      .then(() => setMapLoaded(true))
+      .catch((err) => console.error("Error cargando Google Maps:", err));
   }, []);
 
   // Inicializar mapa
   useEffect(() => {
     if (!mapLoaded || !mapRef.current || mapInstanceRef.current) return;
 
-    // Usar colores normales, no oscuros
+    // Initial style matches the current theme; later theme toggles use setOptions below
+    const initialMapTypeId = VALID_MAP_TYPE_IDS.includes(mapTypeId) ? mapTypeId : "roadmap";
     mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
       center: { lat: center?.lat || 4.7110, lng: center?.lng || -74.0721 },
       zoom: zoom || 13,
-      zoomControl: true,
+      mapTypeId: initialMapTypeId,
+      zoomControl: false,
       mapTypeControl: false,
-      fullscreenControl: true,
+      fullscreenControl: false,
       streetViewControl: false,
-      styles: [], // Sin estilos oscuros - mapa normal
+      styles: isDarkMode ? DARK_MAP_STYLES : [],
     });
 
-    // Botón de mi ubicación
-    const locationButton = document.createElement("button");
-    locationButton.innerHTML = "📍";
-    locationButton.className = "custom-location-button";
-    locationButton.style.cssText = `
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      z-index: 10;
-      background: white;
-      border: none;
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    `;
-    
-    locationButton.onclick = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((pos) => {
-          const newLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-          mapInstanceRef.current.setCenter(newLocation);
-          mapInstanceRef.current.setZoom(16);
-        }, undefined, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
-      }
-    };
-    
-    mapRef.current.appendChild(locationButton);
-
-    if (onLocationSelect) {
+    if (true) {
       mapInstanceRef.current.addListener('click', (e) => {
         const lat = e.latLng.lat();
         const lng = e.latLng.lng();
-        onLocationSelect({ lat, lng });
+        onLocationSelectRef.current?.({ lat, lng });
       });
     }
   }, [mapLoaded]);
+
+  // Pan the existing map when `center` changes (e.g. "Centrar en Neiva",
+  // selected nearby destination). One-time creation above stays untouched;
+  // zoom is left alone and selectedLocation/routeGeometry effects are separate.
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+    const lat = Number(center?.lat);
+    const lng = Number(center?.lng);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+    if (typeof mapInstanceRef.current.panTo === "function") {
+      mapInstanceRef.current.panTo({ lat, lng });
+    } else {
+      mapInstanceRef.current.setCenter({ lat, lng });
+    }
+  }, [center?.lat, center?.lng]);
+
+  // React to theme changes without recreating the map or its listeners/markers/routes
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+    mapInstanceRef.current.setOptions({ styles: isDarkMode ? DARK_MAP_STYLES : [] });
+  }, [isDarkMode, mapLoaded]);
+
+  // Switch Google map type without recreating the map or touching markers/routes/theme/listeners
+  useEffect(() => {
+    if (!mapInstanceRef.current || !mapLoaded) return;
+    const nextMapTypeId = VALID_MAP_TYPE_IDS.includes(mapTypeId) ? mapTypeId : "roadmap";
+    if (typeof mapInstanceRef.current.setMapTypeId === "function") {
+      mapInstanceRef.current.setMapTypeId(nextMapTypeId);
+    }
+  }, [mapTypeId, mapLoaded]);
+
+  // Explicit focus on the user's current GPS position (e.g. "Centrar" button).
+  // Validates coordinates, then centers with an explicit zoom and renders a
+  // high-contrast current-position marker. Separate from the ambient `center`
+  // pan effect above; `at` acts as a nonce so repeated taps always retrigger.
+  useEffect(() => {
+    if (!mapInstanceRef.current || !mapLoaded) return;
+    if (!mapFocus) return;
+    const lat = Number(mapFocus?.lat);
+    const lng = Number(mapFocus?.lng);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+    if (!window.google?.maps) return;
+    mapInstanceRef.current.setCenter({ lat, lng });
+    const requestedZoom = Number(mapFocus?.zoom);
+    const fallbackZoom =
+      typeof mapInstanceRef.current.getZoom === "function"
+        ? mapInstanceRef.current.getZoom()
+        : zoom;
+    const targetZoom = Number.isFinite(requestedZoom) ? requestedZoom : fallbackZoom;
+    if (Number.isFinite(Number(targetZoom))) {
+      mapInstanceRef.current.setZoom(Number(targetZoom));
+    }
+    if (focusMarkerRef.current) {
+      focusMarkerRef.current.setMap(null);
+      focusMarkerRef.current = null;
+    }
+    focusMarkerRef.current = new window.google.maps.Marker({
+      position: { lat, lng },
+      map: mapInstanceRef.current,
+      icon: {
+        path: window.google.maps.SymbolPath.CIRCLE,
+        fillColor: "#1a73e8",
+        fillOpacity: 1,
+        strokeColor: "#FFFFFF",
+        strokeWeight: 3,
+        scale: 10,
+      },
+      title: "Tu ubicación actual",
+      zIndex: 2000,
+    });
+  }, [mapFocus?.lat, mapFocus?.lng, mapFocus?.zoom, mapFocus?.at, mapLoaded]);
 
   // Mostrar ubicación del usuario (punto azul)
   useEffect(() => {
@@ -178,7 +240,7 @@ const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", marke
       });
       
       const infoWindow = new window.google.maps.InfoWindow({
-        content: `<div style="padding: 8px; font-family: sans-serif; font-size: 13px;"><strong>${marker.popup}</strong></div>`
+        content: `<div style="padding: 8px; font-family: sans-serif; font-size: 13px;"><strong>${escapeHtml(marker.popup)}</strong></div>`
       });
       
       m.addListener('click', () => {
