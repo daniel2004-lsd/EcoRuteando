@@ -1,0 +1,47 @@
+@startuml Actividad_RutasFavoritas
+title <b>Diagrama de Actividad — Gestión de Rutas Favoritas</b>\n<size:10>CU11 · RF14.1 / RF14.2</size>
+
+|#E8F5E9|Usuario|
+start
+:Accede al detalle de una ruta;
+
+|#FFFFFF|Sistema|
+if (¿Sesión activa?) then (no)
+  |Usuario|
+  :Solicita iniciar sesión;
+  stop
+else (sí)
+endif
+
+|Usuario|
+:Pulsa "Agregar a favoritos";
+
+|Base de Datos|
+if (¿Ruta ya está en favoritos?) then (sí)
+  |Sistema|
+  :Informa "La ruta ya está en tus favoritos";
+  stop
+else (no)
+endif
+
+:Inserta ruta en la lista de favoritos;
+
+|Sistema|
+:Confirma "Ruta agregada a favoritos";
+
+|Usuario|
+:Accede a "Mis rutas favoritas";
+|Sistema|
+:Lista las rutas favoritas del usuario;
+if (¿Hay favoritos guardados?) then (no)
+  :Muestra "sin información disponible";
+  stop
+else (sí)
+endif
+|Usuario|
+:Selecciona una ruta favorita;
+|Sistema|
+:Carga el detalle de la ruta\nen el mapa interactivo;
+stop
+
+@enduml

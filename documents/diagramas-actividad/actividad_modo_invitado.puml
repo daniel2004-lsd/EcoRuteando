@@ -1,0 +1,48 @@
+@startuml Actividad_ModoInvitado
+title <b>Diagrama de Actividad — Modo Invitado</b>\n<size:10>CU14 · RF7</size>
+
+|#E8F5E9|Visitante|
+start
+:Abre la aplicación por primera vez;
+:Explora la página principal (/);
+
+|#FFFFFF|Sistema|
+:Ofrece opciones:\nregistrarse, iniciar sesión\no continuar como invitado;
+
+|Visitante|
+:Selecciona "Continuar como invitado";
+
+|Sistema|
+:Crea sesión limitada sin datos personales (RF7.1);
+:Habilita solo funciones públicas;
+
+|Visitante|
+fork
+  :Consulta rutas en el mapa;
+  |Sistema|
+  :Muestra rutas ecológicas básicas;
+fork again
+  |Visitante|
+  :Consulta puntos de interés;
+  |Sistema|
+  :Muestra parques y ciclorrutas cercanos;
+end fork
+
+|Visitante|
+:Intenta una función exclusiva\n(favoritos, historial, calificar);
+
+|Sistema|
+:Detecta función restringida;
+:Redirige al formulario de registro\ne informa los beneficios de crear cuenta;
+
+if (¿Se registra?) then (sí)
+  |Visitante|
+  :Completa el registro (CU01)\ne continúa con cuenta propia;
+  stop
+else (no)
+  |Sistema|
+  :Permite seguir navegando en modo invitado;
+  stop
+endif
+
+@enduml
