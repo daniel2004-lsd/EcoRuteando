@@ -3,7 +3,12 @@ import api from "../api/api";
 // ── Auth ────────────────────────────────────────────────────────
 
 export const login = async (email, password) => {
-    const response = await api.post("/auth/login", { email, password });
+    const trustedDeviceToken = localStorage.getItem("trustedDeviceToken");
+    const response = await api.post("/auth/login", {
+        email,
+        password,
+        trustedDeviceToken: trustedDeviceToken || null
+    });
     return response.data;
 };
 

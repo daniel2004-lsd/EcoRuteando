@@ -31,6 +31,7 @@ const AUTH_PUBLIC_URLS = [
     "/auth/recover",
     "/auth/reset-password",
     "/auth/send-verification",
+    "/auth/verify-email",
 ];
 
 const processQueue = (error, token = null) => {
