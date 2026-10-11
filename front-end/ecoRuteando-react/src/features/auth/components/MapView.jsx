@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTheme } from "../../../app/context/ThemeContext";
 
+const escapeHtml = (str) => str.replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
 
 const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", markers = [], selectedLocation, routeGeometry }) => {
@@ -119,7 +121,7 @@ const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", marke
       
       // Info window
       const infoWindow = new window.google.maps.InfoWindow({
-        content: `<div style="padding: 8px; font-family: sans-serif;"><strong>${marker.popup}</strong></div>`
+        content: `<div style="padding: 8px; font-family: sans-serif;"><strong>${escapeHtml(marker.popup)}</strong></div>`
       });
       
       m.addListener('click', () => {

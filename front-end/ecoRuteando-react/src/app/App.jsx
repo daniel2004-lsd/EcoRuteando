@@ -7,6 +7,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { LogoImage } from "../shared/components/Icons";
 import LoadingOverlay from "../shared/components/LoadingOverlay";
 import ConfirmModal from "../shared/components/ConfirmModal";
+import ProtectedRoute from "../shared/components/ProtectedRoute";
 
 // Auth pages
 import Login from "../features/auth/components/Login";
@@ -26,10 +27,15 @@ import UserHistory from "../features/home/pages/UserHistory";
 import TripDetail from "../features/home/pages/TripDetail";
 import UserStatistics from "../features/home/pages/UserStatistics";
 import UserAlerts from "../features/home/pages/UserAlert";
+import Favorites from "../features/home/pages/Favorites";
 import PlanRoute from "../features/home/pages/PlanRoute";
 import ReporterProblem from "../features/home/pages/ReporterProblem";
 import AdminPanel from "../features/admin/pages/AdminPanel";
 import PoiManage from "../features/admin/pages/PoiManage";
+import RouteManage from "../features/home/pages/RouteManage";
+import AdminStatistics from "../features/admin/pages/AdminStatistics";
+import AdminReports from "../features/admin/pages/AdminReports";
+import AdminExports from "../features/admin/pages/AdminExports";
 
 import "leaflet/dist/leaflet.css";
 
@@ -38,9 +44,9 @@ function AdminSection({ title }) {
     const { isDarkMode } = useTheme();
     const { t } = useTranslation();
     return (
-        <div className={`min-h-screen flex flex-col items-center justify-center gap-3 ${isDarkMode ? "bg-gray-900" : "bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50"}`}>
-            <h1 className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-gray-700"}`}>{t(title)}</h1>
-            <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>{t("admin.section.underConstruction", "Sección en construcción")}</p>
+        <div className={`min-h-screen flex flex-col items-center justify-center gap-3 ${isDarkMode ? 'bg-[#0B1215]' : "bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50"}`}>
+            <h1 className={`text-xl font-bold ${isDarkMode ? 'text-[#e2e8f0]' : "text-gray-700"}`}>{t(title)}</h1>
+            <p className={`text-sm ${isDarkMode ? 'text-[#94a3b8]' : "text-gray-500"}`}>{t("admin.section.underConstruction", "Sección en construcción")}</p>
             <button
                 onClick={() => navigate("/admin")}
                 className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
@@ -52,12 +58,12 @@ function AdminSection({ title }) {
 }
 
 function AppContent() {
-    const { isDarkMode, toggleTheme } = useTheme();
+    const { isDarkMode } = useTheme();
     const { i18n, t } = useTranslation();
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
-    const [userRole, setUserRole] = useState(() => localStorage.getItem("userRole") || "user");
+    const [isLoading] = useState(false);
     const [showTerms, setShowTerms] = useState(false);
+    const [recoveryCode, setRecoveryCode] = useState(null);
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false, pendingAction: null, title: "", message: "",
@@ -65,9 +71,10 @@ function AppContent() {
     });
 
     // Normaliza rutas relativas ("admin/users" -> "/admin/users")
-    const onNavigate = useCallback((path) => {
+    // Acepta un segundo argumento `state` para pasar datos entre páginas (p.ej. una ruta a "Usar ruta").
+    const onNavigate = useCallback((path, state) => {
         if (typeof path !== "string" || !path) return;
-        navigate(path.startsWith("/") ? path : `/${path}`);
+        navigate(path.startsWith("/") ? path : `/${path}`, state);
     }, [navigate]);
 
     const handleAcceptTerms = () => {
@@ -84,14 +91,7 @@ function AppContent() {
     };
 
     return (
-        <div className={`relative min-h-screen font-sans antialiased ${isDarkMode ? "dark" : ""}`}>
-            <button
-                onClick={toggleTheme}
-                className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
-            >
-                {isDarkMode ? "☀️" : "🌙"}
-            </button>
-
+        <div className={`relative min-h-screen font-sans antialiased ${isDarkMode ? 'dark' : ""}`}>
             <LoadingOverlay isLoading={isLoading} isDarkMode={isDarkMode} message="Cargando..." />
 
             <ConfirmModal
@@ -117,27 +117,30 @@ function AppContent() {
                         />
                     } />
                     <Route path="/recover" element={<Recover />} />
-                    <Route path="/verify" element={<VerifyCode onCodeVerified={(code) => sessionStorage.setItem("passwordRecoveryCode", code)} />} />
+                    <Route path="/verify" element={<VerifyCode onCodeVerified={(code) => setRecoveryCode(code)} />} />
                     <Route path="/verify-email" element={<VerifyEmailCode />} />
-                    <Route path="/newpassword" element={<NewPassword />} />
+                    <Route path="/newpassword" element={<NewPassword recoveryCode={recoveryCode} onClearRecoveryCode={() => setRecoveryCode(null)} />} />
                     <Route path="/auth/callback" element={<OAuthCallback />} />
                     <Route path="/verify-2fa" element={<TwoFactorVerify />} />
-                    <Route path="/dashboard" element={<UserDashboard userRole={userRole} onNavigate={onNavigate} />} />
-                    <Route path="/admin" element={<AdminPanel userRole={userRole} onNavigate={onNavigate} />} />
-                    <Route path="/admin/users" element={<AdminSection title="admin.section.users" />} />
-                    <Route path="/admin/reports" element={<AdminSection title="admin.section.reports" />} />
-                    <Route path="/admin/support" element={<AdminSection title="admin.section.support" />} />
-                    <Route path="/admin/audit" element={<AdminSection title="admin.section.audit" />} />
-                    <Route path="/admin/settings" element={<AdminSection title="admin.section.settings" />} />
-                    <Route path="/admin/impact" element={<AdminSection title="admin.section.impact" />} />
-                    <Route path="/admin/pois" element={<PoiManage onNavigate={onNavigate} />} />
-                    <Route path="/profile" element={<UserProfile userRole={userRole} onNavigate={onNavigate} />} />
-                    <Route path="/user/plan-route" element={<PlanRoute onNavigate={onNavigate} />} />
-                    <Route path="/user/history" element={<UserHistory onNavigate={onNavigate} />} />
-                    <Route path="/user/history/:usageId" element={<TripDetail onNavigate={onNavigate} />} />
-                    <Route path="/user/statistics" element={<UserStatistics onNavigate={onNavigate} />} />
-                    <Route path="/user/reporter-problem" element={<ReporterProblem onNavigate={onNavigate} />} />
-                    <Route path="/user/alerts" element={<UserAlerts onNavigate={onNavigate} />} />
+                    <Route path="/dashboard" element={<ProtectedRoute allowGuest><UserDashboard onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminPanel onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.users" /></ProtectedRoute>} />
+                    <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminReports onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/admin/support" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.support" /></ProtectedRoute>} />
+                    <Route path="/admin/audit" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.audit" /></ProtectedRoute>} />
+                    <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.settings" /></ProtectedRoute>} />
+                    <Route path="/admin/impact" element={<ProtectedRoute requiredRole="admin"><AdminStatistics onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/admin/exports" element={<ProtectedRoute requiredRole="admin"><AdminExports onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/admin/pois" element={<ProtectedRoute requiredRole="admin"><PoiManage onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/profile" element={<ProtectedRoute><UserProfile onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/plan-route" element={<ProtectedRoute allowGuest><PlanRoute onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/routes" element={<ProtectedRoute><RouteManage onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/history" element={<ProtectedRoute><UserHistory onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/history/:usageId" element={<ProtectedRoute><TripDetail onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/statistics" element={<ProtectedRoute><UserStatistics onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/reporter-problem" element={<ProtectedRoute><ReporterProblem onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/alerts" element={<ProtectedRoute><UserAlerts onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/favorites" element={<ProtectedRoute><Favorites onNavigate={onNavigate} /></ProtectedRoute>} />
                 </Routes>
             </main>
 

@@ -1,6 +1,6 @@
 # Caso de Uso N° 13 — Eliminación de cuenta
 
-> Requisito asociado: **RF6** · SRS EcoRuteando, sección 4.2
+> Requisito asociado: **RF13** · SRS EcoRuteando, sección 4.2
 
 **Descripción:** Permite al usuario solicitar la eliminación permanente de su cuenta y de sus datos personales del sistema.
 
@@ -22,16 +22,18 @@
 
 ## Postcondición
 
-La cuenta queda eliminada/desactivada y sus datos personales borrados (RF6.2, RF6.3).
+La cuenta queda eliminada/desactivada y sus datos personales borrados (RF13.2, RF13.3).
 
 ## Excepciones (flujo alterno)
 
-| Paso | Acción |
-|:---:|---|
-| 1 | Si la contraseña es incorrecta, el sistema no elimina la cuenta y muestra un error. |
-| 2 | Si hay falla de conexión durante el proceso, el sistema informa “intente más tarde”. |
+| Paso | Condición | Respuesta del sistema |
+|:---:|---|---|
+| E1 | Contraseña de confirmación incorrecta. | Cancela la eliminación y muestra “Contraseña incorrecta”. |
+| E2 | Sesión expirada o permisos insuficientes. | Deniega la operación con “Sesión expirada / permisos insuficientes” (401/403). |
+| E3 | Fallo de conexión o timeout de BD durante el borrado. | Muestra “No fue posible eliminar la cuenta. Intente más tarde” y revierte la transacción. |
+| E4 | Cuenta ya eliminada o en proceso de eliminación concurrente. | Informa “La cuenta ya se encuentra en proceso de eliminación”. |
 
 | Campo | Descripción |
 |---|---|
 | **Actores** | Usuario, Administrador |
-| **Comentarios** | El administrador puede reactivar cuentas desde el módulo de gestión de usuarios (RF21.3). |
+| **Comentarios** | El administrador puede reactivar cuentas desde el módulo de gestión de usuarios (RF21.3). Trazabilidad: RF13 → CU13 (RF13.1 Solicitar eliminación, RF13.2 Borrado de datos, RF13.3 Cierre de sesión). |
