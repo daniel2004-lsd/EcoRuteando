@@ -13,7 +13,7 @@ const VerifyEmailCode = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const email = searchParams.get("email") || "";
+    const email = searchParams.get("email") || sessionStorage.getItem("pendingVerificationEmail") || "";
 
     const [code, setCode] = useState(["", "", "", "", "", ""]);
     const [verifying, setVerifying] = useState(false);
@@ -122,7 +122,8 @@ const VerifyEmailCode = () => {
     };
 
     return (
-        <div className="w-full max-w-md mx-auto">
+        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 flex flex-col items-center justify-center px-4 py-6">
+            <div className="w-full max-w-md mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
 
             <div className="text-center mb-6">
 
@@ -210,6 +211,7 @@ const VerifyEmailCode = () => {
                 Volver al login
             </button>
 
+            </div>
         </div>
     );
 };

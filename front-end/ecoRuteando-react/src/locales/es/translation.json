@@ -10,13 +10,13 @@
   },
   "hero": {
     "subtitle": "Tu guía para la movilidad sostenible",
-    "description": "Descubre rutas ecológicas combinando transporte público y bicicleta. Cada viaje es una oportunidad para cuidar el planeta y reducir tu huella de carbono.",
+    "description": "Descubre rutas ecológicas optimizadas. Cada viaje es una oportunidad para cuidar el planeta y reducir tu huella de carbono.",
     "registerBtn": "Regístrate ahora",
     "loginBtn": "Iniciar sesión",
     "guestBtn": "Modo Invitado",
     "badge": "Movilidad sostenible · SENA Neiva",
     "chips": {
-      "bike": "Bici, bus o a pie",
+      "bike": "A pie o en vehículo",
       "co2": "-30% huella de CO₂",
       "routes": "Rutas en segundos"
     }
@@ -29,7 +29,7 @@
     "cards": [
       {
         "title": "Rutas Inteligentes",
-        "desc": "Combina bicicleta y transporte público con tiempos exactos y alternativas verdes."
+        "desc": "Planifica tus trayectos con tiempos exactos y alternativas sostenibles."
       },
       {
         "title": "Ahorro de CO₂",
@@ -48,15 +48,15 @@
     "reasons": [
       {
         "title": "Movilidad integrada",
-        "desc": "Conecta fácilmente tramos en bicicleta con rutas de transporte público."
+        "desc": "Conecta fácilmente tus puntos de origen y destino con rutas eficientes."
       },
       {
         "title": "Salud y bienestar",
-        "desc": "Fomenta el ejercicio diario y mejora tu calidad de vida mientras te desplazas."
+        "desc": "Fomenta hábitos activos y mejora tu calidad de vida mientras te desplazas."
       },
       {
         "title": "Impacto ambiental real",
-        "desc": "Cada kilómetro en bicicleta evita emisiones. Tu contribución cuenta."
+        "desc": "Cada kilómetro planificado evita emisiones. Tu contribución cuenta."
       }
     ]
   },
@@ -79,11 +79,13 @@
       "routesCreated": "Rutas creadas",
       "tripsCompleted": "Viajes completados",
       "co2Saved": "CO₂ ahorrado",
-      "ecoPoints": "EcoPuntos"
+      "ecoPoints": "EcoPuntos",
+      "favoriteRoutes": "Rutas Favoritas"
     },
     "tools": {
       "title": "Herramientas",
-      "subtitle": "Selecciona una opción para comenzar"
+      "subtitle": "Selecciona una opción para comenzar",
+      "count": "{{count}} módulos disponibles"
     },
     "modules": {
       "planRoute": {
@@ -123,7 +125,8 @@
       "title": "Tu impacto ambiental",
       "description": "Hasta el momento has evitado emitir",
       "descriptionEnd": "gracias a tus rutas sostenibles.",
-      "button": "Ver estadísticas"
+      "button": "Ver estadísticas",
+      "eyebrow": "Tu Impacto Ecológico"
     },
     "footer": "Cada viaje sostenible ayuda a cuidar el planeta 🌱",
     "modal": {
@@ -131,7 +134,14 @@
       "message": "¿Estás seguro de que deseas cerrar sesión? Tendrás que volver a iniciar sesión para acceder al Dashboard.",
       "cancel": "Cancelar",
       "confirm": "Cerrar sesión"
-    }
+    },
+    "logout": "Cerrar Sesión",
+    "panel": {
+      "subtitle": "Panel de Movilidad Sostenible"
+    },
+    "guest": "Modo Invitado",
+    "guestHint": "Inicia sesión para registrar tus viajes y guardar rutas.",
+    "toggleTheme": "Cambiar tema"
   },
   "routeManage": {
     "title": "Gestión de Rutas",
@@ -229,7 +239,6 @@
       "car": "Coche"
     }
   },
-
   "alerts": {
     "title": "Alertas Climáticas",
     "subtitle": "Clima en tiempo real para tu seguridad",
@@ -256,7 +265,6 @@
     "severityMedium": "Media",
     "severityLow": "Baja"
   },
-
   "reporterProblem": {
     "title": "Reportar Problema",
     "subtitle": "Ayúdanos a mejorar las vías",
@@ -293,7 +301,6 @@
       "submitFailed": "No se pudo enviar el reporte. Intenta más tarde."
     }
   },
-
   "adminReports": {
     "title": "Verificación de Reportes",
     "subtitle": "Revisa y valida los reportes ciudadanos",
@@ -323,7 +330,6 @@
       "rejected": "Rechazado"
     }
   },
-
   "adminExports": {
     "title": "Exportar Datos",
     "subtitle": "Descarga informes del sistema en CSV, Excel o JSON",
@@ -340,5 +346,427 @@
     "exportError": "No se pudo generar el archivo. Intenta más tarde.",
     "footnote": "Los archivos CSV y Excel abren directamente en herramientas de oficina; el JSON es ideal para integraciones técnicas.",
     "motivationalPhrase": "Los datos abiertos impulsan una movilidad más sostenible"
+  },
+  "planRoute": {
+    "plannerTitle": "PLANIFICADOR DE RUTAS",
+    "heroLead": "Planifica tu ruta",
+    "heroHighlight": "más ecológica",
+    "origin": "Punto de partida",
+    "destination": "Destino",
+    "addressOrPlace": "Escribe una dirección o lugar...",
+    "useMyLocation": "Usar mi ubicación actual",
+    "myLocation": "Mi ubicación",
+    "defaultOrigin": "Origen",
+    "defaultDestination": "Destino",
+    "transportMode": "Medio de transporte",
+    "modeWalking": "A pie",
+    "modeCar": "Auto",
+    "onFoot": "A pie",
+    "distance": "Distancia",
+    "co2Avoided": "CO₂ evitado",
+    "calculating": "Calculando ruta...",
+    "calculate": "Calcular mejor ruta",
+    "suggestedRoute": "Ruta recomendada",
+    "save": "Guardar ruta",
+    "saving": "Guardando...",
+    "savedRoute": "En Mis Rutas",
+    "savedInMyRoutes": "En Mis Rutas",
+    "favorite": "Favorito",
+    "favoriting": "Guardando...",
+    "favorited": "En Favoritas",
+    "saveDescription": "Ruta ecológica desde {{from}} hasta {{to}}",
+    "start": "Iniciar viaje",
+    "starting": "Iniciando...",
+    "inProgress": "Viaje en curso",
+    "complete": "Finalizar viaje",
+    "completing": "Finalizando...",
+    "searchPlaces": "Lugares de interés cercanos",
+    "mapTypeHint": "Vista del mapa: {{type}}",
+    "centerMyLocation": "Centrar en mi ubicación",
+    "back": "Volver al Dashboard",
+    "nearbyTitle": "Lugares cercanos",
+    "close": "Cerrar",
+    "tapToGo": "Toca para ir aquí",
+    "mapView": "Vista de mapa: {{view}}",
+    "popupOrigin": "Origen: {{name}}",
+    "popupDestination": "Destino: {{name}}",
+    "mapType": {
+      "roadmap": "Predeterminado",
+      "satellite": "Satélite",
+      "hybrid": "Híbrido",
+      "terrain": "Relieve"
+    },
+    "poiTypes": {
+      "restaurant": "Restaurantes",
+      "hotel": "Hoteles",
+      "church": "Iglesias",
+      "park": "Parques",
+      "cafe": "Cafés",
+      "bar": "Bares",
+      "museum": "Museos"
+    },
+    "search": {
+      "mapsLoading": "Cargando mapa...",
+      "noResults": "No se encontraron resultados",
+      "failed": "Error al buscar lugares",
+      "detailFailed": "No se pudieron obtener los detalles del lugar"
+    },
+    "action": {
+      "chooseType": "Selecciona una categoría de lugares cercanos",
+      "searchPanelClosed": "Panel de lugares cerrado",
+      "geoUnsupported": "Geolocalización no soportada por el navegador",
+      "locationUnavailable": "No se pudo obtener tu ubicación actual",
+      "centeredOnLocation": "Mapa centrado en tu ubicación actual",
+      "insecureConnection": "La geolocalización requiere una conexión segura",
+      "allowLocation": "Permite el acceso a tu ubicación en el navegador"
+    },
+    "errors": {
+      "loadMaps": "Error al cargar Google Maps. Revisa tu conexión.",
+      "selectOrigin": "Selecciona un punto de partida",
+      "selectDestination": "Selecciona un destino",
+      "originInvalidCoords": "El origen no tiene coordenadas válidas",
+      "destinationInvalidCoords": "El destino no tiene coordenadas válidas",
+      "noValidRoute": "No se encontró una ruta válida entre estos puntos",
+      "calculateRoute": "No se pudo calcular la ruta. Intenta nuevamente.",
+      "saveForTrip": "No se pudo guardar la ruta antes de iniciar el viaje",
+      "startTrip": "No se pudo iniciar el viaje",
+      "completeTrip": "No se pudo finalizar el viaje",
+      "geoUnsupported": "La geolocalización no está soportada en tu navegador",
+      "gettingLocation": "Obteniendo tu ubicación actual...",
+      "locationFailed": "No se pudo acceder a tu ubicación actual",
+      "placeAsDestination": "El lugar seleccionado no tiene coordenadas válidas",
+      "selectOriginOrLocation": "Selecciona un origen o activa tu ubicación actual",
+      "alreadySaved": "Esta ruta ya se encuentra guardada en Mis Rutas.",
+      "alreadyFavorite": "Esta ruta ya se encuentra en tus Favoritos.",
+      "saveFailed": "Error al guardar la ruta."
+    },
+    "favoriteAdded": "❤️ ¡Ruta añadida a Favoritos!"
+  },
+  "favorites": {
+    "title": "Mis Rutas Favoritas",
+    "subtitle": "Accede rápidamente a tus trayectos frecuentes y ecológicos",
+    "back": "Volver al Dashboard",
+    "needLoginTitle": "Inicia sesión para ver tus favoritas",
+    "needLoginHint": "Guarda y gestiona tus trayectos habituales de forma segura.",
+    "goLogin": "Iniciar Sesión",
+    "loading": "Cargando tus rutas favoritas...",
+    "empty": "No tienes rutas favoritas guardadas",
+    "emptyHint": "Explora o planea una ruta para agregarla a tus favoritas y tener acceso directo.",
+    "addFirst": "Planear una ruta",
+    "listTitle": "Tus rutas destacadas",
+    "add": "Añadir a favoritas",
+    "remove": "Quitar",
+    "useRoute": "Usar ruta",
+    "addTitle": "Selecciona una ruta para añadir a favoritas",
+    "noAvailable": "No hay rutas disponibles para añadir",
+    "errorLoad": "Error al cargar las rutas favoritas",
+    "errorAdd": "Error al guardar la ruta en favoritos",
+    "errorRemove": "Error al quitar la ruta de favoritos",
+    "alreadyFavorite": "Esta ruta ya se encuentra en tus Favoritos.",
+    "addedSuccess": "Ruta agregada a Favoritos con éxito."
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "back": "Volver al Dashboard",
+    "changesSaved": "Cambios guardados con éxito",
+    "saveError": "No se pudieron actualizar los datos del perfil",
+    "footer": "Cada viaje sostenible cuenta para un futuro más verde y consciente.",
+    "stats": {
+      "routesCompleted": "Viajes Completados",
+      "co2Saved": "CO₂ Evitado",
+      "activeTime": "Tiempo Sostenible"
+    },
+    "tabs": {
+      "personal": "Información Personal",
+      "security": "Seguridad y Acceso",
+      "config": "Configuración"
+    },
+    "personal": {
+      "title": "Datos Personales",
+      "subtitle": "Administra tu información de cuenta y contacto",
+      "edit": "Editar Perfil",
+      "cancel": "Cancelar",
+      "save": "Guardar Cambios",
+      "defaultBirthday": "15 de mayo, 1995",
+      "defaultBio": "Apasionado por la movilidad sostenible y el cuidado del medio ambiente."
+    },
+    "fields": {
+      "fullName": "Nombre Completo",
+      "email": "Correo Electrónico",
+      "phone": "Teléfono",
+      "location": "Ciudad / Ubicación",
+      "birthday": "Fecha de Cumpleaños",
+      "bio": "Sobre Mí"
+    },
+    "security": {
+      "title": "Seguridad de la Cuenta",
+      "subtitle": "Gestiona tu contraseña y credenciales de acceso",
+      "changePassword": "Cambiar Contraseña",
+      "currentPassword": "Contraseña Actual",
+      "newPassword": "Nueva Contraseña",
+      "confirmPassword": "Confirmar Nueva Contraseña",
+      "update": "Actualizar",
+      "passwordsNotMatch": "Las contraseñas no coinciden",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "passwordUpdated": "Contraseña actualizada exitosamente",
+      "passwordUpdateFailed": "No se pudo actualizar la contraseña",
+      "twoFactorAuth": "Autenticación en Dos Pasos (2FA)",
+      "twoFactorInDevelopment": "La autenticación en dos pasos estará disponible próximamente",
+      "deleteAccount": "Eliminar mi cuenta",
+      "confirmDelete": "¿Estás seguro de que deseas eliminar tu cuenta permanentemente? Esta acción no se puede deshacer.",
+      "accountDeleted": "Tu cuenta ha sido eliminada.",
+      "accountDeleteFailed": "No se pudo eliminar la cuenta.",
+      "googleAccountTitle": "Cuenta vinculada a Google",
+      "googleAccountDesc": "Iniciaste sesión con tu cuenta de Google. Tu contraseña y autenticación son administradas de forma segura y centralizada por Google.",
+      "googleManageSecurity": "Gestionar seguridad en Google",
+      "googleNoPasswordNotice": "No requieres ni puedes cambiar una contraseña local en EcoRuteando.",
+      "enable2FA": "Activar 2FA",
+      "disable2FA": "Desactivar 2FA",
+      "twoFactorActive": "2FA Habilitado",
+      "twoFactorInactive": "2FA Desactivado",
+      "twoFactorSetupTitle": "Configurar Autenticación en Dos Pasos (TOTP)",
+      "twoFactorScanQR": "Escanea este código QR con Google Authenticator, Microsoft Authenticator o Authy:",
+      "twoFactorManualKey": "O copia esta clave secreta manualmente:",
+      "twoFactorEnterCode": "Ingresa el código de 6 dígitos generado por tu aplicación:",
+      "twoFactorVerifyBtn": "Verificar y Activar",
+      "twoFactorSuccess": "¡2FA activado exitosamente! Guarda tus códigos de recuperación en un lugar seguro.",
+      "twoFactorDisableTitle": "Desactivar Autenticación en Dos Pasos",
+      "twoFactorDisableConfirm": "Ingresa tu código de 6 dígitos actual para confirmar la desactivación:",
+      "twoFactorDisabled": "Autenticación en dos pasos desactivada correctamente.",
+      "deleteAccountModalTitle": "¿Eliminar cuenta permanentemente?",
+      "deleteAccountModalWarning": "Esta acción es irreversible y eliminará todos tus datos personales, preferencias e historial de rutas registradas en EcoRuteando.",
+      "deleteAccountModalConfirm": "Sí, eliminar definitivamente",
+      "copied": "¡Copiado al portapapeles!"
+    },
+    "config": {
+      "title": "Preferencias del Sistema",
+      "subtitle": "Personaliza la apariencia y el idioma de EcoRuteando",
+      "darkMode": "Modo Oscuro",
+      "darkModeDesc": "Cambia entre el tema claro y oscuro de la aplicación",
+      "lightMode": "Modo Claro",
+      "language": "Idioma del Sistema",
+      "languageDesc": "Selecciona el idioma de tu preferencia",
+      "responsive": "EcoRuteando está optimizado para dispositivos móviles y de escritorio."
+    },
+    "confirmIdentity": {
+      "title": "Confirmar Identidad",
+      "subtitle": "Por seguridad, ingresa tu contraseña actual para confirmar los cambios."
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Panel de Administración",
+      "controlPanelSubtitle": "Monitoreo y control integral del sistema",
+      "back": "Volver al Dashboard",
+      "administrationPanel": "Administración Global",
+      "exporting": "Exportando...",
+      "stats": {
+        "users": "Usuarios Activos",
+        "routes": "Rutas Registradas",
+        "reports": "Reportes Viales",
+        "tickets": "Tickets de Soporte",
+        "co2": "CO₂ Total Evitado"
+      },
+      "modules": {
+        "users": {
+          "title": "Gestión de Usuarios",
+          "subtitle": "Roles, accesos y permisos"
+        },
+        "reports": {
+          "title": "Reportes de Obstáculos",
+          "subtitle": "Incidencias reportadas en vías"
+        },
+        "support": {
+          "title": "Soporte y Tickets",
+          "subtitle": "Atención a consultas de usuarios"
+        },
+        "export": {
+          "title": "Exportación de Datos",
+          "subtitle": "Reportes en Excel y PDF"
+        },
+        "audit": {
+          "title": "Auditoría del Sistema",
+          "subtitle": "Registros de eventos y cambios"
+        },
+        "settings": {
+          "title": "Configuración General",
+          "subtitle": "Parámetros de la plataforma"
+        }
+      }
+    },
+    "panel": {
+      "title": "Centro de Control EcoRuteando",
+      "systemTagline": "Gestión Inteligente de Movilidad Urbana",
+      "backToDashboard": "Volver al Dashboard",
+      "totalCo2Saved": "CO₂ Evitado Global",
+      "equivalentTrees": "Árboles Equivalentes",
+      "modulesTitle": "Módulos de Gestión",
+      "pendingActionsTitle": "Acciones Pendientes",
+      "environmentalImpact": "Impacto Ambiental Consolidado",
+      "viewStats": "Ver Estadísticas Detalladas",
+      "motivationalPhrase": "Liderando la transición hacia ciudades sostenibles.",
+      "stats": {
+        "users": "Usuarios",
+        "routes": "Rutas",
+        "reports": "Reportes",
+        "tickets": "Tickets",
+        "ecoPoints": "Puntos Eco"
+      },
+      "modules": {
+        "users": {
+          "title": "Usuarios",
+          "subtitle": "Gestión de cuentas y roles"
+        },
+        "reports": {
+          "title": "Reportes Viales",
+          "subtitle": "Validación de obstáculos"
+        },
+        "support": {
+          "title": "Soporte",
+          "subtitle": "Atención al usuario"
+        },
+        "export": {
+          "title": "Reportes",
+          "subtitle": "Descarga de métricas"
+        },
+        "audit": {
+          "title": "Auditoría",
+          "subtitle": "Trazabilidad del sistema"
+        },
+        "pois": {
+          "title": "Puntos de Interés",
+          "subtitle": "Gestión de POIs urbanos"
+        },
+        "settings": {
+          "title": "Configuración",
+          "subtitle": "Ajustes globales"
+        }
+      },
+      "pending": {
+        "reports": {
+          "label": "Reportes por revisar",
+          "desc": "Incidentes reportados por la comunidad"
+        },
+        "tickets": {
+          "label": "Tickets abiertos",
+          "desc": "Solicitudes de soporte pendientes"
+        }
+      },
+      "impact": {
+        "thanks": "Gracias a la comunidad de EcoRuteando",
+        "viaEcoRoutes": "A través de rutas sostenibles trazadas"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar Sesión",
+      "welcomeBack": "Bienvenido de nuevo a EcoRuteando",
+      "sustainableMobility": "Movilidad Ecológica y Sostenible",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "tu@correo.com",
+      "password": "Contraseña",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "submit": "Iniciar Sesión",
+      "loading": "Iniciando sesión...",
+      "orContinueWith": "O continúa con",
+      "noAccount": "¿No tienes una cuenta?",
+      "registerHere": "Regístrate aquí",
+      "tagline": "Rutas más limpias para un planeta mejor",
+      "back": "Volver",
+      "logoAlt": "EcoRuteando",
+      "errorRequired": "Todos los campos son obligatorios",
+      "errorInvalidEmail": "Ingresa un correo electrónico válido",
+      "errorPasswordLength": "La contraseña debe tener al menos 6 caracteres",
+      "errorInvalidCredentials": "Credenciales incorrectas. Verifica tus datos.",
+      "rateLimited": "Demasiados intentos. Intenta más tarde.",
+      "locked": "Cuenta bloqueada temporalmente por seguridad."
+    },
+    "register": {
+      "title": "Crear Cuenta",
+      "subtitle": "Únete a la movilidad sostenible en tu ciudad",
+      "sustainableMobility": "Movilidad Inteligente",
+      "firstName": "Nombre",
+      "firstNamePlaceholder": "Juan",
+      "lastName": "Apellido",
+      "confirmPassword": "Confirmar Contraseña",
+      "confirmPasswordPlaceholder": "••••••••",
+      "successMessage": "¡Cuenta creada exitosamente! Revisa tu correo para activarla.",
+      "errorMessage": "Error al registrar la cuenta. Intenta de nuevo."
+    },
+    "recover": {
+      "title": "Recuperar Contraseña",
+      "subtitle": "Ingresa tu correo para recibir un código de recuperación",
+      "emailLabel": "Correo Electrónico",
+      "emailPlaceholder": "tu@correo.com",
+      "emailValid": "Correo verificado",
+      "sendCode": "Enviar Código",
+      "sendingCode": "Enviando código...",
+      "invalidEmail": "Ingresa un correo válido",
+      "rateLimited": "Demasiadas solicitudes. Espera un momento.",
+      "sendCodeError": "No se pudo enviar el código de recuperación",
+      "checkEmailTitle": "Revisa tu Bandeja",
+      "codeSentTo": "Hemos enviado un código a {{email}}",
+      "haveCodeButton": "Ya tengo el código",
+      "changeEmail": "Cambiar correo",
+      "backToLogin": "Volver al inicio de sesión"
+    },
+    "newPassword": {
+      "title": "Nueva Contraseña",
+      "subtitle": "Establece tu nueva contraseña segura",
+      "stepEmail": "Correo",
+      "stepCode": "Código",
+      "stepPassword": "Nueva Clave",
+      "newPasswordLabel": "Nueva Contraseña",
+      "newPasswordPlaceholder": "••••••••",
+      "confirmLabel": "Confirmar Contraseña",
+      "confirmPlaceholder": "••••••••",
+      "passwordHint": "Mínimo 8 caracteres, combina letras y números",
+      "resetButton": "Restablecer Contraseña",
+      "resetting": "Restableciendo...",
+      "match": "Las contraseñas coinciden",
+      "mismatch": "Las contraseñas no coinciden",
+      "minLengthError": "La contraseña debe tener al menos 8 caracteres",
+      "errorMismatch": "Las contraseñas no coinciden",
+      "noCodeError": "Código de recuperación inválido o ausente",
+      "resetError": "Error al restablecer la contraseña",
+      "successTitle": "¡Contraseña Actualizada!",
+      "successMessage": "Tu contraseña ha sido actualizada con éxito.",
+      "loginButton": "Iniciar Sesión",
+      "strengthVeryWeak": "Muy débil",
+      "strengthMedium": "Media",
+      "strengthStrong": "Fuerte",
+      "strengthVeryStrong": "Muy fuerte"
+    },
+    "verifyCode": {
+      "title": "Verificar Código",
+      "subtitle": "Ingresa el código que enviamos a tu correo",
+      "stepEmail": "Correo",
+      "stepCode": "Código",
+      "stepPassword": "Nueva Clave",
+      "verifyButton": "Verificar Código",
+      "noCodeReceived": "¿No recibiste el código?",
+      "resend": "Reenviar código",
+      "resending": "Reenviando...",
+      "back": "Volver",
+      "noEmailError": "No se encontró el correo de recuperación",
+      "codeResent": "Código reenviado con éxito",
+      "resendError": "Error al reenviar el código",
+      "rateLimited": "Espera antes de solicitar otro código"
+    },
+    "verifyEmail": {
+      "title": "Activar Cuenta",
+      "sentTo": "Código enviado a {{email}}",
+      "enterToActivate": "Ingresa el código de 6 dígitos para activar tu cuenta",
+      "subtitleNoEmail": "Ingresa el código que llegó a tu correo",
+      "successToast": "¡Cuenta activada con éxito!",
+      "invalidCodeError": "Código incorrecto o expirado",
+      "noEmailError": "Correo no especificado",
+      "codeResent": "Código reenviado con éxito",
+      "resendError": "Error al reenviar el código",
+      "rateLimited": "Espera un momento antes de reenviar",
+      "rateLimitedResend": "Demasiados reenvíos. Espera un momento."
+    }
   }
 }

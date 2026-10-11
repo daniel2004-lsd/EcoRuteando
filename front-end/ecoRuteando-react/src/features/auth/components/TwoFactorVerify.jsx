@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import api from "../../../api/api";
+import * as authService from "../../../services/authService";
 
 function TwoFactorVerify() {
     const navigate = useNavigate();
-    const { saveTokens } = useAuth();
+    const { saveTokens, setUser } = useAuth();
     const [code, setCode] = useState("");
+    const [rememberDevice, setRememberDevice] = useState(true);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -22,14 +24,27 @@ function TwoFactorVerify() {
         try {
             const twoFactorToken = sessionStorage.getItem("twoFactorToken");
 
-            // Send 2FA code with the temporary twoFactorToken
-            const response = await api.post("/auth/2fa/verify", { code }, {
+            // Send 2FA code with the temporary twoFactorToken and rememberDevice
+            const response = await api.post("/auth/2fa/verify", { 
+                code, 
+                rememberDevice 
+            }, {
                 headers: { Authorization: `Bearer ${twoFactorToken}` }
             });
+
+            if (response.data.trustedDeviceToken) {
+                localStorage.setItem("trustedDeviceToken", response.data.trustedDeviceToken);
+            }
 
             if (response.data.accessToken) {
                 saveTokens(response.data.accessToken, response.data.refreshToken);
                 sessionStorage.removeItem("twoFactorToken");
+                try {
+                    const userData = await authService.me();
+                    if (setUser) setUser(userData);
+                } catch {
+                    // Fallback if me() fails
+                }
                 navigate("/dashboard", { replace: true });
             }
         } catch (err) {
@@ -74,6 +89,19 @@ function TwoFactorVerify() {
                         className="otp-input mt-4 w-full px-4 py-3 text-center text-2xl font-mono tracking-[0.5em] border border-gray-200 rounded-lg focus:outline-none focus:border-emerald-400 transition-all"
                         autoFocus
                     />
+
+                    <div className="flex items-center justify-start mt-3 px-1 text-left">
+                        <input
+                            id="rememberDevice"
+                            type="checkbox"
+                            checked={rememberDevice}
+                            onChange={(e) => setRememberDevice(e.target.checked)}
+                            className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded cursor-pointer"
+                        />
+                        <label htmlFor="rememberDevice" className="ml-2 block text-xs text-gray-600 cursor-pointer select-none">
+                            Recordar este dispositivo por 30 días
+                        </label>
+                    </div>
 
                     <button
                         onClick={handleVerify}

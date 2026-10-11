@@ -15,12 +15,22 @@ export const useLanguage = () => {
 export const LanguageProvider = ({ children }) => {
   const { i18n } = useTranslation();
   const [language, setLanguage] = useState(() => {
-    return localStorage.getItem("language") || "es";
+    return (
+      localStorage.getItem("language") ||
+      localStorage.getItem("appLanguage") ||
+      i18n.language ||
+      "es"
+    );
   });
 
   useEffect(() => {
-    i18n.changeLanguage(language);
-    localStorage.setItem("language", language);
+    if (language) {
+      i18n.changeLanguage(language);
+      localStorage.setItem("language", language);
+      localStorage.setItem("appLanguage", language);
+      localStorage.setItem("i18nextLng", language);
+      document.documentElement.lang = language;
+    }
   }, [language, i18n]);
 
   const changeLanguage = (lang) => {

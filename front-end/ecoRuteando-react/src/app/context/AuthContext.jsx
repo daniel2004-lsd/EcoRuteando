@@ -54,6 +54,13 @@ export function AuthProvider({ children }) {
             };
         }
 
+        // Email verification required — no tokens yet
+        if (data.requiresEmailVerification) {
+            return {
+                requiresEmailVerification: true,
+            };
+        }
+
         saveTokens(data.accessToken, data.refreshToken);
 
         const userData = await authService.me();
@@ -102,7 +109,7 @@ export function AuthProvider({ children }) {
                 isAuthenticated,
                 isGuest,
                 userRole,
-                saveTokens:
+                saveTokens,
                 loginUser,
                 loginWithOAuth,
                 logout,
