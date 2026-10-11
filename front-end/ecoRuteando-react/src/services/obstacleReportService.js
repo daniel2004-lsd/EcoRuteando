@@ -30,6 +30,24 @@ const obstacleReportService = {
       validationNote,
     });
   },
+
+  getActiveReports: async ({ latitude, longitude, radiusKm } = {}) => {
+    const params = {};
+    if (latitude !== undefined && latitude !== null) params.latitude = latitude;
+    if (longitude !== undefined && longitude !== null) params.longitude = longitude;
+    if (radiusKm !== undefined && radiusKm !== null) params.radiusKm = radiusKm;
+    const { data } = await api.get("/obstacle-reports/active", { params });
+    return data;
+  },
+
+  voteReport: async (reportId, { confirms, latitude, longitude }) => {
+    const { data } = await api.post(`/obstacle-reports/${reportId}/vote`, {
+      confirms,
+      latitude,
+      longitude,
+    });
+    return data;
+  },
 };
 
 export default obstacleReportService;
