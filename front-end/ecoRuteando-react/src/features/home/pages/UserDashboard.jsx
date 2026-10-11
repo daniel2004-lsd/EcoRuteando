@@ -12,7 +12,8 @@ import {
   MapIcon,
   ReportIcon,
   ShieldIcon,
-  HeartIcon
+  HeartIcon,
+  ChartIcon
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import routeService from "../../../services/routeService";
@@ -65,6 +66,10 @@ const MODULE_STYLES = {
     icon: "bg-gradient-to-br from-slate-600 to-slate-800 text-white",
     iconDark: "bg-slate-600/20 text-slate-300"
   },
+  estadisticas: {
+    icon: "bg-gradient-to-br from-indigo-500 to-emerald-600 text-white",
+    iconDark: "bg-indigo-500/20 text-indigo-400"
+  },
   default: {
     icon: "bg-gradient-to-br from-emerald-500 to-teal-500 text-white",
     iconDark: "bg-emerald-500/20 text-emerald-400"
@@ -80,9 +85,20 @@ const MODULE_STYLES = {
 // saben de dónde vienen sus datos, así que se pueden testear o reutilizar
 // en otra pantalla sin arrastrar el resto del dashboard.
 // ---------------------------------------------------------------------------
-const StatCard = ({ icon, value, labelKey, isDarkMode, t }) => (
+const StatCard = ({ icon, value, labelKey, isDarkMode, t, onClick }) => (
   <div
-    className={`rounded-2xl p-5 shadow-sm border transition-colors ${
+    onClick={onClick}
+    role={onClick ? "button" : undefined}
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={(e) => {
+      if (onClick && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault();
+        onClick();
+      }
+    }}
+    className={`rounded-2xl p-5 shadow-sm border transition-all ${
+      onClick ? "cursor-pointer hover:scale-[1.02] hover:shadow-md" : ""
+    } ${
       isDarkMode ? 'bg-[#0B1215]/40 border-[#26383D]' : "bg-white border-gray-100"
     }`}
   >
@@ -173,29 +189,39 @@ const UserDashboard = ({ onNavigate }) => {
   }, []);
 
   useEffect(() => {
+    let mounted = true;
     const loadStats = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token && !user) return; // Modo invitado: no cargar stats
+
       try {
-        // Impacto real basado en los TRAYECTOS del usuario (los viajes completados),
-        // no en el número de rutas guardadas (bug: mostraba routes.length como "viajes").
-        if (!user) return; // Modo invitado: no cargar stats
-        const [routes, trips] = await Promise.all([routeService.getAll(), tripService.getAll()]);
+        const [routesRes, tripsRes] = await Promise.allSettled([
+          routeService.getAll(),
+          tripService.getAll()
+        ]);
 
-        const completedTrips = (Array.isArray(trips) ? trips : []).filter((t) => t.completed);
-        const totalCO2 = completedTrips.reduce((sum, r) => sum + (r.actualCo2Kg || 0), 0);
-        const totalKm = completedTrips.reduce((sum, r) => sum + (r.actualDistanceKm || 0), 0);
+        const routes = routesRes.status === "fulfilled" && Array.isArray(routesRes.value) ? routesRes.value : [];
+        const trips = tripsRes.status === "fulfilled" && Array.isArray(tripsRes.value) ? tripsRes.value : [];
 
-        setStats({
-          routes: (Array.isArray(routes) ? routes : []).length,
-          trips: completedTrips.length,
-          co2Saved: totalCO2.toFixed(1),
-          points: Math.round(totalKm * 10)
-        });
+        const completedTrips = trips.filter((t) => t.completed);
+        const totalCO2 = completedTrips.reduce((sum, r) => sum + (parseFloat(r.actualCo2Kg) || 0), 0);
+        const totalKm = completedTrips.reduce((sum, r) => sum + (parseFloat(r.actualDistanceKm) || 0), 0);
+
+        if (mounted) {
+          setStats({
+            routes: routes.length,
+            trips: completedTrips.length,
+            co2Saved: totalCO2.toFixed(1),
+            points: Math.round(totalKm * 10)
+          });
+        }
       } catch (error) {
         console.error("Error cargando stats:", error);
       }
     };
     loadStats();
-  }, []);
+    return () => { mounted = false; };
+  }, [user]);
 
   // Antes se llamaba handleBack/confirmBack/showBackModal, pero la función
   // en realidad cierra sesión (llama a logout()) y navega a "/". Ese nombre
@@ -260,6 +286,13 @@ const UserDashboard = ({ onNavigate }) => {
       titleKey: "dashboard.modules.report.title",
       subtitleKey: "dashboard.modules.report.subtitle",
       onClick: () => onNavigate("/user/reporter-problem")
+    },
+    {
+      id: "estadisticas",
+      icon: <ChartIcon size={24} />,
+      titleKey: "dashboard.impact.button",
+      subtitleKey: "dashboard.impact.title",
+      onClick: () => onNavigate("/user/statistics")
     }
   ];
 
@@ -274,10 +307,30 @@ const UserDashboard = ({ onNavigate }) => {
   const modules = userRole === "admin" ? [...baseModules, adminModule] : baseModules;
 
   const statsCards = [
-    { icon: <MapIcon size={20} />, value: stats.routes, labelKey: "dashboard.stats.routesCreated" },
-    { icon: <ClockIcon size={20} />, value: stats.trips, labelKey: "dashboard.stats.tripsCompleted" },
-    { icon: <LeafIcon size={20} />, value: `${stats.co2Saved} kg`, labelKey: "dashboard.stats.co2Saved" },
-    { icon: <ActivityIcon size={20} />, value: stats.points, labelKey: "dashboard.stats.ecoPoints" }
+    {
+      icon: <MapIcon size={20} />,
+      value: stats.routes,
+      labelKey: "dashboard.stats.routesCreated",
+      onClick: () => onNavigate("/user/routes")
+    },
+    {
+      icon: <ClockIcon size={20} />,
+      value: stats.trips,
+      labelKey: "dashboard.stats.tripsCompleted",
+      onClick: () => onNavigate("/user/history")
+    },
+    {
+      icon: <LeafIcon size={20} />,
+      value: `${stats.co2Saved} kg`,
+      labelKey: "dashboard.stats.co2Saved",
+      onClick: () => onNavigate("/user/statistics")
+    },
+    {
+      icon: <ActivityIcon size={20} />,
+      value: stats.points,
+      labelKey: "dashboard.stats.ecoPoints",
+      onClick: () => onNavigate("/user/statistics")
+    }
   ];
 
   return (

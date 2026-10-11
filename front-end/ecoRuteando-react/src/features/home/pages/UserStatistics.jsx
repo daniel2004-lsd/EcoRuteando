@@ -1,205 +1,521 @@
-import { useState } from "react";
-import { LeafIcon, ArrowLeft, BikeIcon, BusIcon, TrophyIcon, ChartIcon } from "../../../shared/components/Icons";
+import { useState, useEffect } from "react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
+import { Line, Bar, Doughnut } from "react-chartjs-2";
+import { LeafIcon, ArrowLeft, TrophyIcon, ChartIcon, RouteIcon, ClockIcon } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
+import { useTranslation } from "react-i18next";
+import tripService from "../../../services/tripService";
+import routeService from "../../../services/routeService";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
+
+const TRANSPORT_COLORS = {
+  walking: "#10b981",
+  car: "#f59e0b",
+  other: "#94a3b8",
+};
 
 const UserStatistics = ({ onNavigate }) => {
   const { isDarkMode, toggleTheme } = useTheme();
+  const { t } = useTranslation();
 
-  // Datos de ejemplo
-  const [stats] = useState({
-    totalCO2: 1.5,
-    treesEquivalent: 0.07,
-    monthlyCO2: [0.12, 0.15, 0.18, 0.22, 0.28, 0.35],
-    weeklyKm: [5.2, 6.8, 7.5, 8.2, 9.1, 10.5, 11.2, 12.8],
-    transportType: {
-      bike: 65,
-      public: 35
+  const [loading, setLoading] = useState(true);
+  const [tripsData, setTripsData] = useState([]);
+  const [routesCount, setRoutesCount] = useState(0);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchUserData = async () => {
+      setLoading(true);
+      try {
+        const [trips, routes] = await Promise.all([
+          tripService.getAll(),
+          routeService.getAll(null, false, true),
+        ]);
+
+        if (mounted) {
+          setTripsData(Array.isArray(trips) ? trips : []);
+          setRoutesCount((Array.isArray(routes) ? routes : []).length);
+        }
+      } catch (err) {
+        console.error("Error al cargar datos para estadísticas:", err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    fetchUserData();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const completedTrips = tripsData.filter((t) => t.completed);
+  const totalCO2 = completedTrips.reduce((sum, t) => sum + (Number(t.actualCo2Kg) || 0), 0);
+  const totalKm = completedTrips.reduce((sum, t) => sum + (Number(t.actualDistanceKm) || 0), 0);
+  const totalCalories = completedTrips.reduce((sum, t) => sum + (Number(t.estimatedCalories) || 0), 0);
+  const treesEquivalent = (totalCO2 / 21).toFixed(2); // ~21kg de CO2 absorbido por árbol por año
+
+  // Agrupación mensual para Chart.js
+  const monthlyMap = {};
+  completedTrips.forEach((trip) => {
+    const date = new Date(trip.startedAt || trip.endedAt || Date.now());
+    const monthKey = date.toLocaleString("es-ES", { month: "short" });
+    if (!monthlyMap[monthKey]) {
+      monthlyMap[monthKey] = { co2: 0, km: 0 };
     }
+    monthlyMap[monthKey].co2 += Number(trip.actualCo2Kg) || 0;
+    monthlyMap[monthKey].km += Number(trip.actualDistanceKm) || 0;
   });
 
-  const months = ["Dic", "Ene", "Feb", "Mar", "Abr", "May"];
-  const weeks = ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"];
+  const monthLabels = Object.keys(monthlyMap).length > 0
+    ? Object.keys(monthlyMap)
+    : ["Sin viajes aún"];
+  const monthlyCo2Values = Object.keys(monthlyMap).length > 0
+    ? Object.values(monthlyMap).map((m) => Number(m.co2.toFixed(2)))
+    : [0];
+  const monthlyKmValues = Object.keys(monthlyMap).length > 0
+    ? Object.values(monthlyMap).map((m) => Number(m.km.toFixed(1)))
+    : [0];
 
+  // Agrupación por modo de transporte para Doughnut Chart
+  const modeMap = {};
+  completedTrips.forEach((trip) => {
+    const mode = (trip.transportMode || "walking").toLowerCase();
+    modeMap[mode] = (modeMap[mode] || 0) + 1;
+  });
+
+  const modeLabels = Object.keys(modeMap).length > 0
+    ? Object.keys(modeMap).map((m) => {
+        if (m === "car") return "Automóvil";
+        return "Caminata";
+      })
+    : ["Sin registros"];
+
+  const modeValues = Object.keys(modeMap).length > 0
+    ? Object.values(modeMap)
+    : [1];
+
+  const modeColors = Object.keys(modeMap).length > 0
+    ? Object.keys(modeMap).map((m) => TRANSPORT_COLORS[m] || TRANSPORT_COLORS.other)
+    : [isDarkMode ? "#26383D" : "#e5e7eb"];
+
+  // Configuración de estilos y temas para Chart.js
+  const axisColor = isDarkMode ? "#9ca3af" : "#6b7280";
+  const gridColor = isDarkMode ? "rgba(55, 65, 81, 0.5)" : "rgba(229, 231, 235, 0.8)";
+  const textColor = isDarkMode ? "#e2e8f0" : "#1f2937";
+
+  // Gráfico 1: Barras de CO2 mensual
+  const barChartData = {
+    labels: monthLabels,
+    datasets: [
+      {
+        label: "CO₂ Ahorrado (kg)",
+        data: monthlyCo2Values,
+        backgroundColor: "rgba(16, 185, 129, 0.85)",
+        hoverBackgroundColor: "#059669",
+        borderRadius: 8,
+        borderSkipped: false,
+      },
+    ],
+  };
+
+  const barChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => ` ${ctx.parsed.y} kg de CO₂`,
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { color: gridColor },
+        ticks: { color: axisColor, font: { size: 12 } },
+      },
+      y: {
+        grid: { color: gridColor },
+        ticks: { color: axisColor, font: { size: 12 } },
+        beginAtZero: true,
+      },
+    },
+  };
+
+  // Gráfico 2: Línea de Distancia (Km)
+  const lineChartData = {
+    labels: monthLabels,
+    datasets: [
+      {
+        label: "Distancia Recorrida (km)",
+        data: monthlyKmValues,
+        borderColor: "#06b6d4",
+        backgroundColor: "rgba(6, 182, 212, 0.15)",
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: "#06b6d4",
+        pointBorderColor: isDarkMode ? "#0B1215" : "#ffffff",
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+      },
+    ],
+  };
+
+  const lineChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => ` ${ctx.parsed.y} km recorridos`,
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { color: gridColor },
+        ticks: { color: axisColor, font: { size: 12 } },
+      },
+      y: {
+        grid: { color: gridColor },
+        ticks: { color: axisColor, font: { size: 12 } },
+        beginAtZero: true,
+      },
+    },
+  };
+
+  // Gráfico 3: Dona por modo de transporte
+  const doughnutData = {
+    labels: modeLabels,
+    datasets: [
+      {
+        data: modeValues,
+        backgroundColor: modeColors,
+        borderColor: isDarkMode ? "#162329" : "#ffffff",
+        borderWidth: 3,
+        hoverOffset: 6,
+      },
+    ],
+  };
+
+  const doughnutOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: {
+          color: textColor,
+          font: { family: "Inter, system-ui, sans-serif", size: 12 },
+          padding: 12,
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => ` ${ctx.label}: ${ctx.parsed} viajes`,
+        },
+      },
+    },
+    cutout: "68%",
+  };
+
+  // Logros dinámicos basados en la actividad real
   const achievements = [
-    { name: "Primera ruta", completed: true, icon: "🚀" },
-    { name: "10 rutas", completed: true, icon: "🌟", value: "10/10" },
-    { name: "50 rutas", completed: false, icon: "🏆", value: "12/50" },
-    { name: "100 kg CO₂", completed: false, icon: "🌿", value: "32/100" },
-    { name: "500 kg CO₂", completed: false, icon: "💚", value: "32/500" },
-    { name: "100 km recorridos", completed: true, icon: "🚲", value: "156/100" }
+    {
+      name: "Primera Ruta",
+      completed: routesCount >= 1,
+      icon: "🚀",
+      value: `${routesCount}/1`,
+    },
+    {
+      name: "Explorador Verde (5 Rutas)",
+      completed: routesCount >= 5,
+      icon: "🌟",
+      value: `${routesCount}/5`,
+    },
+    {
+      name: "Primer Viaje Sostenible",
+      completed: completedTrips.length >= 1,
+      icon: "🚶",
+      value: `${completedTrips.length}/1`,
+    },
+    {
+      name: "Viajero Constante (10 Viajes)",
+      completed: completedTrips.length >= 10,
+      icon: "🏆",
+      value: `${completedTrips.length}/10`,
+    },
+    {
+      name: "10 kg CO₂ Ahorrados",
+      completed: totalCO2 >= 10,
+      icon: "🌿",
+      value: `${totalCO2.toFixed(1)}/10 kg`,
+    },
+    {
+      name: "50 km Sostenibles",
+      completed: totalKm >= 50,
+      icon: "🚶",
+      value: `${totalKm.toFixed(1)}/50 km`,
+    },
   ];
 
-  const maxCO2 = Math.max(...stats.monthlyCO2);
-  const maxKm = Math.max(...stats.weeklyKm);
-
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-[#0B1215]' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
-
+    <div className={`min-h-screen ${isDarkMode ? "bg-[#0B1215]" : "bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50"}`}>
       {/* Botón modo oscuro/claro */}
       <button
         onClick={toggleTheme}
         className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center"
       >
-        {isDarkMode ? '☀️' : "🌙"}
+        {isDarkMode ? "☀️" : "🌙"}
       </button>
 
       {/* HEADER */}
-      <header className={`relative ${isDarkMode ? 'bg-[#162329] border-b border-[#26383D]' : 'bg-gradient-to-r from-green-700 via-emerald-700 to-teal-700'} shadow-lg overflow-hidden`}>
+      <header className={`relative ${isDarkMode ? "bg-[#162329] border-b border-[#26383D]" : "bg-gradient-to-r from-green-700 via-emerald-700 to-teal-700"} shadow-lg overflow-hidden`}>
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${isDarkMode ? 'bg-[#162329] border border-emerald-500/30' : 'bg-white'}`}>
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${isDarkMode ? "bg-[#162329] border border-emerald-500/30" : "bg-white"}`}>
                 <ChartIcon size={24} className="text-emerald-500" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">Mis Estadísticas</h1>
-                <p className={`text-sm ${isDarkMode ? 'text-emerald-400' : 'text-green-100'}`}>Tu impacto ambiental en números</p>
+                <h1 className="text-2xl font-bold text-white">Reportes Estadísticos y Visualización</h1>
+                <p className={`text-sm ${isDarkMode ? "text-emerald-400" : "text-green-100"}`}>
+                  Análisis interactivo de movilidad y huella ambiental impulsado por Chart.js
+                </p>
               </div>
             </div>
 
             <button
               onClick={() => onNavigate("/dashboard")}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-[#162329]/50 text-emerald-400 border border-emerald-500/30 hover:bg-[#26383D]' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+                isDarkMode
+                  ? "bg-[#162329]/50 text-emerald-400 border border-emerald-500/30 hover:bg-[#26383D]"
+                  : "bg-white/20 text-white hover:bg-white/30 border border-white/30"
+              }`}
             >
               <ArrowLeft size={16} />
-              Volver
+              Volver al Dashboard
             </button>
           </div>
         </div>
       </header>
 
-      {/* CONTENIDO */}
+      {/* CONTENIDO PRINCIPAL */}
       <div className="max-w-7xl mx-auto px-6 py-8">
-
-        {/* Tarjeta principal CO₂ */}
-        <div className={`rounded-2xl p-8 mb-8 text-center shadow-md border transition-all ${isDarkMode ? 'bg-[#162329] border-[#26383D]' : 'bg-white border-gray-100'}`}>
-          <div className="flex justify-center mb-4">
-            <div className={`w-20 h-20 rounded-2xl flex items-center justify-center ${isDarkMode ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
-              <LeafIcon size={36} className="text-emerald-500" />
-            </div>
+        {loading ? (
+          <div className="text-center py-20">
+            <div className="w-10 h-10 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p className={isDarkMode ? "text-gray-400" : "text-gray-600"}>Cargando datos y generando reportes...</p>
           </div>
-          <h3 className={`text-xs font-bold uppercase tracking-wide mb-1 ${isDarkMode ? 'text-emerald-400/80' : 'text-gray-500'}`}>CO₂ AHORRADO</h3>
-          <p className={`text-5xl md:text-6xl font-black mt-2 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-700'}`}>{stats.totalCO2} kg</p>
-          <p className={`text-sm mt-3 ${isDarkMode ? 'text-emerald-400/80' : 'text-gray-500'}`}>
-            Equivale a plantar <span className={`font-bold ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>{stats.treesEquivalent}</span> árboles
-          </p>
-        </div>
-
-        {/* Gráficos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          
-          {/* CO₂ ahorrado por mes */}
-          <div className={`rounded-2xl p-6 shadow-md border transition-all ${isDarkMode ? 'bg-[#162329] border-[#26383D]' : 'bg-white border-gray-100'}`}>
-            <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>CO₂ ahorrado por mes</h3>
-            <div className="flex items-end justify-between h-52 gap-2">
-              {stats.monthlyCO2.map((value, idx) => (
-                <div key={idx} className="flex-1 flex flex-col items-center gap-2">
-                  <div 
-                    className="w-full rounded-t-lg transition-all duration-300 hover:opacity-80"
-                    style={{
-                      height: `${(value / maxCO2) * 140}px`,
-                      background: isDarkMode ? '#3a8a5a' : '#2a6b8f',
-                    }}
-                  />
-                  <span className={`text-xs ${isDarkMode ? 'text-emerald-400/80' : 'text-gray-500'}`}>{months[idx]}</span>
-                  <span className={`text-xs font-semibold ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>{value} kg</span>
+        ) : (
+          <>
+            {/* KPI Cards de Resumen */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <div className={`rounded-2xl p-5 shadow-sm border ${isDarkMode ? "bg-[#162329] border-[#26383D]" : "bg-white border-gray-100"}`}>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+                    <LeafIcon size={20} />
+                  </div>
+                  <span className={`text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                    CO₂ Ahorrado
+                  </span>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Km recorridos */}
-          <div className={`rounded-2xl p-6 shadow-md border transition-all ${isDarkMode ? 'bg-[#162329] border-[#26383D]' : 'bg-white border-gray-100'}`}>
-            <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>Km recorridos (últimas 8 semanas)</h3>
-            <div className="flex items-end justify-between h-52 gap-2">
-              {stats.weeklyKm.map((value, idx) => (
-                <div key={idx} className="flex-1 flex flex-col items-center gap-2">
-                  <div 
-                    className="w-full rounded-t-lg transition-all duration-300 hover:opacity-80"
-                    style={{
-                      height: `${(value / maxKm) * 140}px`,
-                      background: isDarkMode ? '#10b981' : '#059669',
-                    }}
-                  />
-                  <span className={`text-xs ${isDarkMode ? 'text-emerald-400/80' : 'text-gray-500'}`}>{weeks[idx]}</span>
-                  <span className={`text-xs font-semibold ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>{value} km</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Transporte y Logros */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          
-          {/* Tipo de transporte */}
-          <div className={`rounded-2xl p-6 shadow-md border transition-all ${isDarkMode ? 'bg-[#162329] border-[#26383D]' : 'bg-white border-gray-100'}`}>
-            <h3 className={`text-lg font-bold mb-5 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>Tipo de transporte</h3>
-            
-            <div className="mb-5">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <BikeIcon size={18} className="text-emerald-500" />
-                  <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Bicicleta</span>
-                </div>
-                <span className={`text-lg font-bold ${isDarkMode ? 'text-emerald-400' : 'text-emerald-700'}`}>{stats.transportType.bike}%</span>
+                <p className={`text-3xl font-black ${isDarkMode ? "text-emerald-400" : "text-emerald-700"}`}>
+                  {totalCO2.toFixed(1)} <span className="text-base font-normal">kg</span>
+                </p>
+                <p className={`text-[11px] mt-1 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                  ≈ {treesEquivalent} árboles absorbentes
+                </p>
               </div>
-              <div className={`w-full h-2 rounded-full ${isDarkMode ? 'bg-[#162329]' : 'bg-gray-200'}`}>
-                <div className="h-full rounded-full bg-emerald-500" style={{ width: `${stats.transportType.bike}%` }} />
-              </div>
-            </div>
 
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <BusIcon size={18} className="text-blue-500" />
-                  <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Transporte Público</span>
+              <div className={`rounded-2xl p-5 shadow-sm border ${isDarkMode ? "bg-[#162329] border-[#26383D]" : "bg-white border-gray-100"}`}>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-500 flex items-center justify-center">
+                    <RouteIcon size={20} />
+                  </div>
+                  <span className={`text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                    Distancia Total
+                  </span>
                 </div>
-                <span className={`text-lg font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>{stats.transportType.public}%</span>
+                <p className={`text-3xl font-black ${isDarkMode ? "text-cyan-400" : "text-cyan-700"}`}>
+                  {totalKm.toFixed(1)} <span className="text-base font-normal">km</span>
+                </p>
+                <p className={`text-[11px] mt-1 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                  En trayectos sostenibles
+                </p>
               </div>
-              <div className={`w-full h-2 rounded-full ${isDarkMode ? 'bg-[#162329]' : 'bg-gray-200'}`}>
-                <div className="h-full rounded-full bg-blue-500" style={{ width: `${stats.transportType.public}%` }} />
+
+              <div className={`rounded-2xl p-5 shadow-sm border ${isDarkMode ? "bg-[#162329] border-[#26383D]" : "bg-white border-gray-100"}`}>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center">
+                    <ClockIcon size={20} />
+                  </div>
+                  <span className={`text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                    Viajes Hechos
+                  </span>
+                </div>
+                <p className={`text-3xl font-black ${isDarkMode ? "text-purple-400" : "text-purple-700"}`}>
+                  {completedTrips.length}
+                </p>
+                <p className={`text-[11px] mt-1 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                  {routesCount} rutas creadas
+                </p>
+              </div>
+
+              <div className={`rounded-2xl p-5 shadow-sm border ${isDarkMode ? "bg-[#162329] border-[#26383D]" : "bg-white border-gray-100"}`}>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
+                    <TrophyIcon size={20} />
+                  </div>
+                  <span className={`text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                    EcoPuntos
+                  </span>
+                </div>
+                <p className={`text-3xl font-black ${isDarkMode ? "text-amber-400" : "text-amber-700"}`}>
+                  {Math.round(totalKm * 10)}
+                </p>
+                <p className={`text-[11px] mt-1 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                  {Math.round(totalCalories)} kcal quemadas
+                </p>
               </div>
             </div>
-          </div>
 
-          {/* Logros */}
-          <div className={`rounded-2xl p-6 shadow-md border transition-all ${isDarkMode ? 'bg-[#162329] border-[#26383D]' : 'bg-white border-gray-100'}`}>
-            <h3 className={`text-lg font-bold mb-4 flex items-center gap-2 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>
-              <TrophyIcon size={20} className="text-amber-500" />
-              Logros
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              {achievements.map((achievement, idx) => (
-                <div 
-                  key={idx} 
-                  className={`p-3 rounded-xl text-center transition-all ${achievement.completed 
-                    ? (isDarkMode ? 'bg-emerald-500/10 border border-emerald-500/30' : 'bg-emerald-50 border border-emerald-200')
-                    : (isDarkMode ? 'bg-[#162329]/50 border border-gray-600' : 'bg-gray-50 border border-gray-200')
-                  } ${achievement.completed ? '' : 'opacity-60'}`}
-                >
-                  <div className="text-2xl mb-1">{achievement.icon}</div>
-                  <p className={`text-xs font-semibold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{achievement.name}</p>
-                  {achievement.value && (
-                    <p className={`text-xs mt-1 ${isDarkMode ? 'text-emerald-400/80' : 'text-gray-500'}`}>{achievement.value}</p>
-                  )}
-                  {achievement.completed && (
-                    <p className={`text-xs mt-1 font-medium ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>✓ Completado</p>
-                  )}
+            {/* GRÁFICOS INTERACTIVOS CHART.JS */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              {/* Gráfico 1: Barras de CO2 Ahorrado */}
+              <div className={`rounded-2xl p-6 shadow-md border ${isDarkMode ? "bg-[#162329] border-[#26383D]" : "bg-white border-gray-100"}`}>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className={`text-base font-bold ${isDarkMode ? "text-[#e2e8f0]" : "text-gray-800"}`}>
+                      CO₂ Ahorrado por Período
+                    </h3>
+                    <p className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                      Kilos de emisiones evitadas en la atmósfera (Chart.js Bar)
+                    </p>
+                  </div>
+                  <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-500 font-semibold">
+                    {totalCO2.toFixed(1)} kg total
+                  </span>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
+                <div className="h-[280px] w-full">
+                  <Bar data={barChartData} options={barChartOptions} />
+                </div>
+              </div>
 
-        {/* Frase motivacional */}
-        <div className="mt-8 text-center">
-          <p className={`text-sm flex items-center justify-center gap-2 ${isDarkMode ? 'text-emerald-400/80' : 'text-gray-500'}`}>
-            <LeafIcon size={14} className="text-emerald-500" />
-            Sigue así, cada kilómetro cuenta para un futuro más verde
-            <LeafIcon size={14} className="text-emerald-500" />
-          </p>
-        </div>
+              {/* Gráfico 2: Línea de Distancia Recorrida */}
+              <div className={`rounded-2xl p-6 shadow-md border ${isDarkMode ? "bg-[#162329] border-[#26383D]" : "bg-white border-gray-100"}`}>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className={`text-base font-bold ${isDarkMode ? "text-[#e2e8f0]" : "text-gray-800"}`}>
+                      Evolución de Kilómetros Sostenibles
+                    </h3>
+                    <p className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                      Trayectos acumulados por período (Chart.js Line)
+                    </p>
+                  </div>
+                  <span className="text-xs px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-500 font-semibold">
+                    {totalKm.toFixed(1)} km total
+                  </span>
+                </div>
+                <div className="h-[280px] w-full">
+                  <Line data={lineChartData} options={lineChartOptions} />
+                </div>
+              </div>
+            </div>
+
+            {/* Fila 2: Distribución por Modo y Logros */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              {/* Gráfico 3: Dona por Modo de Transporte */}
+              <div className={`rounded-2xl p-6 shadow-md border ${isDarkMode ? "bg-[#162329] border-[#26383D]" : "bg-white border-gray-100"}`}>
+                <h3 className={`text-base font-bold mb-1 ${isDarkMode ? "text-[#e2e8f0]" : "text-gray-800"}`}>
+                  Distribución por Modo de Transporte
+                </h3>
+                <p className={`text-xs mb-4 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                  Porcentaje de viajes según el transporte utilizado (Chart.js Doughnut)
+                </p>
+                <div className="h-[260px] w-full flex items-center justify-center">
+                  <Doughnut data={doughnutData} options={doughnutOptions} />
+                </div>
+              </div>
+
+              {/* Logros Ambientales */}
+              <div className={`rounded-2xl p-6 shadow-md border ${isDarkMode ? "bg-[#162329] border-[#26383D]" : "bg-white border-gray-100"}`}>
+                <h3 className={`text-base font-bold mb-1 flex items-center gap-2 ${isDarkMode ? "text-[#e2e8f0]" : "text-gray-800"}`}>
+                  <TrophyIcon size={18} className="text-amber-500" />
+                  Logros y Metas Ecológicas
+                </h3>
+                <p className={`text-xs mb-4 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                  Incentivos por tus hábitos de movilidad limpia
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  {achievements.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className={`p-3 rounded-xl border transition-all ${
+                        item.completed
+                          ? isDarkMode
+                            ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
+                            : "bg-emerald-50 border-emerald-200 text-emerald-800"
+                          : isDarkMode
+                          ? "bg-[#162329]/40 border-[#26383D] opacity-60 text-gray-400"
+                          : "bg-gray-50 border-gray-200 opacity-60 text-gray-500"
+                      }`}
+                    >
+                      <div className="text-xl mb-1">{item.icon}</div>
+                      <p className="text-xs font-bold truncate">{item.name}</p>
+                      <p className="text-[11px] font-mono mt-0.5">{item.value}</p>
+                      {item.completed && (
+                        <span className="text-[10px] font-semibold text-emerald-500 block mt-1">
+                          ✓ Desbloqueado
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Mensaje motivacional */}
+            <div className="text-center py-4">
+              <p className={`text-xs flex items-center justify-center gap-2 ${isDarkMode ? "text-emerald-400" : "text-emerald-700"}`}>
+                <LeafIcon size={14} className="text-emerald-500" />
+                Cada kilómetro planificado y recorrido reduce la huella de carbono de la ciudad.
+                <LeafIcon size={14} className="text-emerald-500" />
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

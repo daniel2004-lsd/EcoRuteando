@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { LeafIcon, MapIcon, ActivityIcon, HeartIcon, BikeIcon, BusIcon, CloseIcon } from "../../../shared/components/Icons";
+import { LeafIcon, MapIcon, ActivityIcon, HeartIcon, CloseIcon } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
+import { useLanguage } from "../../../app/context/LanguageContext";
 import { useAuth } from "../../../hooks/useAuth";
 
 /* ── Ícono globo inline ── */
@@ -35,31 +36,8 @@ const HomePage = ({ onNavigate }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const { isDarkMode, toggleTheme } = useTheme();
-  
-  // ✅ INICIALIZAR IDIOMA DESDE localStorage
-  const [language, setLanguage] = useState(() => {
-    const saved = localStorage.getItem("appLanguage");
-    return saved || i18n.language || 'es';
-  });
-  
+  const { language, changeLanguage: setGlobalLanguage } = useLanguage();
   const dropdownRef = useRef(null);
-
-  // ✅ GUARDAR IDIOMA CUANDO CAMBIA
-  useEffect(() => {
-    localStorage.setItem("appLanguage", language);
-    i18n.changeLanguage(language);
-    console.log('🔄 Idioma guardado:', language);
-  }, [language, i18n]);
-
-  // ✅ RESTAURAR IDIOMA AL CARGAR LA PÁGINA (NUEVO)
-  useEffect(() => {
-    const savedLang = localStorage.getItem("appLanguage");
-    if (savedLang && savedLang !== i18n.language) {
-      console.log('🔄 Restaurando idioma guardado:', savedLang);
-      setLanguage(savedLang);
-      i18n.changeLanguage(savedLang);
-    }
-  }, []);
 
   const scrollToSection = (id) => {
     setMenuOpen(false);
@@ -70,7 +48,7 @@ const HomePage = ({ onNavigate }) => {
   };
 
   const changeLanguage = (lng) => {
-    setLanguage(lng);
+    setGlobalLanguage(lng);
     setLangDropdownOpen(false);
   };
 
@@ -86,7 +64,7 @@ const HomePage = ({ onNavigate }) => {
   const featureCards = Array.isArray(rawFeatureCards) && rawFeatureCards.length > 0 
     ? rawFeatureCards 
     : [
-        { title: "Rutas Inteligentes", desc: "Combina bicicleta y transporte público con tiempos exactos y alternativas verdes." },
+        { title: "Rutas Inteligentes", desc: "Planifica tus trayectos a pie y en vehículo con tiempos exactos y alternativas verdes." },
         { title: "Ahorro de CO₂", desc: "Cada trayecto suma. Visualiza el impacto positivo de tus decisiones de movilidad." },
         { title: "Comunidad Activa", desc: "Únete a una red de personas comprometidas con la movilidad sostenible en tu ciudad." }
       ];
@@ -96,21 +74,21 @@ const HomePage = ({ onNavigate }) => {
   const whyReasons = Array.isArray(rawWhyReasons) && rawWhyReasons.length > 0
     ? rawWhyReasons
     : [
-        { title: "Movilidad integrada", desc: "Conecta fácilmente tramos en bicicleta con rutas de transporte público." },
-        { title: "Salud y bienestar", desc: "Fomenta el ejercicio diario y mejora tu calidad de vida mientras te desplazas." },
-        { title: "Impacto ambiental real", desc: "Cada kilómetro en bicicleta evita emisiones. Tu contribución cuenta." }
+        { title: "Movilidad integrada", desc: "Conecta fácilmente tus puntos de origen y destino con rutas eficientes." },
+        { title: "Salud y bienestar", desc: "Fomenta hábitos activos y mejora tu calidad de vida mientras te desplazas." },
+        { title: "Impacto ambiental real", desc: "Cada kilómetro planificado evita emisiones. Tu contribución cuenta." }
       ];
 
   // ✅ CHIPS DE IMPACTO CON FALLBACKS
   const heroStats = [
-    { icon: BikeIcon, text: t('hero.chips.bike') || "Bici, bus o a pie" },
+    { icon: ActivityIcon, text: t('hero.chips.bike') || "A pie o en vehículo" },
     { icon: LeafIcon, text: t('hero.chips.co2') || "-30% huella de CO₂" },
     { icon: MapIcon, text: t('hero.chips.routes') || "Rutas en segundos" },
   ];
 
   // ✅ TEXTO DEL HERO CON FALLBACKS
   const heroSubtitle = t('hero.subtitle') || "Tu guía para la movilidad sostenible";
-  const heroDescription = t('hero.description') || "Descubre rutas ecológicas combinando transporte público y bicicleta. Cada viaje es una oportunidad para cuidar el planeta y reducir tu huella de carbono.";
+  const heroDescription = t('hero.description') || "Descubre rutas ecológicas optimizadas. Cada viaje es una oportunidad para cuidar el planeta y reducir tu huella de carbono.";
   const heroRegisterBtn = t('hero.registerBtn') || "Regístrate ahora";
   const heroLoginBtn = t('hero.loginBtn') || "Iniciar sesión";
   const heroGuestBtn = t('hero.guestBtn') || "Modo Invitado";
@@ -503,7 +481,7 @@ const HomePage = ({ onNavigate }) => {
           <div className="grid lg:grid-cols-2 gap-10 items-start">
             <div className="space-y-4">
               {whyReasons.map((reason, i) => {
-                const icons = [BikeIcon, BusIcon, LeafIcon];
+                const icons = [MapIcon, ActivityIcon, LeafIcon];
                 const Icon = icons[i] || LeafIcon;
                 const iconColors = ["text-emerald-600", "text-teal-600", "text-amber-500"];
                 const bgColors = ["bg-emerald-100", "bg-teal-100", "bg-amber-100"];

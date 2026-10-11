@@ -73,6 +73,12 @@ function Login() {
                 return;
             }
 
+            if (result.requiresEmailVerification) {
+                sessionStorage.setItem("pendingVerificationEmail", email);
+                navigate("/verify-email");
+                return;
+            }
+
             navigate("/dashboard", { replace: true });
         } catch (err) {
             const data = err.response?.data;
@@ -187,7 +193,7 @@ function Login() {
                             </div>
                         )}
 
-                        <div className="space-y-4">
+                        <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="space-y-4">
                             <div>
                                 <label className={`block text-xs font-medium mb-1 transition-colors duration-300 ${isDarkMode ? 'text-[#34D399]' : 'text-gray-600'}`}>
                                     {t("auth.login.email", "Correo electrónico")}
@@ -230,14 +236,14 @@ function Login() {
                                     </button>
                                 </div>
                                 <div className="text-right mt-1">
-                                    <button onClick={() => navigate("/recover")} className={`text-[10px] hover:underline transition-colors ${isDarkMode ? 'text-[#34D399]' : 'text-emerald-500'}`}>
+                                    <button type="button" onClick={() => navigate("/recover")} className={`text-[10px] hover:underline transition-colors ${isDarkMode ? 'text-[#34D399]' : 'text-emerald-500'}`}>
                                         {t("auth.login.forgotPassword", "¿Olvidaste tu contraseña?")}
                                     </button>
                                 </div>
                             </div>
 
                             <button
-                                onClick={handleLogin}
+                                type="submit"
                                 disabled={loading || retrySeconds > 0}
                                 className={`w-full py-2.5 mt-2 text-white font-medium text-sm rounded-lg transition-all duration-300 hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed ${
                                     isDarkMode
@@ -280,7 +286,7 @@ function Login() {
                                     <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Facebook</span>
                                 </button>
                             </div>
-                        </div>
+                        </form>
 
                         <div className="text-center mt-5 pt-3 border-t border-gray-100">
                             <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>

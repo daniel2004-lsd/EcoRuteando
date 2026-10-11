@@ -30,7 +30,7 @@ const EMPTY_FORM = {
   availableDate: "",
 };
 
-const TRANSPORT_TYPES = ["walking", "bike", "car", "public_transport", "mixed"];
+const TRANSPORT_TYPES = ["walking", "car"];
 
 const STATUS_BADGES = {
   active: "bg-emerald-500/20 text-emerald-500",
@@ -64,10 +64,13 @@ const RouteManage = ({ onNavigate }) => {
     setLoading(true);
     setError(null);
     try {
-      // includeInactive = true: la gestión debe listar todas las rutas,
-      // incluidas las inactivas, en revisión o archivadas (CU03).
+      // includeInactive = true: la gestión debe listar las rutas guardadas del sistema
       const data = await routeService.getAll(null, true);
-      setRoutes(data);
+      // Solo mostrar rutas guardadas deliberadamente (no las temporales creadas solo para registrar un viaje)
+      const userSavedRoutes = (Array.isArray(data) ? data : []).filter(
+        (r) => r.status !== "archived" && !r.description?.includes("[trip_transient]")
+      );
+      setRoutes(userSavedRoutes);
     } catch (err) {
       console.error("Error cargando rutas:", err);
       setError(t("routeManage.loadError", "No se pudieron cargar las rutas"));
@@ -575,27 +578,15 @@ const RouteManage = ({ onNavigate }) => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className={`block text-xs font-medium mb-1 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{t("routeManage.photoUrl", "URL de la foto")}</label>
-                    <input
-                      name="photoUrl"
-                      value={form.photoUrl}
-                      onChange={handleChange}
-                      placeholder="https://..."
-                      className={`w-full px-3 py-2.5 rounded-lg text-sm border focus:outline-none ${isDarkMode ? 'bg-[#0B1215] border-emerald-800/20 text-[#e2e8f0]' : 'bg-white border-gray-300 text-gray-800'}`}
-                    />
-                  </div>
-                  <div>
-                    <label className={`block text-xs font-medium mb-1 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{t("routeManage.availableDate", "Disponible desde")}</label>
-                    <input
-                      name="availableDate"
-                      type="date"
-                      value={form.availableDate}
-                      onChange={handleChange}
-                      className={`w-full px-3 py-2.5 rounded-lg text-sm border focus:outline-none ${isDarkMode ? 'bg-[#0B1215] border-emerald-800/20 text-[#e2e8f0]' : 'bg-white border-gray-300 text-gray-800'}`}
-                    />
-                  </div>
+                <div>
+                  <label className={`block text-xs font-medium mb-1 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{t("routeManage.availableDate", "Disponible desde")}</label>
+                  <input
+                    name="availableDate"
+                    type="date"
+                    value={form.availableDate}
+                    onChange={handleChange}
+                    className={`w-full px-3 py-2.5 rounded-lg text-sm border focus:outline-none ${isDarkMode ? 'bg-[#0B1215] border-emerald-800/20 text-[#e2e8f0]' : 'bg-white border-gray-300 text-gray-800'}`}
+                  />
                 </div>
 
                 <div>
