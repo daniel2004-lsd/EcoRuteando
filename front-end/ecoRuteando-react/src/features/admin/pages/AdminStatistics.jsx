@@ -1,17 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip as ChartTooltip,
+  Legend as ChartLegend,
+  ArcElement
+} from "chart.js";
+import { Bar, Pie } from "react-chartjs-2";
 import {
   LeafIcon,
   ArrowLeft,
@@ -21,6 +19,16 @@ import {
   ChartIcon,
   ClockIcon,
 } from "../../../shared/components/Icons";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  ChartTooltip,
+  ChartLegend,
+  ArcElement
+);
 import { useTheme } from "../../../app/context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import statsService from "../../../services/statsService";
@@ -227,18 +235,49 @@ const AdminStatistics = ({ onNavigate }) => {
                 <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>
                   {t("adminStatistics.chart.monthlyCo2", "CO₂ ahorrado por mes")}
                 </h3>
-                <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={stats.monthly}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                    <XAxis dataKey="period" stroke={axisColor} fontSize={12} />
-                    <YAxis stroke={axisColor} fontSize={12} />
-                    <Tooltip
-                      contentStyle={{ backgroundColor: isDarkMode ? '#1f2937' : "#ffffff", border: "1px solid #10b981", borderRadius: 8, color: isDarkMode ? '#fff' : "#111827" }}
-                      formatter={(value) => [`${value} kg`, t("adminStatistics.chart.co2Kg", "CO₂")]}
-                    />
-                    <Bar dataKey="co2Kg" name={t("adminStatistics.chart.co2Kg", "CO₂")} fill="#10b981" radius={[6, 6, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+                <div className="h-[280px] w-full">
+                  <Bar
+                    data={{
+                      labels: stats.monthly?.map((m) => m.period) || [],
+                      datasets: [
+                        {
+                          label: t("adminStatistics.chart.co2Kg", "CO₂ (kg)"),
+                          data: stats.monthly?.map((m) => m.co2Kg) || [],
+                          backgroundColor: "#10b981",
+                          hoverBackgroundColor: "#059669",
+                          borderRadius: 6,
+                        },
+                      ],
+                    }}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: {
+                          labels: {
+                            color: isDarkMode ? "#e2e8f0" : "#374151",
+                            font: { family: "Inter, system-ui, sans-serif" },
+                          },
+                        },
+                        tooltip: {
+                          callbacks: {
+                            label: (ctx) => ` ${ctx.parsed.y} kg ${t("adminStatistics.chart.co2Kg", "CO₂")}`,
+                          },
+                        },
+                      },
+                      scales: {
+                        x: {
+                          grid: { color: gridColor },
+                          ticks: { color: axisColor, font: { size: 11 } },
+                        },
+                        y: {
+                          grid: { color: gridColor },
+                          ticks: { color: axisColor, font: { size: 11 } },
+                        },
+                      },
+                    }}
+                  />
+                </div>
               </div>
 
               {/* Modos de transporte */}
@@ -246,28 +285,40 @@ const AdminStatistics = ({ onNavigate }) => {
                 <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>
                   {t("adminStatistics.chart.byMode", "Recorridos por modo de transporte")}
                 </h3>
-                <ResponsiveContainer width="100%" height={280}>
-                  <PieChart>
-                    <Pie
-                      data={stats.byTransportMode}
-                      dataKey="trips"
-                      nameKey="mode"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={95}
-                      label={(entry) => chartModeLabel(entry.mode)}
-                    >
-                      {stats.byTransportMode.map((entry, index) => (
-                        <Cell key={index} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{ backgroundColor: isDarkMode ? '#1f2937' : "#ffffff", border: "1px solid #10b981", borderRadius: 8, color: isDarkMode ? '#fff' : "#111827" }}
-                      formatter={(value) => [value, t("adminStatistics.chart.trips", "Recorridos")]}
-                    />
-                    <Legend formatter={(value) => chartModeLabel(value)} wrapperStyle={{ color: isDarkMode ? '#fff' : "#111827" }} />
-                  </PieChart>
-                </ResponsiveContainer>
+                <div className="h-[280px] w-full flex items-center justify-center">
+                  <Pie
+                    data={{
+                      labels: stats.byTransportMode?.map((entry) => chartModeLabel(entry.mode)) || [],
+                      datasets: [
+                        {
+                          data: stats.byTransportMode?.map((entry) => entry.trips) || [],
+                          backgroundColor: PIE_COLORS,
+                          borderColor: isDarkMode ? "#162329" : "#ffffff",
+                          borderWidth: 2,
+                        },
+                      ],
+                    }}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: {
+                          position: "bottom",
+                          labels: {
+                            color: isDarkMode ? "#e2e8f0" : "#374151",
+                            font: { family: "Inter, system-ui, sans-serif", size: 12 },
+                            padding: 14,
+                          },
+                        },
+                        tooltip: {
+                          callbacks: {
+                            label: (ctx) => ` ${ctx.label}: ${ctx.parsed} ${t("adminStatistics.chart.trips", "Recorridos")}`,
+                          },
+                        },
+                      },
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </>
