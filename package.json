@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "npm --prefix front-end/ecoRuteando-react run build",
+    "dev": "npm --prefix front-end/ecoRuteando-react run dev"
+  },
   "dependencies": {
     "axios": "^1.19.0",
     "lucide-react": "^1.8.0",

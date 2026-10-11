@@ -10,13 +10,13 @@
   },
   "hero": {
     "subtitle": "Your guide to sustainable mobility",
-    "description": "Discover eco-friendly routes combining public transport and bike. Every trip is an opportunity to care for the planet and reduce your carbon footprint.",
+    "description": "Discover optimized eco-friendly routes. Every trip is an opportunity to care for the planet and reduce your carbon footprint.",
     "registerBtn": "Register now",
     "loginBtn": "Log in",
     "guestBtn": "Guest Mode",
     "badge": "Sustainable mobility · SENA Neiva",
     "chips": {
-      "bike": "Bike, bus or walk",
+      "bike": "Walking or car",
       "co2": "-30% CO₂ footprint",
       "routes": "Routes in seconds"
     }
@@ -29,7 +29,7 @@
     "cards": [
       {
         "title": "Smart Routes",
-        "desc": "Combine bicycle and public transport with precise times and green alternatives."
+        "desc": "Plan your journeys with precise times and green alternatives."
       },
       {
         "title": "CO₂ Savings",
@@ -48,15 +48,15 @@
     "reasons": [
       {
         "title": "Integrated mobility",
-        "desc": "Easily connect bicycle segments with public transport routes."
+        "desc": "Easily connect origin and destination with efficient routes."
       },
       {
         "title": "Health & wellness",
-        "desc": "Promote daily exercise and improve your quality of life while commuting."
+        "desc": "Promote active habits and improve your quality of life while commuting."
       },
       {
         "title": "Real environmental impact",
-        "desc": "Every kilometer on a bicycle avoids emissions. Your contribution matters."
+        "desc": "Every kilometer planned avoids emissions. Your contribution matters."
       }
     ]
   },
@@ -79,11 +79,13 @@
       "routesCreated": "Routes Created",
       "tripsCompleted": "Trips Completed",
       "co2Saved": "CO₂ Saved",
-      "ecoPoints": "Eco Points"
+      "ecoPoints": "Eco Points",
+      "favoriteRoutes": "Favorite Routes"
     },
     "tools": {
       "title": "Tools",
-      "subtitle": "Choose an option to get started"
+      "subtitle": "Choose an option to get started",
+      "count": "{{count}} modules available"
     },
     "modules": {
       "planRoute": {
@@ -123,7 +125,8 @@
       "title": "Your Environmental Impact",
       "description": "So far you have avoided emitting",
       "descriptionEnd": "thanks to your sustainable trips.",
-      "button": "View Statistics"
+      "button": "View Statistics",
+      "eyebrow": "Your Ecological Impact"
     },
     "footer": "Every sustainable trip helps protect the planet 🌱",
     "modal": {
@@ -131,7 +134,14 @@
       "message": "Are you sure you want to log out? You'll need to log in again to access the Dashboard.",
       "cancel": "Cancel",
       "confirm": "Log out"
-    }
+    },
+    "logout": "Log Out",
+    "panel": {
+      "subtitle": "Sustainable Mobility Dashboard"
+    },
+    "guest": "Guest Mode",
+    "guestHint": "Log in to record your trips and save routes.",
+    "toggleTheme": "Toggle theme"
   },
   "routeManage": {
     "title": "Route Management",
@@ -229,7 +239,6 @@
       "car": "Car"
     }
   },
-
   "alerts": {
     "title": "Climate Alerts",
     "subtitle": "Real-time weather for your safety",
@@ -256,7 +265,6 @@
     "severityMedium": "Medium",
     "severityLow": "Low"
   },
-
   "reporterProblem": {
     "title": "Report a Problem",
     "subtitle": "Help us improve the roads",
@@ -293,7 +301,6 @@
       "submitFailed": "The report could not be submitted. Please try later."
     }
   },
-
   "adminReports": {
     "title": "Report Verification",
     "subtitle": "Review and validate citizen reports",
@@ -323,7 +330,6 @@
       "rejected": "Rejected"
     }
   },
-
   "adminExports": {
     "title": "Export Data",
     "subtitle": "Download system reports as CSV, Excel or JSON",
@@ -340,5 +346,427 @@
     "exportError": "The file could not be generated. Try again later.",
     "footnote": "CSV and Excel files open directly in office tools; JSON is ideal for technical integrations.",
     "motivationalPhrase": "Open data drives more sustainable mobility"
+  },
+  "planRoute": {
+    "plannerTitle": "ROUTE PLANNER",
+    "heroLead": "Plan your route",
+    "heroHighlight": "more eco-friendly",
+    "origin": "Starting point",
+    "destination": "Destination",
+    "addressOrPlace": "Enter an address or place...",
+    "useMyLocation": "Use my current location",
+    "myLocation": "My location",
+    "defaultOrigin": "Origin",
+    "defaultDestination": "Destination",
+    "transportMode": "Transport mode",
+    "modeWalking": "Walking",
+    "modeCar": "Car",
+    "onFoot": "Walking",
+    "distance": "Distance",
+    "co2Avoided": "CO₂ saved",
+    "calculating": "Calculating route...",
+    "calculate": "Find best route",
+    "suggestedRoute": "Recommended route",
+    "save": "Save route",
+    "saving": "Saving...",
+    "savedRoute": "In My Routes",
+    "savedInMyRoutes": "In My Routes",
+    "favorite": "Favorite",
+    "favoriting": "Saving...",
+    "favorited": "In Favorites",
+    "saveDescription": "Eco-friendly route from {{from}} to {{to}}",
+    "start": "Start trip",
+    "starting": "Starting...",
+    "inProgress": "Trip in progress",
+    "complete": "Finish trip",
+    "completing": "Finishing...",
+    "searchPlaces": "Nearby points of interest",
+    "mapTypeHint": "Map view: {{type}}",
+    "centerMyLocation": "Center on my location",
+    "back": "Back to Dashboard",
+    "nearbyTitle": "Nearby places",
+    "close": "Close",
+    "tapToGo": "Tap to go here",
+    "mapView": "Map view: {{view}}",
+    "popupOrigin": "Origin: {{name}}",
+    "popupDestination": "Destination: {{name}}",
+    "mapType": {
+      "roadmap": "Default",
+      "satellite": "Satellite",
+      "hybrid": "Hybrid",
+      "terrain": "Terrain"
+    },
+    "poiTypes": {
+      "restaurant": "Restaurants",
+      "hotel": "Hotels",
+      "church": "Churches",
+      "park": "Parks",
+      "cafe": "Cafes",
+      "bar": "Bars",
+      "museum": "Museums"
+    },
+    "search": {
+      "mapsLoading": "Loading map...",
+      "noResults": "No results found",
+      "failed": "Failed to search places",
+      "detailFailed": "Could not retrieve place details"
+    },
+    "action": {
+      "chooseType": "Select a nearby places category",
+      "searchPanelClosed": "Nearby places panel closed",
+      "geoUnsupported": "Geolocation is not supported by your browser",
+      "locationUnavailable": "Could not obtain your current location",
+      "centeredOnLocation": "Map centered on your current location",
+      "insecureConnection": "Geolocation requires a secure HTTPS connection",
+      "allowLocation": "Please allow location access in your browser"
+    },
+    "errors": {
+      "loadMaps": "Failed to load Google Maps. Check your connection.",
+      "selectOrigin": "Please select a starting point",
+      "selectDestination": "Please select a destination",
+      "originInvalidCoords": "Origin has invalid coordinates",
+      "destinationInvalidCoords": "Destination has invalid coordinates",
+      "noValidRoute": "No valid route found between these points",
+      "calculateRoute": "Could not calculate route. Please try again.",
+      "saveForTrip": "Could not save route before starting the trip",
+      "startTrip": "Could not start trip",
+      "completeTrip": "Could not complete trip",
+      "geoUnsupported": "Geolocation is not supported in your browser",
+      "gettingLocation": "Getting your current location...",
+      "locationFailed": "Could not access your current location",
+      "placeAsDestination": "The selected place does not have valid coordinates",
+      "selectOriginOrLocation": "Select an origin or enable your current location",
+      "alreadySaved": "This route is already saved in My Routes.",
+      "alreadyFavorite": "This route is already in your Favorites.",
+      "saveFailed": "Error saving route."
+    },
+    "favoriteAdded": "❤️ Route added to Favorites!"
+  },
+  "favorites": {
+    "title": "My Favorite Routes",
+    "subtitle": "Quickly access your frequent and eco-friendly journeys",
+    "back": "Back to Dashboard",
+    "needLoginTitle": "Log in to see your favorites",
+    "needLoginHint": "Save and manage your regular trips securely.",
+    "goLogin": "Log In",
+    "loading": "Loading your favorite routes...",
+    "empty": "You have no favorite routes saved",
+    "emptyHint": "Explore or plan a route to add it to your favorites for instant access.",
+    "addFirst": "Plan a route",
+    "listTitle": "Your featured routes",
+    "add": "Add to favorites",
+    "remove": "Remove",
+    "useRoute": "Use route",
+    "addTitle": "Select a route to add to favorites",
+    "noAvailable": "No routes available to add",
+    "errorLoad": "Error loading favorite routes",
+    "errorAdd": "Error saving route to favorites",
+    "errorRemove": "Error removing route from favorites",
+    "alreadyFavorite": "This route is already in your Favorites.",
+    "addedSuccess": "Route added to Favorites successfully."
+  },
+  "profile": {
+    "title": "My Profile",
+    "back": "Back to Dashboard",
+    "changesSaved": "Changes saved successfully",
+    "saveError": "Could not update profile information",
+    "footer": "Every sustainable journey counts towards a greener, cleaner future.",
+    "stats": {
+      "routesCompleted": "Completed Trips",
+      "co2Saved": "CO₂ Saved",
+      "activeTime": "Sustainable Time"
+    },
+    "tabs": {
+      "personal": "Personal Info",
+      "security": "Security & Access",
+      "config": "Settings"
+    },
+    "personal": {
+      "title": "Personal Information",
+      "subtitle": "Manage your account and contact details",
+      "edit": "Edit Profile",
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "defaultBirthday": "May 15, 1995",
+      "defaultBio": "Passionate about sustainable mobility and caring for our environment."
+    },
+    "fields": {
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "location": "City / Location",
+      "birthday": "Birthday",
+      "bio": "About Me"
+    },
+    "security": {
+      "title": "Account Security",
+      "subtitle": "Manage your password and security credentials",
+      "changePassword": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "update": "Update",
+      "passwordsNotMatch": "Passwords do not match",
+      "passwordMinLength": "Password must be at least 8 characters long",
+      "passwordUpdated": "Password updated successfully",
+      "passwordUpdateFailed": "Could not update password",
+      "twoFactorAuth": "Two-Factor Authentication (2FA)",
+      "twoFactorInDevelopment": "Two-factor authentication will be available soon",
+      "deleteAccount": "Delete my account",
+      "confirmDelete": "Are you sure you want to permanently delete your account? This action cannot be undone.",
+      "accountDeleted": "Your account has been deleted.",
+      "accountDeleteFailed": "Could not delete account.",
+      "googleAccountTitle": "Google Linked Account",
+      "googleAccountDesc": "You signed in with your Google account. Your password and authentication are securely managed by Google.",
+      "googleManageSecurity": "Manage Google Security",
+      "googleNoPasswordNotice": "You do not need and cannot change a local password in EcoRuteando.",
+      "enable2FA": "Enable 2FA",
+      "disable2FA": "Disable 2FA",
+      "twoFactorActive": "2FA Enabled",
+      "twoFactorInactive": "2FA Disabled",
+      "twoFactorSetupTitle": "Set Up Two-Factor Authentication (TOTP)",
+      "twoFactorScanQR": "Scan this QR code with Google Authenticator, Microsoft Authenticator or Authy:",
+      "twoFactorManualKey": "Or enter this secret key manually:",
+      "twoFactorEnterCode": "Enter the 6-digit code generated by your app:",
+      "twoFactorVerifyBtn": "Verify and Enable",
+      "twoFactorSuccess": "2FA successfully enabled! Store your backup recovery codes in a safe place.",
+      "twoFactorDisableTitle": "Disable Two-Factor Authentication",
+      "twoFactorDisableConfirm": "Enter your current 6-digit code to confirm disabling:",
+      "twoFactorDisabled": "Two-factor authentication successfully disabled.",
+      "deleteAccountModalTitle": "Permanently Delete Account?",
+      "deleteAccountModalWarning": "This action is irreversible and will permanently delete all your personal data, preferences, and trip history in EcoRuteando.",
+      "deleteAccountModalConfirm": "Yes, delete permanently",
+      "copied": "Copied to clipboard!"
+    },
+    "config": {
+      "title": "System Preferences",
+      "subtitle": "Customize EcoRuteando's appearance and language",
+      "darkMode": "Dark Mode",
+      "darkModeDesc": "Toggle between light and dark themes",
+      "lightMode": "Light Mode",
+      "language": "System Language",
+      "languageDesc": "Select your preferred language",
+      "responsive": "EcoRuteando is optimized for both desktop and mobile devices."
+    },
+    "confirmIdentity": {
+      "title": "Confirm Identity",
+      "subtitle": "For security, enter your current password to confirm changes."
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "controlPanelSubtitle": "Comprehensive system monitoring and control",
+      "back": "Back to Dashboard",
+      "administrationPanel": "Global Administration",
+      "exporting": "Exporting...",
+      "stats": {
+        "users": "Active Users",
+        "routes": "Registered Routes",
+        "reports": "Road Reports",
+        "tickets": "Support Tickets",
+        "co2": "Total CO₂ Saved"
+      },
+      "modules": {
+        "users": {
+          "title": "User Management",
+          "subtitle": "Roles, access and permissions"
+        },
+        "reports": {
+          "title": "Obstacle Reports",
+          "subtitle": "Reported road incidents"
+        },
+        "support": {
+          "title": "Support & Tickets",
+          "subtitle": "User inquiry assistance"
+        },
+        "export": {
+          "title": "Data Export",
+          "subtitle": "Excel and PDF reports"
+        },
+        "audit": {
+          "title": "System Audit",
+          "subtitle": "Event logs and changes"
+        },
+        "settings": {
+          "title": "General Settings",
+          "subtitle": "Platform parameters"
+        }
+      }
+    },
+    "panel": {
+      "title": "EcoRuteando Control Center",
+      "systemTagline": "Intelligent Urban Mobility Management",
+      "backToDashboard": "Back to Dashboard",
+      "totalCo2Saved": "Global CO₂ Saved",
+      "equivalentTrees": "Equivalent Trees",
+      "modulesTitle": "Management Modules",
+      "pendingActionsTitle": "Pending Actions",
+      "environmentalImpact": "Consolidated Environmental Impact",
+      "viewStats": "View Detailed Stats",
+      "motivationalPhrase": "Leading the transition to sustainable cities.",
+      "stats": {
+        "users": "Users",
+        "routes": "Routes",
+        "reports": "Reports",
+        "tickets": "Tickets",
+        "ecoPoints": "Eco Points"
+      },
+      "modules": {
+        "users": {
+          "title": "Users",
+          "subtitle": "Account and role management"
+        },
+        "reports": {
+          "title": "Road Reports",
+          "subtitle": "Obstacle validation"
+        },
+        "support": {
+          "title": "Support",
+          "subtitle": "User service"
+        },
+        "export": {
+          "title": "Reports",
+          "subtitle": "Metric downloads"
+        },
+        "audit": {
+          "title": "Audit",
+          "subtitle": "System traceability"
+        },
+        "pois": {
+          "title": "Points of Interest",
+          "subtitle": "Urban POI management"
+        },
+        "settings": {
+          "title": "Settings",
+          "subtitle": "Global settings"
+        }
+      },
+      "pending": {
+        "reports": {
+          "label": "Pending reports",
+          "desc": "Community-reported incidents"
+        },
+        "tickets": {
+          "label": "Open tickets",
+          "desc": "Pending support requests"
+        }
+      },
+      "impact": {
+        "thanks": "Thanks to the EcoRuteando community",
+        "viaEcoRoutes": "Through planned eco-routes"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Log In",
+      "welcomeBack": "Welcome back to EcoRuteando",
+      "sustainableMobility": "Eco-Friendly & Sustainable Mobility",
+      "email": "Email Address",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Forgot your password?",
+      "submit": "Log In",
+      "loading": "Logging in...",
+      "orContinueWith": "Or continue with",
+      "noAccount": "Don't have an account?",
+      "registerHere": "Register here",
+      "tagline": "Cleaner routes for a better planet",
+      "back": "Back",
+      "logoAlt": "EcoRuteando",
+      "errorRequired": "All fields are required",
+      "errorInvalidEmail": "Enter a valid email address",
+      "errorPasswordLength": "Password must be at least 6 characters long",
+      "errorInvalidCredentials": "Invalid credentials. Please verify your details.",
+      "rateLimited": "Too many attempts. Please try again later.",
+      "locked": "Account temporarily locked for security."
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join sustainable mobility in your city",
+      "sustainableMobility": "Smart Mobility",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "John",
+      "lastName": "Last Name",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "••••••••",
+      "successMessage": "Account created successfully! Check your email to activate it.",
+      "errorMessage": "Error creating account. Please try again."
+    },
+    "recover": {
+      "title": "Recover Password",
+      "subtitle": "Enter your email to receive a recovery code",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "you@example.com",
+      "emailValid": "Verified email",
+      "sendCode": "Send Code",
+      "sendingCode": "Sending code...",
+      "invalidEmail": "Enter a valid email",
+      "rateLimited": "Too many requests. Please wait a moment.",
+      "sendCodeError": "Could not send recovery code",
+      "checkEmailTitle": "Check Your Inbox",
+      "codeSentTo": "We sent a code to {{email}}",
+      "haveCodeButton": "I already have the code",
+      "changeEmail": "Change email",
+      "backToLogin": "Back to login"
+    },
+    "newPassword": {
+      "title": "New Password",
+      "subtitle": "Set your new secure password",
+      "stepEmail": "Email",
+      "stepCode": "Code",
+      "stepPassword": "New Password",
+      "newPasswordLabel": "New Password",
+      "newPasswordPlaceholder": "••••••••",
+      "confirmLabel": "Confirm Password",
+      "confirmPlaceholder": "••••••••",
+      "passwordHint": "Minimum 8 characters, combine letters and numbers",
+      "resetButton": "Reset Password",
+      "resetting": "Resetting...",
+      "match": "Passwords match",
+      "mismatch": "Passwords do not match",
+      "minLengthError": "Password must be at least 8 characters",
+      "errorMismatch": "Passwords do not match",
+      "noCodeError": "Invalid or missing recovery code",
+      "resetError": "Error resetting password",
+      "successTitle": "Password Updated!",
+      "successMessage": "Your password has been successfully updated.",
+      "loginButton": "Log In",
+      "strengthVeryWeak": "Very weak",
+      "strengthMedium": "Medium",
+      "strengthStrong": "Strong",
+      "strengthVeryStrong": "Very strong"
+    },
+    "verifyCode": {
+      "title": "Verify Code",
+      "subtitle": "Enter the code sent to your email",
+      "stepEmail": "Email",
+      "stepCode": "Code",
+      "stepPassword": "New Password",
+      "verifyButton": "Verify Code",
+      "noCodeReceived": "Didn't receive the code?",
+      "resend": "Resend code",
+      "resending": "Resending...",
+      "back": "Back",
+      "noEmailError": "Recovery email not found",
+      "codeResent": "Code resent successfully",
+      "resendError": "Error resending code",
+      "rateLimited": "Wait before requesting another code"
+    },
+    "verifyEmail": {
+      "title": "Activate Account",
+      "sentTo": "Code sent to {{email}}",
+      "enterToActivate": "Enter the 6-digit code to activate your account",
+      "subtitleNoEmail": "Enter the code received in your email",
+      "successToast": "Account activated successfully!",
+      "invalidCodeError": "Incorrect or expired code",
+      "noEmailError": "Email not specified",
+      "codeResent": "Code resent successfully",
+      "resendError": "Error resending code",
+      "rateLimited": "Wait a moment before resending",
+      "rateLimitedResend": "Too many resend attempts. Please wait."
+    }
   }
 }

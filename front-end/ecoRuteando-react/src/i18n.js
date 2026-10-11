@@ -6,6 +6,13 @@ import esTranslation from "./locales/es/translation.json";
 import ptTranslation from "./locales/pt/translation.json";
 import frTranslation from "./locales/fr/translation.json";
 
+const savedLanguage =
+  (typeof window !== "undefined" &&
+    (localStorage.getItem("language") ||
+      localStorage.getItem("appLanguage") ||
+      localStorage.getItem("i18nextLng"))) ||
+  "es";
+
 i18n
   .use(initReactI18next)
   .init({
@@ -15,6 +22,7 @@ i18n
       pt: { translation: ptTranslation },
       fr: { translation: frTranslation },
     },
+    lng: savedLanguage,
     fallbackLng: "es",
     interpolation: { escapeValue: false },
   });
