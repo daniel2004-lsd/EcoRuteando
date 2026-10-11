@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-import { LeafIcon, ArrowLeft, MapIcon, SearchIcon, TargetIcon } from "../../../shared/components/Icons";
+import { LeafIcon, ArrowLeft, SearchIcon, TargetIcon } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import MapViewGoogle from "../../../features/auth/components/MapViewGoogle";
 import mapsService from "../../../services/mapsService";
 import routeService from "../../../services/routeService";
 import tripService from "../../../services/tripService";
+import favoriteService from "../../../services/favoriteService";
 import { loadGoogleMapsApi } from "../../../services/googleMapsLoader";
+import toast from "react-hot-toast";
 
 // Coordenadas de Neiva (viewport inicial del mapa)
 const NEIVA_LAT = 2.9273;
@@ -22,8 +24,41 @@ const MAP_TYPE_LABELS = {
   terrain: "planRoute.mapType.terrain",
 };
 
-// Componente de búsqueda (Autocompletado de Google Places)
-const LocationSearch = ({ placeholder, onSelect, isDarkMode, externalValue }) => {
+// SVG Icons auxiliares estilo Google Maps
+const SwapIcon = ({ className = "w-4 h-4" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12M17 20l4-4M17 20l-4-4" />
+  </svg>
+);
+
+const NavigationIcon = ({ className = "w-4 h-4" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
+  </svg>
+);
+
+const BookmarkIcon = ({ className = "w-4 h-4" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+  </svg>
+);
+
+const HeartIcon = ({ className = "w-4 h-4", filled = false }) => (
+  <svg className={className} viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+  </svg>
+);
+
+const LayersIcon = ({ className = "w-5 h-5" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="12 2 2 7 12 12 22 7 12 2" />
+    <polyline points="2 17 12 22 22 17" />
+    <polyline points="2 12 12 17 22 12" />
+  </svg>
+);
+
+// Componente de búsqueda (Autocompletado de Google Places estilo Google Maps)
+const LocationSearch = ({ placeholder, onSelect, onClear, isDarkMode, externalValue }) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState(externalValue || "");
   const [suggestions, setSuggestions] = useState([]);
@@ -35,8 +70,15 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, externalValue }) =>
   const serviceHostRef = useRef(null);
   const placesServiceRef = useRef(null);
 
+  // Sincronizar cuando externalValue cambie (ej: swap, mi ubicación, precarga de favoritos)
+  useEffect(() => {
+    if (externalValue !== undefined) {
+      setQuery(externalValue || "");
+    }
+  }, [externalValue]);
+
   const getPlacesService = () => {
-    if (!placesServiceRef.current) {
+    if (!placesServiceRef.current && serviceHostRef.current) {
       placesServiceRef.current = new window.google.maps.places.PlacesService(serviceHostRef.current);
     }
     return placesServiceRef.current;
@@ -107,7 +149,13 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, externalValue }) =>
     setIsLoading(true);
     setHint("");
 
-    getPlacesService().getDetails(
+    const service = getPlacesService();
+    if (!service) {
+      setIsLoading(false);
+      return;
+    }
+
+    service.getDetails(
       {
         placeId: suggestion.placeId,
         fields: ["name", "formatted_address", "geometry"],
@@ -137,6 +185,13 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, externalValue }) =>
     );
   };
 
+  const handleClear = () => {
+    setQuery("");
+    setSuggestions([]);
+    setHint("");
+    if (onClear) onClear();
+  };
+
   const renderName = (suggestion) => {
     const main = suggestion.name || "";
     const match = suggestion.matched?.[0];
@@ -157,44 +212,55 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, externalValue }) =>
 
   return (
     <div className="relative w-full" ref={serviceHostRef}>
-      <div className="relative">
+      <div className="relative flex items-center">
         <input
           type="text"
           placeholder={placeholder}
           value={query}
           onChange={(e) => { setQuery(e.target.value); setShowDropdown(true); }}
           onFocus={() => setShowDropdown(true)}
-          onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-          className={isDarkMode
-            ? "w-full pl-8 pr-4 py-3 rounded-full text-sm bg-[#111C20] border border-[#26383D] text-[#e2e8f0] placeholder:text-[#94a3b8]/60 focus:outline-none focus:ring-2 focus:ring-[#34D399]/30"
-            : "w-full pl-8 pr-4 py-3 rounded-full text-sm bg-[#f5f0e8] border-0 text-[#2d2d2d] placeholder:text-[#8b7355]/60 focus:outline-none focus:ring-2 focus:ring-[#1a5c2a]/20"
-          }
+          onBlur={() => setTimeout(() => setShowDropdown(false), 220)}
+          className={`w-full py-2 pl-2 pr-7 text-xs sm:text-sm font-medium rounded-lg bg-transparent transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none ${
+            isDarkMode ? "text-gray-100" : "text-gray-900"
+          }`}
         />
         {isLoading && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            <div className="w-3.5 h-3.5 border border-blue-500 border-t-transparent rounded-full animate-spin" />
+          <div className="absolute right-2 top-1/2 -translate-y-1/2">
+            <div className="w-3.5 h-3.5 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
           </div>
+        )}
+        {!isLoading && query && (
+          <button
+            type="button"
+            onClick={handleClear}
+            className={`absolute right-1.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center text-xs transition-colors ${
+              isDarkMode ? "text-gray-400 hover:text-white hover:bg-gray-700/60" : "text-gray-400 hover:text-gray-700 hover:bg-gray-200"
+            }`}
+            title="Borrar"
+          >
+            ✕
+          </button>
         )}
       </div>
 
       {showDropdown && (suggestions.length > 0 || hint) && (
-        <div className={`absolute z-50 w-full mt-1 rounded-lg shadow-lg overflow-hidden max-h-64 overflow-y-auto ${
-          isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white border border-gray-200'
+        <div className={`absolute z-50 left-0 right-0 top-full mt-1.5 rounded-xl shadow-2xl overflow-hidden max-h-60 overflow-y-auto ${
+          isDarkMode ? "bg-[#162329] border border-[#26383D]" : "bg-white border border-gray-200"
         }`}>
           {suggestions.map((suggestion, idx) => (
             <button
               key={`${suggestion.placeId}-${idx}`}
               onClick={() => selectPlace(suggestion)}
-              className={`w-full text-left px-3 py-2 text-sm transition-colors border-b last:border-b-0 ${
-                isDarkMode ? 'hover:bg-[#111C20] text-[#e2e8f0] border-[#26383D]' : 'hover:bg-gray-50 text-gray-700 border-gray-100'
+              className={`w-full text-left px-3.5 py-2.5 text-xs sm:text-sm transition-colors border-b last:border-b-0 ${
+                isDarkMode ? "hover:bg-[#111C20] text-[#e2e8f0] border-[#26383D]" : "hover:bg-gray-50 text-gray-800 border-gray-100"
               }`}
             >
-              <div className="flex items-start gap-2">
-                <span className={`mt-0.5 text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>📍</span>
-                <div className="min-w-0">
-                  <div>{renderName(suggestion)}</div>
+              <div className="flex items-start gap-2.5">
+                <span className="mt-0.5 text-xs select-none">📍</span>
+                <div className="min-w-0 flex-1">
+                  <div className="truncate">{renderName(suggestion)}</div>
                   {suggestion.address && (
-                    <div className={`text-xs mt-0.5 truncate ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>
+                    <div className={`text-[11px] mt-0.5 truncate ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
                       {suggestion.address}
                     </div>
                   )}
@@ -203,7 +269,7 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode, externalValue }) =>
             </button>
           ))}
           {suggestions.length === 0 && hint && (
-            <div className={`px-3 py-2 text-sm ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
+            <div className={`px-3.5 py-2.5 text-xs ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
               {hint}
             </div>
           )}
@@ -228,6 +294,8 @@ const PlanRoute = ({ onNavigate }) => {
   const [mapFocus, setMapFocus] = useState(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [favoriting, setFavoriting] = useState(false);
+  const [favorited, setFavorited] = useState(false);
   const [nearbyPois, setNearbyPois] = useState([]);
   const [nearbyType, setNearbyType] = useState("restaurant");
   const [showNearbySearch, setShowNearbySearch] = useState(false);
@@ -242,10 +310,11 @@ const PlanRoute = ({ onNavigate }) => {
   const presetPendingRef = useRef(false);
   const [actionMessage, setActionMessage] = useState(null);
   const actionTimeoutRef = useRef(null);
-  const showActionMessage = (message) => {
+
+  const showActionMessage = (message, type = "info") => {
     if (actionTimeoutRef.current) clearTimeout(actionTimeoutRef.current);
-    setActionMessage(message);
-    actionTimeoutRef.current = setTimeout(() => setActionMessage(null), 2600);
+    setActionMessage(typeof message === "string" ? { text: message, type } : message);
+    actionTimeoutRef.current = setTimeout(() => setActionMessage(null), 3200);
   };
 
   useEffect(() => {
@@ -283,9 +352,10 @@ const PlanRoute = ({ onNavigate }) => {
         lat: (fav.startLat + fav.endLat) / 2,
         lng: (fav.startLng + fav.endLng) / 2,
       });
-      // Esta ruta ya está guardada en el backend: reutilizar su id en vez de duplicarla
       if (fav.routeId) {
         setRouteSavedId(fav.routeId);
+        setSaved(true);
+        setFavorited(true);
       }
       presetPendingRef.current = true;
     }
@@ -294,22 +364,28 @@ const PlanRoute = ({ onNavigate }) => {
 
   useEffect(() => {
     loadGoogleMapsApi().catch(() => setError(t("planRoute.errors.loadMaps")));
-    // HU-23: Cargar historial de direcciones guardadas
-    routeService.getUserAddressHistory().then((history) => {
-      // Las direcciones se pueden usar aquí o almacenar en state
-      // Por ahora, solo guardamos el estado para posible uso futuro
-      setOriginInputValue(originInputValue); // Forzar re-render si es necesario
-    });
+    routeService.getUserAddressHistory().then(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Obtener ubicación actual y resolver su dirección real (barrio/calle)
+  // Invertir origen y destino estilo Google Maps
+  const handleSwap = () => {
+    const prevOrigin = origin;
+    const prevDest = destination;
+    setOrigin(prevDest);
+    setDestination(prevOrigin);
+    setOriginInputValue(prevDest?.name || "");
+    if (prevDest?.lat && prevOrigin?.lat) {
+      calculateRoute(prevDest, prevOrigin);
+    }
+  };
+
+  // Obtener ubicación actual y resolver su dirección real
   const resolveLocationName = async (lat, lng) => {
     try {
       const data = await mapsService.reverseGeocode(lat, lng);
       const address = data?.results?.[0]?.formattedAddress;
       if (address) {
-        // Primer segmento de la dirección (calle + número o nombre de lugar)
         const parts = address.split(",");
         return parts[0] || address;
       }
@@ -319,9 +395,7 @@ const PlanRoute = ({ onNavigate }) => {
     return t("planRoute.myLocation");
   };
 
-  // Función para calcular ruta (usa backend).
-  // Acepta puntos opcionales para evitar el problema de closure cuando
-  // el origen/destino se acaban de actualizar (p.ej. "Usar mi ubicación").
+  // Función para calcular ruta
   const calculateRoute = async (nextOrigin = origin, nextDestination = destination) => {
     if (!nextOrigin) {
       setError(t("planRoute.errors.selectOrigin"));
@@ -344,12 +418,6 @@ const PlanRoute = ({ onNavigate }) => {
     setError(null);
 
     try {
-      console.log("Calculando ruta via backend...");
-      console.log("Origen:", nextOrigin);
-      console.log("Destino:", nextDestination);
-      console.log("Modo:", transportMode);
-
-      // Mapear modos de transporte
       const modeMap = {
         walking: "walking",
         car: "driving",
@@ -363,13 +431,9 @@ const PlanRoute = ({ onNavigate }) => {
         modeMap[transportMode] || "walking"
       );
 
-      console.log("Respuesta del backend:", result);
-
       if (result && result.encodedPolyline) {
         const distance = (result.distance.valueMeters / 1000).toFixed(1);
         const duration = Math.round(result.duration.valueSeconds / 60);
-
-        console.log("Ruta calculada:", { distance, duration });
 
         setRoute({
           distance,
@@ -379,7 +443,13 @@ const PlanRoute = ({ onNavigate }) => {
           endAddress: nextDestination.address,
         });
 
-        // Estimar CO₂/calorías con el backend (factores de transporte)
+        if (!presetPendingRef.current) {
+          setRouteSavedId(null);
+          setSaved(false);
+          setFavorited(false);
+        }
+
+        // Estimar CO₂/calorías con el backend
         try {
           const pgModeMap = { walking: "walking", car: "car" };
           const estimateResult = await mapsService.getEstimate(
@@ -389,7 +459,6 @@ const PlanRoute = ({ onNavigate }) => {
             nextDestination.lng,
             pgModeMap[transportMode] || "walking"
           );
-          console.log("Estimación de sostenibilidad:", estimateResult);
           setEstimate(estimateResult);
         } catch (err) {
           console.warn("Estimación de sostenibilidad no disponible:", err);
@@ -400,34 +469,39 @@ const PlanRoute = ({ onNavigate }) => {
         setError(t("planRoute.errors.noValidRoute"));
       }
     } catch (err) {
-      console.error("Error:", err);
+      console.error("Error calculando ruta:", err);
       setError(err?.response?.data?.message || err?.message || t("planRoute.errors.calculateRoute"));
     } finally {
       setLoading(false);
     }
   };
 
-  // Guardar ruta en el backend
-  const saveRoute = async () => {
+  // Guardar ruta en el backend (isTransient = true cuando solo se usa para registrar el viaje en Historial)
+  const saveRoute = async (isTransient = false) => {
     if (!route || !origin || !destination) return null;
 
-    // Si la ruta ya está guardada (p.ej. vino de favoritos), no crear un duplicado
-    if (routeSavedId) {
-      setSaved(true);
-      setTimeout(() => setSaved(false), 3000);
+    if (!isTransient && routeSavedId) {
+      const msg = t("planRoute.errors.alreadySaved", "Esta ruta ya se encuentra guardada en Mis Rutas.");
+      showActionMessage(msg, "error");
+      toast.error(msg);
       return routeSavedId;
     }
 
-    setSaving(true);
+    if (!isTransient) {
+      setSaving(true);
+    }
     try {
       const modeMap = {
         walking: "walking",
         car: "car",
       };
 
-      const savedRoute = await routeService.create({
-        name: `${origin.name} → ${destination.name}`,
-        description: t("planRoute.saveDescription", { from: origin.name, to: destination.name }),
+      const baseName = `${origin.name} → ${destination.name}`;
+      const payload = {
+        name: isTransient ? `Viaje: ${baseName} (${Date.now()})` : baseName,
+        description: isTransient
+          ? `[trip_transient] ${baseName}`
+          : t("planRoute.saveDescription", { from: origin.name, to: destination.name }),
         transportType: modeMap[transportMode] || "walking",
         startName: origin.name,
         destinationName: destination.name,
@@ -440,21 +514,110 @@ const PlanRoute = ({ onNavigate }) => {
         estimatedTimeMin: route.duration,
         co2SavedKg: estimate?.co2SavedKg ?? null,
         estimatedCalories: estimate?.estimatedCalories ?? null,
-      });
+      };
 
-      setRouteSavedId(savedRoute?.id ?? null);
-      setSaved(true);
-      setTimeout(() => setSaved(false), 3000);
+      let savedRoute;
+      try {
+        savedRoute = await routeService.create(payload);
+      } catch (err) {
+        const errorMsg = err?.response?.data?.message || err?.message || "";
+        if (!isTransient && (errorMsg.includes("Ya existe") || errorMsg.includes("duplicate"))) {
+          const msg = t("planRoute.errors.alreadySaved", "Esta ruta ya se encuentra guardada en Mis Rutas.");
+          showActionMessage(msg, "error");
+          toast.error(msg);
+          throw err;
+        } else {
+          throw err;
+        }
+      }
+
+      if (!isTransient) {
+        setRouteSavedId(savedRoute?.id ?? null);
+        setSaved(true);
+        const okMsg = t("planRoute.savedInMyRoutes", "Ruta guardada en Mis Rutas");
+        showActionMessage(okMsg, "success");
+        toast.success(okMsg);
+      }
       return savedRoute?.id ?? null;
     } catch (err) {
       console.error("Error guardando ruta:", err);
+      if (!isTransient) {
+        const errMsg = err?.response?.data?.message || err?.message || t("planRoute.errors.saveFailed", "Error al guardar la ruta");
+        showActionMessage(errMsg, "error");
+        toast.error(errMsg);
+      }
       throw err;
     } finally {
-      setSaving(false);
+      if (!isTransient) {
+        setSaving(false);
+      }
     }
   };
 
-  // Iniciar viaje: guarda la ruta si falta y crea el trayecto
+  // Añadir a Favoritos
+  const saveFavorite = async () => {
+    if (!route || !origin || !destination) return;
+    if (favorited) {
+      const msg = t("planRoute.errors.alreadyFavorite", "Esta ruta ya se encuentra en tus Favoritos.");
+      showActionMessage(msg, "error");
+      toast.error(msg);
+      return;
+    }
+
+    setFavoriting(true);
+    try {
+      let routeId = routeSavedId;
+      if (!routeId) {
+        routeId = await saveRoute(false);
+      }
+      if (!routeId) {
+        throw new Error("No se pudo obtener el ID de la ruta");
+      }
+
+      await favoriteService.add(routeId, `${origin.name} → ${destination.name}`);
+      setFavorited(true);
+      const favOk = t("planRoute.favoriteAdded", "❤️ ¡Ruta añadida a Favoritos!");
+      showActionMessage(favOk, "success");
+      toast.success(favOk);
+    } catch (err) {
+      console.error("Error al añadir a favoritos:", err);
+      const msg = err?.response?.data?.message || err?.message || "No se pudo añadir a favoritos";
+      if (typeof msg === "string" && (msg.toLowerCase().includes("favorit") || msg.toLowerCase().includes("ya existe"))) {
+        setFavorited(true);
+        const dupMsg = t("planRoute.errors.alreadyFavorite", "Esta ruta ya se encuentra en tus Favoritos.");
+        showActionMessage(dupMsg, "error");
+        toast.error(dupMsg);
+      } else {
+        showActionMessage(msg, "error");
+        toast.error(msg);
+      }
+    } finally {
+      setFavoriting(false);
+    }
+  };
+
+  // Clicks explícitos para mostrar error al presionar por segunda vez
+  const handleSaveClick = async () => {
+    if (saved || routeSavedId) {
+      const msg = t("planRoute.errors.alreadySaved", "Esta ruta ya se encuentra guardada en Mis Rutas.");
+      showActionMessage(msg, "error");
+      toast.error(msg);
+      return;
+    }
+    await saveRoute(false);
+  };
+
+  const handleFavoriteClick = async () => {
+    if (favorited) {
+      const msg = t("planRoute.errors.alreadyFavorite", "Esta ruta ya se encuentra en tus Favoritos.");
+      showActionMessage(msg, "error");
+      toast.error(msg);
+      return;
+    }
+    await saveFavorite();
+  };
+
+  // Iniciar viaje
   const startTrip = async () => {
     if (!route || !origin || !destination) return;
 
@@ -463,7 +626,8 @@ const PlanRoute = ({ onNavigate }) => {
     try {
       let routeId = routeSavedId;
       if (!routeId) {
-        routeId = await saveRoute();
+        // Guarda como ruta transitoria: se graba en el historial pero NO aparece en "Mis Rutas"
+        routeId = await saveRoute(true);
       }
       if (!routeId) {
         throw new Error(t("planRoute.errors.saveForTrip"));
@@ -490,7 +654,7 @@ const PlanRoute = ({ onNavigate }) => {
     }
   };
 
-  // Completar viaje: registra las métricas reales y el CO₂ ahorrado
+  // Completar viaje
   const completeTrip = async () => {
     if (!activeTripId || !route) return;
 
@@ -503,7 +667,6 @@ const PlanRoute = ({ onNavigate }) => {
         actualCo2Kg: estimate?.co2SavedKg ?? null,
       });
 
-      console.log("Viaje completado");
       onNavigate?.("/user/history");
     } catch (err) {
       console.error("Error completando viaje:", err);
@@ -518,9 +681,10 @@ const PlanRoute = ({ onNavigate }) => {
     if (origin && destination && origin.lat && destination.lat) {
       calculateRoute();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transportMode]);
 
-  // Trazar automáticamente la ruta precargada desde favoritos (una sola vez)
+  // Trazar automáticamente la ruta precargada desde favoritos
   useEffect(() => {
     if (presetPendingRef.current && origin?.lat && destination?.lat) {
       presetPendingRef.current = false;
@@ -529,9 +693,7 @@ const PlanRoute = ({ onNavigate }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [origin, destination]);
 
-  // Función para usar mi ubicación como origen.
-  // Siempre solicita GPS fresco en el clic (enableHighAccuracy, sin caché)
-  // para no usar una posición cacheada/imprecisa del primer useEffect.
+  // Usar ubicación actual
   const setMyLocation = async () => {
     if (!navigator.geolocation) {
       setError(t("planRoute.errors.geoUnsupported"));
@@ -548,13 +710,14 @@ const PlanRoute = ({ onNavigate }) => {
           name: t("planRoute.myLocation"),
           address: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`
         };
+
         const realName = await resolveLocationName(location.lat, location.lng);
         location.name = realName;
         location.address = `${realName} (${location.address})`;
         setOrigin(location);
         setOriginInputValue(realName);
         setMapCenter({ lat: location.lat, lng: location.lng });
-        console.log("Usando ubicación como origen:", location);
+        setError(null);
 
         if (destination && destination.lat) {
           setTimeout(() => calculateRoute(location, destination), 100);
@@ -690,7 +853,8 @@ const PlanRoute = ({ onNavigate }) => {
   };
 
   return (
-    <div className={`relative h-screen w-full overflow-hidden ${isDarkMode ? "bg-[#0B1215]" : "bg-[#f5f0e8]"}`}>
+    <div className={`relative h-screen w-full overflow-hidden select-none ${isDarkMode ? "bg-[#0B1215]" : "bg-[#f5f0e8]"}`}>
+      {/* MAPA FULLSCREEN */}
       <div className="absolute inset-0">
         <MapViewGoogle
           height="100vh"
@@ -714,164 +878,440 @@ const PlanRoute = ({ onNavigate }) => {
         />
       </div>
 
-      <div className="absolute top-0 left-0 right-0 z-30 px-6 py-4 flex items-center justify-between pointer-events-none">
-        <div className="flex items-center gap-3 pointer-events-auto">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg ${isDarkMode ? "bg-[#064E3B]" : "bg-[#1a5c2a]"}`}>
-            <span className="text-white font-black text-lg">e</span>
+      {/* TARJETA FLOTANTE ESTILO GOOGLE MAPS */}
+      <div className="absolute top-4 left-4 z-30 w-[calc(100%-2rem)] max-w-[420px] max-h-[calc(100vh-2rem)] overflow-y-auto no-scrollbar pointer-events-auto">
+        <div className={`rounded-2xl shadow-2xl overflow-hidden transition-all border backdrop-blur-md ${
+          isDarkMode
+            ? "bg-[#162329]/95 border-[#26383D] text-[#e2e8f0]"
+            : "bg-white/95 border-gray-200/80 text-gray-900"
+        }`}>
+          {/* HEADER CON BOTÓN VOLVER, TÍTULO Y THEME */}
+          <div className="px-4 pt-3.5 pb-2.5 flex items-center justify-between border-b border-inherit/10">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <button
+                type="button"
+                onClick={() => onNavigate?.("/dashboard")}
+                className={`p-2 rounded-xl transition-all ${
+                  isDarkMode
+                    ? "text-gray-300 hover:text-white hover:bg-[#111C20]"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                }`}
+                title={t("planRoute.back")}
+                aria-label={t("planRoute.back")}
+              >
+                <ArrowLeft size={18} />
+              </button>
+              <div className="min-w-0">
+                <p className={`text-[10px] font-black tracking-wider uppercase leading-none mb-0.5 ${
+                  isDarkMode ? "text-emerald-400" : "text-[#1a5c2a]"
+                }`}>
+                  {t("planRoute.plannerTitle")}
+                </p>
+                <h1 className="text-sm sm:text-base font-extrabold truncate">
+                  {t("planRoute.heroLead")}{" "}
+                  <span className={isDarkMode ? "text-emerald-400 font-black" : "text-[#1a5c2a] font-black"}>
+                    {t("planRoute.heroHighlight")}
+                  </span>
+                </h1>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className={`p-2 rounded-xl text-sm transition-all ${
+                isDarkMode ? "hover:bg-[#111C20]" : "hover:bg-gray-100"
+              }`}
+              title="Cambiar tema"
+            >
+              {isDarkMode ? "☀️" : "🌙"}
+            </button>
           </div>
-          <div>
-            <h1 className={`text-lg font-black leading-tight ${isDarkMode ? "text-[#34D399]" : "text-[#1a5c2a]"}`}>EcoRuteando</h1>
-            <p className={`text-[10px] font-medium tracking-wider ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>NEIVA · HUILA · COLOMBIA</p>
+
+          <div className="p-3.5 space-y-3">
+            {/* SELECTOR DE MODO DE TRANSPORTE ESTILO GOOGLE MAPS */}
+            <div className={`flex items-center justify-between gap-1 p-1 rounded-xl ${
+              isDarkMode ? "bg-[#111C20]/90 border border-[#26383D]" : "bg-gray-100/90"
+            }`}>
+              {[
+                { id: "walking", icon: "🚶", label: t("planRoute.modeWalking") },
+                { id: "car", icon: "🚗", label: t("planRoute.modeCar") },
+              ].map((mode) => {
+                const isActive = transportMode === mode.id;
+                return (
+                  <button
+                    key={mode.id}
+                    type="button"
+                    onClick={() => setTransportMode(mode.id)}
+                    className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold transition-all ${
+                      isActive
+                        ? isDarkMode
+                          ? "bg-emerald-600 text-white shadow-md font-bold"
+                          : "bg-white text-emerald-800 shadow-sm font-bold border border-emerald-100"
+                        : isDarkMode
+                          ? "text-gray-400 hover:text-gray-200 hover:bg-[#162329]"
+                          : "text-gray-600 hover:text-gray-900 hover:bg-gray-200/50"
+                    }`}
+                  >
+                    <span className="text-base sm:text-lg">{mode.icon}</span>
+                    <span className="text-xs font-bold">{mode.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* CAJA DE ENTRADA ORIGEN / DESTINO CON CONECTOR Y BOTÓN SWAP (GOOGLE MAPS STYLE) */}
+            <div className={`relative rounded-xl border p-2.5 transition-all ${
+              isDarkMode
+                ? "bg-[#111C20] border-[#26383D] focus-within:border-emerald-500/50"
+                : "bg-white border-gray-200 focus-within:border-emerald-600/50 shadow-sm"
+            }`}>
+              <div className="flex items-center gap-2">
+                {/* Indicadores visuales de punto de partida (círculo verde) y llegada (punto rojo) con conector punteado */}
+                <div className="flex flex-col items-center justify-between self-stretch py-2 select-none">
+                  <span className="w-3 h-3 rounded-full border-2 border-emerald-500 bg-white dark:bg-[#111C20] shrink-0" title="Origen" />
+                  <div className="w-0.5 flex-1 my-1 border-l-2 border-dotted border-gray-300 dark:border-gray-600" />
+                  <span className="w-3 h-3 rounded-full bg-rose-500 shrink-0" title="Destino" />
+                </div>
+
+                {/* Campos de texto de búsqueda de Google Places */}
+                <div className="flex-1 min-w-0 space-y-1">
+                  <LocationSearch
+                    placeholder={t("planRoute.origin")}
+                    onSelect={(loc) => {
+                      setOrigin(loc);
+                      setOriginInputValue(loc.name);
+                      if (destination?.lat) calculateRoute(loc, destination);
+                    }}
+                    onClear={() => { setOrigin(null); setOriginInputValue(""); setRoute(null); }}
+                    isDarkMode={isDarkMode}
+                    externalValue={origin?.name || originInputValue}
+                  />
+                  <div className={`h-px w-full ${isDarkMode ? "bg-[#26383D]" : "bg-gray-100"}`} />
+                  <LocationSearch
+                    placeholder={t("planRoute.destination")}
+                    onSelect={(loc) => {
+                      setDestination(loc);
+                      if (origin?.lat) calculateRoute(origin, loc);
+                    }}
+                    onClear={() => { setDestination(null); setRoute(null); }}
+                    isDarkMode={isDarkMode}
+                    externalValue={destination?.name}
+                  />
+                </div>
+
+                {/* Botón de invertir origen y destino (Swap) */}
+                <div className="shrink-0 pl-1">
+                  <button
+                    type="button"
+                    onClick={handleSwap}
+                    title="Invertir origen y destino"
+                    className={`p-2 rounded-full transition-transform active:scale-90 hover:rotate-180 duration-300 ${
+                      isDarkMode
+                        ? "text-gray-300 hover:bg-[#162329] hover:text-emerald-400"
+                        : "text-gray-600 hover:bg-gray-100 hover:text-emerald-700"
+                    }`}
+                  >
+                    <SwapIcon className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* ACCESOS RÁPIDOS Y BOTÓN DE CALCULAR */}
+            <div className="flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={setMyLocation}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                  isDarkMode
+                    ? "bg-[#111C20] hover:bg-[#162329] text-emerald-400 border border-[#26383D]"
+                    : "bg-emerald-50 hover:bg-emerald-100 text-[#1a5c2a] border border-emerald-100"
+                }`}
+              >
+                <TargetIcon size={14} />
+                <span>{t("planRoute.useMyLocation")}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => calculateRoute()}
+                disabled={!origin?.lat || !destination?.lat || loading}
+                className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all shadow-md ${
+                  origin?.lat && destination?.lat && !loading
+                    ? isDarkMode
+                      ? "bg-emerald-600 hover:bg-emerald-500 text-white active:scale-[0.98]"
+                      : "bg-[#1a5c2a] hover:bg-[#145223] text-white active:scale-[0.98]"
+                    : isDarkMode
+                      ? "bg-[#111C20] text-gray-500 border border-[#26383D] cursor-not-allowed"
+                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+              >
+                {loading ? (
+                  <>
+                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>{t("planRoute.calculating")}</span>
+                  </>
+                ) : (
+                  <>
+                    <NavigationIcon className="w-3.5 h-3.5" />
+                    <span>{t("planRoute.calculate")}</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* MENSAJES DE ERROR */}
+            {error && (
+              <div className={`p-2.5 rounded-xl text-xs text-center border ${
+                isDarkMode ? "bg-rose-950/40 border-rose-900/60 text-rose-300" : "bg-rose-50 border-rose-100 text-rose-700"
+              }`}>
+                {error}
+              </div>
+            )}
+
+            {/* TARJETA DE RESULTADO DE RUTA (ESTILO GOOGLE MAPS ROUTE SUMMARY) */}
+            {route && (
+              <div className={`mt-2 p-3.5 rounded-xl border transition-all ${
+                isDarkMode ? "bg-[#111C20] border-[#26383D]" : "bg-gray-50 border-gray-200"
+              }`}>
+                {/* Resumen del tiempo y distancia en formato grande */}
+                <div className="flex items-baseline justify-between mb-1">
+                  <div className="flex items-baseline gap-2">
+                    <span className={`text-2xl font-black ${isDarkMode ? "text-emerald-400" : "text-emerald-700"}`}>
+                      {route.duration} min
+                    </span>
+                    <span className={`text-sm font-semibold ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+                      ({route.distance} km)
+                    </span>
+                  </div>
+                  <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                    isDarkMode ? "bg-[#162329] text-gray-300 border border-[#26383D]" : "bg-white text-gray-700 border border-gray-200"
+                  }`}>
+                    {transportMode === "car" ? t("planRoute.modeCar") : t("planRoute.onFoot")}
+                  </span>
+                </div>
+
+                {/* Nombres de los puntos */}
+                <p className={`text-xs font-medium truncate mb-2.5 ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
+                  {route.startAddress?.split(",")[0]} → {route.endAddress?.split(",")[0]}
+                </p>
+
+                {/* Chips de ahorro de CO2 y calorías */}
+                <div className="flex flex-wrap gap-1.5 mb-3.5">
+                  {estimate?.co2SavedKg != null && (
+                    <div className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold ${
+                      isDarkMode ? "bg-emerald-950/60 text-emerald-400 border border-emerald-800/60" : "bg-emerald-100/70 text-emerald-800 border border-emerald-200"
+                    }`}>
+                      <span>🌱</span>
+                      <span>-{estimate.co2SavedKg} kg {t("planRoute.co2Avoided")}</span>
+                    </div>
+                  )}
+                  {estimate?.estimatedCalories != null && (
+                    <div className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold ${
+                      isDarkMode ? "bg-amber-950/40 text-amber-300 border border-amber-800/50" : "bg-amber-100/70 text-amber-900 border border-amber-200"
+                    }`}>
+                      <span>🔥</span>
+                      <span>{estimate.estimatedCalories} kcal</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Botones de acción del viaje (Iniciar / Guardar) */}
+                {activeTripId ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className={`text-xs font-bold ${isDarkMode ? "text-emerald-400" : "text-emerald-700"}`}>
+                          {t("planRoute.inProgress")}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={completeTrip}
+                      disabled={completing}
+                      className="w-full py-2.5 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 shadow-md transition-all flex items-center justify-center gap-2"
+                    >
+                      {completing ? t("planRoute.completing") : t("planRoute.complete")}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {/* Botón principal: Iniciar viaje */}
+                    <button
+                      type="button"
+                      onClick={startTrip}
+                      disabled={startingTrip}
+                      className={`w-full py-2.5 px-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5 transition-all shadow-md ${
+                        isDarkMode ? "bg-emerald-600 hover:bg-emerald-500" : "bg-[#1a5c2a] hover:bg-[#145223]"
+                      }`}
+                    >
+                      <NavigationIcon className="w-3.5 h-3.5" />
+                      <span>{startingTrip ? t("planRoute.starting") : t("planRoute.start")}</span>
+                    </button>
+
+                    {/* Botones secundarios: Guardar en Mis Rutas y Añadir a Favoritos */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={handleSaveClick}
+                        disabled={saving}
+                        className={`py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border ${
+                          saved || routeSavedId
+                            ? isDarkMode ? "bg-emerald-950/40 text-emerald-400 border-emerald-800" : "bg-emerald-50 text-emerald-800 border-emerald-300"
+                            : isDarkMode
+                              ? "bg-[#162329] text-gray-200 border-[#26383D] hover:bg-[#1f3037]"
+                              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100 shadow-sm"
+                        }`}
+                      >
+                        <BookmarkIcon className="w-3.5 h-3.5" />
+                        <span>{saved || routeSavedId ? t("planRoute.savedInMyRoutes") : saving ? t("planRoute.saving") : t("planRoute.save")}</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleFavoriteClick}
+                        disabled={favoriting}
+                        className={`py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border ${
+                          favorited
+                            ? isDarkMode ? "bg-rose-950/40 text-rose-400 border-rose-800" : "bg-rose-50 text-rose-700 border-rose-300"
+                            : isDarkMode
+                              ? "bg-[#162329] text-gray-200 border-[#26383D] hover:bg-[#1f3037]"
+                              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100 shadow-sm"
+                        }`}
+                      >
+                        <HeartIcon className={`w-3.5 h-3.5 ${favorited ? "text-rose-500 fill-rose-500" : ""}`} filled={favorited} />
+                        <span>{favorited ? t("planRoute.favorited") : favoriting ? t("planRoute.favoriting") : t("planRoute.favorite")}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {tripError && <p className="mt-2 text-center text-xs text-rose-500 font-medium">{tripError}</p>}
+              </div>
+            )}
           </div>
         </div>
-        <button onClick={toggleTheme} className={`pointer-events-auto w-10 h-10 rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition-all ${isDarkMode ? "bg-[#162329] border border-[#26383D]" : "bg-white"}`}>
-          <span className="text-lg">{isDarkMode ? "☀️" : "🌙"}</span>
+      </div>
+
+      {/* BOTONES FLOTANTES DEL MAPA ESTILO GOOGLE MAPS (INFERIOR DERECHA) */}
+      <div className="absolute bottom-6 right-4 md:right-6 z-20 flex flex-col gap-2.5 items-end">
+        <button
+          type="button"
+          onClick={handleNearbyToggle}
+          className={`w-11 h-11 rounded-2xl shadow-xl flex items-center justify-center transition-all ${
+            showNearbySearch
+              ? "bg-emerald-600 text-white"
+              : isDarkMode
+                ? "bg-[#162329]/95 text-gray-200 border border-[#26383D] hover:bg-[#111C20]"
+                : "bg-white/95 text-gray-800 hover:bg-gray-50 shadow-md"
+          }`}
+          title={t("planRoute.searchPlaces")}
+          aria-label={t("planRoute.searchPlaces")}
+        >
+          <SearchIcon size={20} />
+        </button>
+
+        <button
+          type="button"
+          onClick={handleMapTypeCycle}
+          className={`w-11 h-11 rounded-2xl shadow-xl flex items-center justify-center transition-all ${
+            isDarkMode
+              ? "bg-[#162329]/95 text-gray-200 border border-[#26383D] hover:bg-[#111C20]"
+              : "bg-white/95 text-gray-800 hover:bg-gray-50 shadow-md"
+          }`}
+          title={t("planRoute.mapTypeHint", { type: t(MAP_TYPE_LABELS[mapTypeId]) })}
+          aria-label={t("planRoute.mapTypeHint", { type: t(MAP_TYPE_LABELS[mapTypeId]) })}
+        >
+          <LayersIcon className="w-5 h-5" />
+        </button>
+
+        <button
+          type="button"
+          onClick={handleCenterAction}
+          className={`w-11 h-11 rounded-2xl shadow-xl flex items-center justify-center transition-all ${
+            isDarkMode
+              ? "bg-[#162329]/95 text-gray-200 border border-[#26383D] hover:bg-[#111C20]"
+              : "bg-white/95 text-gray-800 hover:bg-gray-50 shadow-md"
+          }`}
+          title={t("planRoute.centerMyLocation")}
+          aria-label={t("planRoute.centerMyLocation")}
+        >
+          <TargetIcon size={20} />
         </button>
       </div>
 
-      <div className="absolute top-20 left-4 md:left-6 z-20 w-[calc(100%-2rem)] max-w-[380px] max-h-[calc(100vh-6rem)] overflow-y-auto">
-        <div className={`rounded-3xl shadow-xl overflow-hidden mb-4 ${isDarkMode ? "bg-[#162329] border border-[#26383D]" : "bg-white"}`}>
-          <div className="px-6 pt-6 pb-4">
-            <p className={`text-[10px] font-bold tracking-[0.2em] uppercase mb-1 ${isDarkMode ? "text-[#34D399]/80" : "text-[#1a5c2a]/70"}`}>{t("planRoute.plannerTitle")}</p>
-            <h2 className={`text-2xl font-black leading-snug ${isDarkMode ? "text-[#e2e8f0]" : "text-[#2d2d2d]"}`}>
-              {t("planRoute.heroLead")} <em className={`not-italic ${isDarkMode ? "text-[#34D399]" : "text-[#1a5c2a]"}`}>{t("planRoute.heroHighlight")}</em>
-            </h2>
-          </div>
-          <div className="px-6 pb-6 space-y-4">
-            <div>
-              <label className={`block text-[10px] font-bold tracking-[0.15em] uppercase mb-1.5 ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>{t("planRoute.origin")}</label>
-              <LocationSearch key={`origin-search-${originInputValue}`} placeholder={t("planRoute.addressOrPlace")} onSelect={setOrigin} isDarkMode={isDarkMode} value={origin?.name} externalValue={originInputValue} type="origin" />
-            </div>
-            <div>
-              <label className={`block text-[10px] font-bold tracking-[0.15em] uppercase mb-1.5 ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>{t("planRoute.destination")}</label>
-              <LocationSearch placeholder={t("planRoute.addressOrPlace")} onSelect={setDestination} isDarkMode={isDarkMode} value={destination?.name} type="destination" />
-            </div>
-            <button onClick={setMyLocation} className={`w-full py-2.5 rounded-full border-2 text-xs font-bold flex items-center justify-center gap-2 transition-all ${isDarkMode ? "border-[#26383D] text-[#34D399] hover:bg-[#111C20]" : "border-[#1a5c2a]/20 text-[#1a5c2a] hover:bg-[#1a5c2a]/5"}`}>
-              {t("planRoute.useMyLocation")}
-            </button>
-            <div>
-              <label className={`block text-[10px] font-bold tracking-[0.15em] uppercase mb-2 ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>{t("planRoute.transportMode")}</label>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { id: "walking", icon: "🚶", label: t("planRoute.modeWalking") },
-                  { id: "bike", icon: "🚲", label: t("planRoute.modeBike") },
-                  { id: "public", icon: "🚌", label: t("planRoute.modePublic") },
-                  { id: "car", icon: "🚗", label: t("planRoute.modeCar") }
-                ].map((mode) => (
-                  <button key={mode.id} onClick={() => setTransportMode(mode.id)}
-                    className={`py-3 rounded-2xl flex flex-col items-center gap-1 text-[10px] font-bold transition-all ${
-                      transportMode === mode.id
-                        ? isDarkMode ? "bg-[#064E3B] text-white shadow-lg" : "bg-[#1a5c2a] text-white shadow-lg shadow-[#1a5c2a]/30"
-                        : isDarkMode ? "bg-[#111C20] text-[#94a3b8] border border-[#26383D] hover:bg-[#162329]" : "bg-[#f5f0e8] text-[#8b7355] hover:bg-[#ebe4d5]"
-                    }`}>
-                    <span className="text-lg">{mode.icon}</span>
-                    <span>{mode.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-            <button onClick={() => calculateRoute()} disabled={!origin?.lat || !destination?.lat || loading}
-              className={`w-full py-3.5 rounded-2xl text-sm font-bold transition-all ${
-                origin?.lat && destination?.lat && !loading
-                  ? isDarkMode ? "bg-[#064E3B] text-white hover:bg-[#065f46] shadow-lg" : "bg-[#1a5c2a] text-white hover:bg-[#145223] shadow-lg shadow-[#1a5c2a]/30"
-                  : isDarkMode ? "bg-[#111C20] text-[#94a3b8]/60 border border-[#26383D] cursor-not-allowed" : "bg-[#e8e0d4] text-[#b8a898] cursor-not-allowed"
-              }`}>
-              {loading ? t("planRoute.calculating") : t("planRoute.calculate")}
-            </button>
-            {(transportMode === "bike" || transportMode === "public") && (
-              <div className={`p-3 rounded-xl text-xs border ${isDarkMode ? "bg-[#111C20] border-[#26383D] text-[#e2e8f0]" : "bg-amber-50 border-amber-100 text-amber-700"}`}>
-                {transportMode === "bike"
-                  ? t("planRoute.hintBike")
-                  : t("planRoute.hintPublic")}
-              </div>
-            )}
-            {error && <div className={`p-3 rounded-xl text-xs text-center border ${isDarkMode ? "bg-[#111C20] border-[#26383D] text-red-400" : "bg-red-50 border-red-100 text-red-600"}`}>{error}</div>}
-          </div>
-        </div>
-
-        {route && (
-          <div className={`rounded-3xl shadow-xl overflow-hidden mb-4 ${isDarkMode ? "bg-[#162329] border border-[#26383D]" : "bg-white"}`}>
-            <div className="px-6 pt-5 pb-3">
-              <p className={`text-[10px] font-bold tracking-[0.2em] uppercase mb-1 ${isDarkMode ? "text-[#34D399]/80" : "text-[#1a5c2a]/70"}`}>{t("planRoute.suggestedRoute")}</p>
-              <p className={`text-sm font-bold leading-snug ${isDarkMode ? "text-[#e2e8f0]" : "text-[#2d2d2d]"}`}>
-                {route.startAddress?.split(",")[0]} → {route.endAddress?.split(",")[0]}
-              </p>
-            </div>
-            <div className="px-6 pb-5">
-              <div className="flex gap-2">
-                <div className={`flex-1 rounded-2xl p-3 text-center ${isDarkMode ? "bg-[#111C20] border border-[#26383D]" : "bg-[#f5f0e8]"}`}>
-                  <p className={`text-lg font-black ${isDarkMode ? "text-[#e2e8f0]" : "text-[#2d2d2d]"}`}>{route.duration}</p>
-                  <p className={`text-[10px] font-bold tracking-wider uppercase ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>{transportMode === "car" ? t("planRoute.modeCar") : transportMode === "bike" ? t("planRoute.modeBike") : transportMode === "public" ? t("planRoute.modePublic") : t("planRoute.onFoot")}</p>
-                </div>
-                <div className={`flex-1 rounded-2xl p-3 text-center ${isDarkMode ? "bg-[#111C20] border border-[#26383D]" : "bg-[#f5f0e8]"}`}>
-                  <p className={`text-lg font-black ${isDarkMode ? "text-[#e2e8f0]" : "text-[#2d2d2d]"}`}>{route.distance} km</p>
-                  <p className={`text-[10px] font-bold tracking-wider uppercase ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>{t("planRoute.distance")}</p>
-                </div>
-                {estimate?.co2SavedKg != null && (
-                  <div className={`flex-1 rounded-2xl p-3 text-center ${isDarkMode ? "bg-[#111C20] border border-[#26383D]" : "bg-[#f5f0e8]"}`}>
-                    <p className={`text-lg font-black ${isDarkMode ? "text-[#34D399]" : "text-[#1a5c2a]"}`}>-{estimate.co2SavedKg} kg</p>
-                    <p className={`text-[10px] font-bold tracking-wider uppercase ${isDarkMode ? "text-[#94a3b8]" : "text-[#8b7355]"}`}>{t("planRoute.co2Avoided")}</p>
-                  </div>
-                )}
-              </div>
-              <div className="mt-4 space-y-2">
-                {activeTripId ? (
-                  <>
-                    <div className="grid grid-cols-2 gap-2">
-                      <span className={`flex items-center justify-center py-2.5 rounded-xl text-xs font-bold ${isDarkMode ? "bg-[#111C20] text-[#34D399] border border-[#26383D]" : "bg-amber-50 text-amber-700"}`}>{t("planRoute.inProgress")}</span>
-                      <button onClick={completeTrip} disabled={completing} className={`py-2.5 rounded-xl text-xs font-bold ${completing ? isDarkMode ? "bg-[#111C20] text-[#94a3b8]/60 border border-[#26383D]" : "bg-[#e8e0d4] text-[#b8a898]" : isDarkMode ? "bg-[#064E3B] text-white hover:bg-[#065f46]" : "bg-[#1a5c2a] text-white hover:bg-[#145223]"}`}>{completing ? t("planRoute.completing") : t("planRoute.complete")}</button>
-                    </div>
-                  </>
-                ) : (
-                  <div className="grid grid-cols-2 gap-2">
-                    <button onClick={saveRoute} disabled={saving || saved || !!routeSavedId} className={`py-2.5 rounded-xl text-xs font-bold ${saved || routeSavedId ? isDarkMode ? "bg-[#111C20] text-[#34D399] border border-[#26383D]" : "bg-green-50 text-green-700" : saving ? isDarkMode ? "bg-[#111C20] text-[#94a3b8]/60 border border-[#26383D]" : "bg-[#e8e0d4] text-[#b8a898]" : isDarkMode ? "bg-[#064E3B] text-white hover:bg-[#065f46]" : "bg-[#1a5c2a] text-white hover:bg-[#145223]"}`}>{saved || routeSavedId ? t("planRoute.savedRoute") : saving ? t("planRoute.saving") : t("planRoute.save")}</button>
-                    <button onClick={startTrip} disabled={startingTrip} className={`py-2.5 rounded-xl text-xs font-bold ${startingTrip ? isDarkMode ? "bg-[#111C20] text-[#94a3b8]/60 border border-[#26383D]" : "bg-[#e8e0d4] text-[#b8a898]" : isDarkMode ? "bg-[#064E3B] text-white hover:bg-[#065f46]" : "bg-[#1a5c2a] text-white hover:bg-[#145223]"}`}>{startingTrip ? t("planRoute.starting") : t("planRoute.start")}</button>
-                  </div>
-                )}
-                {tripError && <p className={`text-center text-xs ${isDarkMode ? "text-red-400" : "text-red-500"}`}>{tripError}</p>}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="absolute bottom-24 right-4 md:bottom-6 md:right-6 z-20 flex flex-col gap-2">
-        <button onClick={handleNearbyToggle} className={`w-12 h-12 rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#34D399]/40 ${showNearbySearch ? "bg-[#064E3B] text-white border border-[#064E3B]" : isDarkMode ? "bg-[#162329] border border-[#26383D] text-[#e2e8f0] hover:bg-[#111C20]" : "bg-white text-[#2d2d2d] hover:bg-gray-50"}`} title={t("planRoute.searchPlaces")} aria-label={t("planRoute.searchPlaces")}><SearchIcon size={22} /></button>
-        <button onClick={handleMapTypeCycle} className={`w-12 h-12 rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#34D399]/40 ${isDarkMode ? "bg-[#162329] border border-[#26383D] text-[#e2e8f0] hover:bg-[#111C20]" : "bg-white text-[#2d2d2d] hover:bg-gray-50"}`} title={t("planRoute.mapTypeHint", { type: t(MAP_TYPE_LABELS[mapTypeId]) })} aria-label={t("planRoute.mapTypeHint", { type: t(MAP_TYPE_LABELS[mapTypeId]) })}><MapIcon size={22} /></button>
-        <button onClick={handleCenterAction} className={`w-12 h-12 rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#34D399]/40 ${isDarkMode ? "bg-[#162329] border border-[#26383D] text-[#e2e8f0] hover:bg-[#111C20]" : "bg-white text-[#2d2d2d] hover:bg-gray-50"}`} title={t("planRoute.centerMyLocation")} aria-label={t("planRoute.centerMyLocation")}><TargetIcon size={22} /></button>
-        <button onClick={() => onNavigate?.("/dashboard")} className={`w-12 h-12 rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#34D399]/40 ${isDarkMode ? "bg-[#162329] border border-[#26383D] text-[#e2e8f0] hover:bg-[#111C20]" : "bg-white text-[#1a5c2a] hover:bg-gray-50"}`} title={t("planRoute.back")} aria-label={t("planRoute.back")}><ArrowLeft size={22} /></button>
-      </div>
-
+      {/* TOAST FLOTANTE DE ACCIÓN */}
       {actionMessage && (
         <div
           role="status"
           aria-live="polite"
-          className={`absolute bottom-6 left-4 md:left-6 z-30 max-w-[calc(100%-6rem)] px-4 py-2.5 rounded-full shadow-lg text-xs font-bold pointer-events-none ${isDarkMode ? "bg-[#162329] border border-[#26383D] text-[#e2e8f0]" : "bg-white border border-black/5 text-[#2d2d2d]"}`}
+          className={`absolute bottom-6 left-1/2 -translate-x-1/2 z-30 px-5 py-2.5 rounded-full shadow-2xl text-xs font-bold pointer-events-none transition-all flex items-center gap-2 ${
+            actionMessage.type === "error"
+              ? "bg-rose-600 text-white border border-rose-400 shadow-rose-950/50"
+              : actionMessage.type === "success"
+                ? "bg-emerald-600 text-white border border-emerald-400 shadow-emerald-950/50"
+                : isDarkMode
+                  ? "bg-[#162329] border border-[#26383D] text-gray-100"
+                  : "bg-gray-900 text-white"
+          }`}
         >
-          {actionMessage}
+          {actionMessage.type === "error" ? "⚠️" : actionMessage.type === "success" ? "✓" : "ℹ️"}
+          <span>{actionMessage.text || actionMessage}</span>
         </div>
       )}
 
+      {/* PANEL FLOTANTE DE LUGARES DE INTERÉS CERCANOS */}
       {showNearbySearch && (
-        <div className="absolute z-20 left-4 right-4 top-[380px] md:top-20 md:left-[400px] md:right-auto">
-          <div className={`rounded-2xl shadow-2xl p-4 w-full md:w-72 ${isDarkMode ? "bg-[#162329] border border-[#26383D]" : "bg-white border border-black/5"}`}>
+        <div className="absolute z-20 left-4 right-4 top-20 md:left-[450px] md:right-auto">
+          <div className={`rounded-2xl shadow-2xl p-4 w-full md:w-80 backdrop-blur-md border ${
+            isDarkMode ? "bg-[#162329]/95 border-[#26383D]" : "bg-white/95 border-gray-200"
+          }`}>
             <div className="flex items-center justify-between mb-3">
-              <h4 className={`text-sm font-bold ${isDarkMode ? "text-[#e2e8f0]" : "text-black"}`}>{t("planRoute.nearbyTitle")}</h4>
-              <button onClick={() => setShowNearbySearch(false)} className={`text-xs font-bold ${isDarkMode ? "text-[#94a3b8] hover:text-[#e2e8f0]" : "text-black/60 hover:text-black"}`}>{t("planRoute.close")}</button>
+              <h4 className={`text-sm font-bold ${isDarkMode ? "text-gray-100" : "text-gray-900"}`}>
+                {t("planRoute.nearbyTitle")}
+              </h4>
+              <button
+                type="button"
+                onClick={() => setShowNearbySearch(false)}
+                className={`text-xs font-bold ${isDarkMode ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-gray-900"}`}
+              >
+                {t("planRoute.close")}
+              </button>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {["restaurant", "hotel", "church", "park", "cafe", "bar", "museum"].map((type) => (
-                <button key={type} onClick={() => { setNearbyType(type); loadNearbyPois(type); }}
-                  className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold capitalize ${nearbyType === type ? isDarkMode ? "bg-[#064E3B] text-white" : "bg-[#1a5c2a] text-white" : isDarkMode ? "bg-[#111C20] text-[#e2e8f0] border border-[#26383D] hover:bg-[#162329]" : "bg-[#f5f0e8] text-black hover:bg-[#ebe4d5]"                    }`}>{t(`planRoute.poiTypes.${type}`)}</button>
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => { setNearbyType(type); loadNearbyPois(type); }}
+                  className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold capitalize transition-colors ${
+                    nearbyType === type
+                      ? isDarkMode ? "bg-emerald-600 text-white" : "bg-[#1a5c2a] text-white"
+                      : isDarkMode ? "bg-[#111C20] text-gray-300 border border-[#26383D] hover:bg-[#162329]" : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                  }`}
+                >
+                  {t(`planRoute.poiTypes.${type}`)}
+                </button>
               ))}
             </div>
             {nearbyPois.length > 0 && (
-              <div className="mt-3 max-h-52 overflow-y-auto space-y-1.5">
+              <div className="mt-3 max-h-52 overflow-y-auto space-y-1.5 no-scrollbar">
                 {nearbyPois.slice(0, 10).map((poi, idx) => (
-                  <button key={idx} type="button" onClick={() => selectNearbyPoi(poi)} className={`w-full text-left p-2.5 rounded-lg border transition-colors ${isDarkMode ? "bg-[#111C20] border-[#26383D] hover:border-[#34D399]" : "bg-white border-black/10 hover:border-[#1a5c2a]"}`}>
-                    <p className={`text-[13px] font-bold leading-snug ${isDarkMode ? "text-[#e2e8f0]" : "text-black"}`}>{poi.name}</p>
-                    {poi.vicinity && <p className={`text-[11px] font-medium leading-snug ${isDarkMode ? "text-[#94a3b8]" : "text-black/70"}`}>{poi.vicinity}</p>}
-                    <p className={`text-[11px] font-bold mt-0.5 ${isDarkMode ? "text-[#e2e8f0]" : "text-black"}`}>
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => selectNearbyPoi(poi)}
+                    className={`w-full text-left p-2.5 rounded-xl border transition-all ${
+                      isDarkMode
+                        ? "bg-[#111C20] border-[#26383D] hover:border-emerald-500"
+                        : "bg-white border-gray-200 hover:border-emerald-600 shadow-sm"
+                    }`}
+                  >
+                    <p className={`text-xs font-bold leading-snug ${isDarkMode ? "text-gray-100" : "text-gray-900"}`}>{poi.name}</p>
+                    {poi.vicinity && <p className={`text-[11px] font-medium leading-snug mt-0.5 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>{poi.vicinity}</p>}
+                    <p className={`text-[11px] font-bold mt-1 ${isDarkMode ? "text-emerald-400" : "text-emerald-700"}`}>
                       {poi.rating ? `⭐ ${poi.rating} · ` : ""}{t("planRoute.tapToGo")}
                     </p>
                   </button>
