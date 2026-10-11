@@ -10,15 +10,17 @@ jobs:
 
     steps:
       - name: Clonar repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Instalar Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Instalar dependencias
+        working-directory: front-end/ecoRuteando-react
         run: npm install
 
       - name: Build del proyecto
+        working-directory: front-end/ecoRuteando-react
         run: npm run build

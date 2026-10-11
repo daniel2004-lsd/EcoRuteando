@@ -13,6 +13,7 @@ import { useTheme } from "../../../app/context/ThemeContext";
 import { me } from "../../../services/authService";
 import favoriteService from "../../../services/favoriteService";
 import routeService from "../../../services/routeService";
+import toast from "react-hot-toast";
 
 // Componente principal — Mis rutas favoritas (CU11)
 const Favorites = ({ onNavigate }) => {
@@ -75,12 +76,22 @@ const Favorites = ({ onNavigate }) => {
   };
 
   const handleAddFavorite = async (routeId) => {
+    if (favorites.some((f) => f.routeId === routeId)) {
+      const dupMsg = t("favorites.alreadyFavorite", "Esta ruta ya se encuentra en tus Favoritos.");
+      setError(dupMsg);
+      toast.error(dupMsg);
+      return;
+    }
+
     try {
       await favoriteService.add(routeId);
+      toast.success(t("favorites.addedSuccess", "Ruta agregada a Favoritos con éxito."));
       setShowAddModal(false);
       await loadFavorites();
     } catch (err) {
-      setError(err?.response?.data?.detail || err?.message || t("favorites.errorAdd", "Error al guardar la ruta en favoritos"));
+      const errMsg = err?.response?.data?.detail || err?.message || t("favorites.errorAdd", "Error al guardar la ruta en favoritos");
+      setError(errMsg);
+      toast.error(errMsg);
     }
   };
 
