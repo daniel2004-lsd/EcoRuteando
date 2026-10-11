@@ -169,11 +169,8 @@ const UserHistory = ({ onNavigate }) => {
 
     const transportLabel = (mode) => {
         const labels = {
-            bike: "Bicicleta",
             car: "Automóvil",
             walking: "Caminata",
-            public_transport: "Transporte público",
-            mixed: "Mixto",
         };
         return labels[mode] || mode || "—";
     };
@@ -330,7 +327,9 @@ const UserHistory = ({ onNavigate }) => {
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-2 flex-wrap">
                                             <LeafIcon size={18} className="text-emerald-500" />
-                                            <span className={`font-semibold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{trip.routeName}</span>
+                                            <span className={`font-semibold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>
+                                                {trip.routeName?.replace(/^Viaje:\s*/i, '')?.replace(/\s*\(\d+\)$/, '') || trip.routeName}
+                                            </span>
                                             <span className={`text-xs px-2 py-0.5 rounded-full ${isDarkMode ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600'}`}>
                                                 {transportLabel(trip.transportMode)}
                                             </span>

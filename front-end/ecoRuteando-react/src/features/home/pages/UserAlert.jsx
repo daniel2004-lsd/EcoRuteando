@@ -395,8 +395,8 @@ const UserAlerts = ({ onNavigate }) => {
               <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Mantente hidratado durante tu ruta</p>
             </div>
             <div className={`flex items-center gap-2 p-3 rounded-lg ${isDarkMode ? 'bg-[#162329]' : 'bg-white'}`}>
-              <span>🚲</span>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Revisa el estado de tu bicicleta antes de salir</p>
+              <span>👟</span>
+              <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Usa calzado cómodo para tus desplazamientos a pie</p>
             </div>
             <div className={`flex items-center gap-2 p-3 rounded-lg ${isDarkMode ? 'bg-[#162329]' : 'bg-white'}`}>
               <span>🧴</span>
