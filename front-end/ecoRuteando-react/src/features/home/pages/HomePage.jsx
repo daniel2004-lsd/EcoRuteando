@@ -52,9 +52,15 @@ const HomePage = ({ onNavigate }) => {
     setLangDropdownOpen(false);
   };
 
-  const handleGuestMode = () => {
-    // Navega al dashboard; ProtectedRoute con allowGuest permite acceso a invitados
-    onNavigate("/dashboard");
+  const handleGuestMode = async () => {
+    // Modo invitado: limpia tokens previos si habían y navega directo a planificar ruta (igual que en móvil)
+    try {
+      if (logout) await logout();
+    } catch {}
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("userRole");
+    onNavigate("/user/plan-route");
   };
 
   const currentLang = LANGUAGES.find((l) => l.code === language) || LANGUAGES[0];
@@ -130,8 +136,8 @@ const HomePage = ({ onNavigate }) => {
       {/* ─── NAVBAR ─── */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-            ? isDarkMode ? 'bg-[#0B1215]/95 backdrop-blur-md shadow-lg py-3 border-b border-emerald-500/20' : "bg-white/90 backdrop-blur-md shadow-lg py-3 border-b border-emerald-100"
-            : isDarkMode ? 'bg-black/80 backdrop-blur-md py-5' : "bg-gradient-to-r from-emerald-800 via-green-700 to-teal-700 py-5"
+            ? isDarkMode ? 'bg-[#0B1215]/95 backdrop-blur-md shadow-lg py-3 border-b border-[#26383D]' : "bg-white/90 backdrop-blur-md shadow-lg py-3 border-b border-emerald-100"
+            : isDarkMode ? 'bg-[#0B1215]/90 backdrop-blur-md py-5 border-b border-[#26383D]/40' : "bg-gradient-to-r from-emerald-800 via-green-700 to-teal-700 py-5"
           }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between">
@@ -140,8 +146,8 @@ const HomePage = ({ onNavigate }) => {
             className="flex items-center gap-3 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-lg"
             onClick={() => scrollToSection("hero")}
           >
-            <div className={`relative w-10 h-10 rounded-full flex items-center justify-center shadow-lg ${isDarkMode ? 'bg-emerald-500/20' : 'bg-white'}`}>
-              <LeafIcon size={20} className={isDarkMode ? 'text-emerald-400' : 'text-emerald-600'} />
+            <div className={`relative w-10 h-10 rounded-full flex items-center justify-center shadow-lg ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white'}`}>
+              <LeafIcon size={20} className={isDarkMode ? 'text-[#34D399]' : 'text-emerald-600'} />
               <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-amber-400 ring-2 ring-white" />
             </div>
             <span className={`font-bold text-xl md:text-2xl tracking-tight ${scrolled ? (isDarkMode ? 'text-[#e2e8f0]' : "text-gray-800") : "text-white"
@@ -152,19 +158,19 @@ const HomePage = ({ onNavigate }) => {
 
           <div className="hidden md:flex items-center gap-8 lg:gap-10 text-base font-medium">
             <a href="#features" className={`relative pb-1 transition-colors duration-300 after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-amber-400 after:transition-all after:duration-300 hover:after:w-full ${scrolled
-                ? (isDarkMode ? 'text-gray-300 hover:text-emerald-400' : "text-gray-700 hover:text-emerald-600")
+                ? (isDarkMode ? 'text-[#e2e8f0] hover:text-[#34D399]' : "text-gray-700 hover:text-emerald-600")
                 : "text-white/90 hover:text-white"
               }`}>
               {navFeatures}
             </a>
             <a href="#why" className={`relative pb-1 transition-colors duration-300 after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-amber-400 after:transition-all after:duration-300 hover:after:w-full ${scrolled
-                ? (isDarkMode ? 'text-gray-300 hover:text-emerald-400' : "text-gray-700 hover:text-emerald-600")
+                ? (isDarkMode ? 'text-[#e2e8f0] hover:text-[#34D399]' : "text-gray-700 hover:text-emerald-600")
                 : "text-white/90 hover:text-white"
               }`}>
               {navBenefits}
             </a>
             <button onClick={() => onNavigate("/register")} className={`relative pb-1 transition-colors duration-300 after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-amber-400 after:transition-all after:duration-300 hover:after:w-full ${scrolled
-                ? (isDarkMode ? 'text-gray-300 hover:text-emerald-400' : "text-gray-700 hover:text-emerald-600")
+                ? (isDarkMode ? 'text-[#e2e8f0] hover:text-[#34D399]' : "text-gray-700 hover:text-emerald-600")
                 : "text-white/90 hover:text-white"
               }`}>
               {navJoin}
@@ -176,16 +182,16 @@ const HomePage = ({ onNavigate }) => {
               onClick={toggleTheme}
               aria-label="Cambiar tema"
               className={`w-10 h-10 rounded-full flex items-center justify-center text-base transition-all duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 border ${scrolled
-                  ? (isDarkMode ? 'bg-[#162329] text-amber-300 hover:bg-[#1e3038] border-[#26383D]' : "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200")
-                  : (isDarkMode ? 'bg-[#162329]/50 text-amber-300 hover:bg-[#162329] border-white/20' : "bg-white/10 text-white hover:bg-white/20 border-white/20")
+                  ? (isDarkMode ? 'bg-[#162329] text-amber-300 hover:bg-[#111C20] border-[#26383D]' : "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200")
+                  : (isDarkMode ? 'bg-[#162329]/70 text-amber-300 hover:bg-[#162329] border-[#26383D]' : "bg-white/10 text-white hover:bg-white/20 border-white/20")
                 }`}
             >
               {isDarkMode ? '☀️' : "🌙"}
             </button>
             <button
-              onClick={() => window.location.href = "/login"}
+              onClick={() => onNavigate("/login")}
               className={`px-5 lg:px-6 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${scrolled
-                  ? (isDarkMode ? 'border-emerald-500 text-emerald-400 hover:bg-emerald-500 hover:text-black' : "border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white")
+                  ? (isDarkMode ? 'border-[#34D399] text-[#34D399] hover:bg-[#34D399] hover:text-[#0B1215]' : "border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white")
                   : "border-white/80 text-white hover:bg-white hover:text-emerald-900"
                 }`}
             >
@@ -193,7 +199,7 @@ const HomePage = ({ onNavigate }) => {
             </button>
             <button
               onClick={() => onNavigate("/register")}
-              className={`px-5 lg:px-6 py-2.5 rounded-xl text-sm font-semibold shadow-md transition-all duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${isDarkMode ? 'bg-emerald-600 hover:bg-emerald-500 text-[#e2e8f0]' : "bg-emerald-600 hover:bg-emerald-700 text-white"
+              className={`px-5 lg:px-6 py-2.5 rounded-xl text-sm font-semibold shadow-md transition-all duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${isDarkMode ? 'bg-[#059669] hover:bg-[#047857] text-[#e2e8f0]' : "bg-emerald-600 hover:bg-emerald-700 text-white"
                 }`}
             >
               {navRegister}
@@ -205,8 +211,8 @@ const HomePage = ({ onNavigate }) => {
                 aria-label="Cambiar idioma"
                 aria-expanded={langDropdownOpen}
                 className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${scrolled
-                    ? (isDarkMode ? 'bg-[#162329] text-gray-300 hover:bg-[#162329] border border-[#26383D]' : "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200")
-                    : (isDarkMode ? 'bg-[#162329]/50 text-[#e2e8f0] hover:bg-[#162329] border border-white/20' : "bg-white/10 text-white hover:bg-white/20 border border-white/20")
+                    ? (isDarkMode ? 'bg-[#162329] text-gray-300 hover:bg-[#111C20] border border-[#26383D]' : "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200")
+                    : (isDarkMode ? 'bg-[#162329]/70 text-[#e2e8f0] hover:bg-[#162329] border border-[#26383D]' : "bg-white/10 text-white hover:bg-white/20 border border-white/20")
                   }`}
               >
                 <GlobeIcon />
@@ -225,8 +231,8 @@ const HomePage = ({ onNavigate }) => {
                       key={lang.code}
                       onClick={() => changeLanguage(lang.code)}
                       className={`flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors ${language === lang.code
-                          ? (isDarkMode ? 'bg-emerald-600 text-[#e2e8f0]' : 'bg-emerald-50 text-emerald-700')
-                          : (isDarkMode ? 'text-gray-300 hover:bg-[#162329]' : 'text-gray-700 hover:bg-gray-50')
+                          ? (isDarkMode ? 'bg-[#059669] text-[#e2e8f0]' : 'bg-emerald-50 text-emerald-700')
+                          : (isDarkMode ? 'text-gray-300 hover:bg-[#111C20]' : 'text-gray-700 hover:bg-gray-50')
                         }`}
                     >
                       <span className="text-lg">{lang.flag}</span>
@@ -249,7 +255,7 @@ const HomePage = ({ onNavigate }) => {
               aria-label="Cambiar tema"
               className={`w-10 h-10 rounded-full flex items-center justify-center text-base transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 border ${scrolled
                   ? (isDarkMode ? 'bg-[#162329] text-amber-300 border-[#26383D]' : "bg-gray-100 text-gray-700 border-gray-200")
-                  : (isDarkMode ? 'bg-[#162329]/50 text-amber-300 border-white/20' : "bg-white/10 text-white border-white/20")
+                  : (isDarkMode ? 'bg-[#162329]/70 text-amber-300 border-[#26383D]' : "bg-white/10 text-white border-white/20")
                 }`}
             >
               {isDarkMode ? '☀️' : "🌙"}
@@ -273,21 +279,21 @@ const HomePage = ({ onNavigate }) => {
         <div className={`absolute top-0 right-0 bottom-0 w-[85%] max-w-sm ${isDarkMode ? 'bg-[#162329]' : 'bg-white'} flex flex-col shadow-2xl transition-transform duration-300 ease-out ${menuOpen ? "translate-x-0" : "translate-x-full"}`}>
           <div className={`p-5 border-b ${isDarkMode ? 'border-[#26383D]' : 'border-gray-100'} flex items-center justify-between`}>
             <div className="flex items-center gap-2">
-              <LeafIcon size={24} className="text-emerald-500" />
+              <LeafIcon size={24} className="text-[#34D399]" />
               <span className={`font-bold text-lg ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>EcoRuteando</span>
             </div>
-            <button onClick={() => setMenuOpen(false)} aria-label="Cerrar menú" className={`${isDarkMode ? 'text-[#94a3b8] hover:text-emerald-400' : 'text-gray-400 hover:text-emerald-600'} p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-lg`}>
+            <button onClick={() => setMenuOpen(false)} aria-label="Cerrar menú" className={`${isDarkMode ? 'text-[#94a3b8] hover:text-[#34D399]' : 'text-gray-400 hover:text-emerald-600'} p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-lg`}>
               <CloseIcon />
             </button>
           </div>
           <div className="flex-1 py-4 px-4 space-y-1">
-            <button onClick={() => scrollToSection("features")} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-[#162329] hover:text-emerald-400' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'}`}>
+            <button onClick={() => scrollToSection("features")} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-[#111C20] hover:text-[#34D399]' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'}`}>
               <MapIcon size={22} /> {navFeatures}
             </button>
-            <button onClick={() => scrollToSection("why")} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-[#162329] hover:text-emerald-400' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'}`}>
+            <button onClick={() => scrollToSection("why")} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-[#111C20] hover:text-[#34D399]' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'}`}>
               <ActivityIcon size={22} /> {navBenefits}
             </button>
-            <button onClick={() => { onNavigate("/register"); setMenuOpen(false); }} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-[#162329] hover:text-emerald-400' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'}`}>
+            <button onClick={() => { onNavigate("/register"); setMenuOpen(false); }} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-[#111C20] hover:text-[#34D399]' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'}`}>
               <HeartIcon size={22} /> {navJoin}
             </button>
 
@@ -299,8 +305,8 @@ const HomePage = ({ onNavigate }) => {
                     key={lang.code}
                     onClick={() => changeLanguage(lang.code)}
                     className={`flex items-center gap-2 p-3 rounded-xl text-sm transition-colors ${language === lang.code
-                        ? isDarkMode ? 'bg-[#162329] text-emerald-400 font-bold border border-emerald-500' : "bg-emerald-50 text-gray-800 font-bold border border-emerald-200"
-                        : isDarkMode ? 'text-[#94a3b8] hover:bg-[#162329] border border-[#26383D]' : "text-gray-600 hover:bg-gray-50 border border-gray-100"
+                        ? isDarkMode ? 'bg-[#111C20] text-[#34D399] font-bold border border-[#34D399]' : "bg-emerald-50 text-gray-800 font-bold border border-emerald-200"
+                        : isDarkMode ? 'text-[#94a3b8] hover:bg-[#111C20] border border-[#26383D]' : "text-gray-600 hover:bg-gray-50 border border-gray-100"
                       }`}
                   >
                     <span className="text-lg">{lang.flag}</span>
@@ -314,10 +320,10 @@ const HomePage = ({ onNavigate }) => {
             <button onClick={() => { onNavigate("/register"); setMenuOpen(false); }} className="w-full py-4 rounded-2xl font-bold shadow-lg text-sm text-white bg-emerald-600 hover:bg-emerald-700 transition-all">
               {navRegister} →
             </button>
-            <button onClick={() => { onNavigate("/login"); setMenuOpen(false); }} className={`w-full py-4 rounded-2xl font-bold text-sm transition-all ${isDarkMode ? 'bg-[#162329] border border-[#26383D] text-[#e2e8f0] hover:bg-[#162329]' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
+            <button onClick={() => { onNavigate("/login"); setMenuOpen(false); }} className={`w-full py-4 rounded-2xl font-bold text-sm transition-all ${isDarkMode ? 'bg-[#111C20] border border-[#26383D] text-[#e2e8f0] hover:bg-[#162329]' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
               {navLogin}
             </button>
-            <button onClick={() => { handleGuestMode(); setMenuOpen(false); }} className={`w-full py-4 rounded-2xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-[#162329] border border-emerald-500/50 text-emerald-400 hover:bg-[#162329]' : 'bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100'}`}>
+            <button onClick={() => { handleGuestMode(); setMenuOpen(false); }} className={`w-full py-4 rounded-2xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-[#111C20] border border-[#34D399]/50 text-[#34D399] hover:bg-[#162329]' : 'bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100'}`}>
               {navGuest}
             </button>
           </div>
@@ -328,9 +334,9 @@ const HomePage = ({ onNavigate }) => {
       <section id="hero" className="relative min-h-[88vh] flex flex-col items-center justify-center px-5 text-center overflow-hidden">
         {isDarkMode ? (
           <>
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-950 via-gray-900 to-teal-950" />
-            <div className="absolute inset-0 bg-black/40" />
-            <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full -translate-x-48 -translate-y-48" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#15803d]" />
+            <div className="absolute inset-0 bg-[#0B1215]/50" />
+            <div className="absolute top-0 left-0 w-96 h-96 bg-[#34D399]/10 rounded-full -translate-x-48 -translate-y-48" />
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-amber-500/5 rounded-full translate-x-48 translate-y-48" />
           </>
         ) : (
@@ -348,8 +354,8 @@ const HomePage = ({ onNavigate }) => {
 
         <div className="relative z-10 w-full max-w-5xl mx-auto">
           <div className="flex justify-center mb-6">
-            <div className="relative w-28 h-28 md:w-32 md:h-32 bg-white rounded-2xl flex items-center justify-center shadow-2xl animate-float">
-              <LeafIcon size={52} className="text-emerald-600" />
+            <div className={`relative w-28 h-28 md:w-32 md:h-32 rounded-2xl flex items-center justify-center shadow-2xl animate-float ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white'}`}>
+              <LeafIcon size={52} className={isDarkMode ? 'text-[#34D399]' : 'text-emerald-600'} />
               <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-amber-400 ring-4 ring-emerald-700/30" />
             </div>
           </div>
@@ -382,7 +388,7 @@ const HomePage = ({ onNavigate }) => {
             <button
               onClick={() => onNavigate("/login")}
               className={`w-full sm:w-auto px-8 md:px-10 py-3 md:py-4 rounded-2xl font-semibold text-base md:text-lg transition-all duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 ${isDarkMode
-                  ? 'bg-emerald-600/80 backdrop-blur-sm text-white border border-emerald-400/50 hover:bg-emerald-600'
+                  ? 'bg-[#162329]/80 backdrop-blur-sm text-[#e2e8f0] border border-[#26383D] hover:bg-[#162329]'
                   : 'bg-white/15 backdrop-blur-md text-white border border-white/40 hover:bg-white/25'
                 }`}
             >
@@ -419,10 +425,10 @@ const HomePage = ({ onNavigate }) => {
           <div className="text-center mb-14">
             <div className="flex justify-center mb-4">
               <div className={`w-14 h-14 rounded-xl flex items-center justify-center shadow-md border ${isDarkMode ? 'bg-[#162329] border-[#26383D]' : 'bg-white border-green-100'}`}>
-                <LeafIcon size={28} className="text-emerald-500" />
+                <LeafIcon size={28} className={isDarkMode ? 'text-[#34D399]' : 'text-emerald-500'} />
               </div>
             </div>
-            <span className="text-emerald-600 text-sm font-semibold uppercase tracking-wider">{featuresTag}</span>
+            <span className={`${isDarkMode ? 'text-[#34D399]' : 'text-emerald-600'} text-sm font-semibold uppercase tracking-wider`}>{featuresTag}</span>
             <h2 className={`text-3xl md:text-4xl font-bold mt-2 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`} style={{ fontFamily: "'Playfair Display', serif" }}>
               {featuresTitle}
             </h2>
@@ -431,11 +437,11 @@ const HomePage = ({ onNavigate }) => {
 
           <div className="hidden md:grid grid-cols-3 relative mb-5 px-[8%]">
             <div
-              className={`absolute top-1/2 left-[16.5%] right-[16.5%] border-t-2 border-dashed -translate-y-1/2 ${isDarkMode ? 'border-emerald-700/60' : 'border-emerald-300'}`}
+              className={`absolute top-1/2 left-[16.5%] right-[16.5%] border-t-2 border-dashed -translate-y-1/2 ${isDarkMode ? 'border-[#26383D]' : 'border-emerald-300'}`}
             />
             {[0, 1, 2].map((i) => (
               <div key={i} className="flex justify-center relative z-10">
-                <div className={`w-9 h-9 rounded-full text-white text-xs font-bold flex items-center justify-center shadow-md ring-4 ${isDarkMode ? 'bg-emerald-500 ring-gray-900' : 'bg-emerald-600 ring-white'}`}>
+                <div className={`w-9 h-9 rounded-full text-white text-xs font-bold flex items-center justify-center shadow-md ring-4 ${isDarkMode ? 'bg-[#059669] ring-[#0B1215]' : 'bg-emerald-600 ring-white'}`}>
                   {i + 1}
                 </div>
               </div>
@@ -449,8 +455,8 @@ const HomePage = ({ onNavigate }) => {
               const colors = ["from-emerald-500 to-green-500", "from-teal-500 to-cyan-500", "from-amber-500 to-orange-500"];
 
               return (
-                <div key={i} className={`group rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border ${isDarkMode ? 'bg-[#162329] border-[#26383D] hover:border-emerald-500/50' : 'bg-white border-gray-100'}`}>
-                  <div className="md:hidden text-xs font-bold text-emerald-500 mb-2 tracking-widest uppercase">{featuresStop} {i + 1}</div>
+                <div key={i} className={`group rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border ${isDarkMode ? 'bg-[#162329] border-[#26383D] hover:border-[#34D399]' : 'bg-white border-gray-100'}`}>
+                  <div className={`md:hidden text-xs font-bold mb-2 tracking-widest uppercase ${isDarkMode ? 'text-[#34D399]' : 'text-emerald-500'}`}>{featuresStop} {i + 1}</div>
                   <div className={`w-20 h-20 bg-gradient-to-br ${colors[i % colors.length]} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-md`}>
                     <Icon size={36} className="text-white" />
                   </div>
@@ -464,15 +470,15 @@ const HomePage = ({ onNavigate }) => {
       </section>
 
       {/* SECCIÓN BENEFICIOS */}
-      <section id="why" className={`py-20 px-6 ${isDarkMode ? 'bg-gray-950' : 'bg-gradient-to-br from-gray-50 to-gray-100'}`}>
+      <section id="why" className={`py-20 px-6 ${isDarkMode ? 'bg-[#111C20]' : 'bg-gradient-to-br from-gray-50 to-gray-100'}`}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <div className="flex justify-center mb-4">
               <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-md border ${isDarkMode ? 'bg-[#162329] border-[#26383D]' : 'bg-white border-green-100'}`}>
-                <LeafIcon size={32} className="text-emerald-500" />
+                <LeafIcon size={32} className={isDarkMode ? 'text-[#34D399]' : 'text-emerald-500'} />
               </div>
             </div>
-            <span className="text-emerald-600 text-sm font-semibold uppercase tracking-wider">{whyTag}</span>
+            <span className={`${isDarkMode ? 'text-[#34D399]' : 'text-emerald-600'} text-sm font-semibold uppercase tracking-wider`}>{whyTag}</span>
             <h2 className={`text-3xl md:text-4xl font-bold mt-2 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`} style={{ fontFamily: "'Playfair Display', serif" }}>
               {whyTitle}
             </h2>
@@ -483,14 +489,14 @@ const HomePage = ({ onNavigate }) => {
               {whyReasons.map((reason, i) => {
                 const icons = [MapIcon, ActivityIcon, LeafIcon];
                 const Icon = icons[i] || LeafIcon;
-                const iconColors = ["text-emerald-600", "text-teal-600", "text-amber-500"];
+                const iconColors = ["text-[#34D399]", "text-teal-400", "text-amber-400"];
                 const bgColors = ["bg-emerald-100", "bg-teal-100", "bg-amber-100"];
-                const darkBgColors = ["bg-emerald-900/30", "bg-teal-900/30", "bg-amber-900/20"];
+                const darkBgColors = ["bg-[#162329]", "bg-[#162329]", "bg-[#162329]"];
 
                 return (
                   <div key={i} className={`flex gap-5 p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white'}`}>
-                    <div className={`w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 ${isDarkMode ? darkBgColors[i % darkBgColors.length] : bgColors[i % bgColors.length]}`}>
-                      <Icon size={24} className={iconColors[i % iconColors.length]} />
+                    <div className={`w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 border ${isDarkMode ? `${darkBgColors[i % darkBgColors.length]} border-[#26383D]` : bgColors[i % bgColors.length]}`}>
+                      <Icon size={24} className={isDarkMode ? iconColors[i % iconColors.length] : "text-emerald-600"} />
                     </div>
                     <div>
                       <h4 className={`font-bold text-lg ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{reason.title}</h4>
@@ -503,14 +509,14 @@ const HomePage = ({ onNavigate }) => {
 
             <div className="relative flex justify-center">
               <svg className="absolute w-[110%] h-[110%] -z-0 opacity-40" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="48" fill="none" stroke={isDarkMode ? '#10b981' : "#10b981"} strokeWidth="0.6" strokeDasharray="1.5 4" />
+                <circle cx="50" cy="50" r="48" fill="none" stroke={isDarkMode ? '#34D399' : "#10b981"} strokeWidth="0.6" strokeDasharray="1.5 4" />
               </svg>
-              <div className="relative w-80 h-80 md:w-96 md:h-96 bg-gradient-to-br from-emerald-400 to-green-600 rounded-full flex items-center justify-center shadow-2xl">
+              <div className="relative w-80 h-80 md:w-96 md:h-96 bg-gradient-to-br from-emerald-500 to-green-700 rounded-full flex items-center justify-center shadow-2xl">
                 <span className="absolute top-6 right-10 w-4 h-4 rounded-full bg-amber-400 shadow-md" />
-                <div className="w-52 h-52 md:w-60 md:h-60 bg-white rounded-full flex flex-col items-center justify-center shadow-lg">
-                  <LeafIcon size={72} className="text-emerald-600 mb-3" />
-                  <p className="text-4xl md:text-5xl font-black text-emerald-600">-30%</p>
-                  <p className="text-sm text-gray-500 font-semibold tracking-wide">{whyCo2}</p>
+                <div className={`w-52 h-52 md:w-60 md:h-60 rounded-full flex flex-col items-center justify-center shadow-lg border ${isDarkMode ? 'bg-[#162329] border-[#26383D]' : 'bg-white'}`}>
+                  <LeafIcon size={72} className={isDarkMode ? 'text-[#34D399] mb-3' : 'text-emerald-600 mb-3'} />
+                  <p className={`text-4xl md:text-5xl font-black ${isDarkMode ? 'text-[#34D399]' : 'text-emerald-600'}`}>-30%</p>
+                  <p className={`text-sm font-semibold tracking-wide ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{whyCo2}</p>
                 </div>
               </div>
             </div>
@@ -527,8 +533,8 @@ const HomePage = ({ onNavigate }) => {
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <div className="flex justify-center mb-5">
-            <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-2xl animate-float">
-              <LeafIcon size={40} className="text-emerald-600" />
+            <div className={`w-20 h-20 rounded-2xl flex items-center justify-center shadow-2xl animate-float ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white'}`}>
+              <LeafIcon size={40} className={isDarkMode ? 'text-[#34D399]' : 'text-emerald-600'} />
             </div>
           </div>
 
@@ -550,11 +556,11 @@ const HomePage = ({ onNavigate }) => {
       </section>
 
       {/* FOOTER */}
-      <footer className={`py-10 px-6 ${isDarkMode ? 'bg-[#0B1215] border-t border-gray-800' : 'bg-gray-900'}`}>
+      <footer className={`py-10 px-6 ${isDarkMode ? 'bg-[#0B1215] border-t border-[#26383D]' : 'bg-gray-900'}`}>
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md">
-              <LeafIcon size={20} className="text-emerald-600" />
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white'}`}>
+              <LeafIcon size={20} className={isDarkMode ? 'text-[#34D399]' : 'text-emerald-600'} />
             </div>
             <span className="font-bold text-white text-xl" style={{ fontFamily: "'Playfair Display', serif" }}>
               EcoRuteando
@@ -566,11 +572,11 @@ const HomePage = ({ onNavigate }) => {
           </p>
 
           <div className="flex justify-center gap-8 text-sm text-gray-500">
-            <button className="hover:text-emerald-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded">{footerPrivacy}</button>
+            <button className={`transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded ${isDarkMode ? 'hover:text-[#34D399]' : 'hover:text-emerald-400'}`}>{footerPrivacy}</button>
             <span className="text-gray-600">|</span>
-            <button className="hover:text-emerald-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded">{footerTerms}</button>
+            <button className={`transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded ${isDarkMode ? 'hover:text-[#34D399]' : 'hover:text-emerald-400'}`}>{footerTerms}</button>
             <span className="text-gray-600">|</span>
-            <button className="hover:text-emerald-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded">{footerContact}</button>
+            <button className={`transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded ${isDarkMode ? 'hover:text-[#34D399]' : 'hover:text-emerald-400'}`}>{footerContact}</button>
           </div>
         </div>
       </footer>

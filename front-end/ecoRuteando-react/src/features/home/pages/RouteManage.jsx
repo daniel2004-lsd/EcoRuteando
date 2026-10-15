@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import {
   RouteIcon,
   LeafIcon,
@@ -6,10 +7,14 @@ import {
   EditIcon,
   AlertTriangleIcon,
   MapPinIcon,
+  HeartIcon,
+  ClockIcon,
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import routeService from "../../../services/routeService";
+import favoriteService from "../../../services/favoriteService";
+import toast from "react-hot-toast";
 
 const EMPTY_FORM = {
   name: "",
@@ -43,7 +48,10 @@ const RouteManage = ({ onNavigate }) => {
   const { isDarkMode, toggleTheme } = useTheme();
   const { t } = useTranslation();
 
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(location.state?.initialTab === "favorites" ? "favorites" : "all");
   const [routes, setRoutes] = useState([]);
+  const [favorites, setFavorites] = useState([]);
   const [filter, setFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,30 +61,111 @@ const RouteManage = ({ onNavigate }) => {
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [loadingDetail, setLoadingDetail] = useState(false);
-
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   useEffect(() => {
-    loadRoutes();
+    if (location.state?.initialTab === "favorites") {
+      setActiveTab("favorites");
+    } else if (location.state?.initialTab === "all") {
+      setActiveTab("all");
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    loadData();
   }, []);
 
-  const loadRoutes = async () => {
+  const loadData = async () => {
     setLoading(true);
     setError(null);
     try {
-      // includeInactive = true: la gestión debe listar las rutas guardadas del sistema
-      const data = await routeService.getAll(null, true);
-      // Solo mostrar rutas guardadas deliberadamente (no las temporales creadas solo para registrar un viaje)
-      const userSavedRoutes = (Array.isArray(data) ? data : []).filter(
+      const [routesData, favsData] = await Promise.allSettled([
+        routeService.getAll(null, true, true),
+        favoriteService.getAll()
+      ]);
+
+      const allRoutes = routesData.status === "fulfilled" && Array.isArray(routesData.value) ? routesData.value : [];
+      const userSavedRoutes = allRoutes.filter(
         (r) => r.status !== "archived" && !r.description?.includes("[trip_transient]")
       );
       setRoutes(userSavedRoutes);
+
+      const allFavs = favsData.status === "fulfilled" && Array.isArray(favsData.value) ? favsData.value : [];
+      setFavorites(allFavs);
     } catch (err) {
-      console.error("Error cargando rutas:", err);
+      console.error("Error cargando rutas y favoritos:", err);
       setError(t("routeManage.loadError", "No se pudieron cargar las rutas"));
     } finally {
       setLoading(false);
     }
+  };
+
+  const isFavorite = (routeId) => {
+    if (!routeId) return false;
+    return favorites.some(
+      (f) => String(f.routeId || f.id) === String(routeId)
+    );
+  };
+
+  const toggleFavorite = async (route) => {
+    const routeId = route.id;
+    const isFav = isFavorite(routeId);
+    if (isFav) {
+      try {
+        await favoriteService.remove(routeId);
+        setFavorites((prev) =>
+          prev.filter((f) => String(f.routeId || f.id) !== String(routeId))
+        );
+        toast.success(t("favorites.removedSuccess", "Ruta quitada de Favoritos."));
+      } catch (err) {
+        toast.error(t("favorites.errorRemove", "Error al quitar de favoritos."));
+      }
+    } else {
+      try {
+        await favoriteService.add(routeId, route.name);
+        setFavorites((prev) => [
+          ...prev,
+          { routeId: routeId, routeName: route.name, ...route }
+        ]);
+        toast.success(t("favorites.addedSuccess", "Ruta añadida a Favoritos ❤️"));
+      } catch (err) {
+        toast.error(err?.response?.data?.message || t("favorites.errorAdd", "Error al añadir a favoritos."));
+      }
+    }
+  };
+
+  const handleUseRoute = async (route) => {
+    let startLat = route.startLocation?.latitude ?? route.startLat;
+    let startLng = route.startLocation?.longitude ?? route.startLng;
+    let endLat = route.endLocation?.latitude ?? route.endLat;
+    let endLng = route.endLocation?.longitude ?? route.endLng;
+
+    // Si la ruta viene del listado resumen y no tiene coordenadas directas, pedimos el detalle
+    if (startLat == null || endLat == null) {
+      try {
+        const detail = await routeService.getById(route.id);
+        startLat = detail?.startLocation?.latitude ?? detail?.startLat;
+        startLng = detail?.startLocation?.longitude ?? detail?.startLng;
+        endLat = detail?.endLocation?.latitude ?? detail?.endLat;
+        endLng = detail?.endLocation?.longitude ?? detail?.endLng;
+      } catch (err) {
+        console.warn("No se pudo obtener detalle de coordenadas:", err);
+      }
+    }
+
+    onNavigate?.("/user/plan-route", {
+      state: {
+        favoriteRoute: {
+          routeId: route.id,
+          routeName: route.name,
+          startLat,
+          startLng,
+          endLat,
+          endLng,
+          transportMode: route.transportType || "walking",
+        }
+      }
+    });
   };
 
   const openCreate = () => {
@@ -170,7 +259,7 @@ const RouteManage = ({ onNavigate }) => {
         await routeService.create(payload);
       }
       setModalOpen(false);
-      loadRoutes();
+      loadData();
     } catch (err) {
       console.error("Error guardando ruta:", err);
       const message =
@@ -197,7 +286,7 @@ const RouteManage = ({ onNavigate }) => {
     try {
       await routeService.delete(confirmDelete.id);
       setConfirmDelete(null);
-      loadRoutes();
+      loadData();
     } catch (err) {
       console.error("Error eliminando ruta:", err);
       setError(t("routeManage.errors.deleteFailed", "No se pudo eliminar la ruta"));
@@ -206,9 +295,45 @@ const RouteManage = ({ onNavigate }) => {
     }
   };
 
-  const filteredRoutes = routes.filter((r) =>
-    r.name?.toLowerCase().includes(filter.trim().toLowerCase())
-  );
+  // Combinar rutas guardadas con rutas que estén en favoritos pero no creadas por el usuario
+  const allCombinedRoutes = [...routes];
+  favorites.forEach((fav) => {
+    const fId = fav.routeId || fav.id;
+    if (fId && !allCombinedRoutes.some((r) => r.id === fId)) {
+      allCombinedRoutes.push({
+        id: fId,
+        name: fav.routeName || fav.name || t("favorites.defaultName", "Ruta favorita"),
+        startName: fav.originAddress || fav.startName || "",
+        destinationName: fav.destinationAddress || fav.destinationName || "",
+        transportType: fav.transportMode || fav.transportType || "walking",
+        status: "active",
+        distanceKm: fav.distanceKm ?? null,
+        estimatedTimeMin: fav.estimatedTimeMin ?? null,
+        co2SavedKg: fav.co2SavedKg ?? null,
+        difficultyLevel: fav.difficultyLevel ?? 1,
+        startLat: fav.startLat ?? null,
+        startLng: fav.startLng ?? null,
+        endLat: fav.endLat ?? null,
+        endLng: fav.endLng ?? null,
+      });
+    }
+  });
+
+  const displayedRoutes = allCombinedRoutes.filter((r) => {
+    const matchesQuery =
+      !filter.trim() ||
+      r.name?.toLowerCase().includes(filter.trim().toLowerCase()) ||
+      r.startName?.toLowerCase().includes(filter.trim().toLowerCase()) ||
+      r.destinationName?.toLowerCase().includes(filter.trim().toLowerCase());
+
+    if (!matchesQuery) return false;
+    if (activeTab === "favorites") {
+      return isFavorite(r.id);
+    }
+    return true;
+  });
+
+  const favoritesCount = allCombinedRoutes.filter((r) => isFavorite(r.id)).length;
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-[#0B1215]' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
@@ -230,8 +355,8 @@ const RouteManage = ({ onNavigate }) => {
                 <RouteIcon size={24} className="text-emerald-500" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">{t("routeManage.title", "Gestión de Rutas")}</h1>
-                <p className={`text-sm ${isDarkMode ? 'text-emerald-400' : 'text-green-100'}`}>{t("routeManage.subtitle", "Crear, editar y administrar las rutas del sistema")}</p>
+                <h1 className="text-2xl font-bold text-white">{t("routeManage.title", "Mis Rutas y Favoritas")}</h1>
+                <p className={`text-sm ${isDarkMode ? 'text-emerald-400' : 'text-green-100'}`}>{t("routeManage.subtitle", "Tus trayectos guardados y favoritos en un solo lugar")}</p>
               </div>
             </div>
 
@@ -249,12 +374,53 @@ const RouteManage = ({ onNavigate }) => {
       {/* CONTENIDO */}
       <div className="max-w-7xl mx-auto px-6 py-8">
 
+        {/* PESTAÑAS ESTILO GOOGLE MAPS */}
+        <div className="flex items-center gap-2 mb-6 p-1.5 rounded-2xl border max-w-md w-full bg-inherit">
+          <button
+            onClick={() => setActiveTab("all")}
+            className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+              activeTab === "all"
+                ? "bg-emerald-600 text-white shadow-md"
+                : isDarkMode
+                  ? "text-gray-300 hover:bg-[#162329]"
+                  : "text-gray-600 hover:bg-white/70"
+            }`}
+          >
+            <RouteIcon size={16} />
+            <span>{t("routeManage.allRoutes", "Todas mis rutas")}</span>
+            <span className={`text-[11px] px-2 py-0.5 rounded-full ${
+              activeTab === "all" ? "bg-white/20 text-white" : "bg-emerald-500/10 text-emerald-500"
+            }`}>
+              {routes.length}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("favorites")}
+            className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+              activeTab === "favorites"
+                ? "bg-rose-600 text-white shadow-md"
+                : isDarkMode
+                  ? "text-gray-300 hover:bg-[#162329]"
+                  : "text-gray-600 hover:bg-white/70"
+            }`}
+          >
+            <HeartIcon size={16} />
+            <span>{t("favorites.title", "Favoritas")}</span>
+            <span className={`text-[11px] px-2 py-0.5 rounded-full ${
+              activeTab === "favorites" ? "bg-white/20 text-white" : "bg-rose-500/10 text-rose-500"
+            }`}>
+              {favoritesCount}
+            </span>
+          </button>
+        </div>
+
         {/* Barra de acciones */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 flex-wrap">
           <div className="flex items-center gap-3">
             <input
               type="text"
-              placeholder={t("routeManage.filterPlaceholder", "Filtrar por nombre...")}
+              placeholder={t("routeManage.filterPlaceholder", "Filtrar por nombre o dirección...")}
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               className={`px-4 py-2.5 rounded-lg text-sm border transition-all focus:outline-none w-full md:w-80 ${
@@ -263,13 +429,15 @@ const RouteManage = ({ onNavigate }) => {
             />
           </div>
 
-          <button
-            onClick={openCreate}
-            className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-all shadow-md flex items-center gap-2 justify-center"
-          >
-            <span className="text-base">＋</span>
-            {t("routeManage.newRoute", "Nueva Ruta")}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={openCreate}
+              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-all shadow-md flex items-center gap-2 justify-center"
+            >
+              <span className="text-base">＋</span>
+              {t("routeManage.newRoute", "Nueva Ruta")}
+            </button>
+          </div>
         </div>
 
         {/* Error */}
@@ -291,89 +459,140 @@ const RouteManage = ({ onNavigate }) => {
         {/* Lista */}
         {!loading && !error && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filteredRoutes.map((route) => (
-              <div
-                key={route.id}
-                className={`rounded-2xl p-5 shadow-md hover:shadow-lg transition-all duration-300 border ${isDarkMode ? 'bg-[#162329] border-emerald-800/20 hover:border-emerald-500/50' : 'bg-white border-gray-100 hover:border-emerald-200'}`}
-              >
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
-                      <RouteIcon size={20} className="text-emerald-500" />
+            {displayedRoutes.map((route) => {
+              const fav = isFavorite(route.id);
+              return (
+                <div
+                  key={route.id}
+                  className={`rounded-2xl p-5 shadow-md hover:shadow-lg transition-all duration-300 border relative ${isDarkMode ? 'bg-[#162329] border-emerald-800/20 hover:border-emerald-500/50' : 'bg-white border-gray-100 hover:border-emerald-200'}`}
+                >
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div className="flex items-center gap-3 min-w-0 pr-2">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isDarkMode ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
+                        <RouteIcon size={20} className="text-emerald-500" />
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className={`font-bold text-sm truncate ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{route.name}</h3>
+                        <span className={`inline-block text-xs px-2 py-0.5 rounded-full mt-1 ${STATUS_BADGES[route.status] || STATUS_BADGES.inactive}`}>
+                          {t(`routeManage.status.${route.status}`, route.status)}
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className={`font-bold text-sm ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{route.name}</h3>
-                      <span className={`inline-block text-xs px-2 py-0.5 rounded-full mt-1 ${STATUS_BADGES[route.status] || STATUS_BADGES.inactive}`}>
-                        {t(`routeManage.status.${route.status}`, route.status)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
 
-                <div className={`text-xs space-y-1 mb-4 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
-                  <div className="flex items-center gap-1">
-                    <MapPinIcon size={14} className="text-emerald-500" />
-                    <span>{route.startName} → {route.destinationName}</span>
+                    {/* Botón de favorito estilo Google Maps */}
+                    <button
+                      type="button"
+                      onClick={() => toggleFavorite(route)}
+                      title={fav ? t("favorites.remove", "Quitar de favoritos") : t("favorites.add", "Añadir a favoritos")}
+                      aria-label="Toggle Favorito"
+                      className={`w-9 h-9 rounded-full flex items-center justify-center transition-all shrink-0 hover:scale-110 ${
+                        fav
+                          ? "bg-rose-500/15 text-rose-500 hover:bg-rose-500/25"
+                          : isDarkMode
+                            ? "bg-gray-800 text-gray-400 hover:text-rose-400"
+                            : "bg-gray-100 text-gray-400 hover:text-rose-500"
+                      }`}
+                    >
+                      <HeartIcon size={18} />
+                    </button>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <span>🚲</span>
-                    <span>{t(`routeManage.transport.${route.transportType}`, route.transportType)}</span>
-                  </div>
-                  {route.distanceKm != null && (
-                    <div className="flex items-center gap-1">
-                      <span>📏</span>
-                      <span>{route.distanceKm} km</span>
-                    </div>
-                  )}
-                  {route.estimatedTimeMin != null && (
-                    <div className="flex items-center gap-1">
-                      <span>⏱️</span>
-                      <span>{route.estimatedTimeMin} min</span>
-                    </div>
-                  )}
-                  {route.difficultyLevel != null && (
-                    <div className="flex items-center gap-1">
-                      <span>🎯</span>
-                      <span>{t("routeManage.difficulty", "Dificultad")}: {"★".repeat(route.difficultyLevel)}{"☆".repeat(5 - route.difficultyLevel)}</span>
-                    </div>
-                  )}
-                </div>
 
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => openEdit(route)}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${isDarkMode ? 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 border border-emerald-500/30' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200'}`}
-                  >
-                    <EditIcon size={14} />
-                    {t("routeManage.edit", "Editar")}
-                  </button>
-                  <button
-                    onClick={() => confirmDeleteRoute(route)}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${isDarkMode ? 'bg-red-600/20 text-red-400 hover:bg-red-600/30 border border-red-500/30' : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'}`}
-                  >
-                    <AlertTriangleIcon size={14} />
-                    {t("routeManage.delete", "Eliminar")}
-                  </button>
+                  <div className={`text-xs space-y-1 mb-4 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
+                    <div className="flex items-center gap-1">
+                      <MapPinIcon size={14} className="text-emerald-500" />
+                      <span className="truncate">{route.startName} → {route.destinationName}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span>🚲</span>
+                      <span>{t(`routeManage.transport.${route.transportType}`, route.transportType)}</span>
+                    </div>
+                    {route.distanceKm != null && (
+                      <div className="flex items-center gap-1">
+                        <span>📏</span>
+                        <span>{route.distanceKm} km</span>
+                      </div>
+                    )}
+                    {route.estimatedTimeMin != null && (
+                      <div className="flex items-center gap-1">
+                        <span>⏱️</span>
+                        <span>{route.estimatedTimeMin} min</span>
+                      </div>
+                    )}
+                    {route.difficultyLevel != null && (
+                      <div className="flex items-center gap-1">
+                        <span>🎯</span>
+                        <span>{t("routeManage.difficulty", "Dificultad")}: {"★".repeat(route.difficultyLevel)}{"☆".repeat(5 - route.difficultyLevel)}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2 border-t border-inherit/10">
+                    <button
+                      onClick={() => handleUseRoute(route)}
+                      className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-bold text-center transition-all ${
+                        isDarkMode
+                          ? "bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm"
+                          : "bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm"
+                      }`}
+                    >
+                      {t("favorites.useRoute", "Usar ruta")}
+                    </button>
+                    <button
+                      onClick={() => openEdit(route)}
+                      className={`p-1.5 rounded-lg text-xs font-medium transition-all ${isDarkMode ? 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 border border-emerald-500/30' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200'}`}
+                      title={t("routeManage.edit", "Editar")}
+                    >
+                      <EditIcon size={14} />
+                    </button>
+                    <button
+                      onClick={() => confirmDeleteRoute(route)}
+                      className={`p-1.5 rounded-lg text-xs font-medium transition-all ${isDarkMode ? 'bg-red-600/20 text-red-400 hover:bg-red-600/30 border border-red-500/30' : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'}`}
+                      title={t("routeManage.delete", "Eliminar")}
+                    >
+                      <AlertTriangleIcon size={14} />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
         {/* Sin resultados */}
-        {!loading && !error && filteredRoutes.length === 0 && (
+        {!loading && !error && displayedRoutes.length === 0 && (
           <div className={`text-center py-16 rounded-2xl ${isDarkMode ? 'bg-[#162329]' : 'bg-white'}`}>
-            <RouteIcon size={48} className={`mx-auto mb-4 ${isDarkMode ? 'text-gray-600' : 'text-gray-300'}`} />
-            <p className={`${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
-              {filter.trim() ? t("routeManage.noResults", "No hay rutas que coincidan con la búsqueda") : t("routeManage.empty", "No hay rutas registradas")}
-            </p>
-            {!filter.trim() && (
-              <button
-                onClick={openCreate}
-                className="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all"
-              >
-                {t("routeManage.createFirst", "Crear la primera")}
-              </button>
+            {activeTab === "favorites" ? (
+              <>
+                <HeartIcon size={48} className={`mx-auto mb-4 ${isDarkMode ? 'text-gray-600' : 'text-gray-300'}`} />
+                <p className={`${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
+                  {filter.trim()
+                    ? t("routeManage.noResults", "No hay rutas que coincidan con la búsqueda")
+                    : t("favorites.emptyHint", "Aún no tienes rutas favoritas guardadas. Presiona el corazón en cualquier ruta para marcarla como favorita.")}
+                </p>
+                {!filter.trim() && (
+                  <button
+                    onClick={() => setActiveTab("all")}
+                    className="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all"
+                  >
+                    {t("routeManage.viewAllRoutes", "Ver todas mis rutas")}
+                  </button>
+                )}
+              </>
+            ) : (
+              <>
+                <RouteIcon size={48} className={`mx-auto mb-4 ${isDarkMode ? 'text-gray-600' : 'text-gray-300'}`} />
+                <p className={`${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
+                  {filter.trim() ? t("routeManage.noResults", "No hay rutas que coincidan con la búsqueda") : t("routeManage.empty", "No hay rutas registradas")}
+                </p>
+                {!filter.trim() && (
+                  <button
+                    onClick={openCreate}
+                    className="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all"
+                  >
+                    {t("routeManage.createFirst", "Crear la primera")}
+                  </button>
+                )}
+              </>
             )}
           </div>
         )}
