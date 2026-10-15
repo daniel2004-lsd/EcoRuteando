@@ -1,0 +1,2810 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoRuteando — Visor General de Arquitectura y Casos de Uso</title>
+  <!-- Mermaid local con fallback inteligente -->
+  <script src="js/mermaid.min.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js'"></script>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #131c2e;
+      --border: #22324d;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #10b981;
+      --primary-hover: #059669;
+      --accent: #38bdf8;
+      --accent-dim: rgba(56, 189, 248, 0.12);
+      --purple: #a855f7;
+      --warning: #f59e0b;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2.5rem 1.25rem;
+    }
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      padding: 0.35rem 0.9rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.025em;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    /* Master Tabs */
+    .master-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 2rem 0;
+      background: rgba(19, 28, 46, 0.7);
+      padding: 0.6rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 0.7rem 1.3rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    .tab-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      color: #090d16;
+      border-color: var(--accent);
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Sub Filters */
+    .sub-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    .filter-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.4rem 0.9rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .filter-pill:hover, .filter-pill.active {
+      background: var(--accent);
+      color: #090d16;
+      border-color: var(--accent);
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto 1.5rem auto;
+      display: block;
+      padding: 0.75rem 1.25rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .search-box:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Cards */
+    .diagram-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+      transition: border-color 0.2s ease;
+    }
+    .diagram-card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+    .diagram-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.8rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .diagram-title {
+      font-size: 1.35rem;
+      color: #ffffff;
+      font-weight: 700;
+    }
+    .badge-sub {
+      background: var(--accent-dim);
+      color: var(--accent);
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .badge-rf {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .badge-state {
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--purple);
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+    .diagram-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .diagram-render-area {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 1.75rem;
+      overflow-x: auto;
+      display: flex;
+      justify-content: center;
+      min-height: 250px;
+      align-items: center;
+      color: #090d16;
+    }
+    .diagram-render-area svg {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+    .code-toggle {
+      margin-top: 1rem;
+      border-top: 1px dashed var(--border);
+      padding-top: 0.8rem;
+    }
+    details summary {
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      user-select: none;
+    }
+    details summary:hover {
+      color: var(--accent);
+    }
+    pre.code-preview {
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      color: #a5b4fc;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      margin-top: 0.5rem;
+    }
+    .error-box {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+      padding: 1rem;
+      border-radius: 8px;
+      width: 100%;
+      text-align: left;
+    }
+    .hidden {
+      display: none !important;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: #090d16;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">UML 2.5 • Suite Integral de Arquitectura</span>
+      <h1>EcoRuteando — Visor General de Casos de Uso y Arquitectura</h1>
+      <p class="lead">Suite exhaustiva de ingeniería de software: 28 Casos de Uso, 12 Diagramas de Secuencia, 8 Diagramas de Transición de Estados y Trazabilidad de 34 Requisitos Funcionales.</p>
+
+      <!-- Pestañas Principales -->
+      <div class="master-tabs">
+        <button class="tab-btn active" onclick="switchMasterTab('macro', this)">🏛️ Casos de Uso: Macro (6)</button>
+        <button class="tab-btn" onclick="switchMasterTab('micro', this)">🔍 Casos de Uso: Desglosados (28)</button>
+        <button class="tab-btn" onclick="switchMasterTab('seq', this)">⚡ Diagramas de Secuencia (12)</button>
+        <button class="tab-btn" onclick="switchMasterTab('state', this)">🔄 Transición de Estados (8)</button>
+        <button class="tab-btn" onclick="switchMasterTab('matrix', this)">📋 Matriz de Trazabilidad</button>
+      </div>
+    </header>
+
+    <!-- 1. TAB: MACRO CASOS DE USO -->
+    <div id="tab-macro" class="tab-content">
+
+      <div class="diagram-card" id="card-macro-gen">
+        <div class="diagram-header">
+          <h2 class="diagram-title">1. Diagrama General de la Arquitectura del Sistema</h2>
+          <div>
+            <span class="badge-sub">Visión Global</span>
+            <span class="badge-rf">RF01 - RF34</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Mapeo integral de los 3 actores primarios (Visitante, Ciudadano/Conductor, Administrador), los 2 servicios externos integrados (Motor GIS y Text-to-Speech) y los 5 paquetes funcionales dentro del límite del sistema.</p>
+        <div class="diagram-render-area" id="render-macro-gen">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-macro-gen">flowchart TB
+    Visitante["👤 Visitante / Invitado"]
+    Ciudadano["🧑‍💼 Ciudadano / Conductor"]
+    Admin["🛡️ Administrador"]
+    ServicioRutas["🌐 Servicio Enrutamiento (ORS/OSRM)"]
+    MotorTTS["🔊 Motor Text-to-Speech (TTS)"]
+
+    subgraph EcoRuteando ["Límite del Sistema: EcoRuteando"]
+        subgraph Sub_Auth ["Subsistema 1: Autenticación y Perfil"]
+            CU_Auth["CU01, CU02, CU05, CU12, CU13, CU14, CU15"]
+        end
+
+        subgraph Sub_Rutas ["Subsistema 2: Rutas y Movilidad Ecológica"]
+            CU_Rutas["CU03, CU04, CU06, CU11, CU16, CU17, CU25, CU27"]
+        end
+
+        subgraph Sub_Comunidad ["Subsistema 3: Reportes y Comunidad"]
+            CU_Comunidad["CU07, CU18, CU22"]
+        end
+
+        subgraph Sub_Admin ["Subsistema 4: Administración y Analítica"]
+            CU_Admin["CU08, CU10, CU19, CU24, CU28"]
+        end
+
+        subgraph Sub_Preferencias ["Subsistema 5: Soporte y Preferencias"]
+            CU_Prefs["CU09, CU20, CU21, CU23, CU26"]
+        end
+    end
+
+    Visitante --> CU_Auth
+    Visitante --> CU_Rutas
+
+    Ciudadano --> CU_Auth
+    Ciudadano --> CU_Rutas
+    Ciudadano --> CU_Comunidad
+    Ciudadano --> CU_Prefs
+
+    Admin --> CU_Admin
+    Admin --> CU_Comunidad
+
+    CU_Rutas --- ServicioRutas
+    CU_Rutas --> MotorTTS</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card" id="card-macro-sub1">
+        <div class="diagram-header">
+          <h2 class="diagram-title">2. Subsistema 1: Autenticación y Gestión de Cuentas</h2>
+          <div>
+            <span class="badge-sub">CU01, CU02, CU05, CU12, CU13, CU14, CU15</span>
+            <span class="badge-rf">RF01, RF02, RF03, RF04, RF07, RF08</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Interacciones de acceso, registro con aceptación obligatoria de términos, navegación como invitado, edición de perfil y baja voluntaria de cuenta.</p>
+        <div class="diagram-render-area" id="render-macro-sub1">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-macro-sub1">flowchart LR
+    Usuario["👤 Visitante / Usuario"]
+    Registrado["🧑‍💼 Usuario Registrado"]
+
+    Registrado -.->|"hereda de"| Usuario
+
+    subgraph ModuloAuth ["Subsistema: Autenticación y Perfil"]
+        CU01(["CU01: Registro de Usuario"])
+        CU02(["CU02: Recuperación de Contraseña"])
+        CU05(["CU05: Inicio de Sesión"])
+        CU14(["CU14: Navegación en Modo Invitado"])
+        CU15(["CU15: Consulta y Aceptación de Términos"])
+        CU12(["CU12: Edición de Perfil"])
+        CU13(["CU13: Eliminación de Cuenta"])
+
+        ValidaCred(["Validar Credenciales"])
+    end
+
+    Usuario --> CU01
+    Usuario --> CU02
+    Usuario --> CU05
+    Usuario --> CU14
+    Usuario --> CU15
+
+    Registrado --> CU12
+    Registrado --> CU13
+
+    CU01 -.->|"«include»"| CU15
+    CU05 -.->|"«include»"| ValidaCred
+    CU13 -.->|"«include»"| ValidaCred</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card" id="card-macro-sub2">
+        <div class="diagram-header">
+          <h2 class="diagram-title">3. Subsistema 2: Rutas y Movilidad Ecológica</h2>
+          <div>
+            <span class="badge-sub">CU03, CU04, CU06, CU11, CU16, CU17, CU25, CU27</span>
+            <span class="badge-rf">RF05, RF06, RF09, RF10, RF11, RF12, RF13, RF14, RF15, RF26, RF27, RF28</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Cálculo de trayectos (automóvil particular eficiente y caminata a pie), métricas ambientales (tiempo y CO₂ evitado), puntos de interés, historial, favoritos, direcciones habituales y locución guiada por voz paso a paso.</p>
+        <div class="diagram-render-area" id="render-macro-sub2">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-macro-sub2">flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano / Conductor"]
+    ServicioORS["🌐 Motor GIS (ORS/OSRM)"]
+    MotorTTS["🔊 Motor TTS Nativo"]
+
+    subgraph ModuloRutas ["Subsistema: Rutas y Movilidad"]
+        CU03(["CU03: Planificación de Rutas"])
+        CU06(["CU06: Visualización Rutas Ecológicas"])
+        CU16(["CU16: Estimación Tiempo y Ahorro CO₂"])
+        CU17(["CU17: Consulta Puntos de Interés"])
+        CU11(["CU11: Guardar Rutas Favoritas"])
+        CU27(["CU27: Direcciones Frecuentes"])
+        CU04(["CU04: Historial de Trayectos"])
+        CU25(["CU25: Asistencia Guiada por Voz"])
+    end
+
+    Ciudadano --> CU03
+    Ciudadano --> CU06
+    Ciudadano --> CU17
+    Ciudadano --> CU11
+    Ciudadano --> CU27
+    Ciudadano --> CU04
+    Ciudadano --> CU25
+
+    CU03 -.->|"«include»"| CU06
+    CU06 -.->|"«include»"| CU16
+    CU03 -.->|"«extend»"| CU27
+    CU03 -.->|"«extend»"| CU25
+    CU03 -.->|"«extend»"| CU11
+
+    CU03 --- ServicioORS
+    CU25 --> MotorTTS</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card" id="card-macro-sub3">
+        <div class="diagram-header">
+          <h2 class="diagram-title">4. Subsistema 3: Reportes Colaborativos e Incidentes</h2>
+          <div>
+            <span class="badge-sub">CU07, CU18, CU22</span>
+            <span class="badge-rf">RF17, RF18, RF19</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Registro geoespacial de incidentes en vía, consulta preventiva de alertas meteorológicas y validación comunitaria por votos de confirmación o descarte.</p>
+        <div class="diagram-render-area" id="render-macro-sub3">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-macro-sub3">flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano"]
+    Comunidad["👥 Comunidad de Usuarios"]
+    Admin["🛡️ Administrador"]
+
+    subgraph ModuloReportes ["Subsistema: Reportes y Alertas"]
+        CU07(["CU07: Reportar Incidente u Obstáculo"])
+        CU22(["CU22: Validación Comunitaria de Reportes"])
+        CU18(["CU18: Consulta de Alertas Climáticas"])
+
+        Geoloc(["Capturar Coordenadas GPS"])
+        Moderar(["Moderar o Cerrar Reporte"])
+    end
+
+    Ciudadano --> CU07
+    Comunidad --> CU22
+    Ciudadano --> CU18
+    Admin --> Moderar
+
+    CU07 -.->|"«include»"| Geoloc
+    CU07 -.->|"«extend»"| CU22
+    CU22 -.->|"«extend»"| Moderar</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card" id="card-macro-sub4">
+        <div class="diagram-header">
+          <h2 class="diagram-title">5. Subsistema 4: Administración, Auditoría y Analítica</h2>
+          <div>
+            <span class="badge-sub">CU08, CU10, CU19, CU24, CU28</span>
+            <span class="badge-rf">RF20, RF21, RF22, RF23, RF24, RF25, RF29</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Panel administrativo de métricas de impacto ambiental, configuración de variables operativas, auditoría estricta de cambios de rol, notificaciones masivas y exportación de datos en PDF/CSV.</p>
+        <div class="diagram-render-area" id="render-macro-sub4">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-macro-sub4">flowchart LR
+    Admin["🛡️ Administrador"]
+    ServidorNotif["📲 Servicio Notificaciones"]
+
+    subgraph ModuloAdmin ["Subsistema: Administración y Analítica"]
+        CU08(["CU08: Portal de Estadísticas y CO₂"])
+        CU24(["CU24: Gestión de Usuarios y Auditoría"])
+        CU28(["CU28: Configuración del Sistema"])
+        CU10(["CU10: Envío de Notificaciones"])
+        CU19(["CU19: Exportación de Historial y Reportes"])
+
+        LogAudit(["Registrar Log de Seguridad"])
+    end
+
+    Admin --> CU08
+    Admin --> CU24
+    Admin --> CU28
+    Admin --> CU10
+    Admin --> CU19
+
+    CU24 -.->|"«include»"| LogAudit
+    CU28 -.->|"«include»"| LogAudit
+    CU10 --> ServidorNotif
+    CU19 -.->|"«include»"| LogAudit</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card" id="card-macro-sub5">
+        <div class="diagram-header">
+          <h2 class="diagram-title">6. Subsistema 5: Soporte, Social y Preferencias</h2>
+          <div>
+            <span class="badge-sub">CU09, CU20, CU21, CU23, CU26</span>
+            <span class="badge-rf">RF16, RF30, RF31, RF32, RF33, RF34</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Calificación de rutas con estrellas y comentarios, difusión en redes sociales, selección de idioma, radicación de tickets de ayuda y selector de tema claro/oscuro.</p>
+        <div class="diagram-render-area" id="render-macro-sub5">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-macro-sub5">flowchart LR
+    Usuario["🧑‍💼 Usuario"]
+    AdminSoporte["🎧 Administrador / Soporte"]
+
+    subgraph ModuloPreferencias ["Subsistema: Soporte y Preferencias"]
+        CU09(["CU09: Calificar Rutas Realizadas"])
+        CU20(["CU20: Compartir Recorrido"])
+        CU21(["CU21: Configuración de Idioma"])
+        CU23(["CU23: Soporte Técnico y Mesa de Ayuda"])
+        CU26(["CU26: Personalización de Tema Visual"])
+    end
+
+    Usuario --> CU09
+    Usuario --> CU20
+    Usuario --> CU21
+    Usuario --> CU23
+    Usuario --> CU26
+
+    AdminSoporte --> CU23</pre>
+          </details>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 2. TAB: MICRO CASOS DE USO (28 DESGLOSADOS) -->
+    <div id="tab-micro" class="tab-content hidden">
+      <input type="text" class="search-box" id="search-micro" placeholder="🔍 Buscar por CU (ej. CU03, Voz, Perfil, CO2, RF18)..." onkeyup="filterMicroCUs()">
+
+      <div class="sub-filter-bar">
+        <button class="filter-pill active" onclick="filterMicroBySub('all', this)">Todos (28)</button>
+        <button class="filter-pill" onclick="filterMicroBySub('Autenticación y Perfil', this)">1. Autenticación y Perfil (7)</button>
+        <button class="filter-pill" onclick="filterMicroBySub('Rutas y Movilidad', this)">2. Rutas y Movilidad (8)</button>
+        <button class="filter-pill" onclick="filterMicroBySub('Reportes y Comunidad', this)">3. Reportes y Comunidad (3)</button>
+        <button class="filter-pill" onclick="filterMicroBySub('Administración y Analítica', this)">4. Administración y Analítica (5)</button>
+        <button class="filter-pill" onclick="filterMicroBySub('Soporte y Preferencias', this)">5. Soporte y Preferencias (5)</button>
+      </div>
+
+      <div id="micro-container">
+
+        <div class="diagram-card micro-card" data-cuid="CU01" data-sub="Autenticación y Perfil" data-title="CU01: Registro de Usuario" data-rf="RF01, RF04" id="card-CU01">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU01: Registro de Usuario</h2>
+            <div>
+              <span class="badge-sub">Autenticación y Perfil</span>
+              <span class="badge-rf">RF01, RF04</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Flujo de registro con validación de contraseña, hashing Argon2id y aceptación obligatoria de términos.</p>
+          <div class="diagram-render-area" id="render-CU01">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU01">flowchart LR
+    Visitante["👤 Visitante"]
+    DB[("💾 PostgreSQL")]
+    SMTP["📧 Servidor SMTP"]
+
+    subgraph ModuloAuth ["Límite: Registro de Usuario"]
+        CU01(["CU01: Registrar Usuario"])
+        CU15(["CU15: Aceptar Términos"])
+        Hash(["Validar y Aplicar Hash Argon2id"])
+        Email(["Enviar Correo de Bienvenida"])
+    end
+
+    Visitante --> CU01
+    CU01 -.->|"«include»"| CU15
+    CU01 -.->|"«include»"| Hash
+    CU01 -.->|"«extend»"| Email
+
+    Hash --> DB
+    Email --> SMTP</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU02" data-sub="Autenticación y Perfil" data-title="CU02: Recuperación de Contraseña" data-rf="RF03" id="card-CU02">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU02: Recuperación de Contraseña</h2>
+            <div>
+              <span class="badge-sub">Autenticación y Perfil</span>
+              <span class="badge-rf">RF03</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Generación de token temporal firmado y envío seguro por correo para restablecimiento de clave.</p>
+          <div class="diagram-render-area" id="render-CU02">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU02">flowchart LR
+    Usuario["👤 Usuario"]
+    SMTP["📧 Servidor SMTP"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloAuth ["Límite: Recuperación de Contraseña"]
+        CU02(["CU02: Solicitar Recuperación"])
+        ValidaMail(["Validar Correo Registrado"])
+        Token(["Generar Token Criptográfico con Expiración"])
+        Reset(["Establecer Nueva Contraseña"])
+    end
+
+    Usuario --> CU02
+    CU02 -.->|"«include»"| ValidaMail
+    CU02 -.->|"«include»"| Token
+    CU02 -.->|"«extend»"| Reset
+
+    Token --> SMTP
+    Reset --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU03" data-sub="Rutas y Movilidad" data-title="CU03: Planificación de Rutas" data-rf="RF09, RF26, RF27" id="card-CU03">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU03: Planificación de Rutas</h2>
+            <div>
+              <span class="badge-sub">Rutas y Movilidad</span>
+              <span class="badge-rf">RF09, RF26, RF27</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Definición interactiva de trayecto con cálculo multimodal ecológico y asistencia por voz.</p>
+          <div class="diagram-render-area" id="render-CU03">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU03">flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano / Conductor"]
+    GIS["🌐 Motor GIS (ORS/OSRM)"]
+
+    subgraph ModuloRutas ["Límite: Planificación de Rutas"]
+        CU03(["CU03: Planificar Trayecto"])
+        CU06(["CU06: Visualizar Rutas"])
+        CU16(["CU16: Estimar Tiempo y CO₂"])
+        CU27(["CU27: Usar Direcciones Frecuentes"])
+        CU11(["CU11: Guardar Favorita"])
+        CU25(["CU25: Asistencia por Voz"])
+    end
+
+    Ciudadano --> CU03
+    CU03 -.->|"«include»"| CU06
+    CU06 -.->|"«include»"| CU16
+    CU03 -.->|"«extend»"| CU27
+    CU03 -.->|"«extend»"| CU11
+    CU03 -.->|"«extend»"| CU25
+
+    CU03 --- GIS</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU04" data-sub="Rutas y Movilidad" data-title="CU04: Historial de Trayectos" data-rf="RF12" id="card-CU04">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU04: Historial de Trayectos</h2>
+            <div>
+              <span class="badge-sub">Rutas y Movilidad</span>
+              <span class="badge-rf">RF12</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Consulta paginada de rutas recorridas con filtros por fecha y opciones de exportación.</p>
+          <div class="diagram-render-area" id="render-CU04">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU04">flowchart LR
+    Usuario["🧑‍💼 Usuario Registrado"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloRutas ["Límite: Historial de Trayectos"]
+        CU04(["CU04: Consultar Historial"])
+        Filtro(["Filtrar por Fecha / Modo"])
+        CU19(["CU19: Exportar a PDF/Excel"])
+        CU03(["CU03: Reutilizar como Nueva Ruta"])
+    end
+
+    Usuario --> CU04
+    CU04 -.->|"«include»"| Filtro
+    CU04 -.->|"«extend»"| CU19
+    CU04 -.->|"«extend»"| CU03
+
+    CU04 --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU05" data-sub="Autenticación y Perfil" data-title="CU05: Inicio de Sesión" data-rf="RF02, RF04" id="card-CU05">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU05: Inicio de Sesión</h2>
+            <div>
+              <span class="badge-sub">Autenticación y Perfil</span>
+              <span class="badge-rf">RF02, RF04</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Autenticación segura con verificación de contraseña cifrada y expedición de token JWT.</p>
+          <div class="diagram-render-area" id="render-CU05">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU05">flowchart LR
+    Usuario["👤 Usuario Registrado"]
+    AuthService["🔐 Servicio de Autenticación"]
+
+    subgraph ModuloAuth ["Límite: Inicio de Sesión"]
+        CU05(["CU05: Iniciar Sesión"])
+        Valida(["Validar Credenciales y Hash"])
+        JWT(["Generar Token JWT con Rol"])
+        Bloqueo(["Bloquear Temporalmente tras 5 Intentos"])
+        CU02(["CU02: Recuperar Contraseña"])
+    end
+
+    Usuario --> CU05
+    CU05 -.->|"«include»"| Valida
+    CU05 -.->|"«include»"| JWT
+    CU05 -.->|"«extend»"| Bloqueo
+    CU05 -.->|"«extend»"| CU02
+
+    Valida --> AuthService</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU06" data-sub="Rutas y Movilidad" data-title="CU06: Visualización de Rutas Ecológicas" data-rf="RF10" id="card-CU06">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU06: Visualización de Rutas Ecológicas</h2>
+            <div>
+              <span class="badge-sub">Rutas y Movilidad</span>
+              <span class="badge-rf">RF10</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Renderizado cartográfico vectorial de la ruta óptima con métrica de CO₂ evitado.</p>
+          <div class="diagram-render-area" id="render-CU06">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU06">flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano / Conductor"]
+    MapAPI["🗺️ API Mapbox / Google"]
+
+    subgraph ModuloRutas ["Límite: Visualización de Rutas"]
+        CU06(["CU06: Visualizar Rutas"])
+        Trazado(["Renderizar Geometría LineString"])
+        CU16(["CU16: Indicador de CO₂ Evitado"])
+        CU17(["CU17: Mostrar POIs en Recorrido"])
+        CU07(["CU07: Visualizar Incidentes Reportados"])
+    end
+
+    Ciudadano --> CU06
+    CU06 -.->|"«include»"| Trazado
+    CU06 -.->|"«include»"| CU16
+    CU06 -.->|"«extend»"| CU17
+    CU06 -.->|"«extend»"| CU07
+
+    Trazado --- MapAPI</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU07" data-sub="Reportes y Comunidad" data-title="CU07: Reporte Ciudadano de Obstáculos" data-rf="RF17" id="card-CU07">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU07: Reporte Ciudadano de Obstáculos</h2>
+            <div>
+              <span class="badge-sub">Reportes y Comunidad</span>
+              <span class="badge-rf">RF17</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Georreferenciación de incidentes viales mediante GPS y evidencia fotográfica opcional.</p>
+          <div class="diagram-render-area" id="render-CU07">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU07">flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano"]
+    GPS["📡 GPS Dispositivo"]
+    DB[("💾 PostGIS")]
+
+    subgraph ModuloReportes ["Límite: Reporte de Obstáculos"]
+        CU07(["CU07: Reportar Incidente"])
+        Captura(["Capturar Coordenadas GPS"])
+        Foto(["Adjuntar Fotografía de Evidencia"])
+        CU22(["CU22: Validación Comunitaria"])
+    end
+
+    Ciudadano --> CU07
+    CU07 -.->|"«include»"| Captura
+    CU07 -.->|"«extend»"| Foto
+    CU07 -.->|"«extend»"| CU22
+
+    Captura --- GPS
+    CU07 --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU08" data-sub="Administración y Analítica" data-title="CU08: Portal de Estadísticas y Analítica" data-rf="RF20" id="card-CU08">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU08: Portal de Estadísticas y Analítica</h2>
+            <div>
+              <span class="badge-sub">Administración y Analítica</span>
+              <span class="badge-rf">RF20</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Métricas consolidadas de impacto ambiental, balance de CO₂ y movilidad por zonas.</p>
+          <div class="diagram-render-area" id="render-CU08">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU08">flowchart LR
+    Admin["🛡️ Administrador / Analista"]
+    DB[("💾 PostgreSQL / Vistas")]
+
+    subgraph ModuloAdmin ["Límite: Portal de Estadísticas"]
+        CU08(["CU08: Visualizar Métricas"])
+        CO2(["Consolidar Ahorro Total de CO₂"])
+        Modalidad(["Comparativa Auto vs. Caminata"])
+        CU19(["CU19: Exportar Informe Estadístico"])
+    end
+
+    Admin --> CU08
+    CU08 -.->|"«include»"| CO2
+    CU08 -.->|"«include»"| Modalidad
+    CU08 -.->|"«extend»"| CU19
+
+    CU08 --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU09" data-sub="Soporte y Preferencias" data-title="CU09: Calificar y Retroalimentar Rutas" data-rf="RF16" id="card-CU09">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU09: Calificar y Retroalimentar Rutas</h2>
+            <div>
+              <span class="badge-sub">Soporte y Preferencias</span>
+              <span class="badge-rf">RF16</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Evaluación de calidad de trazado y estado de la vía al completar un trayecto.</p>
+          <div class="diagram-render-area" id="render-CU09">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU09">flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloSoporte ["Límite: Calificación de Rutas"]
+        CU09(["CU09: Calificar Ruta"])
+        Rating(["Asignar Puntuación 1 a 5 Estrellas"])
+        Feedback(["Añadir Observación de Seguridad/Vía"])
+    end
+
+    Ciudadano --> CU09
+    CU09 -.->|"«include»"| Rating
+    CU09 -.->|"«extend»"| Feedback
+
+    CU09 --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU10" data-sub="Administración y Analítica" data-title="CU10: Envío de Notificaciones del Sistema" data-rf="RF25" id="card-CU10">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU10: Envío de Notificaciones del Sistema</h2>
+            <div>
+              <span class="badge-sub">Administración y Analítica</span>
+              <span class="badge-rf">RF25</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Despacho institucional de alertas y comunicados push segmentados por perfil.</p>
+          <div class="diagram-render-area" id="render-CU10">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU10">flowchart LR
+    Admin["🛡️ Administrador"]
+    PushService["📲 Firebase Cloud Messaging"]
+
+    subgraph ModuloAdmin ["Límite: Notificaciones del Sistema"]
+        CU10(["CU10: Enviar Notificación"])
+        FiltroUsuarios(["Definir Audiencia Objetivo"])
+        Programar(["Programar Fecha y Hora de Envío"])
+    end
+
+    Admin --> CU10
+    CU10 -.->|"«include»"| FiltroUsuarios
+    CU10 -.->|"«extend»"| Programar
+
+    CU10 --> PushService</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU11" data-sub="Rutas y Movilidad" data-title="CU11: Gestión de Rutas Favoritas" data-rf="RF14" id="card-CU11">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU11: Gestión de Rutas Favoritas</h2>
+            <div>
+              <span class="badge-sub">Rutas y Movilidad</span>
+              <span class="badge-rf">RF14</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Marcado y acceso rápido a recorridos frecuentes con alias personalizados.</p>
+          <div class="diagram-render-area" id="render-CU11">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU11">flowchart LR
+    Usuario["🧑‍💼 Usuario Registrado"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloRutas ["Límite: Rutas Favoritas"]
+        CU11(["CU11: Gestionar Favoritas"])
+        Guardar(["Guardar Ruta con Alias Personalizado"])
+        Eliminar(["Desmarcar Ruta de Favoritas"])
+        CU03(["CU03: Planificar Inmediatamente"])
+    end
+
+    Usuario --> CU11
+    CU11 -.->|"«extend»"| Guardar
+    CU11 -.->|"«extend»"| Eliminar
+    CU11 -.->|"«extend»"| CU03
+
+    CU11 --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU12" data-sub="Autenticación y Perfil" data-title="CU12: Edición del Perfil de Usuario" data-rf="RF05" id="card-CU12">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU12: Edición del Perfil de Usuario</h2>
+            <div>
+              <span class="badge-sub">Autenticación y Perfil</span>
+              <span class="badge-rf">RF05</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Modificación de nombres, correo de contacto, contraseña y preferencias del usuario.</p>
+          <div class="diagram-render-area" id="render-CU12">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU12">flowchart LR
+    Usuario["🧑‍💼 Usuario Registrado"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloAuth ["Límite: Edición de Perfil"]
+        CU12(["CU12: Editar Perfil"])
+        ValidaDatos(["Validar Formato de Datos"])
+        Pass(["Cambiar Contraseña con Verificación"])
+        Foto(["Actualizar Avatar del Perfil"])
+    end
+
+    Usuario --> CU12
+    CU12 -.->|"«include»"| ValidaDatos
+    CU12 -.->|"«extend»"| Pass
+    CU12 -.->|"«extend»"| Foto
+
+    CU12 --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU13" data-sub="Autenticación y Perfil" data-title="CU13: Eliminación de Cuenta" data-rf="RF06, RF21" id="card-CU13">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU13: Eliminación de Cuenta</h2>
+            <div>
+              <span class="badge-sub">Autenticación y Perfil</span>
+              <span class="badge-rf">RF06, RF21</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Baja voluntaria con reautenticación estricta y anonimización de datos para estadísticas.</p>
+          <div class="diagram-render-area" id="render-CU13">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU13">flowchart LR
+    Usuario["🧑‍💼 Usuario Registrado"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloAuth ["Límite: Eliminación de Cuenta"]
+        CU13(["CU13: Eliminar Cuenta"])
+        Reauth(["Reautenticar con Contraseña Actual"])
+        Confirm(["Confirmar Advertencia Irreversible"])
+        Anon(["Anonimizar Trayectos para Estadísticas"])
+    end
+
+    Usuario --> CU13
+    CU13 -.->|"«include»"| Reauth
+    CU13 -.->|"«include»"| Confirm
+    CU13 -.->|"«extend»"| Anon
+
+    CU13 --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU14" data-sub="Autenticación y Perfil" data-title="CU14: Modo Invitado" data-rf="RF07" id="card-CU14">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU14: Modo Invitado</h2>
+            <div>
+              <span class="badge-sub">Autenticación y Perfil</span>
+              <span class="badge-rf">RF07</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Acceso libre sin registro previo con sesión efímera en memoria local del dispositivo.</p>
+          <div class="diagram-render-area" id="render-CU14">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU14">flowchart LR
+    Visitante["👤 Visitante"]
+    LocalStorage["📱 Almacenamiento Local"]
+
+    subgraph ModuloAuth ["Límite: Navegación Invitado"]
+        CU14(["CU14: Explorar como Invitado"])
+        SesionTemp(["Generar Sesión Efímera"])
+        CU03(["CU03: Planificar Rutas Básicas"])
+        CU01(["CU01: Sugerir Registro para Guardar"])
+    end
+
+    Visitante --> CU14
+    CU14 -.->|"«include»"| SesionTemp
+    CU14 -.->|"«extend»"| CU03
+    CU14 -.->|"«extend»"| CU01
+
+    SesionTemp --- LocalStorage</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU15" data-sub="Autenticación y Perfil" data-title="CU15: Consulta y Aceptación de Términos" data-rf="RF08" id="card-CU15">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU15: Consulta y Aceptación de Términos</h2>
+            <div>
+              <span class="badge-sub">Autenticación y Perfil</span>
+              <span class="badge-rf">RF08</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Lectura y firma digital del consentimiento informado de tratamiento de datos personales.</p>
+          <div class="diagram-render-area" id="render-CU15">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU15">flowchart LR
+    Ciudadano["👤 Visitante / Ciudadano"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloLegal ["Límite: Términos y Condiciones"]
+        CU15(["CU15: Gestionar Términos"])
+        VerDoc(["Visualizar Versión Vigente"])
+        Aceptar(["Registrar Consentimiento Informado"])
+        Timestamp(["Auditar Versión y Marca Temporal"])
+    end
+
+    Ciudadano --> CU15
+    CU15 -.->|"«include»"| VerDoc
+    CU15 -.->|"«extend»"| Aceptar
+    Aceptar -.->|"«include»"| Timestamp
+
+    Timestamp --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU16" data-sub="Rutas y Movilidad" data-title="CU16: Estimación de Tiempo y CO₂" data-rf="RF11" id="card-CU16">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU16: Estimación de Tiempo y CO₂</h2>
+            <div>
+              <span class="badge-sub">Rutas y Movilidad</span>
+              <span class="badge-rf">RF11</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Cálculo matemático de duración de recorrido y gramos de dióxido de carbono evitados.</p>
+          <div class="diagram-render-area" id="render-CU16">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU16">flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano / Sistema"]
+    MotorCalculo["⚙️ Motor Algorítmico Ambiental"]
+
+    subgraph ModuloRutas ["Límite: Estimación de CO₂"]
+        CU16(["CU16: Calcular Métricas de Ruta"])
+        Distancia(["Calcular Distancia y Pendiente"])
+        Emision(["Aplicar Factor de Combustible (g/km)"])
+        Comparativa(["Comparar con Caminata a Pie"])
+    end
+
+    Ciudadano --> CU16
+    CU16 -.->|"«include»"| Distancia
+    CU16 -.->|"«include»"| Emision
+    CU16 -.->|"«extend»"| Comparativa
+
+    CU16 --- MotorCalculo</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU17" data-sub="Rutas y Movilidad" data-title="CU17: Puntos de Interés (POIs)" data-rf="RF15" id="card-CU17">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU17: Puntos de Interés (POIs)</h2>
+            <div>
+              <span class="badge-sub">Rutas y Movilidad</span>
+              <span class="badge-rf">RF15</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Búsqueda espacial de talleres, zonas verdes y parqueaderos para agregarlos como paradas.</p>
+          <div class="diagram-render-area" id="render-CU17">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU17">flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano / Conductor"]
+    DB[("💾 PostGIS")]
+
+    subgraph ModuloRutas ["Límite: Consulta de POIs"]
+        CU17(["CU17: Consultar POIs"])
+        FiltroCat(["Filtrar por Categoría (Taller, Zonas Verdes)"])
+        Radio(["Filtrar por Radio de Proximidad"])
+        AddParada(["Agregar POI como Parada en Ruta"])
+    end
+
+    Ciudadano --> CU17
+    CU17 -.->|"«include»"| FiltroCat
+    CU17 -.->|"«include»"| Radio
+    CU17 -.->|"«extend»"| AddParada
+
+    CU17 --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU18" data-sub="Reportes y Comunidad" data-title="CU18: Alertas Climáticas" data-rf="RF19" id="card-CU18">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU18: Alertas Climáticas</h2>
+            <div>
+              <span class="badge-sub">Reportes y Comunidad</span>
+              <span class="badge-rf">RF19</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Integración con API meteorológica para avisar anticipadamente precipitaciones en el trayecto.</p>
+          <div class="diagram-render-area" id="render-CU18">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU18">flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano"]
+    WeatherAPI["⛅ API Meteorológica"]
+
+    subgraph ModuloReportes ["Límite: Alertas Climáticas"]
+        CU18(["CU18: Consultar Clima"])
+        Pronostico(["Obtener Estado del Tiempo Actual"])
+        AlertaLluvia(["Generar Alerta de Lluvia en Ruta"])
+    end
+
+    Ciudadano --> CU18
+    CU18 -.->|"«include»"| Pronostico
+    CU18 -.->|"«extend»"| AlertaLluvia
+
+    CU18 --- WeatherAPI</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU19" data-sub="Administración y Analítica" data-title="CU19: Exportación de Historial y Reportes" data-rf="RF22, RF29" id="card-CU19">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU19: Exportación de Historial y Reportes</h2>
+            <div>
+              <span class="badge-sub">Administración y Analítica</span>
+              <span class="badge-rf">RF22, RF29</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Generación de documentos PDF tabulares y hojas de cálculo Excel (.xlsx) estructuradas.</p>
+          <div class="diagram-render-area" id="render-CU19">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU19">flowchart LR
+    Usuario["🧑‍💼 Usuario / Administrador"]
+    PDFEngine["📄 Motor de Generación PDF/Excel"]
+
+    subgraph ModuloReportes ["Límite: Exportación de Datos"]
+        CU19(["CU19: Exportar Información"])
+        RangoFechas(["Seleccionar Rango Temporal"])
+        PDF(["Generar Documento PDF"])
+        Excel(["Generar Hoja de Cálculo Excel (.xlsx)"])
+    end
+
+    Usuario --> CU19
+    CU19 -.->|"«include»"| RangoFechas
+    CU19 -.->|"«extend»"| PDF
+    CU19 -.->|"«extend»"| Excel
+
+    CU19 --- PDFEngine</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU20" data-sub="Soporte y Preferencias" data-title="CU20: Compartir Recorridos" data-rf="RF32" id="card-CU20">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU20: Compartir Recorridos</h2>
+            <div>
+              <span class="badge-sub">Soporte y Preferencias</span>
+              <span class="badge-rf">RF32</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Difusión de trayectos mediante URL de token temporal seguro excluyendo datos personales.</p>
+          <div class="diagram-render-area" id="render-CU20">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU20">flowchart LR
+    Usuario["🧑‍💼 Usuario"]
+    OSShare["📲 Sistema Operativo / Redes"]
+
+    subgraph ModuloSocial ["Límite: Compartir Trayecto"]
+        CU20(["CU20: Compartir Recorrido"])
+        LinkOfuscado(["Generar Enlace Cifrado sin Datos Privados"])
+        Redes(["Compartir en Redes Sociales"])
+        Portapapeles(["Copiar Enlace al Portapapeles"])
+    end
+
+    Usuario --> CU20
+    CU20 -.->|"«include»"| LinkOfuscado
+    CU20 -.->|"«extend»"| Redes
+    CU20 -.->|"«extend»"| Portapapeles
+
+    LinkOfuscado --- OSShare</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU21" data-sub="Soporte y Preferencias" data-title="CU21: Configuración de Idioma" data-rf="RF34" id="card-CU21">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU21: Configuración de Idioma</h2>
+            <div>
+              <span class="badge-sub">Soporte y Preferencias</span>
+              <span class="badge-rf">RF34</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Conmutación en caliente entre español e inglés con persistencia en el almacenamiento local.</p>
+          <div class="diagram-render-area" id="render-CU21">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU21">flowchart LR
+    Usuario["👤 Cualquier Usuario"]
+    Storage["📱 Preferencias del Dispositivo"]
+
+    subgraph ModuloPreferencias ["Límite: Selector de Idioma"]
+        CU21(["CU21: Cambiar Idioma"])
+        Seleccionar(["Elegir Idioma (Español / Inglés)"])
+        ActualizarUI(["Recargar Textos Traducibles"])
+        Persistir(["Guardar Preferencia Localmente"])
+    end
+
+    Usuario --> CU21
+    CU21 -.->|"«include»"| Seleccionar
+    CU21 -.->|"«include»"| ActualizarUI
+    CU21 -.->|"«include»"| Persistir
+
+    Persistir --- Storage</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU22" data-sub="Reportes y Comunidad" data-title="CU22: Validación Comunitaria de Reportes" data-rf="RF18" id="card-CU22">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU22: Validación Comunitaria de Reportes</h2>
+            <div>
+              <span class="badge-sub">Reportes y Comunidad</span>
+              <span class="badge-rf">RF18</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Votación colaborativa de incidentes con descarte automático al superar el umbral fijado.</p>
+          <div class="diagram-render-area" id="render-CU22">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU22">flowchart LR
+    Comunidad["👥 Comunidad de Usuarios"]
+    Admin["🛡️ Moderador Admin"]
+    DB[("💾 PostGIS")]
+
+    subgraph ModuloReportes ["Límite: Validación Comunitaria"]
+        CU22(["CU22: Validar Incidente"])
+        Voto(["Emitir Voto (Confirmar / Resolver)"])
+        AutoCierre(["Cierre Automático por Umbral de Votos"])
+        Moderar(["Moderar Directamente"])
+    end
+
+    Comunidad --> CU22
+    Admin --> Moderar
+
+    CU22 -.->|"«include»"| Voto
+    CU22 -.->|"«extend»"| AutoCierre
+    CU22 -.->|"«extend»"| Moderar
+
+    CU22 --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU23" data-sub="Soporte y Preferencias" data-title="CU23: Soporte Técnico y Mesa de Ayuda" data-rf="RF30" id="card-CU23">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU23: Soporte Técnico y Mesa de Ayuda</h2>
+            <div>
+              <span class="badge-sub">Soporte y Preferencias</span>
+              <span class="badge-rf">RF30</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Canal de radicación de tickets de soporte con categorización y respuesta del equipo.</p>
+          <div class="diagram-render-area" id="render-CU23">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU23">flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano"]
+    AdminSoporte["🎧 Equipo de Soporte"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloSoporte ["Límite: Mesa de Ayuda"]
+        CU23(["CU23: Solicitar Soporte"])
+        Radicar(["Radicar Ticket con Categoría"])
+        Adjunto(["Adjuntar Captura de Pantalla"])
+        Responder(["Responder y Cerrar Incidencia"])
+    end
+
+    Ciudadano --> CU23
+    AdminSoporte --> Responder
+
+    CU23 -.->|"«include»"| Radicar
+    CU23 -.->|"«extend»"| Adjunto
+    CU23 -.->|"«extend»"| Responder
+
+    CU23 --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU24" data-sub="Administración y Analítica" data-title="CU24: Gestión Administrativa y Auditoría" data-rf="RF21, RF24" id="card-CU24">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU24: Gestión Administrativa y Auditoría</h2>
+            <div>
+              <span class="badge-sub">Administración y Analítica</span>
+              <span class="badge-rf">RF21, RF24</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Control de usuarios, asignación de privilegios y bitácora de auditoría inmutable de eventos.</p>
+          <div class="diagram-render-area" id="render-CU24">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU24">flowchart LR
+    Admin["🛡️ Administrador del Sistema"]
+    DB[("💾 PostgreSQL / Logs")]
+
+    subgraph ModuloAdmin ["Límite: Gestión y Auditoría"]
+        CU24(["CU24: Administrar Usuarios"])
+        Listar(["Listar Usuarios y Estados"])
+        CambiarRol(["Asignar / Revocar Roles"])
+        Bloquear(["Bloquear Cuenta por Seguridad"])
+        LogAudit(["Registrar en Log de Auditoría"])
+    end
+
+    Admin --> CU24
+    CU24 -.->|"«include»"| Listar
+    CU24 -.->|"«extend»"| CambiarRol
+    CU24 -.->|"«extend»"| Bloquear
+    CambiarRol -.->|"«include»"| LogAudit
+    Bloquear -.->|"«include»"| LogAudit
+
+    CU24 --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU25" data-sub="Rutas y Movilidad" data-title="CU25: Asistencia de Navegación por Voz (TTS)" data-rf="RF28" id="card-CU25">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU25: Asistencia de Navegación por Voz (TTS)</h2>
+            <div>
+              <span class="badge-sub">Rutas y Movilidad</span>
+              <span class="badge-rf">RF28</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Locución auditiva paso a paso de maniobras usando el motor Text-to-Speech nativo del SO.</p>
+          <div class="diagram-render-area" id="render-CU25">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU25">flowchart LR
+    Conductor["🧑‍💼 Conductor / Ciudadano"]
+    TTS["🔊 Motor Text-to-Speech Nativo"]
+
+    subgraph ModuloNavegacion ["Límite: Asistencia por Voz"]
+        CU25(["CU25: Guiado por Voz"])
+        Deteccion(["Detectar Próxima Maniobra en Vía"])
+        Sintesis(["Generar Locución Auditiva"])
+        Mute(["Silenciar / Ajustar Volumen"])
+    end
+
+    Conductor --> CU25
+    CU25 -.->|"«include»"| Deteccion
+    CU25 -.->|"«include»"| Sintesis
+    CU25 -.->|"«extend»"| Mute
+
+    Sintesis --> TTS</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU26" data-sub="Soporte y Preferencias" data-title="CU26: Personalización de Tema Visual" data-rf="RF33" id="card-CU26">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU26: Personalización de Tema Visual</h2>
+            <div>
+              <span class="badge-sub">Soporte y Preferencias</span>
+              <span class="badge-rf">RF33</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Alternancia dinámica de tema claro/oscuro y modo de alto contraste accesible WCAG 2.1.</p>
+          <div class="diagram-render-area" id="render-CU26">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU26">flowchart LR
+    Usuario["👤 Cualquier Usuario"]
+    Storage["📱 LocalStorage"]
+
+    subgraph ModuloPreferencias ["Límite: Tema Visual"]
+        CU26(["CU26: Configurar Tema"])
+        Alternar(["Alternar Modo Claro / Oscuro"])
+        Contraste(["Activar Modo Alto Contraste (WCAG)"])
+        Guardar(["Persistir Selección"])
+    end
+
+    Usuario --> CU26
+    CU26 -.->|"«include»"| Alternar
+    CU26 -.->|"«extend»"| Contraste
+    CU26 -.->|"«include»"| Guardar
+
+    Guardar --- Storage</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU27" data-sub="Rutas y Movilidad" data-title="CU27: Gestión de Direcciones Frecuentes" data-rf="RF13" id="card-CU27">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU27: Gestión de Direcciones Frecuentes</h2>
+            <div>
+              <span class="badge-sub">Rutas y Movilidad</span>
+              <span class="badge-rf">RF13</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Almacenamiento, autocompletado en 1 toque y organización de destinos habituales.</p>
+          <div class="diagram-render-area" id="render-CU27">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU27">flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano / Conductor"]
+    DB[("💾 PostgreSQL / Caché")]
+
+    subgraph ModuloRutas ["Límite: Direcciones Frecuentes"]
+        CU27(["CU27: Gestionar Direcciones"])
+        Etiquetar(["Asignar Etiqueta (Casa, Trabajo)"])
+        Autocompletar(["Autocompletar Origen/Destino"])
+        Limpiar(["Borrar Búsquedas Recientes"])
+    end
+
+    Ciudadano --> CU27
+    CU27 -.->|"«include»"| Etiquetar
+    CU27 -.->|"«extend»"| Autocompletar
+    CU27 -.->|"«extend»"| Limpiar
+
+    CU27 --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+        <div class="diagram-card micro-card" data-cuid="CU28" data-sub="Administración y Analítica" data-title="CU28: Configuración del Sistema" data-rf="RF23" id="card-CU28">
+          <div class="diagram-header">
+            <h2 class="diagram-title">CU28: Configuración del Sistema</h2>
+            <div>
+              <span class="badge-sub">Administración y Analítica</span>
+              <span class="badge-rf">RF23</span>
+            </div>
+          </div>
+          <p class="diagram-desc">Parametrización global de variables de cálculo, radios de búsqueda y políticas operativas.</p>
+          <div class="diagram-render-area" id="render-CU28">
+            <span>Cargando renderizado...</span>
+          </div>
+          <div class="code-toggle">
+            <details>
+              <summary>Ver código fuente Mermaid</summary>
+              <pre class="code-preview" id="code-CU28">flowchart LR
+    Admin["🛡️ Administrador del Sistema"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloAdmin ["Límite: Configuración del Sistema"]
+        CU28(["CU28: Configurar Parámetros"])
+        ValidaParam(["Validar Rangos Operativos"])
+        FactorCO2(["Ajustar Factores de Emisión CO₂"])
+        Radio(["Definir Radio Máximo de Búsqueda"])
+        LogAudit(["Registrar en Log de Auditoría"])
+    end
+
+    Admin --> CU28
+    CU28 -.->|"«include»"| ValidaParam
+    CU28 -.->|"«extend»"| FactorCO2
+    CU28 -.->|"«extend»"| Radio
+    CU28 -.->|"«include»"| LogAudit
+
+    CU28 --> DB</pre>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 3. TAB: DIAGRAMAS DE SECUENCIA (12 MODELOS) -->
+    <div id="tab-seq" class="tab-content hidden">
+      <input type="text" class="search-box" id="search-seq" placeholder="🔍 Buscar diagrama de secuencia (ej. DS04, JWT, GPS, CO2)..." onkeyup="filterSeq()">
+      <div id="seq-container">
+
+      <div class="diagram-card seq-card" data-title="DS01: Registro de Nuevo Usuario con Hash Argon2id y Envío de Correo OTP" data-rf="RF01, RF04, RF08" id="card-DS01">
+        <div class="diagram-header">
+          <h2 class="diagram-title">DS01: Registro de Nuevo Usuario con Hash Argon2id y Envío de Correo OTP</h2>
+          <div>
+            <span class="badge-sub">Diagrama de Secuencia UML</span>
+            <span class="badge-rf">RF01, RF04, RF08</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Modela el flujo de registro, validación de contraseña robusta, aplicación de hash con salt mediante Argon2id, almacenamiento seguro y despacho de código de verificación vía SMTP.</p>
+        <div class="diagram-render-area" id="render-DS01">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-DS01">sequenceDiagram
+    autonumber
+    actor V as 👤 Visitante
+    participant UI as 📱 App Móvil / Web
+    participant AuthCtrl as 🚪 AuthController (.NET)
+    participant SecSvc as 🛡️ SecurityService
+    participant HashEngine as 🔒 Argon2id Hash Engine
+    participant DB as 💾 PostgreSQL (Usuarios)
+    participant SMTP as 📧 Servicio SMTP (Email)
+
+    V->>UI: Ingresa datos personales, credenciales y acepta Términos (CU15)
+    activate UI
+    UI->>UI: Validar coincidencia de passwords y formato RFC de correo
+    UI->>AuthCtrl: POST /api/v1/auth/register (nombre, email, password)
+    activate AuthCtrl
+    AuthCtrl->>SecSvc: RegistrarNuevoUsuarioAsync(dto)
+    activate SecSvc
+    SecSvc->>DB: SELECT id FROM usuarios WHERE email = @email
+    activate DB
+    DB-->>SecSvc: NULL (Correo disponible)
+    deactivate DB
+    SecSvc->>HashEngine: GenerarSaltYHash(password, memoria=64MB, iteraciones=3)
+    activate HashEngine
+    HashEngine-->>SecSvc: Retorna (hash_argon2id, salt)
+    deactivate HashEngine
+    SecSvc->>DB: INSERT INTO usuarios (email, hash, salt, estado='PENDIENTE_OTP')
+    activate DB
+    DB-->>SecSvc: ID de usuario generado
+    deactivate DB
+    SecSvc->>SMTP: EnviarCodigoOTP(email, codigo_6_digitos, exp=15min)
+    activate SMTP
+    SMTP-->>SecSvc: 200 OK (Email encolado)
+    deactivate SMTP
+    SecSvc-->>AuthCtrl: RegistroExitosoDTO
+    deactivate SecSvc
+    AuthCtrl-->>UI: 201 Created (Token temporal para validación OTP)
+    deactivate AuthCtrl
+    UI-->>V: Muestra pantalla: "Ingrese código enviado a su correo"
+    deactivate UI</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card seq-card" data-title="DS02: Inicio de Sesión, Validación de Credenciales y Emisión de Token JWT" data-rf="RF02, RF04, RF24" id="card-DS02">
+        <div class="diagram-header">
+          <h2 class="diagram-title">DS02: Inicio de Sesión, Validación de Credenciales y Emisión de Token JWT</h2>
+          <div>
+            <span class="badge-sub">Diagrama de Secuencia UML</span>
+            <span class="badge-rf">RF02, RF04, RF24</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Verificación criptográfica de credenciales, protección contra ataques de fuerza bruta mediante bloqueo temporal tras 5 intentos y expedición de token JWT con expiración controlada.</p>
+        <div class="diagram-render-area" id="render-DS02">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-DS02">sequenceDiagram
+    autonumber
+    actor U as 👤 Usuario / Conductor
+    participant UI as 📱 Interfaz de Usuario
+    participant AuthCtrl as 🚪 AuthController (.NET)
+    participant SecSvc as 🛡️ SecurityService
+    participant HashEngine as 🔒 Argon2id Engine
+    participant DB as 💾 PostgreSQL (Usuarios)
+    participant AuditLog as 📝 AuditLogger
+
+    U->>UI: Ingresa email y contraseña
+    activate UI
+    UI->>AuthCtrl: POST /api/v1/auth/login (email, password)
+    activate AuthCtrl
+    AuthCtrl->>SecSvc: ValidarCredencialesAsync(email, password)
+    activate SecSvc
+    SecSvc->>DB: SELECT id, hash, salt, intentos_fallidos, estado, rol FROM usuarios WHERE email = @email
+    activate DB
+    DB-->>SecSvc: Registro de usuario
+    deactivate DB
+    alt Usuario bloqueado temporalmente
+        SecSvc-->>AuthCtrl: Error: Cuenta temporalmente suspendida
+        AuthCtrl-->>UI: 403 Forbidden ("Espere 15 min")
+    else Cuenta activa
+        SecSvc->>HashEngine: Verify(password, hash, salt)
+        activate HashEngine
+        HashEngine-->>SecSvc: Resultado Booleano (isValid)
+        deactivate HashEngine
+        alt Contraseña Errónea
+            SecSvc->>DB: UPDATE usuarios SET intentos_fallidos = intentos_fallidos + 1
+            opt Intentos fallidos >= 5
+                SecSvc->>DB: UPDATE usuarios SET estado = 'BLOQUEADO_TEMPORAL'
+                SecSvc->>AuditLog: LogBloqueoSeguridad(email, ip)
+            end
+            SecSvc-->>AuthCtrl: Error 401 Credenciales Inválidas
+            AuthCtrl-->>UI: 401 Unauthorized
+        else Contraseña Válida
+            SecSvc->>DB: UPDATE usuarios SET intentos_fallidos = 0, ultimo_login = NOW()
+            SecSvc->>SecSvc: GenerarJWT(userId, rol, exp=24h)
+            SecSvc->>AuditLog: LogAccesoExitoso(userId, ip)
+            SecSvc-->>AuthCtrl: AuthResultDTO (token_jwt, user_info)
+            deactivate SecSvc
+            AuthCtrl-->>UI: 200 OK (Token JWT)
+            deactivate AuthCtrl
+            UI->>UI: Guardar JWT en almacenamiento seguro
+            UI-->>U: Redirecciona al Mapa Principal
+        end
+    end
+    deactivate UI</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card seq-card" data-title="DS03: Recuperación de Contraseña con Token Temporal Criptográfico" data-rf="RF03, RF04" id="card-DS03">
+        <div class="diagram-header">
+          <h2 class="diagram-title">DS03: Recuperación de Contraseña con Token Temporal Criptográfico</h2>
+          <div>
+            <span class="badge-sub">Diagrama de Secuencia UML</span>
+            <span class="badge-rf">RF03, RF04</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Generación de token firmado de restablecimiento con expiración corta, envío por SMTP y actualización de contraseña previa verificación.</p>
+        <div class="diagram-render-area" id="render-DS03">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-DS03">sequenceDiagram
+    autonumber
+    actor U as 👤 Usuario
+    participant UI as 📱 App Móvil / Web
+    participant AuthCtrl as 🚪 AuthController (.NET)
+    participant TokenSvc as 🔑 TokenService
+    participant DB as 💾 PostgreSQL (Tokens / Usuarios)
+    participant SMTP as 📧 Servicio SMTP
+
+    U->>UI: Solicita "Olvidé mi contraseña" e ingresa correo
+    activate UI
+    UI->>AuthCtrl: POST /api/v1/auth/forgot-password (email)
+    activate AuthCtrl
+    AuthCtrl->>TokenSvc: GenerarTokenRestablecimiento(email)
+    activate TokenSvc
+    TokenSvc->>DB: INSERT INTO reset_tokens (user_id, token_hash, exp=1h, usado=false)
+    activate DB
+    DB-->>TokenSvc: Token persistido
+    deactivate DB
+    TokenSvc->>SMTP: EnviarEmailRecuperacion(email, reset_link_con_token)
+    activate SMTP
+    SMTP-->>TokenSvc: Email despachado
+    deactivate SMTP
+    TokenSvc-->>AuthCtrl: Proceso completado
+    deactivate TokenSvc
+    AuthCtrl-->>UI: 200 OK ("Si el correo existe, recibirá instrucciones")
+    deactivate AuthCtrl
+    UI-->>U: Aviso visual informativo
+
+    Note over U, UI: El usuario abre el enlace recibido en su correo
+    U->>UI: Ingresa nueva contraseña y token
+    UI->>AuthCtrl: POST /api/v1/auth/reset-password (token, new_password)
+    activate AuthCtrl
+    AuthCtrl->>DB: Validar token no expirado y no usado
+    activate DB
+    DB-->>AuthCtrl: Token válido
+    AuthCtrl->>DB: UPDATE usuarios SET hash = nuevo_hash, salt = nuevo_salt; UPDATE reset_tokens SET usado=true
+    deactivate DB
+    AuthCtrl-->>UI: 200 OK ("Contraseña actualizada exitosamente")
+    deactivate AuthCtrl
+    UI-->>U: Notifica éxito y redirige a Iniciar Sesión
+    deactivate UI</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card seq-card" data-title="DS04: Planificación de Ruta Óptima en Auto Particular, Cálculo de CO₂ y Respaldo PostGIS" data-rf="RF09, RF10, RF11, RF13, RF26, RF27" id="card-DS04">
+        <div class="diagram-header">
+          <h2 class="diagram-title">DS04: Planificación de Ruta Óptima en Auto Particular, Cálculo de CO₂ y Respaldo PostGIS</h2>
+          <div>
+            <span class="badge-sub">Diagrama de Secuencia UML</span>
+            <span class="badge-rf">RF09, RF10, RF11, RF13, RF26, RF27</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Cálculo de trayectos vehiculares eficientes, consulta a la API GIS, estimación de combustible y CO₂ evitado vs. promedio de la ciudad y persistencia en base de datos geoespacial.</p>
+        <div class="diagram-render-area" id="render-DS04">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-DS04">sequenceDiagram
+    autonumber
+    actor C as 🧑‍💼 Conductor
+    participant UI as 📱 App Móvil
+    participant RutasCtrl as 🌐 RutasController (.NET)
+    participant RoutingSvc as ⚙️ RoutingService
+    participant ORS as 🗺️ OpenRouteService API
+    participant EcoEngine as 🌿 EcoMetricEngine
+    participant PostGIS as 💾 PostgreSQL / PostGIS
+
+    C->>UI: Define origen y destino en Neiva (o dirección frecuente CU27)
+    activate UI
+    UI->>RutasCtrl: POST /api/v1/routes/plan (origen, destino, modo='vehiculo_eco')
+    activate RutasCtrl
+    RutasCtrl->>RoutingSvc: CalcularRutaOptimaAsync(coords)
+    activate RoutingSvc
+    RoutingSvc->>ORS: GET /v2/directions/driving-car (coords, avoid_poligonos_obras)
+    activate ORS
+    ORS-->>RoutingSvc: GeoJSON LineString (trazado, distancia_km, duracion_s)
+    deactivate ORS
+    RoutingSvc->>EcoEngine: EstimarImpactoCO2(distancia_km, modo='auto_gasolina_eficiente')
+    activate EcoEngine
+    Note over EcoEngine: Emisión calculada = dist * 138 g/km.<br/>CO₂ evitado vs ruta congestionada.
+    EcoEngine-->>RoutingSvc: DTO MetricasCO2 (emitido_g, evitado_g)
+    deactivate EcoEngine
+    RoutingSvc->>PostGIS: INSERT INTO rutas_consultadas (geom, distancia, tiempo, co2_g)
+    activate PostGIS
+    PostGIS-->>RoutingSvc: RutaID persistido
+    deactivate PostGIS
+    RoutingSvc-->>RutasCtrl: RutaCalculadaDTO
+    deactivate RoutingSvc
+    RutasCtrl-->>UI: 200 OK (Geometría vectorial, maniobras, métricas ambientales)
+    deactivate RutasCtrl
+    UI->>UI: Renderizar capa vectorial sobre mapa y tarjeta de ahorro CO₂
+    UI-->>C: Visualiza ruta ecológica en pantalla
+    deactivate UI</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card seq-card" data-title="DS05: Desplazamiento a Pie (Modo Peatonal Cero Emisiones) y Comparativa Ambiental" data-rf="RF09, RF10, RF11" id="card-DS05">
+        <div class="diagram-header">
+          <h2 class="diagram-title">DS05: Desplazamiento a Pie (Modo Peatonal Cero Emisiones) y Comparativa Ambiental</h2>
+          <div>
+            <span class="badge-sub">Diagrama de Secuencia UML</span>
+            <span class="badge-rf">RF09, RF10, RF11</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Resolución de rutas a pie priorizando andenes y zonas seguras peatonales de Neiva, computando 0 gramos de CO₂ emitidos y calculando el 100% de emisiones evitadas.</p>
+        <div class="diagram-render-area" id="render-DS05">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-DS05">sequenceDiagram
+    autonumber
+    actor P as 🚶 Ciudadano Peatón
+    participant UI as 📱 App Móvil
+    participant RutasCtrl as 🌐 RutasController
+    participant RoutingSvc as ⚙️ RoutingService
+    participant ORS as 🗺️ OpenRouteService (Foot-Walking)
+    participant EcoEngine as 🌿 EcoMetricEngine
+
+    P->>UI: Selecciona modo "A pie / Caminata" e ingresa destino
+    activate UI
+    UI->>RutasCtrl: POST /api/v1/routes/plan (origen, destino, modo='caminata')
+    activate RutasCtrl
+    RutasCtrl->>RoutingSvc: ResolverRutaPeatonalAsync(coords)
+    activate RoutingSvc
+    RoutingSvc->>ORS: GET /v2/directions/foot-walking (coords)
+    activate ORS
+    ORS-->>RoutingSvc: GeoJSON Peatonal (distancia_km, duracion_caminata_s, pasos_aprox)
+    deactivate ORS
+    RoutingSvc->>EcoEngine: CalcularAhorroCeroEmisiones(distancia_km)
+    activate EcoEngine
+    Note over EcoEngine: Emisión propia = 0 g CO₂.<br/>Ahorro directo = 100% de la emisión vehicular.
+    EcoEngine-->>RoutingSvc: MetricasPeatonales (co2_emitido=0, co2_ahorrado=dist*142g, calorias)
+    deactivate EcoEngine
+    RoutingSvc-->>RutasCtrl: RutaPeatonalDTO
+    deactivate RoutingSvc
+    RutasCtrl-->>UI: 200 OK (Trazado peatonal y felicitación ecológica)
+    deactivate RutasCtrl
+    UI->>UI: Mostrar ruta peatonal y badge: "¡100% libre de emisiones!"
+    UI-->>P: Despliega itinerario de caminata
+    deactivate UI</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card seq-card" data-title="DS06: Navegación Guiada por GPS con Asistencia Auditiva Text-to-Speech (TTS)" data-rf="RF25, RF28" id="card-DS06">
+        <div class="diagram-header">
+          <h2 class="diagram-title">DS06: Navegación Guiada por GPS con Asistencia Auditiva Text-to-Speech (TTS)</h2>
+          <div>
+            <span class="badge-sub">Diagrama de Secuencia UML</span>
+            <span class="badge-rf">RF25, RF28</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Ciclo continuo de telemetría GPS, seguimiento de la posición en tiempo real, detección de proximidad a maniobras de giro y síntesis auditiva en cabina mediante el motor TTS nativo.</p>
+        <div class="diagram-render-area" id="render-DS06">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-DS06">sequenceDiagram
+    autonumber
+    actor C as 🧑‍💼 Conductor
+    participant UI as 📱 App Móvil (React Native)
+    participant GPS as 📡 Módulo GPS Dispositivo
+    participant NavEngine as 🧭 NavigationEngine Local
+    participant TTS as 🔊 Motor TTS Nativo (expo-speech)
+
+    C->>UI: Pulsa "Iniciar Navegación Guiada"
+    activate UI
+    UI->>GPS: Iniciar rastreo continuo (intervalo=1s, exactitud='alta')
+    activate GPS
+    UI->>TTS: SpeakAsync("Iniciando recorrido. Avance 200 metros por Calle 8")
+    activate TTS
+    TTS-->>C: Audio de bienvenida
+    deactivate TTS
+
+    loop Telemetría GPS en Tránsito
+        GPS-->>NavEngine: Emitir posición actual (lat, lng, rumbo, velocidad)
+        NavEngine->>NavEngine: Proyectar posición sobre el LineString de la ruta
+        alt Desvío de ruta detectado (> 50 metros)
+            NavEngine->>UI: Notificar evento "Ruta Desviada"
+            UI->>TTS: SpeakAsync("Recalculando ruta...")
+            UI->>UI: Solicitar nuevo trazado al backend en segundo plano
+        else En curso normal
+            NavEngine->>NavEngine: Medir distancia a siguiente maniobra
+            alt Distancia al giro <= 40 metros y no anunciada
+                NavEngine->>TTS: SpeakAsync("En 40 metros, gire a la derecha")
+                activate TTS
+                TTS-->>C: Indicación auditiva clara
+                deactivate TTS
+            end
+        end
+    end
+
+    NavEngine->>NavEngine: Distancia al destino < 10 metros
+    NavEngine->>TTS: SpeakAsync("Ha llegado a su destino. Recorrido completado")
+    UI->>GPS: Detener rastreo continuo
+    deactivate GPS
+    UI-->>C: Muestra resumen final del viaje y ahorro ambiental
+    deactivate UI</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card seq-card" data-title="DS07: Consulta Geoespacial de Puntos de Interés (POIs) e Inserción como Parada" data-rf="RF15" id="card-DS07">
+        <div class="diagram-header">
+          <h2 class="diagram-title">DS07: Consulta Geoespacial de Puntos de Interés (POIs) e Inserción como Parada</h2>
+          <div>
+            <span class="badge-sub">Diagrama de Secuencia UML</span>
+            <span class="badge-rf">RF15</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Filtrado espacial por categoría y radio de proximidad utilizando funciones ST_DWithin de PostGIS, permitiendo agregar talleres o parqueaderos como paradas intermedias en la ruta.</p>
+        <div class="diagram-render-area" id="render-DS07">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-DS07">sequenceDiagram
+    autonumber
+    actor C as 🧑‍💼 Ciudadano / Conductor
+    participant UI as 📱 App Móvil
+    participant PoisCtrl as 🌐 PoisController (.NET)
+    participant PostGIS as 🗺️ PostGIS (Tabla POIs)
+    participant RoutingSvc as ⚙️ RoutingService
+
+    C->>UI: Abre panel "Puntos de Interés" y selecciona filtro: "Talleres / Parqueaderos"
+    activate UI
+    UI->>PoisCtrl: GET /api/v1/pois/nearby (lat, lng, radio_m=3000, categoria='TALLER')
+    activate PoisCtrl
+    PoisCtrl->>PostGIS: SELECT id, nombre, geom, ST_Distance(geom, @punto) FROM pois WHERE categoria=@cat AND ST_DWithin(geom, @punto, 3000)
+    activate PostGIS
+    PostGIS-->>PoisCtrl: Listado ordenado por proximidad
+    deactivate PostGIS
+    PoisCtrl-->>UI: 200 OK (PoisDTO[])
+    deactivate PoisCtrl
+    UI->>UI: Dibujar pines temáticos en el mapa
+    C->>UI: Toca un POI y pulsa "Añadir como parada en mi ruta"
+    UI->>RoutingSvc: Recalcular ruta con waypoint intermedio
+    UI-->>C: Actualiza trazado de viaje incluyendo la parada seleccionada
+    deactivate UI</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card seq-card" data-title="DS08: Registro de Reporte Ciudadano con Captura Satelital GPS y Notificación Push" data-rf="RF17, RF18, RF25" id="card-DS08">
+        <div class="diagram-header">
+          <h2 class="diagram-title">DS08: Registro de Reporte Ciudadano con Captura Satelital GPS y Notificación Push</h2>
+          <div>
+            <span class="badge-sub">Diagrama de Secuencia UML</span>
+            <span class="badge-rf">RF17, RF18, RF25</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Georreferenciación de obstáculos en vía, validación de polígono urbano, almacenamiento en PostGIS y difusión push inmediata a conductores que transiten a menos de 3 km.</p>
+        <div class="diagram-render-area" id="render-DS08">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-DS08">sequenceDiagram
+    autonumber
+    actor R as 🧑‍💼 Reportero en Vía
+    participant UI as 📱 App Móvil
+    participant GPS as 📡 GPS del Dispositivo
+    participant IncCtrl as 🌐 IncidentesController (.NET)
+    participant PostGIS as 💾 Base de Datos PostGIS
+    participant PushHub as 📲 Push Notification Hub (FCM)
+    actor Otros as 👥 Conductores en Zona
+
+    R->>UI: Pulsa botón "Reportar Obstáculo"
+    activate UI
+    UI->>GPS: Obtener coordenadas precisas actuales
+    GPS-->>UI: (lat, lng, precision=4m)
+    R->>UI: Selecciona tipo ("Hueco severo", "Vía inundada") y añade foto opcional
+    UI->>IncCtrl: POST /api/v1/incidents (tipo, coords, descripcion, foto) [Bearer JWT]
+    activate IncCtrl
+    IncCtrl->>IncCtrl: Verificar que coordenadas pertenezcan al perímetro de Neiva
+    IncCtrl->>PostGIS: INSERT INTO incidentes (geom, tipo, estado='PENDIENTE_VALIDACION', votos_confirmar=1)
+    activate PostGIS
+    PostGIS-->>IncCtrl: IncidenteID generado
+    deactivate PostGIS
+    IncCtrl->>PushHub: EnviarAlertaPerimetral(coords, radio_km=3, "Nuevo incidente reportado")
+    activate PushHub
+    PushHub-->>Otros: Notificación push con icono de alerta vial
+    deactivate PushHub
+    IncCtrl-->>UI: 201 Created (IncidenteDTO)
+    deactivate IncCtrl
+    UI-->>R: Notificación en pantalla: "¡Reporte publicado! Gracias por colaborar"
+    deactivate UI</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card seq-card" data-title="DS09: Validación Comunitaria de Incidentes por Votación en Tiempo Real y Auto-Cierre" data-rf="RF18, RF22" id="card-DS09">
+        <div class="diagram-header">
+          <h2 class="diagram-title">DS09: Validación Comunitaria de Incidentes por Votación en Tiempo Real y Auto-Cierre</h2>
+          <div>
+            <span class="badge-sub">Diagrama de Secuencia UML</span>
+            <span class="badge-rf">RF18, RF22</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Ciclo colaborativo de votación donde conductores cercanos confirman o descartan reportes, automatizando el archivo o retiro del marcador sin intervención humana.</p>
+        <div class="diagram-render-area" id="render-DS09">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-DS09">sequenceDiagram
+    autonumber
+    actor C as 👥 Conductor de la Comunidad
+    participant UI as 📱 App Móvil
+    participant IncCtrl as 🌐 IncidentesController
+    participant VoteSvc as ⚖️ VotingService
+    participant PostGIS as 💾 PostGIS
+
+    C->>UI: Se aproxima a la zona del reporte marcado en el mapa
+    activate UI
+    UI->>UI: Detecta proximidad (< 50 metros del marcador)
+    UI-->>C: Prompt emergente: "¿El obstáculo sigue presente en la vía?"
+    C->>UI: Pulsa "Ya no está / Despejado" (Voto Descartar)
+    UI->>IncCtrl: POST /api/v1/incidents/{id}/vote (tipo_voto='DESPEJADO') [Bearer JWT]
+    activate IncCtrl
+    IncCtrl->>VoteSvc: ProcesarVotoComunitarioAsync(incidenteId, userId, 'DESPEJADO')
+    activate VoteSvc
+    VoteSvc->>PostGIS: UPDATE incidentes SET votos_despejado = votos_despejado + 1 WHERE id = @id
+    activate PostGIS
+    PostGIS-->>VoteSvc: Totales actualizados (votos_confirmar=1, votos_despejado=3)
+    deactivate PostGIS
+    alt Votos despejado >= Umbral del sistema (3 votos)
+        VoteSvc->>PostGIS: UPDATE incidentes SET estado = 'RESUELTO_COMUNITARIO', fecha_cierre = NOW()
+        VoteSvc-->>IncCtrl: Incidente resuelto y archivado
+        IncCtrl-->>UI: 200 OK (Incidente cerrado)
+        UI->>UI: Remover marcador del mapa en todos los clientes
+    else Aún no alcanza umbral
+        VoteSvc-->>IncCtrl: Voto computado
+        IncCtrl-->>UI: 200 OK (Voto registrado)
+    end
+    deactivate VoteSvc
+    deactivate IncCtrl
+    UI-->>C: Agradecimiento: "Tu aporte mantiene el mapa actualizado"
+    deactivate UI</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card seq-card" data-title="DS10: Consulta, Calificación y Retroalimentación de Trayecto con Estrellas" data-rf="RF14, RF16" id="card-DS10">
+        <div class="diagram-header">
+          <h2 class="diagram-title">DS10: Consulta, Calificación y Retroalimentación de Trayecto con Estrellas</h2>
+          <div>
+            <span class="badge-sub">Diagrama de Secuencia UML</span>
+            <span class="badge-rf">RF14, RF16</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Al finalizar un recorrido, el usuario califica el estado de la vía de 1 a 5 estrellas, redacta observaciones de seguridad y opcionalmente guarda el trayecto como favorito con un alias.</p>
+        <div class="diagram-render-area" id="render-DS10">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-DS10">sequenceDiagram
+    autonumber
+    actor U as 🧑‍💼 Usuario Registrado
+    participant UI as 📱 App Móvil
+    participant RutasCtrl as 🌐 RutasController
+    participant FavCtrl as ⭐ FavoritasController
+    participant DB as 💾 PostgreSQL
+
+    U->>UI: Finaliza trayecto y accede a la tarjeta de retroalimentación
+    activate UI
+    U->>UI: Asigna 5 estrellas y redacta comentario: "Vía rápida, poco tráfico"
+    UI->>RutasCtrl: POST /api/v1/routes/{id}/rate (rating=5, comentario="...") [Bearer JWT]
+    activate RutasCtrl
+    RutasCtrl->>DB: INSERT INTO calificaciones (ruta_id, user_id, rating, comentario, fecha)
+    activate DB
+    DB-->>RutasCtrl: 201 Created
+    deactivate DB
+    RutasCtrl-->>UI: 200 OK (Calificación guardada)
+    deactivate RutasCtrl
+
+    opt Usuario decide marcarla como favorita
+        U->>UI: Pulsa "Guardar en Favoritas" y asigna alias: "Ruta Casa - Trabajo"
+        UI->>FavCtrl: POST /api/v1/routes/favorites (ruta_id, alias="Ruta Casa - Trabajo")
+        activate FavCtrl
+        FavCtrl->>DB: INSERT INTO rutas_favoritas (user_id, ruta_id, alias)
+        activate DB
+        DB-->>FavCtrl: Favorita persistida
+        deactivate DB
+        FavCtrl-->>UI: 200 OK (Favorita agregada)
+        deactivate FavCtrl
+    end
+    UI-->>U: Notifica éxito y regresa al menú principal
+    deactivate UI</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card seq-card" data-title="DS11: Generación y Exportación de Historial y Reportes Estadísticos en PDF y Excel" data-rf="RF20, RF22, RF29" id="card-DS11">
+        <div class="diagram-header">
+          <h2 class="diagram-title">DS11: Generación y Exportación de Historial y Reportes Estadísticos en PDF y Excel</h2>
+          <div>
+            <span class="badge-sub">Diagrama de Secuencia UML</span>
+            <span class="badge-rf">RF20, RF22, RF29</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Procesamiento de consultas complejas de trayectos por rango temporal, agregación de métricas de CO₂ y compilación de archivos descargables en formatos PDF y Excel (.xlsx).</p>
+        <div class="diagram-render-area" id="render-DS11">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-DS11">sequenceDiagram
+    autonumber
+    actor A as 🛡️ Administrador / Usuario
+    participant UI as 💻 Portal Web / App
+    participant ExportCtrl as 📄 ExportController (.NET)
+    participant ReportEngine as 📊 ReportService (QuestPDF / ClosedXML)
+    participant DB as 💾 PostgreSQL (Vistas Materializadas)
+
+    A->>UI: Selecciona rango de fechas (01/01 a 31/01) y formato "Excel (.xlsx)"
+    activate UI
+    UI->>ExportCtrl: GET /api/v1/reports/export?from=...&to=...&format=xlsx [Bearer JWT]
+    activate ExportCtrl
+    ExportCtrl->>DB: SELECT * FROM view_historial_consolidado WHERE fecha BETWEEN @from AND @to
+    activate DB
+    DB-->>ExportCtrl: Colección de 1,500 registros con métricas de CO₂
+    deactivate DB
+    ExportCtrl->>ReportEngine: GenerarLibroExcelAsync(registros, metricas_resumen)
+    activate ReportEngine
+    ReportEngine->>ReportEngine: Formatear celdas, gráficos de torta y balances de emisiones
+    ReportEngine-->>ExportCtrl: MemoryStream (bytes del archivo .xlsx)
+    deactivate ReportEngine
+    ExportCtrl-->>UI: 200 OK (Content-Type: application/vnd.openxmlformats-officedocument..., file_bytes)
+    deactivate ExportCtrl
+    UI->>UI: Disparar descarga en navegador: "EcoRuteando_Reporte_2026.xlsx"
+    UI-->>A: Notifica: "Archivo descargado con éxito"
+    deactivate UI</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card seq-card" data-title="DS12: Gestión Administrativa de Usuarios, Modificación de Roles y Log de Auditoría" data-rf="RF21, RF23, RF24" id="card-DS12">
+        <div class="diagram-header">
+          <h2 class="diagram-title">DS12: Gestión Administrativa de Usuarios, Modificación de Roles y Log de Auditoría</h2>
+          <div>
+            <span class="badge-sub">Diagrama de Secuencia UML</span>
+            <span class="badge-rf">RF21, RF23, RF24</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Supervisión administrativa de usuarios, revocación o asignación de privilegios de moderador/administrador y registro inmutable en bitácora de auditoría de seguridad.</p>
+        <div class="diagram-render-area" id="render-DS12">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-DS12">sequenceDiagram
+    autonumber
+    actor SuperAdmin as 🛡️ Super Administrador
+    participant WebUI as 💻 Portal Web Admin
+    participant AdminCtrl as ⚙️ AdminUsersController
+    participant SecSvc as 🛡️ SecurityService
+    participant DB as 💾 PostgreSQL (Usuarios & Roles)
+    participant AuditLog as 📝 AuditLogger (Tabla auditoria_seguridad)
+
+    SuperAdmin->>WebUI: Accede a "Gestión de Usuarios", busca usuario por correo y selecciona "Asignar Rol: Moderador"
+    activate WebUI
+    WebUI->>AdminCtrl: PUT /api/v1/admin/users/{id}/role (new_role='MODERADOR') [Bearer JWT SuperAdmin]
+    activate AdminCtrl
+    AdminCtrl->>SecSvc: ValidarPermisosSuperAdmin(callerId)
+    activate SecSvc
+    SecSvc-->>AdminCtrl: Permisos confirmados
+    deactivate SecSvc
+    AdminCtrl->>DB: UPDATE usuarios SET rol = 'MODERADOR' WHERE id = @id
+    activate DB
+    DB-->>AdminCtrl: 1 fila afectada
+    deactivate DB
+    AdminCtrl->>AuditLog: RegistrarAccionCritica(superAdminId, "CAMBIO_ROL", targetUserId, "MODERADOR", ip_origen)
+    activate AuditLog
+    AuditLog->>DB: INSERT INTO auditoria_seguridad (actor_id, accion, target_id, detalle, fecha)
+    deactivate AuditLog
+    AdminCtrl-->>WebUI: 200 OK ("Rol actualizado exitosamente")
+    deactivate AdminCtrl
+    WebUI-->>SuperAdmin: Muestra confirmación y actualiza tabla de padrón en vivo
+    deactivate WebUI</pre>
+          </details>
+        </div>
+      </div>
+
+      </div>
+    </div>
+
+    <!-- 4. TAB: TRANSICIÓN DE ESTADOS (8 MODELOS) -->
+    <div id="tab-state" class="tab-content hidden">
+      <input type="text" class="search-box" id="search-state" placeholder="🔍 Buscar máquina de estados (ej. Ruta, Peatonal, Usuario, Ticket)..." onkeyup="filterState()">
+      <div id="state-container">
+
+      <div class="diagram-card state-card" data-title="TE01: Ciclo de Vida de una Ruta / Trayecto en Vehículo Particular" data-rf="RF09, RF10, RF11, RF12, RF14, RF28" id="card-TE01">
+        <div class="diagram-header">
+          <h2 class="diagram-title">TE01: Ciclo de Vida de una Ruta / Trayecto en Vehículo Particular</h2>
+          <div>
+            <span class="badge-state">Transición de Estados (Statechart)</span>
+            <span class="badge-rf">RF09, RF10, RF11, RF12, RF14, RF28</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Estados formales por los que transita una ruta en automóvil eficiente: desde su formulación inicial hasta su ejecución asistida por voz y almacenamiento histórico para balances ambientales.</p>
+        <div class="diagram-render-area" id="render-TE01">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-TE01">stateDiagram-v2
+    [*] --> Borrador: Usuario ingresa origen y destino
+    
+    Borrador --> SolicitandoCalculo: Pulsa "Calcular Ruta"
+    SolicitandoCalculo --> Calculada: API ORS responde + Cálculo CO₂ completado
+    SolicitandoCalculo --> ErrorCalculo: Timeout de red / Coordenadas inalcanzables
+    ErrorCalculo --> Borrador: Reintentar con nuevos puntos
+
+    Calculada --> EnNavegacion: Conductor pulsa "Iniciar Recorrido"
+    Calculada --> Descartada: Usuario cancela antes de iniciar
+
+    state EnNavegacion {
+        [*] --> GuiadoActivo: Conectar GPS y encender motor TTS
+        GuiadoActivo --> Recalculando: Desvío detectado > 50m
+        Recalculando --> GuiadoActivo: Nuevo trazado sincronizado
+        GuiadoActivo --> ManiobraProxima: Distancia a giro < 40m
+        ManiobraProxima --> GuiadoActivo: Locución TTS reproducida
+    }
+
+    EnNavegacion --> Completada: Conductor arriba al punto de destino
+    EnNavegacion --> Cancelada: Conductor interrumpe el viaje manualmente
+
+    Cancelada --> GuardadaHistorial: Guardar tramo parcial recorrido
+    Completada --> GuardadaHistorial: Persistir trayecto final + CO₂ en PostgreSQL
+
+    state GuardadaHistorial {
+        [*] --> NoCalificada
+        NoCalificada --> Calificada: Usuario califica con estrellas (CU09)
+        NoCalificada --> MarcadaFavorita: Usuario pulsa "Añadir a Favoritas" (CU11)
+        Calificada --> MarcadaFavorita: Usuario pulsa "Añadir a Favoritas" (CU11)
+    }
+
+    GuardadaHistorial --> Exportada: Usuario exporta a PDF o Excel (CU19)
+    Descartada --> [*]
+    Exportada --> [*]</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card state-card" data-title="TE02: Ciclo de Vida del Trayecto Peatonal / Caminata a Pie" data-rf="RF09, RF10, RF11, RF12" id="card-TE02">
+        <div class="diagram-header">
+          <h2 class="diagram-title">TE02: Ciclo de Vida del Trayecto Peatonal / Caminata a Pie</h2>
+          <div>
+            <span class="badge-state">Transición de Estados (Statechart)</span>
+            <span class="badge-rf">RF09, RF10, RF11, RF12</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Ciclo de estados para desplazamientos a pie: cálculo de andenes peatonales, métrica de 0 g CO₂ emitidos, pausa de caminata y consolidación en el podio ecológico.</p>
+        <div class="diagram-render-area" id="render-TE02">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-TE02">stateDiagram-v2
+    [*] --> PlanificandoCaminata: Usuario selecciona modo "A pie"
+    PlanificandoCaminata --> TrazadoResuelto: Algoritmo peatonal asigna sendero seguro
+    
+    TrazadoResuelto --> CaminandoActivo: Pulsa "Comenzar Caminata"
+    TrazadoResuelto --> Cancelado: Descarta itinerario
+
+    state CaminandoActivo {
+        [*] --> Cronometrando: Contador de pasos y tiempo en marcha
+        Cronometrando --> Pausado: Usuario pulsa botón de pausa temporal
+        Pausado --> Cronometrando: Reanuda desplazamiento
+    }
+
+    CaminandoActivo --> CaminataFinalizada: Arriba a destino peatonal
+    CaminandoActivo --> Interrumpido: Usuario detiene registro antes de llegar
+
+    CaminataFinalizada --> ConsolidadoEcologico: Se registra 100% CO₂ evitado vs auto
+    Interrumpido --> ConsolidadoEcologico: Se computa el tramo parcial caminado
+
+    ConsolidadoEcologico --> GuardadoHistorial: Persistido en perfil para métricas de salud
+    GuardadoHistorial --> [*]
+    Cancelado --> [*]</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card state-card" data-title="TE03: Ciclo de Vida del Reporte Ciudadano de Obstáculo / Incidente" data-rf="RF17, RF18, RF24" id="card-TE03">
+        <div class="diagram-header">
+          <h2 class="diagram-title">TE03: Ciclo de Vida del Reporte Ciudadano de Obstáculo / Incidente</h2>
+          <div>
+            <span class="badge-state">Transición de Estados (Statechart)</span>
+            <span class="badge-rf">RF17, RF18, RF24</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Estados de los reportes viales: desde su creación georreferenciada con GPS, su confirmación por consenso de otros conductores y su retiro o archivado por expiración temporal.</p>
+        <div class="diagram-render-area" id="render-TE03">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-TE03">stateDiagram-v2
+    [*] --> CapturandoGPS: Usuario pulsa "Reportar Obstáculo"
+    CapturandoGPS --> BorradorReporte: Coordenadas fijadas + Foto opcional
+    
+    BorradorReporte --> PendienteValidacion: Usuario confirma y envía reporte
+    BorradorReporte --> Cancelado: Usuario aborta envío
+
+    state PendienteValidacion {
+        [*] --> VisibleLocal: Visible con pin amarillo de precaución
+        VisibleLocal --> RecibiendoVotos: Notificación push despachada a zona
+    }
+
+    PendienteValidacion --> ConfirmadoComunidad: Votos "Confirmar" >= 3
+    PendienteValidacion --> VerificadoOficial: Administrador valida reporte (CU24)
+    PendienteValidacion --> DescartadoFalso: Votos "Descartar" >= 3 o Reporte Spam
+
+    state ConfirmadoComunidad {
+        [*] --> MarcadorRojo: Marcador visual de alta severidad en mapa
+        MarcadorRojo --> VotoResolucion: Conductor reporta "Ya no está / Despejado"
+    }
+
+    ConfirmadoComunidad --> ResueltoComunidad: Votos "Despejado" >= 3
+    ConfirmadoComunidad --> ExpiradoTemporal: Tiempo sin actividad > 24 horas
+    VerificadoOficial --> CerradoAdmin: Moderador marca vía despejada
+
+    ResueltoComunidad --> Archivado: Ocultar de mapa y preservar para estadísticas
+    ExpiradoTemporal --> Archivado: Marcar inactivo
+    CerradoAdmin --> Archivado: Marcar verificado y cerrado
+    DescartadoFalso --> [*]
+    Cancelado --> [*]
+    Archivado --> [*]</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card state-card" data-title="TE04: Ciclo de Vida de la Cuenta de Usuario" data-rf="RF01, RF02, RF04, RF06, RF07" id="card-TE04">
+        <div class="diagram-header">
+          <h2 class="diagram-title">TE04: Ciclo de Vida de la Cuenta de Usuario</h2>
+          <div>
+            <span class="badge-state">Transición de Estados (Statechart)</span>
+            <span class="badge-rf">RF01, RF02, RF04, RF06, RF07</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Ciclo completo de identidad digital: modo invitado local, registro con verificación OTP, sesión activa con token JWT, congelamiento preventivo por ataques de fuerza bruta y baja definitiva.</p>
+        <div class="diagram-render-area" id="render-TE04">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-TE04">stateDiagram-v2
+    [*] --> Invitado: Abre app sin iniciar sesión (CU14)
+    
+    Invitado --> Registrando: Pulsa "Crear Cuenta"
+    Registrando --> PendienteVerificacion: Formulario enviado + Hash Argon2id
+    
+    PendienteVerificacion --> Activo: Ingresa código OTP de correo exitosamente
+    PendienteVerificacion --> ExpiradoRegistro: Código vence tras 15 minutos sin verificar
+    ExpiradoRegistro --> Registrando: Solicitar reenvío de código
+
+    state Activo {
+        [*] --> Operativo
+        Operativo --> PerfilModificado: Actualiza datos o avatar (CU12)
+        PerfilModificado --> Operativo
+    }
+
+    Activo --> BloqueadoTemporal: 5 intentos fallidos consecutivos de contraseña
+    BloqueadoTemporal --> Activo: Transcurren 15 minutos de enfriamiento
+    BloqueadoTemporal --> RestableciendoClave: Solicita recuperación por email (CU02)
+    RestableciendoClave --> Activo: Clave redefinida exitosamente
+
+    Activo --> Eliminado: Usuario solicita baja voluntaria (CU13)
+    Eliminado --> [*]: Credenciales destruidas y datos anonimizados para CO₂ global</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card state-card" data-title="TE05: Ciclo de Vida de la Sesión y Token de Autenticación (JWT y Refresh Token)" data-rf="RF02, RF04" id="card-TE05">
+        <div class="diagram-header">
+          <h2 class="diagram-title">TE05: Ciclo de Vida de la Sesión y Token de Autenticación (JWT y Refresh Token)</h2>
+          <div>
+            <span class="badge-state">Transición de Estados (Statechart)</span>
+            <span class="badge-rf">RF02, RF04</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Estados temporales de tokens de acceso: emisión inicial con claims de rol, estado activo durante 24 horas, renovación en segundo plano con refresh token y expiración o revocación definitiva.</p>
+        <div class="diagram-render-area" id="render-TE05">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-TE05">stateDiagram-v2
+    [*] --> NoAutenticado: Inicio de la aplicación
+    
+    NoAutenticado --> Autenticando: Envío de credenciales de acceso
+    Autenticando --> NoAutenticado: Fallo de credenciales (401)
+    Autenticando --> TokenEmitido: Credenciales verificadas con Argon2id
+
+    state TokenEmitido {
+        [*] --> TokenActivo: JWT almacenado en SecureStore (TTL 24h)
+        TokenActivo --> TokenPorExpirar: Tiempo restante < 1 hora
+        TokenPorExpirar --> RenovandoToken: Petición interceptada con Refresh Token
+        RenovandoToken --> TokenActivo: Nuevo Access Token emitido sin desloguear
+        RenovandoToken --> TokenExpirado: Refresh Token inválido o revocado
+    }
+
+    TokenActivo --> SesionCerrada: Usuario presiona "Cerrar Sesión"
+    TokenActivo --> TokenRevocado: Administrador invalida sesiones por seguridad
+    TokenPorExpirar --> TokenExpirado: Cumple 24h sin renovación
+
+    SesionCerrada --> NoAutenticado: Token borrado de memoria local
+    TokenRevocado --> NoAutenticado: Forzar pantalla de login
+    TokenExpirado --> NoAutenticado: Redirección inmediata a autenticación
+    NoAutenticado --> [*]</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card state-card" data-title="TE06: Ciclo de Vida de un Ticket de Soporte Técnico y Mesa de Ayuda" data-rf="RF30" id="card-TE06">
+        <div class="diagram-header">
+          <h2 class="diagram-title">TE06: Ciclo de Vida de un Ticket de Soporte Técnico y Mesa de Ayuda</h2>
+          <div>
+            <span class="badge-state">Transición de Estados (Statechart)</span>
+            <span class="badge-rf">RF30</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Gestión formal de incidencias técnicas: radicación ciudadana, asignación al equipo de soporte, fase de investigación, respuesta al usuario y cierre con encuesta de satisfacción.</p>
+        <div class="diagram-render-area" id="render-TE06">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-TE06">stateDiagram-v2
+    [*] --> RadicandoTicket: Usuario redacta solicitud de ayuda (CU23)
+    RadicandoTicket --> AbiertoPendiente: Ticket registrado con código único de seguimiento
+    
+    AbiertoPendiente --> EnAtencion: Asignado a agente de soporte técnico
+    
+    state EnAtencion {
+        [*] --> InvestigandoFallo: Revisión de logs y capturas adjuntas
+        InvestigandoFallo --> EsperandoRespuestaUsuario: Agente solicita más información
+        EsperandoRespuestaUsuario --> InvestigandoFallo: Usuario aporta datos requeridos
+    }
+
+    EnAtencion --> Resuelto: Agente remite solución o corrección del sistema
+    
+    Resuelto --> CerradoConforme: Usuario valida y acepta solución
+    Resuelto --> Reabierto: Usuario indica persistencia del problema
+    Reabierto --> EnAtencion: Reingresa al ciclo de análisis
+
+    Resuelto --> CerradoAutomatico: 5 días sin réplica tras emitir respuesta
+    CerradoConforme --> [*]
+    CerradoAutomatico --> [*]</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card state-card" data-title="TE07: Ciclo de Vida de una Notificación del Sistema (Push / In-App)" data-rf="RF25" id="card-TE07">
+        <div class="diagram-header">
+          <h2 class="diagram-title">TE07: Ciclo de Vida de una Notificación del Sistema (Push / In-App)</h2>
+          <div>
+            <span class="badge-state">Transición de Estados (Statechart)</span>
+            <span class="badge-rf">RF25</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Ciclo de comunicaciones del sistema: redacción administrativa, programación horaria, encolado en Firebase Cloud Messaging, entrega al dispositivo móvil y lectura por el destinatario.</p>
+        <div class="diagram-render-area" id="render-TE07">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-TE07">stateDiagram-v2
+    [*] --> RedactandoNotificacion: Admin prepara título, mensaje y audiencia objetivo
+    RedactandoNotificacion --> Descartada: Cancela antes de guardar
+    
+    RedactandoNotificacion --> Programada: Fecha de despacho configurada a futuro
+    RedactandoNotificacion --> EnColaEnvio: Despacho instantáneo solicitado
+
+    Programada --> EnColaEnvio: El temporizador del servidor alcanza la hora fijada
+    
+    state EnColaEnvio {
+        [*] --> ProcesandoSegmento: Filtro de tokens FCM por ciudad o rol
+        ProcesandoSegmento --> EnviandoPush: Despacho a servidores de Google / Apple
+    }
+
+    EnColaEnvio --> EntregadaAlDispositivo: Handshake exitoso con el sistema operativo
+    EnColaEnvio --> ErrorDespacho: Falla de red en API de notificaciones
+    ErrorDespacho --> EnColaEnvio: Reintento controlado (máx 3)
+
+    EntregadaAlDispositivo --> NoLeida: Notificación visible en bandeja del teléfono
+    NoLeida --> Leida: Usuario toca la notificación y abre la app
+    NoLeida --> ExpiradaBandeja: Transcurren 30 días sin interacción
+
+    Leida --> Archivada: Guardada en historial de alertas
+    ExpiradaBandeja --> Archivada
+    Archivada --> [*]
+    Descartada --> [*]</pre>
+          </details>
+        </div>
+      </div>
+
+      <div class="diagram-card state-card" data-title="TE08: Ciclo de Vida de Parámetros Operativos del Sistema" data-rf="RF23, RF24" id="card-TE08">
+        <div class="diagram-header">
+          <h2 class="diagram-title">TE08: Ciclo de Vida de Parámetros Operativos del Sistema</h2>
+          <div>
+            <span class="badge-state">Transición de Estados (Statechart)</span>
+            <span class="badge-rf">RF23, RF24</span>
+          </div>
+        </div>
+        <p class="diagram-desc">Manejo de variables globales de entorno: factores de cálculo de CO₂, límites geográficos, valores por defecto de fábrica, validación de rangos numéricos y propagación en caliente en caché.</p>
+        <div class="diagram-render-area" id="render-TE08">
+          <span>Cargando renderizado...</span>
+        </div>
+        <div class="code-toggle">
+          <details>
+            <summary>Ver código fuente Mermaid</summary>
+            <pre class="code-preview" id="code-TE08">stateDiagram-v2
+    [*] --> ValorPredeterminado: Inicialización de fábrica en base de datos
+    
+    ValorPredeterminado --> EnEdicion: Administrador modifica variable en panel web (CU28)
+    
+    state EnEdicion {
+        [*] --> ValidandoSintaxis: Chequeo de tipo de dato y no nulo
+        ValidandoSintaxis --> ValidandoRango: Chequeo de límites físicos (ej. CO₂ > 0)
+    }
+
+    EnEdicion --> InvalidoRechazado: Valor fuera de rango permitido (Error visual)
+    InvalidoRechazado --> EnEdicion: Administrador corrige el número ingresado
+
+    EnEdicion --> ConfirmadoSeguridad: Administrador valida en modal de confirmación
+    ConfirmadoSeguridad --> PersistidoEnBD: Transacción UPDATE en tabla configuracion_sistema
+    
+    PersistidoEnBD --> PropagadoEnMemoria: Backend invalida caché IMemoryCache y recarga variables
+    PersistidoEnBD --> Auditado: Registro automático en tabla auditoria_seguridad (RF24)
+
+    PropagadoEnMemoria --> OperativoEnProduccion: Variable activa para todas las peticiones móviles
+    
+    OperativoEnProduccion --> EnEdicion: Nueva modificación solicitada
+    OperativoEnProduccion --> RestaurandoFabrica: Administrador pulsa "Restablecer Valores por Defecto"
+    RestaurandoFabrica --> ValorPredeterminado: Variables sobreescritas a línea base inicial</pre>
+          </details>
+        </div>
+      </div>
+
+      </div>
+    </div>
+
+    <!-- 5. TAB: MATRIZ DE TRAZABILIDAD -->
+    <div id="tab-matrix" class="tab-content hidden">
+      <div class="diagram-card">
+        <h2 class="diagram-title" style="margin-bottom: 1rem;">Matriz de Cobertura y Trazabilidad Integral (34 RFs vs 28 CUs)</h2>
+        <p class="diagram-desc">Mapeo riguroso entre los Requisitos Funcionales del documento SRS y los 28 Casos de Uso implementados con sus actores clave.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Subsistema</th>
+              <th>Casos de Uso Cubiertos</th>
+              <th>Requisitos Funcionales Asociados</th>
+              <th>Actores Clave</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Autenticación y Perfil</strong></td>
+              <td>CU01, CU02, CU05, CU12, CU13, CU14, CU15</td>
+              <td>RF01, RF02, RF03, RF04, RF07, RF08</td>
+              <td>Visitante, Usuario Registrado</td>
+            </tr>
+            <tr>
+              <td><strong>2. Rutas y Movilidad Ecológica</strong></td>
+              <td>CU03, CU04, CU06, CU11, CU16, CU17, CU25, CU27</td>
+              <td>RF05, RF06, RF09, RF10, RF11, RF12, RF13, RF14, RF15, RF26, RF27, RF28</td>
+              <td>Ciudadano / Conductor, Motor GIS, Motor TTS</td>
+            </tr>
+            <tr>
+              <td><strong>3. Reportes y Comunidad</strong></td>
+              <td>CU07, CU18, CU22</td>
+              <td>RF17, RF18, RF19</td>
+              <td>Ciudadano, Comunidad de Conductores, Moderador Admin</td>
+            </tr>
+            <tr>
+              <td><strong>4. Administración y Analítica</strong></td>
+              <td>CU08, CU10, CU19, CU24, CU28</td>
+              <td>RF20, RF21, RF22, RF23, RF24, RF25, RF29</td>
+              <td>Administrador del Sistema, Servidor Notificaciones</td>
+            </tr>
+            <tr>
+              <td><strong>5. Soporte y Preferencias</strong></td>
+              <td>CU09, CU20, CU21, CU23, CU26</td>
+              <td>RF16, RF30, RF31, RF32, RF33, RF34</td>
+              <td>Usuario, Administrador de Soporte Técnico</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let activeMicroSubFilter = 'all';
+
+    function switchMasterTab(tabName, btn) {{
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+      const activeContent = document.getElementById(`tab-${{tabName}}`);
+      if (activeContent) activeContent.classList.remove('hidden');
+    }}
+
+    function filterMicroBySub(sub, pill) {{
+      activeMicroSubFilter = sub;
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      filterMicroCUs();
+    }}
+
+    function filterMicroCUs() {{
+      const query = document.getElementById('search-micro').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.micro-card');
+
+      cards.forEach(card => {{
+        const sub = card.dataset.sub;
+        const cuid = card.dataset.cuid.toLowerCase();
+        const title = card.dataset.title.toLowerCase();
+        const rf = card.dataset.rf.toLowerCase();
+
+        const matchSub = (activeMicroSubFilter === 'all' || sub === activeMicroSubFilter);
+        const matchQuery = !query || cuid.includes(query) || title.includes(query) || rf.includes(query);
+
+        if (matchSub && matchQuery) {{
+          card.classList.remove('hidden');
+        }} else {{
+          card.classList.add('hidden');
+        }}
+      }});
+    }}
+
+    function filterSeq() {{
+      const query = document.getElementById('search-seq').value.toLowerCase().trim();
+      document.querySelectorAll('.seq-card').forEach(card => {{
+        const title = card.dataset.title.toLowerCase();
+        const rf = card.dataset.rf.toLowerCase();
+        if (!query || title.includes(query) || rf.includes(query)) {{
+          card.classList.remove('hidden');
+        }} else {{
+          card.classList.add('hidden');
+        }}
+      }});
+    }}
+
+    function filterState() {{
+      const query = document.getElementById('search-state').value.toLowerCase().trim();
+      document.querySelectorAll('.state-card').forEach(card => {{
+        const title = card.dataset.title.toLowerCase();
+        const rf = card.dataset.rf.toLowerCase();
+        if (!query || title.includes(query) || rf.includes(query)) {{
+          card.classList.remove('hidden');
+        }} else {{
+          card.classList.add('hidden');
+        }}
+      }});
+    }}
+
+    document.addEventListener("DOMContentLoaded", async function () {{
+      if (typeof mermaid === "undefined") {{
+        console.error("Mermaid library could not be loaded");
+        document.querySelectorAll('.diagram-render-area').forEach(el => {{
+          el.innerHTML = '<div class="error-box">No se pudo cargar la librería Mermaid. Verifique la ruta local js/mermaid.min.js</div>';
+        }});
+        return;
+      }}
+
+      mermaid.initialize({{
+        startOnLoad: false,
+        theme: "default",
+        securityLevel: "loose",
+        flowchart: {{ useMaxWidth: true, htmlLabels: true, curve: "basis" }},
+        sequence: {{ useMaxWidth: true, showSequenceNumbers: true }},
+        state: {{ useMaxWidth: true }}
+      }});
+
+      // IDs de todos los diagramas
+      const allIds = [
+        ...["macro-gen", "macro-sub1", "macro-sub2", "macro-sub3", "macro-sub4", "macro-sub5"],
+        ...["CU01", "CU02", "CU03", "CU04", "CU05", "CU06", "CU07", "CU08", "CU09", "CU10", "CU11", "CU12", "CU13", "CU14", "CU15", "CU16", "CU17", "CU18", "CU19", "CU20", "CU21", "CU22", "CU23", "CU24", "CU25", "CU26", "CU27", "CU28"],
+        ...["DS01", "DS02", "DS03", "DS04", "DS05", "DS06", "DS07", "DS08", "DS09", "DS10", "DS11", "DS12"],
+        ...["TE01", "TE02", "TE03", "TE04", "TE05", "TE06", "TE07", "TE08"]
+      ];
+
+      for (let id of allIds) {{
+        const renderArea = document.getElementById(`render-${{id}}`);
+        const codeElement = document.getElementById(`code-${{id}}`);
+        if (!renderArea || !codeElement) continue;
+
+        try {{
+          const {{ svg }} = await mermaid.render(`svg_${{id}}`, codeElement.textContent.trim());
+          renderArea.innerHTML = svg;
+        }} catch (err) {{
+          console.error(`Error al renderizar ${{id}}:`, err);
+          renderArea.innerHTML = `<div class="error-box"><strong>Error al renderizar:</strong> ${{err.message || err}}</div>`;
+        }}
+      }}
+    }});
+  </script>
+</body>
+</html>

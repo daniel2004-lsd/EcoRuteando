@@ -10,6 +10,30 @@
 | **Prioridad** | Media |
 | **Precondición** | El administrador debe haber iniciado sesión con rol autorizado. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Admin["🛡️ Administrador"]
+    PushService["📲 Firebase Cloud Messaging"]
+
+    subgraph ModuloAdmin ["Límite: Notificaciones del Sistema"]
+        CU10(["CU10: Enviar Notificación"])
+        FiltroUsuarios(["Definir Audiencia Objetivo"])
+        Programar(["Programar Fecha y Hora de Envío"])
+    end
+
+    Admin --> CU10
+    CU10 -.->|"«include»"| FiltroUsuarios
+    CU10 -.->|"«extend»"| Programar
+
+    CU10 --> PushService
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

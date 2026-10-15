@@ -10,6 +10,32 @@
 | **Prioridad** | Media |
 | **Precondición** | El usuario debe haber iniciado sesión y tener al menos un trayecto registrado (opcional: puede estar vacío). |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Usuario["🧑‍💼 Usuario Registrado"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloRutas ["Límite: Historial de Trayectos"]
+        CU04(["CU04: Consultar Historial"])
+        Filtro(["Filtrar por Fecha / Modo"])
+        CU19(["CU19: Exportar a PDF/Excel"])
+        CU03(["CU03: Reutilizar como Nueva Ruta"])
+    end
+
+    Usuario --> CU04
+    CU04 -.->|"«include»"| Filtro
+    CU04 -.->|"«extend»"| CU19
+    CU04 -.->|"«extend»"| CU03
+
+    CU04 --> DB
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

@@ -369,8 +369,12 @@ body {
 .tbl-wrap {
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 12px; overflow: hidden;
-  box-shadow: var(--shadow); margin-bottom: 32px;
+  border-radius: 12px;
+  overflow-x: auto;
+  box-shadow: var(--shadow);
+  margin-bottom: 32px;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 .tbl-head {
   background: var(--green); padding: 16px 24px;
