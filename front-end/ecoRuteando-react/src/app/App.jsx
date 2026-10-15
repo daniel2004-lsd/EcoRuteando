@@ -35,9 +35,6 @@ import RouteManage from "../features/home/pages/RouteManage";
 import AdminStatistics from "../features/admin/pages/AdminStatistics";
 import AdminReports from "../features/admin/pages/AdminReports";
 import AdminExports from "../features/admin/pages/AdminExports";
-import AdminUsers from "../features/admin/pages/AdminUsers";
-import AdminSupport from "../features/admin/pages/AdminSupport";
-import AdminAudit from "../features/admin/pages/AdminAudit";
 import ReporterProblem from "../features/home/pages/ReporterProblem";
 
 import "leaflet/dist/leaflet.css";
