@@ -10,6 +10,30 @@
 | **Prioridad** | Media |
 | **Precondición** | Conexión a internet y disponibilidad del servicio meteorológico. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano"]
+    WeatherAPI["⛅ API Meteorológica"]
+
+    subgraph ModuloReportes ["Límite: Alertas Climáticas"]
+        CU18(["CU18: Consultar Clima"])
+        Pronostico(["Obtener Estado del Tiempo Actual"])
+        AlertaLluvia(["Generar Alerta de Lluvia en Ruta"])
+    end
+
+    Ciudadano --> CU18
+    CU18 -.->|"«include»"| Pronostico
+    CU18 -.->|"«extend»"| AlertaLluvia
+
+    CU18 --- WeatherAPI
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

@@ -10,6 +10,32 @@
 | **Prioridad** | Alta |
 | **Precondición** | El usuario debe haber definido origen y destino del trayecto. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano / Sistema"]
+    MotorCalculo["⚙️ Motor Algorítmico Ambiental"]
+
+    subgraph ModuloRutas ["Límite: Estimación de CO₂"]
+        CU16(["CU16: Calcular Métricas de Ruta"])
+        Distancia(["Calcular Distancia y Pendiente"])
+        Emision(["Aplicar Factor de Combustible (g/km)"])
+        Comparativa(["Comparar con Caminata a Pie"])
+    end
+
+    Ciudadano --> CU16
+    CU16 -.->|"«include»"| Distancia
+    CU16 -.->|"«include»"| Emision
+    CU16 -.->|"«extend»"| Comparativa
+
+    CU16 --- MotorCalculo
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

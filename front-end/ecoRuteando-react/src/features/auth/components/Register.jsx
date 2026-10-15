@@ -382,36 +382,16 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                 <div className={`flex-1 h-px ${isDarkMode ? 'bg-green-500/20' : 'bg-gray-200'}`} />
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex">
                 <button
                   type="button"
                   onClick={handleGoogleLogin}
-                  className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${isDarkMode
+                  className={`w-full border rounded-lg py-2 flex justify-center items-center gap-2 transition-all duration-300 ${isDarkMode
                     ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
                     : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
                   }`}>
                   <GoogleIcon />
-                  <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Google</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={handleFacebookLogin}
-                  className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${isDarkMode
-                    ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
-                    : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
-                  }`}>
-                  <FacebookIcon />
-                  <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Facebook</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => toast("Inicio de sesión con X próximamente disponible", { icon: "ℹ️" })}
-                  className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${isDarkMode
-                    ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
-                    : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
-                  }`}>
-                  <XIcon />
-                  <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>X</span>
+                  <span className={`text-xs font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-600'}`}>Google</span>
                 </button>
               </div>
             </div>

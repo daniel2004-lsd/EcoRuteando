@@ -10,6 +10,34 @@
 | **Prioridad** | Alta |
 | **Precondición** | El usuario no debe tener una cuenta previa registrada con el mismo correo. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Visitante["👤 Visitante"]
+    DB[("💾 PostgreSQL")]
+    SMTP["📧 Servidor SMTP"]
+
+    subgraph ModuloAuth ["Límite: Registro de Usuario"]
+        CU01(["CU01: Registrar Usuario"])
+        CU15(["CU15: Aceptar Términos"])
+        Hash(["Validar y Aplicar Hash Argon2id"])
+        Email(["Enviar Correo de Bienvenida"])
+    end
+
+    Visitante --> CU01
+    CU01 -.->|"«include»"| CU15
+    CU01 -.->|"«include»"| Hash
+    CU01 -.->|"«extend»"| Email
+
+    Hash --> DB
+    Email --> SMTP
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |
