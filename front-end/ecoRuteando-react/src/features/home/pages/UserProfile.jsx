@@ -183,22 +183,9 @@ const UserProfile = ({ onNavigate }) => {
     }
   };
 
-  // Guardar datos personales (si es usuario de Google, no pide contraseña)
+  // Guardar datos personales sin requerir contraseña
   const handleSaveClick = () => {
-    if (!userInfo.hasPassword || userInfo.authProvider === "google") {
-      executeProfileUpdate("");
-      return;
-    }
-    setIdentityPassword("");
-    setShowConfirmModal(true);
-  };
-
-  const handleConfirmSave = () => {
-    if (!identityPassword) {
-      toast.error(t("profile.confirmIdentity.subtitle", "Ingresa tu contraseña actual"));
-      return;
-    }
-    executeProfileUpdate(identityPassword);
+    executeProfileUpdate("");
   };
 
   // Cambio de contraseña
@@ -1074,7 +1061,7 @@ const UserProfile = ({ onNavigate }) => {
       )}
 
       {/* MODAL: CAMBIAR CONTRASEÑA */}
-      {showPasswordModal && (
+      {showPasswordModal && userInfo.hasPassword && userInfo.authProvider !== "google" && (
         <div
           role="dialog"
           aria-modal="true"

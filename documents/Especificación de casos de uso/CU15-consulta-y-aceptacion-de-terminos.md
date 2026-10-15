@@ -10,6 +10,32 @@
 | **Prioridad** | Media |
 | **Precondición** | El usuario debe encontrarse en el formulario de registro. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Ciudadano["👤 Visitante / Ciudadano"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloLegal ["Límite: Términos y Condiciones"]
+        CU15(["CU15: Gestionar Términos"])
+        VerDoc(["Visualizar Versión Vigente"])
+        Aceptar(["Registrar Consentimiento Informado"])
+        Timestamp(["Auditar Versión y Marca Temporal"])
+    end
+
+    Ciudadano --> CU15
+    CU15 -.->|"«include»"| VerDoc
+    CU15 -.->|"«extend»"| Aceptar
+    Aceptar -.->|"«include»"| Timestamp
+
+    Timestamp --> DB
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

@@ -10,14 +10,24 @@ import {
   ClockIcon,
   UsersIcon,
   MapIcon,
-  ReportIcon,
   ShieldIcon,
   HeartIcon,
+<<<<<<< Updated upstream
   ChartIcon
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import routeService from "../../../services/routeService";
 import tripService from "../../../services/tripService";
+=======
+  ChartIcon,
+  CloseIcon,
+  CheckCircle
+} from "../../../shared/components/Icons";
+import { useTheme } from "../../../app/context/ThemeContext";
+import routeService from "../../../services/routeService";
+import favoriteService from "../../../services/favoriteService";
+import toast from "react-hot-toast";
+>>>>>>> Stashed changes
 
 // ---------------------------------------------------------------------------
 // Configuración de estilos por módulo.
@@ -57,10 +67,6 @@ const MODULE_STYLES = {
   alertas: {
     icon: "bg-gradient-to-br from-amber-500 to-orange-500 text-white",
     iconDark: "bg-amber-500/20 text-amber-400"
-  },
-  reportar: {
-    icon: "bg-gradient-to-br from-emerald-700 to-green-800 text-white",
-    iconDark: "bg-emerald-700/20 text-emerald-400"
   },
   admin: {
     icon: "bg-gradient-to-br from-slate-600 to-slate-800 text-white",
@@ -237,6 +243,14 @@ const UserDashboard = ({ onNavigate }) => {
     onNavigate("/");
   };
 
+  const navigateOrPrompt = (path, state) => {
+    if (!user) {
+      toast.error(t("dashboard.guestLoginRequired", "Inicia sesión para acceder a este módulo."));
+      return;
+    }
+    onNavigate(path, state);
+  };
+
   const baseModules = [
     {
       id: "plan_ruta",
@@ -250,6 +264,7 @@ const UserDashboard = ({ onNavigate }) => {
       icon: <RouteIcon size={24} />,
       titleKey: "dashboard.modules.routes.title",
       subtitleKey: "dashboard.modules.routes.subtitle",
+<<<<<<< Updated upstream
       onClick: () => onNavigate("/user/routes")
     },
     {
@@ -265,34 +280,41 @@ const UserDashboard = ({ onNavigate }) => {
       titleKey: "dashboard.modules.favorites.title",
       subtitleKey: "dashboard.modules.favorites.subtitle",
       onClick: () => onNavigate("/user/favorites")
+=======
+      onClick: () => navigateOrPrompt("/user/routes")
+>>>>>>> Stashed changes
     },
     {
       id: "perfil",
       icon: <UsersIcon size={24} />,
       titleKey: "dashboard.modules.profile.title",
       subtitleKey: "dashboard.modules.profile.subtitle",
-      onClick: () => onNavigate("/profile")
+      onClick: () => navigateOrPrompt("/profile")
+    },
+    {
+      id: "historial",
+      icon: <ClockIcon size={24} />,
+      titleKey: "dashboard.modules.history.title",
+      subtitleKey: "dashboard.modules.history.subtitle",
+      onClick: () => navigateOrPrompt("/user/history")
     },
     {
       id: "alertas",
       icon: <ActivityIcon size={24} />,
       titleKey: "dashboard.modules.alerts.title",
       subtitleKey: "dashboard.modules.alerts.subtitle",
-      onClick: () => onNavigate("/user/alerts")
-    },
-    {
-      id: "reportar",
-      icon: <ReportIcon size={24} />,
-      titleKey: "dashboard.modules.report.title",
-      subtitleKey: "dashboard.modules.report.subtitle",
-      onClick: () => onNavigate("/user/reporter-problem")
+      onClick: () => navigateOrPrompt("/user/alerts")
     },
     {
       id: "estadisticas",
       icon: <ChartIcon size={24} />,
       titleKey: "dashboard.impact.button",
       subtitleKey: "dashboard.impact.title",
+<<<<<<< Updated upstream
       onClick: () => onNavigate("/user/statistics")
+=======
+      onClick: () => navigateOrPrompt("/user/statistics")
+>>>>>>> Stashed changes
     }
   ];
 
@@ -311,7 +333,7 @@ const UserDashboard = ({ onNavigate }) => {
       icon: <MapIcon size={20} />,
       value: stats.routes,
       labelKey: "dashboard.stats.routesCreated",
-      onClick: () => onNavigate("/user/routes")
+      onClick: () => navigateOrPrompt("/user/routes", { state: { initialTab: "all" } })
     },
     {
       icon: <ClockIcon size={20} />,
@@ -323,13 +345,20 @@ const UserDashboard = ({ onNavigate }) => {
       icon: <LeafIcon size={20} />,
       value: `${stats.co2Saved} kg`,
       labelKey: "dashboard.stats.co2Saved",
-      onClick: () => onNavigate("/user/statistics")
+      onClick: () => navigateOrPrompt("/user/statistics")
     },
     {
+<<<<<<< Updated upstream
       icon: <ActivityIcon size={20} />,
       value: stats.points,
       labelKey: "dashboard.stats.ecoPoints",
       onClick: () => onNavigate("/user/statistics")
+=======
+      icon: <HeartIcon size={20} />,
+      value: stats.favorites,
+      labelKey: "dashboard.modules.favorites.title",
+      onClick: () => navigateOrPrompt("/user/routes", { state: { initialTab: "favorites" } })
+>>>>>>> Stashed changes
     }
   ];
 
@@ -356,14 +385,16 @@ const UserDashboard = ({ onNavigate }) => {
           <div className="flex items-center gap-3">
             <button
               onClick={handleLogoutClick}
-              aria-label={t("dashboard.logout", "Cerrar sesión")}
+              aria-label={user ? t("dashboard.logout", "Cerrar sesión") : t("dashboard.backToHome", "Volver al inicio")}
               className={`flex items-center justify-center rounded-xl transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
                 isDarkMode ? 'bg-[#162329] text-[#e2e8f0] hover:bg-[#26383D]' : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               } sm:w-auto sm:px-4 sm:py-2.5 sm:text-sm`}
-              title={t("dashboard.logout", "Cerrar sesión")}
+              title={user ? t("dashboard.logout", "Cerrar sesión") : t("dashboard.backToHome", "Volver al inicio")}
             >
               <ArrowLeft size={18} className="sm:mr-2" />
-              <span className="hidden sm:inline">{t("dashboard.logout", "Cerrar sesión")}</span>
+              <span className="hidden sm:inline">
+                {user ? t("dashboard.logout", "Cerrar sesión") : t("dashboard.backToHome", "Volver al inicio")}
+              </span>
             </button>
 
             {user && (

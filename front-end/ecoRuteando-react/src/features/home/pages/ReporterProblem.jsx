@@ -6,10 +6,13 @@ import {
   LeafIcon,
   MapPinIcon,
   CheckCircle,
+  ClockIcon,
+  FileTextIcon,
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import obstacleReportService from "../../../services/obstacleReportService";
 import { NEIVA_COORDS } from "../../../services/weatherService";
+import toast from "react-hot-toast";
 
 const REPORT_TYPES = [
   "obstruction",
@@ -73,13 +76,14 @@ const ReporterProblem = ({ onNavigate }) => {
   const { t } = useTranslation();
   const { isDarkMode, toggleTheme } = useTheme();
 
-  // Pestaña activa: "report" o "community"
+  // Pestaña activa: "report", "community" o "mine"
   const [activeTab, setActiveTab] = useState("report");
 
   // Estado del formulario de creación
   const [formData, setFormData] = useState({
     reportType: "obstruction",
     description: "",
+    addressText: "",
   });
   const [location, setLocation] = useState(null);
   const [gettingLocation, setGettingLocation] = useState(false);
@@ -95,6 +99,11 @@ const ReporterProblem = ({ onNavigate }) => {
   const [radiusFilter, setRadiusFilter] = useState("5"); // km (o "all")
   const [votingReportId, setVotingReportId] = useState(null);
   const [voteFeedback, setVoteFeedback] = useState({}); // { [reportId]: { message, type } }
+
+  // Estado de mis reportes enviados (CU07 / Historial ciudadano)
+  const [myReports, setMyReports] = useState([]);
+  const [loadingMyReports, setLoadingMyReports] = useState(false);
+  const [myReportsError, setMyReportsError] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -119,15 +128,25 @@ const ReporterProblem = ({ onNavigate }) => {
           lng: pos.coords.longitude,
         });
         setGettingLocation(false);
+        toast.success(t("reporterProblem.locationCaptured", "Ubicación GPS capturada"));
       },
       (err) => {
         console.error("Error obteniendo ubicación:", err);
         setGettingLocation(false);
-        setLocationError(t("reporterProblem.errors.gpsFailed", "No se pudo obtener tu ubicación. Verifica los permisos del GPS."));
+        setLocationError(t("reporterProblem.errors.gpsFailed", "No se pudo obtener tu ubicación. Verifica los permisos del GPS o usa el centro de Neiva."));
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
   }, [t]);
+
+  const useDefaultLocation = () => {
+    setLocation({
+      lat: NEIVA_COORDS.lat,
+      lng: NEIVA_COORDS.lng,
+    });
+    setLocationError(null);
+    toast.success(t("reporterProblem.useDefaultLocation", "Ubicación fijada en el centro de Neiva"));
+  };
 
   // Cargar reportes activos comunitarios
   const loadCommunityReports = useCallback(async () => {
@@ -152,12 +171,29 @@ const ReporterProblem = ({ onNavigate }) => {
     }
   }, [location, radiusFilter, t]);
 
-  // Cargar al cambiar a la pestaña comunitaria o cambiar filtros
+  // Cargar historial de reportes del usuario actual
+  const loadMyReports = useCallback(async () => {
+    setLoadingMyReports(true);
+    setMyReportsError(null);
+    try {
+      const data = await obstacleReportService.getMyReports();
+      setMyReports(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error cargando mis reportes:", err);
+      setMyReportsError(t("reporterProblem.mine.loadError", "No se pudieron cargar tus reportes."));
+    } finally {
+      setLoadingMyReports(false);
+    }
+  }, [t]);
+
+  // Cargar al cambiar de pestaña
   useEffect(() => {
     if (activeTab === "community") {
       loadCommunityReports();
+    } else if (activeTab === "mine") {
+      loadMyReports();
     }
-  }, [activeTab, radiusFilter, loadCommunityReports]);
+  }, [activeTab, radiusFilter, loadCommunityReports, loadMyReports]);
 
   // Intentar obtener GPS automáticamente si no se tiene al abrir la pestaña comunitaria
   useEffect(() => {
@@ -176,7 +212,7 @@ const ReporterProblem = ({ onNavigate }) => {
     }
 
     if (!location) {
-      setSubmitError(t("reporterProblem.errors.locationRequired", "Usa el GPS para indicar la ubicación del obstáculo."));
+      setSubmitError(t("reporterProblem.errors.locationRequired", "Selecciona la ubicación mediante GPS o el centro de Neiva."));
       return;
     }
 
@@ -184,26 +220,37 @@ const ReporterProblem = ({ onNavigate }) => {
     setIsSubmitting(true);
 
     try {
+      const finalAddress = formData.addressText?.trim() || formatCoords(location.lat, location.lng);
+
       await obstacleReportService.createReport({
         reportType: formData.reportType,
-        description: formData.description,
+        description: formData.description.trim(),
         latitude: location.lat,
         longitude: location.lng,
-        addressText: formatCoords(location.lat, location.lng),
+        addressText: finalAddress,
       });
 
       setIsSubmitting(false);
       setSubmitted(true);
+      toast.success(t("reporterProblem.submitted", "¡Reporte enviado exitosamente!"));
 
       setTimeout(() => {
         setSubmitted(false);
-        setFormData({ reportType: "obstruction", description: "" });
+        setFormData({ reportType: "obstruction", description: "", addressText: "" });
         setLocation(null);
-      }, 3000);
+      }, 2500);
+
+      // Recargar la lista de mis reportes en background
+      loadMyReports();
     } catch (err) {
       console.error("Error enviando reporte:", err);
       setIsSubmitting(false);
-      setSubmitError(t("reporterProblem.errors.submitFailed", "No se pudo enviar el reporte. Intenta más tarde."));
+      const errMsg =
+        err?.response?.data?.message ||
+        err?.response?.data?.detail ||
+        t("reporterProblem.errors.submitFailed", "No se pudo enviar el reporte. Intenta más tarde.");
+      setSubmitError(errMsg);
+      toast.error(errMsg);
     }
   };
 
@@ -330,11 +377,15 @@ const ReporterProblem = ({ onNavigate }) => {
                 <h1 className="text-2xl font-bold text-white">
                   {activeTab === "report"
                     ? t("reporterProblem.title", "Reportar Problema")
+                    : activeTab === "mine"
+                    ? t("reporterProblem.mine.title", "Mis Reportes Ciudadanos")
                     : t("reporterProblem.community.title", "Validación Comunitaria de Incidentes")}
                 </h1>
                 <p className={`text-sm ${isDarkMode ? "text-emerald-400" : "text-green-100"}`}>
                   {activeTab === "report"
                     ? t("reporterProblem.subtitle", "Ayúdanos a mejorar las vías")
+                    : activeTab === "mine"
+                    ? t("reporterProblem.mine.subtitle", "Seguimiento y estado de los obstáculos que has reportado")
                     : t("reporterProblem.community.subtitle", "Confirma o descarta reportes cercanos para mantener seguras las vías")}
                 </p>
               </div>
@@ -350,7 +401,7 @@ const ReporterProblem = ({ onNavigate }) => {
           </div>
 
           {/* Selector de pestañas */}
-          <div className="mt-6 flex gap-2 border-b border-white/10 pb-1">
+          <div className="mt-6 flex gap-2 border-b border-white/10 pb-1 flex-wrap">
             <button
               onClick={() => setActiveTab("report")}
               className={`px-4 py-2 font-semibold text-sm rounded-t-lg transition-all flex items-center gap-2 ${
@@ -361,6 +412,22 @@ const ReporterProblem = ({ onNavigate }) => {
             >
               <span>📝</span>
               <span>{t("reporterProblem.tabReport", "Reportar Incidente")}</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("mine")}
+              className={`px-4 py-2 font-semibold text-sm rounded-t-lg transition-all flex items-center gap-2 ${
+                activeTab === "mine"
+                  ? "bg-white text-emerald-800 shadow-md"
+                  : "text-white/80 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              <span>📋</span>
+              <span>{t("reporterProblem.tabMine", "Mis Reportes")}</span>
+              {myReports.length > 0 && (
+                <span className="ml-1 px-2 py-0.5 text-xs bg-emerald-600 text-white rounded-full">
+                  {myReports.length}
+                </span>
+              )}
             </button>
             <button
               onClick={() => setActiveTab("community")}
@@ -419,26 +486,45 @@ const ReporterProblem = ({ onNavigate }) => {
               {/* Ubicación */}
               <div className="mb-5">
                 <label className={`block text-xs font-bold uppercase tracking-wide mb-2 ${isDarkMode ? "text-[#94a3b8]" : "text-gray-500"}`}>
-                  📍 {t("reporterProblem.locationLabel", "Ubicación")}
+                  📍 {t("reporterProblem.locationLabel", "Ubicación")} *
                 </label>
-                <button
-                  type="button"
-                  onClick={useGpsLocation}
-                  disabled={gettingLocation}
-                  className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all disabled:opacity-60 ${isDarkMode ? "bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-600/30" : "bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100"}`}
-                >
-                  {gettingLocation ? (
-                    <>
-                      <span className="w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-                      {t("reporterProblem.gettingLocation", "Obteniendo tu ubicación...")}
-                    </>
-                  ) : (
-                    <>
-                      <MapPinIcon size={16} />
-                      {t("reporterProblem.useGps", "Usar mi ubicación actual (GPS)")}
-                    </>
-                  )}
-                </button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={useGpsLocation}
+                    disabled={gettingLocation}
+                    className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all disabled:opacity-60 ${
+                      isDarkMode
+                        ? "bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-600/30"
+                        : "bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100"
+                    }`}
+                  >
+                    {gettingLocation ? (
+                      <>
+                        <span className="w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+                        {t("reporterProblem.gettingLocation", "Obteniendo tu ubicación...")}
+                      </>
+                    ) : (
+                      <>
+                        <MapPinIcon size={16} />
+                        {t("reporterProblem.useGps", "Usar mi ubicación (GPS)")}
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={useDefaultLocation}
+                    className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                      isDarkMode
+                        ? "bg-[#111C20] text-emerald-300 border border-emerald-500/20 hover:bg-emerald-950/40"
+                        : "bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200"
+                    }`}
+                  >
+                    <span>🏛️</span>
+                    {t("reporterProblem.useDefaultLocation", "Usar centro de Neiva")}
+                  </button>
+                </div>
 
                 {location ? (
                   <div className={`mt-3 flex items-center justify-between gap-2 px-4 py-2.5 rounded-lg text-sm ${isDarkMode ? "bg-emerald-900/30 text-emerald-400 border border-emerald-500/30" : "bg-emerald-50 text-emerald-700 border border-emerald-200"}`}>
@@ -446,10 +532,10 @@ const ReporterProblem = ({ onNavigate }) => {
                       <MapPinIcon size={14} />
                       {t("reporterProblem.locationCaptured", "Ubicación capturada")}: {formatCoords(location.lat, location.lng)}
                     </span>
-                    <span>✓</span>
+                    <span className="text-emerald-500 font-bold">✓</span>
                   </div>
                 ) : locationError ? (
-                  <div className={`mt-3 px-4 py-2.5 rounded-lg text-sm ${isDarkMode ? "bg-red-900/30 text-red-400 border border-red-500/30" : "bg-red-50 text-red-700 border border-red-200"}`}>
+                  <div className={`mt-3 px-4 py-2.5 rounded-lg text-xs ${isDarkMode ? "bg-red-900/30 text-red-400 border border-red-500/30" : "bg-red-50 text-red-700 border border-red-200"}`}>
                     {locationError}
                   </div>
                 ) : (
@@ -457,6 +543,26 @@ const ReporterProblem = ({ onNavigate }) => {
                     {t("reporterProblem.locationHint", "Indica el punto exacto del obstáculo para que nuestro equipo pueda validarlo")}
                   </p>
                 )}
+              </div>
+
+              {/* Dirección o referencia textual */}
+              <div className="mb-5">
+                <label className={`block text-xs font-bold uppercase tracking-wide mb-2 ${isDarkMode ? "text-[#94a3b8]" : "text-gray-500"}`}>
+                  🏢 {t("reporterProblem.addressLabel", "Dirección o punto de referencia")}
+                </label>
+                <input
+                  type="text"
+                  name="addressText"
+                  value={formData.addressText}
+                  onChange={handleChange}
+                  maxLength={300}
+                  placeholder={t("reporterProblem.addressPlaceholder", "Ej: Carrera 5 con Calle 10, frente al parque...")}
+                  className={`w-full px-4 py-2.5 rounded-lg text-sm transition-all focus:outline-none ${
+                    isDarkMode
+                      ? "bg-[#162329] border border-gray-600 text-[#e2e8f0] focus:border-emerald-500"
+                      : "bg-gray-50 border border-gray-200 text-gray-800 focus:border-emerald-400"
+                  }`}
+                />
               </div>
 
               {/* Descripción */}
@@ -510,6 +616,149 @@ const ReporterProblem = ({ onNavigate }) => {
                 <span>{t("reporterProblem.reviewNotice", "Tu reporte se publicará en la comunidad para que otros ciclistas y peatones puedan validarlo.")}</span>
               </div>
             </form>
+          </div>
+        ) : activeTab === "mine" ? (
+          /* PESTAÑA 3: MIS REPORTES (CU07 / Historial Ciudadano) */
+          <div className="space-y-6">
+            {/* Cabecera y botón de refrescar */}
+            <div className={`p-4 rounded-2xl shadow-sm border flex flex-wrap items-center justify-between gap-4 ${isDarkMode ? "bg-[#162329] border-emerald-800/20" : "bg-white border-gray-100"}`}>
+              <div>
+                <h3 className={`text-base font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                  {t("reporterProblem.mine.title", "Mis Reportes Ciudadanos")}
+                </h3>
+                <p className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                  {t("reporterProblem.mine.subtitle", "Seguimiento y estado de los obstáculos que has reportado")}
+                </p>
+              </div>
+
+              <button
+                onClick={loadMyReports}
+                disabled={loadingMyReports}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                  isDarkMode
+                    ? "bg-emerald-600/30 text-emerald-300 hover:bg-emerald-600/40 border border-emerald-500/30"
+                    : "bg-emerald-600 text-white hover:bg-emerald-700"
+                }`}
+              >
+                <span className={loadingMyReports ? "animate-spin" : ""}>🔄</span>
+                <span>{t("reporterProblem.mine.refresh", "Actualizar")}</span>
+              </button>
+            </div>
+
+            {/* Error */}
+            {myReportsError && (
+              <div className={`p-4 rounded-xl text-sm border text-center ${isDarkMode ? "bg-red-900/30 text-red-400 border-red-500/30" : "bg-red-50 text-red-700 border-red-200"}`}>
+                {myReportsError}
+              </div>
+            )}
+
+            {/* Loading */}
+            {loadingMyReports ? (
+              <div className={`p-12 rounded-2xl border text-center space-y-3 ${isDarkMode ? "bg-[#162329] border-emerald-800/20" : "bg-white border-gray-100"}`}>
+                <div className="w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
+                <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                  {t("reporterProblem.mine.loading", "Cargando tus reportes...")}
+                </p>
+              </div>
+            ) : myReports.length === 0 ? (
+              /* Empty state */
+              <div className={`p-12 rounded-2xl border text-center space-y-3 ${isDarkMode ? "bg-[#162329] border-emerald-800/20" : "bg-white border-gray-100"}`}>
+                <span className="text-4xl block">📋</span>
+                <h3 className={`text-base font-bold ${isDarkMode ? "text-[#e2e8f0]" : "text-gray-800"}`}>
+                  {t("reporterProblem.mine.empty", "No has enviado reportes de obstáculos todavía.")}
+                </h3>
+                <p className={`text-xs ${isDarkMode ? "text-[#94a3b8]" : "text-gray-500"}`}>
+                  {t("reporterProblem.mine.emptyHint", "Cuando reportes un problema en la vía, aparecerá aquí con su estado de validación.")}
+                </p>
+                <button
+                  onClick={() => setActiveTab("report")}
+                  className="mt-2 px-4 py-2 text-xs font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-all inline-block"
+                >
+                  {t("reporterProblem.tabReport", "Reportar Incidente")}
+                </button>
+              </div>
+            ) : (
+              /* List of my reports */
+              <div className="space-y-4">
+                {myReports.map((report) => {
+                  const statusKey = String(report.status || "pending").toLowerCase();
+                  const isPending = statusKey === "pending" || statusKey === "under_review";
+                  const isValidated = statusKey === "validated";
+                  const isRejected = statusKey === "rejected";
+
+                  return (
+                    <div
+                      key={report.id}
+                      className={`rounded-2xl shadow-sm border p-5 transition-all ${
+                        isDarkMode
+                          ? "bg-[#162329] border-emerald-800/20"
+                          : "bg-white border-gray-100"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-3 flex-wrap">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                            {TYPE_META[report.reportType] || "📌"}
+                          </span>
+                          <div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h3 className={`text-base font-bold ${isDarkMode ? "text-[#e2e8f0]" : "text-gray-800"}`}>
+                                {t(`reporterProblem.types.${report.reportType}`, report.reportType)}
+                              </h3>
+                              <span
+                                className={`px-2.5 py-0.5 rounded-full text-xs font-bold border ${
+                                  isValidated
+                                    ? "bg-emerald-500/15 text-emerald-500 border-emerald-500/30"
+                                    : isRejected
+                                    ? "bg-rose-500/15 text-rose-500 border-rose-500/30"
+                                    : "bg-amber-500/15 text-amber-500 border-amber-500/30"
+                                }`}
+                              >
+                                {isValidated
+                                  ? `✓ ${t("reporterProblem.mine.statusValidated", "Aprobado / Validado")}`
+                                  : isRejected
+                                  ? `✕ ${t("reporterProblem.mine.statusRejected", "Rechazado")}`
+                                  : `⏳ ${t("reporterProblem.mine.statusPending", "Pendiente de validación")}`}
+                              </span>
+                            </div>
+                            <p className={`text-xs ${isDarkMode ? "text-[#94a3b8]" : "text-gray-500"} mt-0.5`}>
+                              {formatTimeAgo(report.createdAt)}
+                              {report.addressText ? ` · 📍 ${report.addressText}` : ""}
+                            </p>
+                          </div>
+                        </div>
+
+                        <span className="text-xs font-mono text-gray-400">
+                          #{report.id?.substring(0, 8)}
+                        </span>
+                      </div>
+
+                      {report.description && (
+                        <p className={`mt-3 text-sm ${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed`}>
+                          {report.description}
+                        </p>
+                      )}
+
+                      {/* Nota de validación del administrador */}
+                      {report.validationNote && (
+                        <div className={`mt-3 p-3 rounded-xl border text-xs ${
+                          isValidated
+                            ? isDarkMode ? "bg-emerald-950/40 border-emerald-800 text-emerald-300" : "bg-emerald-50 border-emerald-200 text-emerald-800"
+                            : isRejected
+                            ? isDarkMode ? "bg-rose-950/40 border-rose-800 text-rose-300" : "bg-rose-50 border-rose-200 text-rose-800"
+                            : isDarkMode ? "bg-gray-800 border-gray-700 text-gray-300" : "bg-gray-50 border-gray-200 text-gray-700"
+                        }`}>
+                          <p className="font-bold mb-0.5">
+                            💬 {t("reporterProblem.mine.adminNote", "Nota del administrador")}:
+                          </p>
+                          <p>{report.validationNote}</p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         ) : (
           /* PESTAÑA 2: VALIDACIÓN COMUNITARIA (CU22) */

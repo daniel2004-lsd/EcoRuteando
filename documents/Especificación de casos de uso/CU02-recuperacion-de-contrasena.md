@@ -10,6 +10,34 @@
 | **Prioridad** | Media |
 | **Precondición** | El usuario debe tener una cuenta registrada y verificada en el sistema. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Usuario["👤 Usuario"]
+    SMTP["📧 Servidor SMTP"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloAuth ["Límite: Recuperación de Contraseña"]
+        CU02(["CU02: Solicitar Recuperación"])
+        ValidaMail(["Validar Correo Registrado"])
+        Token(["Generar Token Criptográfico con Expiración"])
+        Reset(["Establecer Nueva Contraseña"])
+    end
+
+    Usuario --> CU02
+    CU02 -.->|"«include»"| ValidaMail
+    CU02 -.->|"«include»"| Token
+    CU02 -.->|"«extend»"| Reset
+
+    Token --> SMTP
+    Reset --> DB
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

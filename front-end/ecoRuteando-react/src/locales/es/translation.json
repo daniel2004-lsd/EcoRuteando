@@ -144,8 +144,11 @@
     "toggleTheme": "Cambiar tema"
   },
   "routeManage": {
-    "title": "Gestión de Rutas",
-    "subtitle": "Crear, editar y administrar las rutas del sistema",
+    "title": "Mis Rutas y Favoritas",
+    "subtitle": "Tus trayectos guardados y favoritos en un solo lugar",
+    "allRoutes": "Todas mis rutas",
+    "favoritesTab": "Favoritas",
+    "viewAllRoutes": "Ver todas mis rutas",
     "backToDashboard": "Volver al Dashboard",
     "filterPlaceholder": "Filtrar por nombre...",
     "newRoute": "Nueva Ruta",
@@ -283,9 +286,12 @@
     },
     "locationLabel": "Ubicación",
     "useGps": "Usar mi ubicación actual (GPS)",
+    "useDefaultLocation": "Usar centro de Neiva",
     "gettingLocation": "Obteniendo tu ubicación...",
     "locationCaptured": "Ubicación capturada",
     "locationHint": "Indica el punto exacto del obstáculo para que nuestro equipo pueda validarlo",
+    "addressLabel": "Dirección o punto de referencia",
+    "addressPlaceholder": "Ej: Carrera 5 con Calle 10, frente al parque...",
     "descriptionLabel": "Descripción",
     "descriptionPlaceholder": "Describe el problema con detalle (ubicación, magnitud, sugerencias)...",
     "submit": "Enviar Reporte",
@@ -295,13 +301,28 @@
     "footer": "Reportar problemas ayuda a construir una mejor movilidad para todos",
     "errors": {
       "geolocationUnsupported": "Tu navegador no soporta geolocalización.",
-      "gpsFailed": "No se pudo obtener tu ubicación. Verifica los permisos del GPS.",
+      "gpsFailed": "No se pudo obtener tu ubicación. Verifica los permisos del GPS o selecciona el centro de Neiva.",
       "descriptionRequired": "Por favor describe el problema con detalle.",
-      "locationRequired": "Usa el GPS para indicar la ubicación del obstáculo.",
+      "locationRequired": "Selecciona la ubicación mediante GPS o el centro de Neiva.",
       "submitFailed": "No se pudo enviar el reporte. Intenta más tarde."
     },
     "tabReport": "Reportar Incidente",
     "tabCommunity": "Validación Comunitaria",
+    "tabMine": "Mis Reportes",
+    "mine": {
+      "title": "Mis Reportes Ciudadanos",
+      "subtitle": "Seguimiento y estado de los obstáculos que has reportado",
+      "empty": "No has enviado reportes de obstáculos todavía.",
+      "emptyHint": "Cuando reportes un problema en la vía, aparecerá aquí con su estado de validación.",
+      "loading": "Cargando tus reportes...",
+      "loadError": "No se pudieron cargar tus reportes.",
+      "statusPending": "Pendiente de validación",
+      "statusUnderReview": "En revisión",
+      "statusValidated": "Aprobado / Validado",
+      "statusRejected": "Rechazado",
+      "adminNote": "Nota del administrador",
+      "refresh": "Actualizar"
+    },
     "community": {
       "title": "Validación Comunitaria de Incidentes",
       "subtitle": "Confirma o descarta reportes cercanos para mantener seguras las vías",
@@ -584,108 +605,12 @@
     }
   },
   "admin": {
-    "dashboard": {
-      "title": "Panel de Administración",
-      "controlPanelSubtitle": "Monitoreo y control integral del sistema",
-      "back": "Volver al Dashboard",
-      "administrationPanel": "Administración Global",
-      "exporting": "Exportando...",
-      "stats": {
-        "users": "Usuarios Activos",
-        "routes": "Rutas Registradas",
-        "reports": "Reportes Viales",
-        "tickets": "Tickets de Soporte",
-        "co2": "CO₂ Total Evitado"
-      },
-      "modules": {
-        "users": {
-          "title": "Gestión de Usuarios",
-          "subtitle": "Roles, accesos y permisos"
-        },
-        "reports": {
-          "title": "Reportes de Obstáculos",
-          "subtitle": "Incidencias reportadas en vías"
-        },
-        "support": {
-          "title": "Soporte y Tickets",
-          "subtitle": "Atención a consultas de usuarios"
-        },
-        "export": {
-          "title": "Exportación de Datos",
-          "subtitle": "Reportes en Excel y PDF"
-        },
-        "audit": {
-          "title": "Auditoría del Sistema",
-          "subtitle": "Registros de eventos y cambios"
-        },
-        "settings": {
-          "title": "Configuración General",
-          "subtitle": "Parámetros de la plataforma"
-        }
-      }
-    },
-    "panel": {
-      "title": "Centro de Control EcoRuteando",
-      "systemTagline": "Gestión Inteligente de Movilidad Urbana",
-      "backToDashboard": "Volver al Dashboard",
-      "totalCo2Saved": "CO₂ Evitado Global",
-      "equivalentTrees": "Árboles Equivalentes",
-      "modulesTitle": "Módulos de Gestión",
-      "pendingActionsTitle": "Acciones Pendientes",
-      "environmentalImpact": "Impacto Ambiental Consolidado",
-      "viewStats": "Ver Estadísticas Detalladas",
-      "motivationalPhrase": "Liderando la transición hacia ciudades sostenibles.",
-      "stats": {
-        "users": "Usuarios",
-        "routes": "Rutas",
-        "reports": "Reportes",
-        "tickets": "Tickets",
-        "ecoPoints": "Puntos Eco"
-      },
-      "modules": {
-        "users": {
-          "title": "Usuarios",
-          "subtitle": "Gestión de cuentas y roles"
-        },
-        "reports": {
-          "title": "Reportes Viales",
-          "subtitle": "Validación de obstáculos"
-        },
-        "support": {
-          "title": "Soporte",
-          "subtitle": "Atención al usuario"
-        },
-        "export": {
-          "title": "Reportes",
-          "subtitle": "Descarga de métricas"
-        },
-        "audit": {
-          "title": "Auditoría",
-          "subtitle": "Trazabilidad del sistema"
-        },
-        "pois": {
-          "title": "Puntos de Interés",
-          "subtitle": "Gestión de POIs urbanos"
-        },
-        "settings": {
-          "title": "Configuración",
-          "subtitle": "Ajustes globales"
-        }
-      },
-      "pending": {
-        "reports": {
-          "label": "Reportes por revisar",
-          "desc": "Incidentes reportados por la comunidad"
-        },
-        "tickets": {
-          "label": "Tickets abiertos",
-          "desc": "Solicitudes de soporte pendientes"
-        }
-      },
-      "impact": {
-        "thanks": "Gracias a la comunidad de EcoRuteando",
-        "viaEcoRoutes": "A través de rutas sostenibles trazadas"
-      }
+    "section": {
+      "users": "Gestión de Usuarios",
+      "support": "Mesa de Ayuda y Soporte",
+      "audit": "Auditoría del Sistema",
+      "underConstruction": "Sección en construcción",
+      "backToPanel": "Volver al panel"
     }
   },
   "auth": {

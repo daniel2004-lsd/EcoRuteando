@@ -10,6 +10,34 @@
 | **Prioridad** | Alta |
 | **Precondición** | El usuario debe estar registrado y con correo verificado. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Usuario["👤 Usuario Registrado"]
+    AuthService["🔐 Servicio de Autenticación"]
+
+    subgraph ModuloAuth ["Límite: Inicio de Sesión"]
+        CU05(["CU05: Iniciar Sesión"])
+        Valida(["Validar Credenciales y Hash"])
+        JWT(["Generar Token JWT con Rol"])
+        Bloqueo(["Bloquear Temporalmente tras 5 Intentos"])
+        CU02(["CU02: Recuperar Contraseña"])
+    end
+
+    Usuario --> CU05
+    CU05 -.->|"«include»"| Valida
+    CU05 -.->|"«include»"| JWT
+    CU05 -.->|"«extend»"| Bloqueo
+    CU05 -.->|"«extend»"| CU02
+
+    Valida --> AuthService
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |
