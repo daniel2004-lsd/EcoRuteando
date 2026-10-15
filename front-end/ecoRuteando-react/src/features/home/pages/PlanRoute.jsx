@@ -9,6 +9,7 @@ import routeService from "../../../services/routeService";
 import tripService from "../../../services/tripService";
 import favoriteService from "../../../services/favoriteService";
 import { loadGoogleMapsApi } from "../../../services/googleMapsLoader";
+import { useAuth } from "../../../app/context/AuthContext";
 import toast from "react-hot-toast";
 
 // Coordenadas de Neiva (viewport inicial del mapa)
@@ -283,6 +284,7 @@ const LocationSearch = ({ placeholder, onSelect, onClear, isDarkMode, externalVa
 const PlanRoute = ({ onNavigate }) => {
   const { isDarkMode, toggleTheme } = useTheme();
   const { t } = useTranslation();
+  const { isAuthenticated, isGuest } = useAuth();
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [transportMode, setTransportMode] = useState("walking");
@@ -598,6 +600,10 @@ const PlanRoute = ({ onNavigate }) => {
 
   // Clicks explícitos para mostrar error al presionar por segunda vez
   const handleSaveClick = async () => {
+    if (!isAuthenticated) {
+      toast.error(t("planRoute.loginRequiredToSave", "Inicia sesión para guardar tus rutas personalizadas."));
+      return;
+    }
     if (saved || routeSavedId) {
       const msg = t("planRoute.errors.alreadySaved", "Esta ruta ya se encuentra guardada en Mis Rutas.");
       showActionMessage(msg, "error");
@@ -608,6 +614,10 @@ const PlanRoute = ({ onNavigate }) => {
   };
 
   const handleFavoriteClick = async () => {
+    if (!isAuthenticated) {
+      toast.error(t("planRoute.loginRequiredToFavorite", "Inicia sesión para añadir rutas a tus favoritos."));
+      return;
+    }
     if (favorited) {
       const msg = t("planRoute.errors.alreadyFavorite", "Esta ruta ya se encuentra en tus Favoritos.");
       showActionMessage(msg, "error");
@@ -890,7 +900,7 @@ const PlanRoute = ({ onNavigate }) => {
             <div className="flex items-center gap-2.5 min-w-0">
               <button
                 type="button"
-                onClick={() => onNavigate?.("/dashboard")}
+                onClick={() => onNavigate?.(isAuthenticated ? "/dashboard" : "/")}
                 className={`p-2 rounded-xl transition-all ${
                   isDarkMode
                     ? "text-gray-300 hover:text-white hover:bg-[#111C20]"

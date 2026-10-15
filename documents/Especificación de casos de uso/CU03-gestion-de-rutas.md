@@ -10,6 +10,36 @@
 | **Prioridad** | Alta |
 | **Precondición** | El usuario debe haber iniciado sesión. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano / Conductor"]
+    GIS["🌐 Motor GIS (ORS/OSRM)"]
+
+    subgraph ModuloRutas ["Límite: Planificación de Rutas"]
+        CU03(["CU03: Planificar Trayecto"])
+        CU06(["CU06: Visualizar Rutas"])
+        CU16(["CU16: Estimar Tiempo y CO₂"])
+        CU27(["CU27: Usar Direcciones Frecuentes"])
+        CU11(["CU11: Guardar Favorita"])
+        CU25(["CU25: Asistencia por Voz"])
+    end
+
+    Ciudadano --> CU03
+    CU03 -.->|"«include»"| CU06
+    CU06 -.->|"«include»"| CU16
+    CU03 -.->|"«extend»"| CU27
+    CU03 -.->|"«extend»"| CU11
+    CU03 -.->|"«extend»"| CU25
+
+    CU03 --- GIS
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |
