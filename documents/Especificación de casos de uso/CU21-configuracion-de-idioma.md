@@ -10,6 +10,32 @@
 | **Prioridad** | Media |
 | **Precondición** | Acceso a la pantalla de configuración (usuario registrado o invitado). |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Usuario["👤 Cualquier Usuario"]
+    Storage["📱 Preferencias del Dispositivo"]
+
+    subgraph ModuloPreferencias ["Límite: Selector de Idioma"]
+        CU21(["CU21: Cambiar Idioma"])
+        Seleccionar(["Elegir Idioma (Español / Inglés)"])
+        ActualizarUI(["Recargar Textos Traducibles"])
+        Persistir(["Guardar Preferencia Localmente"])
+    end
+
+    Usuario --> CU21
+    CU21 -.->|"«include»"| Seleccionar
+    CU21 -.->|"«include»"| ActualizarUI
+    CU21 -.->|"«include»"| Persistir
+
+    Persistir --- Storage
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

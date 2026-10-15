@@ -144,8 +144,11 @@
     "toggleTheme": "Toggle theme"
   },
   "routeManage": {
-    "title": "Route Management",
-    "subtitle": "Create, edit and manage system routes",
+    "title": "My Routes & Favorites",
+    "subtitle": "Your saved and favorite routes in one place",
+    "allRoutes": "All my routes",
+    "favoritesTab": "Favorites",
+    "viewAllRoutes": "View all my routes",
     "backToDashboard": "Back to Dashboard",
     "filterPlaceholder": "Filter by name...",
     "newRoute": "New Route",
@@ -283,9 +286,12 @@
     },
     "locationLabel": "Location",
     "useGps": "Use my current location (GPS)",
+    "useDefaultLocation": "Use Neiva city center",
     "gettingLocation": "Getting your location...",
     "locationCaptured": "Location captured",
     "locationHint": "Mark the exact spot of the obstacle so our team can validate it",
+    "addressLabel": "Address or landmark",
+    "addressPlaceholder": "e.g., 5th Ave and 10th St, in front of the park...",
     "descriptionLabel": "Description",
     "descriptionPlaceholder": "Describe the problem in detail (location, magnitude, suggestions)...",
     "submit": "Submit Report",
@@ -295,13 +301,28 @@
     "footer": "Reporting problems helps build better mobility for everyone",
     "errors": {
       "geolocationUnsupported": "Your browser does not support geolocation.",
-      "gpsFailed": "Could not get your location. Check your GPS permissions.",
+      "gpsFailed": "Could not get your location. Check GPS permissions or select Neiva center.",
       "descriptionRequired": "Please describe the problem in detail.",
-      "locationRequired": "Use the GPS to mark the obstacle's location.",
+      "locationRequired": "Select the location using GPS or Neiva center.",
       "submitFailed": "The report could not be submitted. Please try later."
     },
     "tabReport": "Report Incident",
     "tabCommunity": "Community Validation",
+    "tabMine": "My Reports",
+    "mine": {
+      "title": "My Citizen Reports",
+      "subtitle": "Track the validation status of the obstacles you reported",
+      "empty": "You have not submitted any obstacle reports yet.",
+      "emptyHint": "When you report an issue on the road, it will show up here along with its status.",
+      "loading": "Loading your reports...",
+      "loadError": "Could not load your reports.",
+      "statusPending": "Pending validation",
+      "statusUnderReview": "Under review",
+      "statusValidated": "Approved / Validated",
+      "statusRejected": "Rejected",
+      "adminNote": "Administrator note",
+      "refresh": "Refresh"
+    },
     "community": {
       "title": "Community Incident Validation",
       "subtitle": "Confirm or dismiss nearby reports to keep roads safe",
@@ -584,108 +605,12 @@
     }
   },
   "admin": {
-    "dashboard": {
-      "title": "Admin Dashboard",
-      "controlPanelSubtitle": "Comprehensive system monitoring and control",
-      "back": "Back to Dashboard",
-      "administrationPanel": "Global Administration",
-      "exporting": "Exporting...",
-      "stats": {
-        "users": "Active Users",
-        "routes": "Registered Routes",
-        "reports": "Road Reports",
-        "tickets": "Support Tickets",
-        "co2": "Total CO₂ Saved"
-      },
-      "modules": {
-        "users": {
-          "title": "User Management",
-          "subtitle": "Roles, access and permissions"
-        },
-        "reports": {
-          "title": "Obstacle Reports",
-          "subtitle": "Reported road incidents"
-        },
-        "support": {
-          "title": "Support & Tickets",
-          "subtitle": "User inquiry assistance"
-        },
-        "export": {
-          "title": "Data Export",
-          "subtitle": "Excel and PDF reports"
-        },
-        "audit": {
-          "title": "System Audit",
-          "subtitle": "Event logs and changes"
-        },
-        "settings": {
-          "title": "General Settings",
-          "subtitle": "Platform parameters"
-        }
-      }
-    },
-    "panel": {
-      "title": "EcoRuteando Control Center",
-      "systemTagline": "Intelligent Urban Mobility Management",
-      "backToDashboard": "Back to Dashboard",
-      "totalCo2Saved": "Global CO₂ Saved",
-      "equivalentTrees": "Equivalent Trees",
-      "modulesTitle": "Management Modules",
-      "pendingActionsTitle": "Pending Actions",
-      "environmentalImpact": "Consolidated Environmental Impact",
-      "viewStats": "View Detailed Stats",
-      "motivationalPhrase": "Leading the transition to sustainable cities.",
-      "stats": {
-        "users": "Users",
-        "routes": "Routes",
-        "reports": "Reports",
-        "tickets": "Tickets",
-        "ecoPoints": "Eco Points"
-      },
-      "modules": {
-        "users": {
-          "title": "Users",
-          "subtitle": "Account and role management"
-        },
-        "reports": {
-          "title": "Road Reports",
-          "subtitle": "Obstacle validation"
-        },
-        "support": {
-          "title": "Support",
-          "subtitle": "User service"
-        },
-        "export": {
-          "title": "Reports",
-          "subtitle": "Metric downloads"
-        },
-        "audit": {
-          "title": "Audit",
-          "subtitle": "System traceability"
-        },
-        "pois": {
-          "title": "Points of Interest",
-          "subtitle": "Urban POI management"
-        },
-        "settings": {
-          "title": "Settings",
-          "subtitle": "Global settings"
-        }
-      },
-      "pending": {
-        "reports": {
-          "label": "Pending reports",
-          "desc": "Community-reported incidents"
-        },
-        "tickets": {
-          "label": "Open tickets",
-          "desc": "Pending support requests"
-        }
-      },
-      "impact": {
-        "thanks": "Thanks to the EcoRuteando community",
-        "viaEcoRoutes": "Through planned eco-routes"
-      }
+    "section": {
+      "users": "User Management",
+      "support": "Help Desk & Support",
+      "audit": "System Audit",
+      "underConstruction": "Section under construction",
+      "backToPanel": "Back to panel"
     }
   },
   "auth": {
