@@ -1,0 +1,66 @@
+# Caso de Uso N° 19 — Exportación de historial
+
+> Requisito asociado: **RF29** · SRS EcoRuteando, sección 4.2
+
+**Descripción:** Permite al usuario exportar su historial de trayectos (vehículo y a pie) dentro de un rango de fechas en formato PDF o Excel.
+
+| Campo | Descripción |
+|---|---|
+| **Nombre** | Exportación de historial |
+| **Prioridad** | Media |
+| **Precondición** | Sesión activa y registros previos en el historial de trayectos. |
+
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Usuario["🧑‍💼 Usuario / Administrador"]
+    PDFEngine["📄 Motor de Generación PDF/Excel"]
+
+    subgraph ModuloReportes ["Límite: Exportación de Datos"]
+        CU19(["CU19: Exportar Información"])
+        RangoFechas(["Seleccionar Rango Temporal"])
+        PDF(["Generar Documento PDF"])
+        Excel(["Generar Hoja de Cálculo Excel (.xlsx)"])
+    end
+
+    Usuario --> CU19
+    CU19 -.->|"«include»"| RangoFechas
+    CU19 -.->|"«extend»"| PDF
+    CU19 -.->|"«extend»"| Excel
+
+    CU19 --- PDFEngine
+```
+
+---
+
+## Secuencia normal
+
+| Paso | Acción | Sistema |
+|:---:|---|---|
+| 1 | El usuario accede a su historial | El sistema muestra los trayectos registrados (vehículo/a pie). |
+| 2 | El usuario selecciona un rango de fechas | El sistema filtra los trayectos del período (RF29.2). |
+| 3 | El usuario pulsa “Exportar” y elige PDF o Excel | El sistema genera el archivo con los datos filtrados. |
+| 4 | — | El sistema descarga el archivo al dispositivo del usuario. |
+
+## Postcondición
+
+El archivo con el historial queda guardado en el dispositivo del usuario (RF29.1).
+
+## Excepciones (flujo alterno)
+
+| Paso | Condición | Respuesta del sistema |
+|:---:|---|---|
+| E1 | No hay trayectos en el rango elegido. | Muestra “Sin información disponible”. |
+| E2 | Error al generar el archivo (librería PDF/Excel). | Informa “Error al exportar” y sugiere reintentar. |
+| E3 | Rango de fechas inválido. | Muestra “Seleccione un rango válido”. |
+| E4 | Sesión expirada durante la exportación. | Redirige a login y cancela la descarga. |
+| E5 | Fallo de escritura/BD timeout. | Registra el error y muestra mensaje genérico. |
+
+| Campo | Descripción |
+|---|---|
+| **Actores** | Usuario |
+| **Comentarios** | Formatos: PDF y Excel (RF22.2). Trazabilidad: RF29 → CU19. |
+

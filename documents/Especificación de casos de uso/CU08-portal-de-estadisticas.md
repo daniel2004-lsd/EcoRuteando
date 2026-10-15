@@ -10,6 +10,32 @@
 | **Prioridad** | Alta |
 | **Precondición** | El administrador debe haber iniciado sesión con rol autorizado. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Admin["🛡️ Administrador / Analista"]
+    DB[("💾 PostgreSQL / Vistas")]
+
+    subgraph ModuloAdmin ["Límite: Portal de Estadísticas"]
+        CU08(["CU08: Visualizar Métricas"])
+        CO2(["Consolidar Ahorro Total de CO₂"])
+        Modalidad(["Comparativa Auto vs. Caminata"])
+        CU19(["CU19: Exportar Informe Estadístico"])
+    end
+
+    Admin --> CU08
+    CU08 -.->|"«include»"| CO2
+    CU08 -.->|"«include»"| Modalidad
+    CU08 -.->|"«extend»"| CU19
+
+    CU08 --> DB
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

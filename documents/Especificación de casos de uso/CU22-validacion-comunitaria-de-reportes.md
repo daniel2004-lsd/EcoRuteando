@@ -10,6 +10,35 @@
 | **Prioridad** | Media |
 | **Precondición** | Sesión activa con permiso `reports.vote` (para votar) o `reports.read` (para consultar). Al menos un reporte creado vía CU07. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Comunidad["👥 Comunidad de Usuarios"]
+    Admin["🛡️ Moderador Admin"]
+    DB[("💾 PostGIS")]
+
+    subgraph ModuloReportes ["Límite: Validación Comunitaria"]
+        CU22(["CU22: Validar Incidente"])
+        Voto(["Emitir Voto (Confirmar / Resolver)"])
+        AutoCierre(["Cierre Automático por Umbral de Votos"])
+        Moderar(["Moderar Directamente"])
+    end
+
+    Comunidad --> CU22
+    Admin --> Moderar
+
+    CU22 -.->|"«include»"| Voto
+    CU22 -.->|"«extend»"| AutoCierre
+    CU22 -.->|"«extend»"| Moderar
+
+    CU22 --> DB
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

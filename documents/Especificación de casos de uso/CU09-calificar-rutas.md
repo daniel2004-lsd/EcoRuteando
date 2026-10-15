@@ -10,6 +10,30 @@
 | **Prioridad** | Media |
 | **Precondición** | El usuario debe haber finalizado una ruta (vehículo o a pie). |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloSoporte ["Límite: Calificación de Rutas"]
+        CU09(["CU09: Calificar Ruta"])
+        Rating(["Asignar Puntuación 1 a 5 Estrellas"])
+        Feedback(["Añadir Observación de Seguridad/Vía"])
+    end
+
+    Ciudadano --> CU09
+    CU09 -.->|"«include»"| Rating
+    CU09 -.->|"«extend»"| Feedback
+
+    CU09 --> DB
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

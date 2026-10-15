@@ -10,6 +10,32 @@
 | **Prioridad** | Media |
 | **Precondición** | El usuario debe tener sesión activa en la aplicación. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Usuario["🧑‍💼 Usuario Registrado"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloRutas ["Límite: Rutas Favoritas"]
+        CU11(["CU11: Gestionar Favoritas"])
+        Guardar(["Guardar Ruta con Alias Personalizado"])
+        Eliminar(["Desmarcar Ruta de Favoritas"])
+        CU03(["CU03: Planificar Inmediatamente"])
+    end
+
+    Usuario --> CU11
+    CU11 -.->|"«extend»"| Guardar
+    CU11 -.->|"«extend»"| Eliminar
+    CU11 -.->|"«extend»"| CU03
+
+    CU11 --> DB
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |
