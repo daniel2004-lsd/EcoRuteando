@@ -13,7 +13,7 @@ import {
   Filler,
 } from "chart.js";
 import { Line, Bar, Doughnut } from "react-chartjs-2";
-import { LeafIcon, ArrowLeft, TrophyIcon, ChartIcon, RouteIcon, ClockIcon } from "../../../shared/components/Icons";
+import { LeafIcon, ArrowLeft, ChartIcon, RouteIcon, ClockIcon } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import tripService from "../../../services/tripService";
@@ -290,6 +290,7 @@ const UserStatistics = ({ onNavigate }) => {
     },
   ];
 
+
   return (
     <div className={`min-h-screen ${isDarkMode ? "bg-[#0B1215]" : "bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50"}`}>
       {/* Botón modo oscuro/claro */}
@@ -454,54 +455,18 @@ const UserStatistics = ({ onNavigate }) => {
               </div>
             </div>
 
-            {/* Fila 2: Distribución por Modo y Logros */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            {/* Fila 2: Distribución por Modo de Transporte */}
+            <div className="mb-8 max-w-2xl mx-auto">
               {/* Gráfico 3: Dona por Modo de Transporte */}
               <div className={`rounded-2xl p-6 shadow-md border ${isDarkMode ? "bg-[#162329] border-[#26383D]" : "bg-white border-gray-100"}`}>
-                <h3 className={`text-base font-bold mb-1 ${isDarkMode ? "text-[#e2e8f0]" : "text-gray-800"}`}>
+                <h3 className={`text-base font-bold mb-1 text-center ${isDarkMode ? "text-[#e2e8f0]" : "text-gray-800"}`}>
                   Distribución por Modo de Transporte
                 </h3>
-                <p className={`text-xs mb-4 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                <p className={`text-xs mb-4 text-center ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
                   Porcentaje de viajes según el transporte utilizado (Chart.js Doughnut)
                 </p>
-                <div className="h-[260px] w-full flex items-center justify-center">
+                <div className="h-[280px] w-full flex items-center justify-center">
                   <Doughnut data={doughnutData} options={doughnutOptions} />
-                </div>
-              </div>
-
-              {/* Logros Ambientales */}
-              <div className={`rounded-2xl p-6 shadow-md border ${isDarkMode ? "bg-[#162329] border-[#26383D]" : "bg-white border-gray-100"}`}>
-                <h3 className={`text-base font-bold mb-1 flex items-center gap-2 ${isDarkMode ? "text-[#e2e8f0]" : "text-gray-800"}`}>
-                  <TrophyIcon size={18} className="text-amber-500" />
-                  Logros y Metas Ecológicas
-                </h3>
-                <p className={`text-xs mb-4 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
-                  Incentivos por tus hábitos de movilidad limpia
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  {achievements.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className={`p-3 rounded-xl border transition-all ${
-                        item.completed
-                          ? isDarkMode
-                            ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
-                            : "bg-emerald-50 border-emerald-200 text-emerald-800"
-                          : isDarkMode
-                          ? "bg-[#162329]/40 border-[#26383D] opacity-60 text-gray-400"
-                          : "bg-gray-50 border-gray-200 opacity-60 text-gray-500"
-                      }`}
-                    >
-                      <div className="text-xl mb-1">{item.icon}</div>
-                      <p className="text-xs font-bold truncate">{item.name}</p>
-                      <p className="text-[11px] font-mono mt-0.5">{item.value}</p>
-                      {item.completed && (
-                        <span className="text-[10px] font-semibold text-emerald-500 block mt-1">
-                          ✓ Desbloqueado
-                        </span>
-                      )}
-                    </div>
-                  ))}
                 </div>
               </div>
             </div>

@@ -260,30 +260,18 @@ function Login() {
                                 <div className={`flex-1 h-px ${isDarkMode ? 'bg-[#26383D]' : 'bg-gray-200'}`} />
                             </div>
 
-                            <div className="flex gap-2">
+                            <div className="flex">
                                 <button
                                     type="button"
                                     onClick={handleGoogleLogin}
                                     disabled={retrySeconds > 0}
-                                    className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${retrySeconds > 0 ? 'opacity-50 cursor-not-allowed ' : ''}${isDarkMode
+                                    className={`w-full border rounded-lg py-2 flex justify-center items-center gap-2 transition-all duration-300 ${retrySeconds > 0 ? 'opacity-50 cursor-not-allowed ' : ''}${isDarkMode
                                         ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
                                         : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
                                     }`}
                                 >
                                     <GoogleIcon />
-                                    <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Google</span>
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={handleFacebookLogin}
-                                    disabled={retrySeconds > 0}
-                                    className={`flex-1 border rounded-lg py-2 flex justify-center items-center gap-1.5 transition-all duration-300 ${retrySeconds > 0 ? 'opacity-50 cursor-not-allowed ' : ''}${isDarkMode
-                                        ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
-                                        : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
-                                    }`}
-                                >
-                                    <FacebookIcon />
-                                    <span className={`text-[10px] font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Facebook</span>
+                                    <span className={`text-xs font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-600'}`}>Google</span>
                                 </button>
                             </div>
                         </form>
