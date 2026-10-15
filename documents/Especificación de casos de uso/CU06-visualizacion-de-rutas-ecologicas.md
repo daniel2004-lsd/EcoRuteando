@@ -10,6 +10,34 @@
 | **Prioridad** | Alta |
 | **Precondición** | El usuario debe ingresar punto de partida y destino válidos. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano / Conductor"]
+    MapAPI["🗺️ API Mapbox / Google"]
+
+    subgraph ModuloRutas ["Límite: Visualización de Rutas"]
+        CU06(["CU06: Visualizar Rutas"])
+        Trazado(["Renderizar Geometría LineString"])
+        CU16(["CU16: Indicador de CO₂ Evitado"])
+        CU17(["CU17: Mostrar POIs en Recorrido"])
+        CU07(["CU07: Visualizar Incidentes Reportados"])
+    end
+
+    Ciudadano --> CU06
+    CU06 -.->|"«include»"| Trazado
+    CU06 -.->|"«include»"| CU16
+    CU06 -.->|"«extend»"| CU17
+    CU06 -.->|"«extend»"| CU07
+
+    Trazado --- MapAPI
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

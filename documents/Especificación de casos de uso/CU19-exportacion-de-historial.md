@@ -10,6 +10,32 @@
 | **Prioridad** | Media |
 | **Precondición** | Sesión activa y registros previos en el historial de trayectos. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Usuario["🧑‍💼 Usuario / Administrador"]
+    PDFEngine["📄 Motor de Generación PDF/Excel"]
+
+    subgraph ModuloReportes ["Límite: Exportación de Datos"]
+        CU19(["CU19: Exportar Información"])
+        RangoFechas(["Seleccionar Rango Temporal"])
+        PDF(["Generar Documento PDF"])
+        Excel(["Generar Hoja de Cálculo Excel (.xlsx)"])
+    end
+
+    Usuario --> CU19
+    CU19 -.->|"«include»"| RangoFechas
+    CU19 -.->|"«extend»"| PDF
+    CU19 -.->|"«extend»"| Excel
+
+    CU19 --- PDFEngine
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |
