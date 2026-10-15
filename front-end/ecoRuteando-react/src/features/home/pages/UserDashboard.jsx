@@ -12,13 +12,6 @@ import {
   MapIcon,
   ShieldIcon,
   HeartIcon,
-<<<<<<< Updated upstream
-  ChartIcon
-} from "../../../shared/components/Icons";
-import { useTheme } from "../../../app/context/ThemeContext";
-import routeService from "../../../services/routeService";
-import tripService from "../../../services/tripService";
-=======
   ChartIcon,
   CloseIcon,
   CheckCircle
@@ -27,7 +20,6 @@ import { useTheme } from "../../../app/context/ThemeContext";
 import routeService from "../../../services/routeService";
 import favoriteService from "../../../services/favoriteService";
 import toast from "react-hot-toast";
->>>>>>> Stashed changes
 
 // ---------------------------------------------------------------------------
 // Configuración de estilos por módulo.
@@ -264,25 +256,21 @@ const UserDashboard = ({ onNavigate }) => {
       icon: <RouteIcon size={24} />,
       titleKey: "dashboard.modules.routes.title",
       subtitleKey: "dashboard.modules.routes.subtitle",
-<<<<<<< Updated upstream
-      onClick: () => onNavigate("/user/routes")
+      onClick: () => navigateOrPrompt("/user/routes")
     },
     {
       id: "historial",
       icon: <ClockIcon size={24} />,
       titleKey: "dashboard.modules.history.title",
       subtitleKey: "dashboard.modules.history.subtitle",
-      onClick: () => onNavigate("/user/history")
+      onClick: () => navigateOrPrompt("/user/history")
     },
     {
       id: "favoritos",
       icon: <HeartIcon size={24} />,
       titleKey: "dashboard.modules.favorites.title",
       subtitleKey: "dashboard.modules.favorites.subtitle",
-      onClick: () => onNavigate("/user/favorites")
-=======
-      onClick: () => navigateOrPrompt("/user/routes")
->>>>>>> Stashed changes
+      onClick: () => navigateOrPrompt("/user/favorites")
     },
     {
       id: "perfil",
@@ -310,11 +298,7 @@ const UserDashboard = ({ onNavigate }) => {
       icon: <ChartIcon size={24} />,
       titleKey: "dashboard.impact.button",
       subtitleKey: "dashboard.impact.title",
-<<<<<<< Updated upstream
-      onClick: () => onNavigate("/user/statistics")
-=======
       onClick: () => navigateOrPrompt("/user/statistics")
->>>>>>> Stashed changes
     }
   ];
 
@@ -348,17 +332,10 @@ const UserDashboard = ({ onNavigate }) => {
       onClick: () => navigateOrPrompt("/user/statistics")
     },
     {
-<<<<<<< Updated upstream
-      icon: <ActivityIcon size={20} />,
-      value: stats.points,
-      labelKey: "dashboard.stats.ecoPoints",
-      onClick: () => onNavigate("/user/statistics")
-=======
       icon: <HeartIcon size={20} />,
       value: stats.favorites,
       labelKey: "dashboard.modules.favorites.title",
       onClick: () => navigateOrPrompt("/user/routes", { state: { initialTab: "favorites" } })
->>>>>>> Stashed changes
     }
   ];
 
