@@ -250,7 +250,6 @@ const UserStatistics = ({ onNavigate }) => {
     cutout: "68%",
   };
 
-<<<<<<< Updated upstream
   // Logros dinámicos basados en la actividad real
   const achievements = [
     {
@@ -290,9 +289,7 @@ const UserStatistics = ({ onNavigate }) => {
       value: `${totalKm.toFixed(1)}/50 km`,
     },
   ];
-=======
 
->>>>>>> Stashed changes
 
   return (
     <div className={`min-h-screen ${isDarkMode ? "bg-[#0B1215]" : "bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50"}`}>

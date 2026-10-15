@@ -35,15 +35,12 @@ import RouteManage from "../features/home/pages/RouteManage";
 import AdminStatistics from "../features/admin/pages/AdminStatistics";
 import AdminReports from "../features/admin/pages/AdminReports";
 import AdminExports from "../features/admin/pages/AdminExports";
-<<<<<<< Updated upstream
-=======
 import AdminUsers from "../features/admin/pages/AdminUsers";
 import AdminSupport from "../features/admin/pages/AdminSupport";
 import AdminAudit from "../features/admin/pages/AdminAudit";
 import UserHistory from "../features/home/pages/UserHistory";
 import TripDetail from "../features/home/pages/TripDetail";
 import ReporterProblem from "../features/home/pages/ReporterProblem";
->>>>>>> Stashed changes
 
 import "leaflet/dist/leaflet.css";
 
