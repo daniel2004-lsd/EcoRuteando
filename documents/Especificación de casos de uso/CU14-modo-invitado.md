@@ -10,6 +10,32 @@
 | **Prioridad** | Baja |
 | **Precondición** | Ninguna. No requiere cuenta ni inicio de sesión. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Visitante["👤 Visitante"]
+    LocalStorage["📱 Almacenamiento Local"]
+
+    subgraph ModuloAuth ["Límite: Navegación Invitado"]
+        CU14(["CU14: Explorar como Invitado"])
+        SesionTemp(["Generar Sesión Efímera"])
+        CU03(["CU03: Planificar Rutas Básicas"])
+        CU01(["CU01: Sugerir Registro para Guardar"])
+    end
+
+    Visitante --> CU14
+    CU14 -.->|"«include»"| SesionTemp
+    CU14 -.->|"«extend»"| CU03
+    CU14 -.->|"«extend»"| CU01
+
+    SesionTemp --- LocalStorage
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

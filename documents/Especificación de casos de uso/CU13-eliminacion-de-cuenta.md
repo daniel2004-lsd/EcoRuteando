@@ -10,6 +10,32 @@
 | **Prioridad** | Media |
 | **Precondición** | El usuario debe tener sesión activa. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Usuario["🧑‍💼 Usuario Registrado"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloAuth ["Límite: Eliminación de Cuenta"]
+        CU13(["CU13: Eliminar Cuenta"])
+        Reauth(["Reautenticar con Contraseña Actual"])
+        Confirm(["Confirmar Advertencia Irreversible"])
+        Anon(["Anonimizar Trayectos para Estadísticas"])
+    end
+
+    Usuario --> CU13
+    CU13 -.->|"«include»"| Reauth
+    CU13 -.->|"«include»"| Confirm
+    CU13 -.->|"«extend»"| Anon
+
+    CU13 --> DB
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

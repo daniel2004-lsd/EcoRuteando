@@ -10,6 +10,32 @@
 | **Prioridad** | Media |
 | **Precondición** | El usuario debe tener sesión activa. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Usuario["🧑‍💼 Usuario Registrado"]
+    DB[("💾 PostgreSQL")]
+
+    subgraph ModuloAuth ["Límite: Edición de Perfil"]
+        CU12(["CU12: Editar Perfil"])
+        ValidaDatos(["Validar Formato de Datos"])
+        Pass(["Cambiar Contraseña con Verificación"])
+        Foto(["Actualizar Avatar del Perfil"])
+    end
+
+    Usuario --> CU12
+    CU12 -.->|"«include»"| ValidaDatos
+    CU12 -.->|"«extend»"| Pass
+    CU12 -.->|"«extend»"| Foto
+
+    CU12 --> DB
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

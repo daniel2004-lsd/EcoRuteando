@@ -10,6 +10,32 @@
 | **Prioridad** | Media |
 | **Precondición** | El usuario debe tener una ruta o zona visualizada en el mapa. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano / Conductor"]
+    DB[("💾 PostGIS")]
+
+    subgraph ModuloRutas ["Límite: Consulta de POIs"]
+        CU17(["CU17: Consultar POIs"])
+        FiltroCat(["Filtrar por Categoría (Taller, Zonas Verdes)"])
+        Radio(["Filtrar por Radio de Proximidad"])
+        AddParada(["Agregar POI como Parada en Ruta"])
+    end
+
+    Ciudadano --> CU17
+    CU17 -.->|"«include»"| FiltroCat
+    CU17 -.->|"«include»"| Radio
+    CU17 -.->|"«extend»"| AddParada
+
+    CU17 --> DB
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |
