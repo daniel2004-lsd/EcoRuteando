@@ -10,6 +10,32 @@
 | **Prioridad** | Baja |
 | **Precondición** | Sesión activa y al menos un recorrido finalizado o guardado. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Usuario["🧑‍💼 Usuario"]
+    OSShare["📲 Sistema Operativo / Redes"]
+
+    subgraph ModuloSocial ["Límite: Compartir Trayecto"]
+        CU20(["CU20: Compartir Recorrido"])
+        LinkOfuscado(["Generar Enlace Cifrado sin Datos Privados"])
+        Redes(["Compartir en Redes Sociales"])
+        Portapapeles(["Copiar Enlace al Portapapeles"])
+    end
+
+    Usuario --> CU20
+    CU20 -.->|"«include»"| LinkOfuscado
+    CU20 -.->|"«extend»"| Redes
+    CU20 -.->|"«extend»"| Portapapeles
+
+    LinkOfuscado --- OSShare
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

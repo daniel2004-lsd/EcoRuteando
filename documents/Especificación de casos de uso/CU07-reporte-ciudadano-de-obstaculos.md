@@ -10,6 +10,34 @@
 | **Prioridad** | Media |
 | **Precondición** | El usuario debe tener sesión activa. |
 
+---
+
+### Diagrama de Caso de Uso UML
+
+```mermaid
+flowchart LR
+    Ciudadano["🧑‍💼 Ciudadano"]
+    GPS["📡 GPS Dispositivo"]
+    DB[("💾 PostGIS")]
+
+    subgraph ModuloReportes ["Límite: Reporte de Obstáculos"]
+        CU07(["CU07: Reportar Incidente"])
+        Captura(["Capturar Coordenadas GPS"])
+        Foto(["Adjuntar Fotografía de Evidencia"])
+        CU22(["CU22: Validación Comunitaria"])
+    end
+
+    Ciudadano --> CU07
+    CU07 -.->|"«include»"| Captura
+    CU07 -.->|"«extend»"| Foto
+    CU07 -.->|"«extend»"| CU22
+
+    Captura --- GPS
+    CU07 --> DB
+```
+
+---
+
 ## Secuencia normal
 
 | Paso | Acción | Sistema |

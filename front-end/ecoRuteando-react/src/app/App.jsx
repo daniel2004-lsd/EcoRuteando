@@ -29,13 +29,21 @@ import UserStatistics from "../features/home/pages/UserStatistics";
 import UserAlerts from "../features/home/pages/UserAlert";
 import Favorites from "../features/home/pages/Favorites";
 import PlanRoute from "../features/home/pages/PlanRoute";
-import ReporterProblem from "../features/home/pages/ReporterProblem";
 import AdminPanel from "../features/admin/pages/AdminPanel";
 import PoiManage from "../features/admin/pages/PoiManage";
 import RouteManage from "../features/home/pages/RouteManage";
 import AdminStatistics from "../features/admin/pages/AdminStatistics";
 import AdminReports from "../features/admin/pages/AdminReports";
 import AdminExports from "../features/admin/pages/AdminExports";
+<<<<<<< Updated upstream
+=======
+import AdminUsers from "../features/admin/pages/AdminUsers";
+import AdminSupport from "../features/admin/pages/AdminSupport";
+import AdminAudit from "../features/admin/pages/AdminAudit";
+import UserHistory from "../features/home/pages/UserHistory";
+import TripDetail from "../features/home/pages/TripDetail";
+import ReporterProblem from "../features/home/pages/ReporterProblem";
+>>>>>>> Stashed changes
 
 import "leaflet/dist/leaflet.css";
 
@@ -138,9 +146,9 @@ function AppContent() {
                     <Route path="/user/history" element={<ProtectedRoute><UserHistory onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/history/:usageId" element={<ProtectedRoute><TripDetail onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/statistics" element={<ProtectedRoute><UserStatistics onNavigate={onNavigate} /></ProtectedRoute>} />
-                    <Route path="/user/reporter-problem" element={<ProtectedRoute><ReporterProblem onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/reporter-problem" element={<Navigate to="/dashboard" replace />} />
                     <Route path="/user/alerts" element={<ProtectedRoute><UserAlerts onNavigate={onNavigate} /></ProtectedRoute>} />
-                    <Route path="/user/favorites" element={<ProtectedRoute><Favorites onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/user/favorites" element={<Navigate to="/user/routes" state={{ initialTab: "favorites" }} replace />} />
                 </Routes>
             </main>
 
