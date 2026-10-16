@@ -721,7 +721,11 @@
       "codeResent": "Code resent successfully",
       "resendError": "Error resending code",
       "rateLimited": "Wait a moment before resending",
-      "rateLimitedResend": "Too many resend attempts. Please wait."
+      "rateLimitedResend": "Too many resend attempts. Please wait.",
+      "checkingStatus": "Checking your account status...",
+      "alreadyVerifiedTitle": "Your email is already verified!",
+      "alreadyVerifiedSubtitle": "The account with this email is already activated:",
+      "goToLogin": "Go to sign in"
     }
   }
 }
