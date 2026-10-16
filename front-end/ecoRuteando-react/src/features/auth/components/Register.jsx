@@ -66,7 +66,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
       password: form.pw
     });
 
-    toast.success(t("auth.register.successMessageNoEmail", "¡Registro exitoso! Ya puedes iniciar sesión"), {
+    toast.success(t("auth.register.successMessage", "¡Registro exitoso! Te enviamos un código a tu correo"), {
       duration: 2500,
       style: {
         background: "#065f46",
@@ -76,7 +76,7 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
     });
 
     setTimeout(() => {
-      navigate("/login");
+      navigate(`/verify-email?email=${encodeURIComponent(form.email)}`);
     }, 1500);
 
   } catch (error) {
