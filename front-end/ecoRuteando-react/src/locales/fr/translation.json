@@ -814,7 +814,11 @@
       "codeResent": "Code renvoyé avec succès",
       "resendError": "Erreur lors du renvoi du code",
       "rateLimited": "Veuillez patienter avant de renvoyer",
-      "rateLimitedResend": "Trop de tentatives de renvoi. Veuillez patienter."
+      "rateLimitedResend": "Trop de tentatives de renvoi. Veuillez patienter.",
+      "checkingStatus": "Vérification de l'état de votre compte...",
+      "alreadyVerifiedTitle": "Votre e-mail est déjà vérifié !",
+      "alreadyVerifiedSubtitle": "Le compte avec cet e-mail est déjà activé :",
+      "goToLogin": "Aller à la connexion"
     }
   }
 }
