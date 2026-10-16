@@ -723,7 +723,8 @@
       "confirmPassword": "Confirmar Senha",
       "confirmPasswordPlaceholder": "••••••••",
       "successMessage": "Conta criada com sucesso! Verifique seu e-mail para ativá-la.",
-      "errorMessage": "Erro ao criar conta. Tente novamente."
+      "errorMessage": "Erro ao criar conta. Tente novamente.",
+      "successMessageNoEmail": "Registro concluído! Você já pode entrar"
     },
     "recover": {
       "title": "Recuperar Senha",
