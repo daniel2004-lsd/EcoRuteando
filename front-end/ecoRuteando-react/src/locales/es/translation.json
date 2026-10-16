@@ -648,7 +648,8 @@
       "confirmPassword": "Confirmar Contraseña",
       "confirmPasswordPlaceholder": "••••••••",
       "successMessage": "¡Cuenta creada exitosamente! Revisa tu correo para activarla.",
-      "errorMessage": "Error al registrar la cuenta. Intenta de nuevo."
+      "errorMessage": "Error al registrar la cuenta. Intenta de nuevo.",
+      "successMessageNoEmail": "¡Registro exitoso! Ya puedes iniciar sesión"
     },
     "recover": {
       "title": "Recuperar Contraseña",
