@@ -741,7 +741,8 @@
       "confirmPassword": "Confirmer le Mot de Passe",
       "confirmPasswordPlaceholder": "••••••••",
       "successMessage": "Compte créé avec succès ! Vérifiez votre e-mail pour l'activer.",
-      "errorMessage": "Erreur lors de la création du compte. Veuillez réessayer."
+      "errorMessage": "Erreur lors de la création du compte. Veuillez réessayer.",
+      "successMessageNoEmail": "Inscription réussie ! Vous pouvez maintenant vous connecter"
     },
     "recover": {
       "title": "Récupérer le Mot de Passe",
