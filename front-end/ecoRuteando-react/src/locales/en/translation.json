@@ -648,7 +648,8 @@
       "confirmPassword": "Confirm Password",
       "confirmPasswordPlaceholder": "••••••••",
       "successMessage": "Account created successfully! Check your email to activate it.",
-      "errorMessage": "Error creating account. Please try again."
+      "errorMessage": "Error creating account. Please try again.",
+      "successMessageNoEmail": "Registration successful! You can now sign in"
     },
     "recover": {
       "title": "Recover Password",
