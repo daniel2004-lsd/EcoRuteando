@@ -13,7 +13,7 @@ import {
   Filler,
 } from "chart.js";
 import { Line, Bar, Doughnut } from "react-chartjs-2";
-import { LeafIcon, ArrowLeft, ChartIcon, RouteIcon, ClockIcon } from "../../../shared/components/Icons";
+import { LeafIcon, ArrowLeft, ChartIcon, RouteIcon, ClockIcon, TrophyIcon } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import tripService from "../../../services/tripService";
