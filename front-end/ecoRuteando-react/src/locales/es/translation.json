@@ -721,7 +721,11 @@
       "codeResent": "Código reenviado con éxito",
       "resendError": "Error al reenviar el código",
       "rateLimited": "Espera un momento antes de reenviar",
-      "rateLimitedResend": "Demasiados reenvíos. Espera un momento."
+      "rateLimitedResend": "Demasiados reenvíos. Espera un momento.",
+      "checkingStatus": "Verificando el estado de tu cuenta...",
+      "alreadyVerifiedTitle": "¡Tu correo ya está verificado!",
+      "alreadyVerifiedSubtitle": "La cuenta con el correo ya está activada:",
+      "goToLogin": "Ir al inicio de sesión"
     }
   }
 }
