@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Button from "../../../shared/components/Button";
@@ -7,7 +7,7 @@ import {
     ArrowLeft,
     ShieldIcon
 } from "../../../shared/components/Icons";
-import { sendVerificationEmail, verifyEmail } from "../../../services/authService";
+import { sendVerificationEmail, verifyEmail, getVerificationStatus } from "../../../services/authService";
 
 const VerifyEmailCode = () => {
     const { t } = useTranslation();
@@ -20,7 +20,32 @@ const VerifyEmailCode = () => {
     const [resending, setResending] = useState(false);
     const [resendMessage, setResendMessage] = useState("");
     const [error, setError] = useState("");
+    const [checkingStatus, setCheckingStatus] = useState(Boolean(email));
+    const [alreadyVerified, setAlreadyVerified] = useState(false);
     const inputs = useRef([]);
+
+    useEffect(() => {
+        if (!email) return;
+
+        let mounted = true;
+        const checkStatus = async () => {
+            try {
+                const result = await getVerificationStatus(email);
+                if (mounted && result?.alreadyVerified) {
+                    setAlreadyVerified(true);
+                }
+            } catch {
+                // Si falla la comprobación, se muestra el formulario normal.
+            } finally {
+                if (mounted) setCheckingStatus(false);
+            }
+        };
+
+        checkStatus();
+        return () => {
+            mounted = false;
+        };
+    }, [email]);
 
     const handleChange = (value, index) => {
         if (!/^[0-9]?$/.test(value)) return;
@@ -108,7 +133,11 @@ const VerifyEmailCode = () => {
         setResendMessage("");
 
         try {
-            await sendVerificationEmail(email);
+            const result = await sendVerificationEmail(email);
+            if (result?.alreadyVerified) {
+                setAlreadyVerified(true);
+                return;
+            }
             setResendMessage(t("auth.verifyEmail.codeResent", "Código reenviado. Revisa tu correo."));
         } catch (err) {
             if (err.response?.status === 429) {
@@ -120,6 +149,52 @@ const VerifyEmailCode = () => {
             setResending(false);
         }
     };
+
+    if (checkingStatus) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 flex flex-col items-center justify-center px-4 py-6">
+                <div className="w-full max-w-md mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-100 text-center">
+                    <div className="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 text-green-700 shadow-sm">
+                        <ShieldIcon />
+                    </div>
+                    <p className="text-gray-500 text-sm">
+                        {t("auth.verifyEmail.checkingStatus")}
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    if (alreadyVerified) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 flex flex-col items-center justify-center px-4 py-6">
+                <div className="w-full max-w-md mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-100 text-center">
+
+                <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                </div>
+
+                <h2 className="text-xl font-bold text-green-900 mb-2">
+                    {t("auth.verifyEmail.alreadyVerifiedTitle")}
+                </h2>
+
+                <p className="text-gray-500 text-sm mb-6">
+                    {t("auth.verifyEmail.alreadyVerifiedSubtitle")} <strong>{email}</strong>.
+                </p>
+
+                <Button
+                    onClick={() => navigate("/login", { replace: true })}
+                    className="w-full py-3.5 shadow-md"
+                >
+                    {t("auth.verifyEmail.goToLogin")}
+                </Button>
+
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 flex flex-col items-center justify-center px-4 py-6">
