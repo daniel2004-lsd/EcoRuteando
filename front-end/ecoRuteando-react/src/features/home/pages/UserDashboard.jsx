@@ -18,6 +18,7 @@ import {
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import routeService from "../../../services/routeService";
+import tripService from "../../../services/tripService";
 import favoriteService from "../../../services/favoriteService";
 import toast from "react-hot-toast";
 
