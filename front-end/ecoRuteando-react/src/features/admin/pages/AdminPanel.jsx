@@ -55,25 +55,11 @@ const AdminPanel = ({ onNavigate }) => {
 
   const modules = [
     {
-      id: "users",
-      icon: <UsersIcon size={28} />,
-      title: t("admin.panel.modules.users.title", "Gestión de Usuarios"),
-      subtitle: t("admin.panel.modules.users.subtitle", "Administrar cuentas y permisos"),
-      onClick: () => onNavigate("admin/users")
-    },
-    {
       id: "reports",
       icon: <ReportIcon size={28} />,
       title: t("admin.panel.modules.reports.title", "Reportes"),
       subtitle: t("admin.panel.modules.reports.subtitle", "Verificar y gestionar reportes"),
       onClick: () => onNavigate("admin/reports")
-    },
-    {
-      id: "support",
-      icon: <TicketIcon size={28} />,
-      title: t("admin.panel.modules.support.title", "Soporte"),
-      subtitle: t("admin.panel.modules.support.subtitle", "Tickets de ayuda y consultas"),
-      onClick: () => onNavigate("admin/support")
     },
     {
       id: "export",
@@ -83,31 +69,16 @@ const AdminPanel = ({ onNavigate }) => {
       onClick: () => onNavigate("admin/exports")
     },
     {
-      id: "audit",
-      icon: <ActivityIcon size={28} />,
-      title: t("admin.panel.modules.audit.title", "Auditoría"),
-      subtitle: t("admin.panel.modules.audit.subtitle", "Logs y actividad del sistema"),
-      onClick: () => onNavigate("admin/audit")
-    },
-    {
       id: "pois",
       icon: <MapPinIcon size={28} />,
       title: t("admin.panel.modules.pois.title", "Puntos de Interés"),
       subtitle: t("admin.panel.modules.pois.subtitle", "Gestionar lugares y marcas"),
       onClick: () => onNavigate("admin/pois")
     },
-    {
-      id: "settings",
-      icon: <SettingsIcon size={28} />,
-      title: t("admin.panel.modules.settings.title", "Configuración"),
-      subtitle: t("admin.panel.modules.settings.subtitle", "Ajustes globales del sistema"),
-      onClick: () => onNavigate("admin/settings")
-    }
   ];
 
   const pendingActions = [
-    { id: "reports", icon: <ReportIcon size={18} />, label: t("admin.panel.pending.reports.label", "Reportes sin revisar"), desc: t("admin.panel.pending.reports.desc", "Requieren atención inmediata"), count: reportCounts.pending, color: "orange" },
-    { id: "tickets", icon: <TicketIcon size={18} />, label: t("admin.panel.pending.tickets.label", "Tickets de soporte"), desc: t("admin.panel.pending.tickets.desc", "Esperando respuesta"), count: stats.tickets, color: "purple" }
+    { id: "reports", icon: <ReportIcon size={18} />, label: t("admin.panel.pending.reports.label", "Reportes sin revisar"), desc: t("admin.panel.pending.reports.desc", "Requieren atención inmediata"), count: reportCounts.pending, color: "orange" }
   ];
 
   return (
