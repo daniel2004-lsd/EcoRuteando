@@ -68,13 +68,6 @@ const AdminPanel = ({ onNavigate }) => {
       subtitle: t("admin.panel.modules.export.subtitle", "PDF, Excel y CSV"),
       onClick: () => onNavigate("admin/exports")
     },
-    {
-      id: "pois",
-      icon: <MapPinIcon size={28} />,
-      title: t("admin.panel.modules.pois.title", "Puntos de Interés"),
-      subtitle: t("admin.panel.modules.pois.subtitle", "Gestionar lugares y marcas"),
-      onClick: () => onNavigate("admin/pois")
-    },
   ];
 
   const pendingActions = [
