@@ -84,6 +84,13 @@ const AdminPanel = ({ onNavigate }) => {
 
   const modules = [
     {
+      id: "users",
+      icon: <UsersIcon size={28} />,
+      title: t("admin.panel.modules.users.title", "Gestión de Usuarios"),
+      subtitle: t("admin.panel.modules.users.subtitle", "Consultar usuarios y asignar roles"),
+      onClick: () => onNavigate("admin/users")
+    },
+    {
       id: "reports",
       icon: <ReportIcon size={28} />,
       title: t("admin.panel.modules.reports.title", "Reportes"),
