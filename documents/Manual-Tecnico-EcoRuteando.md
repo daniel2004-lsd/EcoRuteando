@@ -319,14 +319,14 @@ graph TB
         GW[Google Weather API]
         GO[Google OAuth]
         FB[Facebook OAuth]
-        SMTP[SMTP Gmail<br/>MailKit]
+        BREVO[Brevo API<br/>HTTPS 443]
     end
 
     WEB -->|"HTTP /api/* (proxy nginx)"| API
     MOB -->|"HTTP /api/* (axios)"| API
     SEC & MOB2 & NOT & ADM & INT --> PG
     MOB2 --> GM & GW
-    SEC --> GO & FB & SMTP
+    SEC --> GO & FB & BREVO
 ```
 
 ### 4.6 Flujo de solicitud
@@ -372,7 +372,7 @@ sequenceDiagram
 | Backend | PostgreSQL | TCP 5432 | Npgsql / EF Core |
 | Liquibase | PostgreSQL | TCP 5432 | JDBC (contenedor one-shot) |
 | Backend | Google Maps/Weather | HTTPS | HttpClient con API key |
-| Backend | SMTP Gmail | TCP 587 | MailKit (StartTLS) |
+| Backend | Brevo API | HTTPS 443 | HttpClient (api-key) |
 
 **No existe comunicación directa entre Frontend y App Móvil.** No hay WebSockets, gRPC ni message broker.
 ---
@@ -393,7 +393,7 @@ sequenceDiagram
 | MediatR | 14.1.0 | Desacoplamiento CQRS |
 | FluentValidation | 11.11.0 | Validación de commands/queries |
 | BCrypt.Net-Next | 4.x | Hash de contraseñas |
-| MailKit | 4.x | Envío de correos SMTP |
+| Brevo API | REST/HTTPS | Envío de correos transaccionales vía HTTPS 443 |
 | Microsoft.AspNetCore.Authentication.JwtBearer | 9.0.0 | Autenticación JWT |
 | Swashbuckle | 6.x | Swagger/OpenAPI |
 | Serilog.AspNetCore | 8.0.3 | Logging (**referenciado, sin configurar**) |
@@ -780,8 +780,8 @@ El `PermissionPolicyProvider` (Shared Kernel) resuelve políticas dinámicas `Pe
 | POST | `/sensitive/forgot-password` | Anónimo | — | Solicitud de recuperación |
 | POST | `/sensitive/reset-password` | Anónimo | — | Reset con token |
 | POST | `/sensitive/change-password` | JWT | — | Cambio autenticado |
-| POST | `/sensitive/send-verification` | Anónimo | — | Envía email de verificación |
-| POST | `/sensitive/verify-email` | Anónimo | — | Verifica token de email |
+| POST | `/sensitive/send-verification` | Anónimo | — | Envía email de verificación (no forma parte del flujo de registro actual) |
+| POST | `/sensitive/verify-email` | Anónimo | — | Verifica token de email (no forma parte del flujo de registro actual) |
 | POST | `/oauth/login` | Anónimo | — | Login OAuth (Google/Facebook) |
 | GET | `/sessions` | JWT | — | Lista sesiones activas |
 | DELETE | `/sessions/{sessionId}` | JWT | — | Revoca sesión específica |
@@ -1085,13 +1085,9 @@ El `PermissionPolicyProvider` (Shared Kernel) resuelve políticas dinámicas `Pe
 | `Jwt__Issuer` | Emisor del token | `EcoRuteando` |
 | `Jwt__Audience` | Audiencia del token | `EcoRuteandoUsers` |
 | `Jwt__ExpirationMinutes` | Minutos de expiración access token | `60` |
-| `EmailSettings__Host` | Servidor SMTP | `smtp.gmail.com` |
-| `EmailSettings__Port` | Puerto SMTP | `587` |
-| `EmailSettings__EnableSsl` | Habilitar StartTLS | `true` |
-| `EmailSettings__Username` | Usuario SMTP | Gmail address |
-| `EmailSettings__Password` | Contraseña de aplicación Gmail | **16 caracteres** |
+| `EmailSettings__ApiKey` | Clave API de Brevo (pestaña SMTP & API → API Keys) | `xkeysib-...` (NO la contraseña SMTP) |
 | `EmailSettings__FromName` | Nombre del remitente | `EcoRuteando` |
-| `EmailSettings__FromEmail` | Email del remitente | `no-reply@ecoruteando.com` |
+| `EmailSettings__FromEmail` | Email del remitente (debe estar verificado como remitente en Brevo) | Gmail personal verificado o dominio propio |
 | `Google__ClientId` | Client ID OAuth Google | Console Cloud |
 | `Google__ClientSecret` | Client Secret OAuth Google | Console Cloud |
 | `Facebook__AppId` | App ID OAuth Facebook | Meta Developers |
@@ -1554,13 +1550,14 @@ docker compose exec -T postgres psql -U postgres ecoRuteando_db < backup_2026101
 | No funciona en dispositivo físico | Backend en localhost | `adb reverse tcp:5124 tcp:5124` o usar IP local |
 | Avatar no persiste | SecureStore por usuario | Verificar que `userId` esté en SecureStore antes de montar AvatarContext |
 
-### 16.4 SMTP / correos
+### 16.4 Correos (Brevo API)
 
 | Síntoma | Causa | Solución |
 |---------|-------|----------|
-| No llegan correos de verificación | SMTP mal configurado en Docker | Aplicar fix de variables de entorno SMTP en docker-compose |
-| `Invalid login` Gmail | Contraseña de app incorrecta | Generar contraseña de aplicación de 16 caracteres en Google Account |
-| Usuarios no verificados | Falta fix de verificación | SQL: `UPDATE security.users SET email_verified = true WHERE email = '<email>';` |
+| `Brevo devolvió 401` / `Key not found` | Se pegó la contraseña SMTP (`xsmtpsib-`) en vez de la API key | Generar API key en Brevo → SMTP & API → pestaña **API Keys** (empieza con `xkeysib-` o `v3-`) |
+| `Brevo devolvió 403` | Remitente no verificado en Brevo | Verificar el correo del remitente en Brevo → Senders |
+| Correo no llega al destino | Caído en spam o restricción de IP | Revisar spam; NO activar "Authorized IPs" en Brevo (Render no tiene IP fija en plan free) |
+| Registro no pide código de verificación | **Desactivado intencionalmente** | Los usuarios se crean ya verificados (`user.VerifyEmail()` en registro); pendiente reactivar cuando se defina proveedor definitivo |
 
 ### 16.5 Errores de autenticación
 
@@ -1592,7 +1589,7 @@ docker compose exec -T postgres psql -U postgres ecoRuteando_db < backup_2026101
 | OAuth Google | `Google__ClientId` / `Google__ClientSecret` | ✅ Implementado |
 | OAuth Facebook | `Facebook__AppId` / `Facebook__AppSecret` | ✅ Implementado |
 | 2FA TOTP | Secretos cifrados con AES-256-GCM | ✅ Implementado |
-| Verificación de email | Tokens hasheados con expiración | ✅ Implementado (parcialmente operativo en Docker — SMTP roto) |
+| Verificación de email | Tokens hasheados con expiración | ⏸️ Desactivada temporalmente (usuarios se crean verificados; infra Brevo lista para reactivar) |
 | Recuperación de contraseña | Tokens hasheados con expiración | ✅ Implementado |
 
 ### 17.2 Autorización (RBAC + permisos)
@@ -1630,7 +1627,7 @@ docker compose exec -T postgres psql -U postgres ecoRuteando_db < backup_2026101
 | # | Hallazgo | Severidad | Descripción |
 |---|---------|-----------|-------------|
 | 1 | **API keys hardcodeadas en `.env` commiteado** | 🔴 Alta | Claves reales de Google Maps y OAuth presentes en `.env` que fue commiteado al repositorio. **Acción inmediata:** rotar claves, remover del historial de git, `.env` en `.gitignore`. |
-| 2 | **SMTP roto en Docker** | 🟠 Media | Configuración SMTP no funciona en el stack Docker — correos de verificación no se envían. Workaround manual: marcar usuarios como `email_verified=true`. |
+| 2 | ~~SMTP roto~~ migrado a Brevo API | ✅ Resuelto | Envío vía Brevo API (HTTPS 443). La verificación de correo quedó desactivada intencionalmente hasta definir proveedor definitivo. |
 | 3 | **`SuperAdmin` no sembrado** | 🟡 Baja | El rol existe en código pero no está en los seeds de Liquibase. |
 | 4 | **Sin rate limiting** | 🟡 Baja | No hay `[EnableRateLimiting]` en endpoints de login/refresh. |
 | 5 | **Serilog sin configurar** | 🟡 Baja | Logging estructurado no activo — dificulta auditoría forense. |
@@ -1659,8 +1656,8 @@ docker compose exec -T postgres psql -U postgres ecoRuteando_db < backup_2026101
 | Gestión de usuarios | ✅ Completo | CRUD con permisos |
 | Roles y permisos | ✅ Completo | RBAC + permisos granulares |
 | 2FA TOTP | ✅ Completo | Habilitar/verificar/deshabilitar |
-| Verificación de email | ⚠️ Parcial | Código completo, SMTP roto en Docker |
-| Recuperación de contraseña | ⚠️ Parcial | Código completo, SMTP roto en Docker |
+| Verificación de email | ⏸️ Desactivada | Código completo; desactivada en flujo de registro/login (Brevo API disponible para reactivar) |
+| Recuperación de contraseña | ✅ Operativa | Envío de código vía Brevo API (HTTPS 443) |
 | Sesiones (listar/revocar) | ✅ Completo | IP + User Agent |
 | Auditoría de seguridad | ✅ Completo | Eventos en `security_audit` |
 | Política de seguridad | ✅ Completo | Configurable por admin |
@@ -1757,7 +1754,7 @@ docker compose exec -T postgres psql -U postgres ecoRuteando_db < backup_2026101
 
 **Funcionalidades principales completamente operativas:** autenticación, autorización, planificación de rutas, gestión de rutas/POIs, favoritos, calificaciones, reportes de obstáculos, historial de viajes, estadísticas, exportes, configuración, soporte, notificaciones in-app, panel admin, app móvil.
 
-**Principales gaps:** SMTP en Docker, push notifications (envío real), suite de pruebas automatizadas, CI/CD, Serilog.
+**Principales gaps:** reactivación de verificación de correo (desactivada temporalmente), push notifications (envío real), suite de pruebas automatizadas, CI/CD, Serilog.
 ---
 
 ## 19. Glosario técnico
