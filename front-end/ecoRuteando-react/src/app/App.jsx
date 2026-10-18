@@ -124,11 +124,7 @@ function AppContent() {
                     <Route path="/verify-2fa" element={<TwoFactorVerify />} />
                     <Route path="/dashboard" element={<ProtectedRoute allowGuest><UserDashboard onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminPanel onNavigate={onNavigate} /></ProtectedRoute>} />
-                    <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.users" /></ProtectedRoute>} />
                     <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminReports onNavigate={onNavigate} /></ProtectedRoute>} />
-                    <Route path="/admin/support" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.support" /></ProtectedRoute>} />
-                    <Route path="/admin/audit" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.audit" /></ProtectedRoute>} />
-                    <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><AdminSection title="admin.section.settings" /></ProtectedRoute>} />
                     <Route path="/admin/impact" element={<ProtectedRoute requiredRole="admin"><AdminStatistics onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/exports" element={<ProtectedRoute requiredRole="admin"><AdminExports onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/pois" element={<ProtectedRoute requiredRole="admin"><PoiManage onNavigate={onNavigate} /></ProtectedRoute>} />
