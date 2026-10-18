@@ -30,7 +30,6 @@ import UserAlerts from "../features/home/pages/UserAlert";
 import Favorites from "../features/home/pages/Favorites";
 import PlanRoute from "../features/home/pages/PlanRoute";
 import AdminPanel from "../features/admin/pages/AdminPanel";
-import PoiManage from "../features/admin/pages/PoiManage";
 import RouteManage from "../features/home/pages/RouteManage";
 import AdminStatistics from "../features/admin/pages/AdminStatistics";
 import AdminReports from "../features/admin/pages/AdminReports";
@@ -127,7 +126,6 @@ function AppContent() {
                     <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminReports onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/impact" element={<ProtectedRoute requiredRole="admin"><AdminStatistics onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/exports" element={<ProtectedRoute requiredRole="admin"><AdminExports onNavigate={onNavigate} /></ProtectedRoute>} />
-                    <Route path="/admin/pois" element={<ProtectedRoute requiredRole="admin"><PoiManage onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/profile" element={<ProtectedRoute><UserProfile onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/plan-route" element={<ProtectedRoute allowGuest><PlanRoute onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/routes" element={<ProtectedRoute><RouteManage onNavigate={onNavigate} /></ProtectedRoute>} />
