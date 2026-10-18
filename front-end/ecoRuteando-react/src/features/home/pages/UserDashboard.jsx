@@ -267,25 +267,11 @@ const UserDashboard = ({ onNavigate }) => {
       onClick: () => navigateOrPrompt("/user/history")
     },
     {
-      id: "favoritos",
-      icon: <HeartIcon size={24} />,
-      titleKey: "dashboard.modules.favorites.title",
-      subtitleKey: "dashboard.modules.favorites.subtitle",
-      onClick: () => navigateOrPrompt("/user/favorites")
-    },
-    {
       id: "perfil",
       icon: <UsersIcon size={24} />,
       titleKey: "dashboard.modules.profile.title",
       subtitleKey: "dashboard.modules.profile.subtitle",
       onClick: () => navigateOrPrompt("/profile")
-    },
-    {
-      id: "historial",
-      icon: <ClockIcon size={24} />,
-      titleKey: "dashboard.modules.history.title",
-      subtitleKey: "dashboard.modules.history.subtitle",
-      onClick: () => navigateOrPrompt("/user/history")
     },
     {
       id: "alertas",
