@@ -35,6 +35,7 @@ import AdminStatistics from "../features/admin/pages/AdminStatistics";
 import AdminReports from "../features/admin/pages/AdminReports";
 import AdminExports from "../features/admin/pages/AdminExports";
 import AdminAudit from "../features/admin/pages/AdminAudit";
+import AdminUsers from "../features/admin/pages/AdminUsers";
 import ReporterProblem from "../features/home/pages/ReporterProblem";
 
 import "leaflet/dist/leaflet.css";
@@ -126,6 +127,7 @@ function AppContent() {
                     <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminPanel onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminReports onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/audit" element={<ProtectedRoute requiredRole="admin"><AdminAudit onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminUsers onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/impact" element={<ProtectedRoute requiredRole="admin"><AdminStatistics onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/exports" element={<ProtectedRoute requiredRole="admin"><AdminExports onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/profile" element={<ProtectedRoute><UserProfile onNavigate={onNavigate} /></ProtectedRoute>} />
