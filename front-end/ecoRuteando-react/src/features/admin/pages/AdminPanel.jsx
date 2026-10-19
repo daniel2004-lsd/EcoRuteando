@@ -17,7 +17,6 @@ import {
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import { useTranslation } from "react-i18next";
-import obstacleReportService from "../../../services/obstacleReportService";
 import statsService from "../../../services/statsService";
 import supportService from "../../../services/supportService";
 import userService from "../../../services/userService";
@@ -31,26 +30,12 @@ const AdminPanel = ({ onNavigate }) => {
     users: 0,
     routes: 0,
     tickets: 0,
+    pendingTickets: 0,
     co2Saved: 0
   });
 
-  const [reportCounts, setReportCounts] = useState({ total: 0, pending: 0 });
-
   useEffect(() => {
     let active = true;
-
-    obstacleReportService
-      .getReportsForAdmin()
-      .then((reports) => {
-        if (!active) return;
-        setReportCounts({
-          total: reports.length,
-          pending: reports.filter((r) => r.status === "pending").length,
-        });
-      })
-      .catch((err) => {
-        console.error("Error cargando reportes:", err);
-      });
 
     statsService
       .getStats()
@@ -71,9 +56,12 @@ const AdminPanel = ({ onNavigate }) => {
       .getAllTickets()
       .then((tickets) => {
         if (!active) return;
+        const list = Array.isArray(tickets) ? tickets : (tickets?.items || []);
+        const pending = list.filter((t) => t.status === "Open" || t.status === "Pending" || t.status === "InProgress").length;
         setStats((prev) => ({
           ...prev,
-          tickets: Array.isArray(tickets) ? tickets.length : 0,
+          tickets: list.length,
+          pendingTickets: pending,
         }));
       })
       .catch((err) => {
@@ -121,11 +109,11 @@ const AdminPanel = ({ onNavigate }) => {
       onClick: () => onNavigate("admin/users")
     },
     {
-      id: "reports",
-      icon: <ReportIcon size={28} />,
-      title: t("admin.panel.modules.reports.title", "Reportes"),
-      subtitle: t("admin.panel.modules.reports.subtitle", "Verificar y gestionar reportes"),
-      onClick: () => onNavigate("admin/reports")
+      id: "tickets",
+      icon: <TicketIcon size={28} />,
+      title: t("admin.panel.modules.tickets.title", "Gestión de Tickets (PQRS)"),
+      subtitle: t("admin.panel.modules.tickets.subtitle", "Atender consultas y solicitudes de usuarios"),
+      onClick: () => onNavigate("admin/tickets")
     },
     {
       id: "audit",
@@ -151,7 +139,7 @@ const AdminPanel = ({ onNavigate }) => {
   ];
 
   const pendingActions = [
-    { id: "reports", icon: <ReportIcon size={18} />, label: t("admin.panel.pending.reports.label", "Reportes sin revisar"), desc: t("admin.panel.pending.reports.desc", "Requieren atención inmediata"), count: reportCounts.pending, color: "orange" }
+    { id: "tickets", icon: <TicketIcon size={18} />, label: t("admin.panel.pending.tickets.label", "Tickets pendientes"), desc: t("admin.panel.pending.tickets.desc", "Consultas de usuarios por atender"), count: stats.pendingTickets, color: "blue", onClick: () => onNavigate("admin/tickets") }
   ];
 
   return (
@@ -206,9 +194,12 @@ const AdminPanel = ({ onNavigate }) => {
         </div>
 
         {/* Grid de estadísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           {/* Usuarios */}
-          <div className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}>
+          <div
+            onClick={() => onNavigate("admin/users")}
+            className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg cursor-pointer ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}
+          >
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2 ${isDarkMode ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
               <UsersIcon size={20} className="text-emerald-500" />
             </div>
@@ -217,7 +208,10 @@ const AdminPanel = ({ onNavigate }) => {
           </div>
 
           {/* Rutas */}
-          <div className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}>
+          <div
+            onClick={() => onNavigate("admin/impact")}
+            className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg cursor-pointer ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}
+          >
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2 ${isDarkMode ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
               <RouteIcon size={20} className="text-emerald-500" />
             </div>
@@ -225,24 +219,17 @@ const AdminPanel = ({ onNavigate }) => {
             <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{t("admin.panel.stats.routes", "Rutas")}</p>
           </div>
 
-          {/* Reportes */}
-          <div className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}>
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2 ${isDarkMode ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
-              <ReportIcon size={20} className="text-emerald-500" />
-            </div>
-            <p className={`text-2xl font-black ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{reportCounts.total}</p>
-            <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{t("admin.panel.stats.reports", "Reportes")}</p>
-          </div>
-
-          {/* Tickets */}
-          <div className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}>
+          {/* Tickets de Soporte */}
+          <div
+            onClick={() => onNavigate("admin/tickets")}
+            className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg cursor-pointer ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}
+          >
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2 ${isDarkMode ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
               <TicketIcon size={20} className="text-emerald-500" />
             </div>
             <p className={`text-2xl font-black ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{stats.tickets}</p>
-            <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{t("admin.panel.stats.tickets", "Tickets")}</p>
+            <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{t("admin.panel.stats.tickets", "Tickets de Soporte (PQRS)")}</p>
           </div>
-
         </div>
 
         {/* Título de módulos */}
