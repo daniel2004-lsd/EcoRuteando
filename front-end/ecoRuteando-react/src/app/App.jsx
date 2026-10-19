@@ -33,7 +33,7 @@ import PlanRoute from "../features/home/pages/PlanRoute";
 import AdminPanel from "../features/admin/pages/AdminPanel";
 import RouteManage from "../features/home/pages/RouteManage";
 import AdminStatistics from "../features/admin/pages/AdminStatistics";
-import AdminReports from "../features/admin/pages/AdminReports";
+import AdminTickets from "../features/admin/pages/AdminTickets";
 import AdminExports from "../features/admin/pages/AdminExports";
 import AdminAudit from "../features/admin/pages/AdminAudit";
 import AdminUsers from "../features/admin/pages/AdminUsers";
@@ -126,7 +126,8 @@ function AppContent() {
                     <Route path="/verify-2fa" element={<TwoFactorVerify />} />
                     <Route path="/dashboard" element={<ProtectedRoute allowGuest><UserDashboard onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminPanel onNavigate={onNavigate} /></ProtectedRoute>} />
-                    <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminReports onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/admin/tickets" element={<ProtectedRoute requiredRole="admin"><AdminTickets onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/admin/reports" element={<Navigate to="/admin/tickets" replace />} />
                     <Route path="/admin/audit" element={<ProtectedRoute requiredRole="admin"><AdminAudit onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminUsers onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/impact" element={<ProtectedRoute requiredRole="admin"><AdminStatistics onNavigate={onNavigate} /></ProtectedRoute>} />
