@@ -169,8 +169,11 @@ const UserDashboard = ({ onNavigate }) => {
     routes: 0,
     trips: 0,
     co2Saved: 0,
-    points: 0
+    points: 0,
+    favorites: 0
   });
+
+  const [recentTrips, setRecentTrips] = useState([]);
 
   useEffect(() => {
     let mounted = true;
@@ -194,24 +197,28 @@ const UserDashboard = ({ onNavigate }) => {
       if (!token && !user) return; // Modo invitado: no cargar stats
 
       try {
-        const [routesRes, tripsRes] = await Promise.allSettled([
+        const [routesRes, tripsRes, favoritesRes] = await Promise.allSettled([
           routeService.getAll(),
-          tripService.getAll()
+          tripService.getAll(),
+          favoriteService.getAll()
         ]);
 
         const routes = routesRes.status === "fulfilled" && Array.isArray(routesRes.value) ? routesRes.value : [];
         const trips = tripsRes.status === "fulfilled" && Array.isArray(tripsRes.value) ? tripsRes.value : [];
+        const favorites = favoritesRes.status === "fulfilled" && Array.isArray(favoritesRes.value) ? favoritesRes.value : [];
 
         const completedTrips = trips.filter((t) => t.completed);
         const totalCO2 = completedTrips.reduce((sum, r) => sum + (parseFloat(r.actualCo2Kg) || 0), 0);
         const totalKm = completedTrips.reduce((sum, r) => sum + (parseFloat(r.actualDistanceKm) || 0), 0);
 
         if (mounted) {
+          setRecentTrips(trips.slice(0, 3));
           setStats({
             routes: routes.length,
             trips: completedTrips.length,
             co2Saved: totalCO2.toFixed(1),
-            points: Math.round(totalKm * 10)
+            points: Math.round(totalKm * 10),
+            favorites: favorites.length
           });
         }
       } catch (error) {
@@ -433,6 +440,67 @@ const UserDashboard = ({ onNavigate }) => {
             <ModuleCard key={module.id} module={module} isDarkMode={isDarkMode} t={t} />
           ))}
         </div>
+
+        {/* RECORRIDOS RECIENTES Y SINCRONIZACIÓN MÓVIL/WEB */}
+        {recentTrips.length > 0 && (
+          <section
+            className={`rounded-3xl p-6 md:p-8 shadow-md border mb-10 transition-all ${
+              isDarkMode ? "bg-[#162329] border-[#26383D]" : "bg-white border-emerald-100"
+            }`}
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+              <div>
+                <h3 className={`text-xl font-bold tracking-tight ${isDarkMode ? "text-emerald-50" : "text-gray-900"}`}>
+                  {t("dashboard.recentTrips.title", "Últimos Recorridos Sincronizados")}
+                </h3>
+                <p className={`text-xs sm:text-sm mt-1 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                  {t("dashboard.recentTrips.subtitle", "Trazabilidad de tus trayectos completados en la app móvil y en la web.")}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => onNavigate("/user/history")}
+                className="text-xs sm:text-sm font-semibold text-emerald-500 hover:text-emerald-600 hover:underline flex items-center gap-1"
+              >
+                <span>{t("dashboard.recentTrips.viewAll", "Ver historial completo")}</span>
+                <span>→</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {recentTrips.map((trip) => (
+                <div
+                  key={trip.usageId}
+                  className={`p-4 rounded-2xl border transition-all ${
+                    isDarkMode ? "bg-[#111C20] border-[#26383D]" : "bg-gray-50 border-gray-200"
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${
+                      trip.source === "mobile"
+                        ? isDarkMode ? "bg-sky-950/70 text-sky-400 border-sky-800" : "bg-sky-50 text-sky-700 border-sky-200"
+                        : isDarkMode ? "bg-purple-950/70 text-purple-400 border-purple-800" : "bg-purple-50 text-purple-700 border-purple-200"
+                    }`}>
+                      {trip.source === "mobile" ? "📱 App Móvil" : "💻 Web"}
+                    </span>
+                    <span className={`text-[11px] ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                      {trip.startedAt ? new Date(trip.startedAt).toLocaleDateString() : ""}
+                    </span>
+                  </div>
+
+                  <h4 className={`text-sm font-bold truncate mb-2 ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}>
+                    {trip.routeName?.replace(/^Viaje:\s*/i, "")?.replace(/\s*\(\d+\)$/, "") || trip.routeName || "Trayecto sostenible"}
+                  </h4>
+
+                  <div className="flex items-center justify-between text-xs font-medium text-emerald-500">
+                    <span>📏 {trip.actualDistanceKm != null ? `${trip.actualDistanceKm} km` : "—"}</span>
+                    <span>🌿 {trip.actualCo2Kg != null ? `${trip.actualCo2Kg} kg CO₂` : "—"}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* IMPACTO AMBIENTAL */}
         <section

@@ -4,6 +4,7 @@ import { LeafIcon, MapIcon, ActivityIcon, HeartIcon, CloseIcon } from "../../../
 import { useTheme } from "../../../app/context/ThemeContext";
 import { useLanguage } from "../../../app/context/LanguageContext";
 import { useAuth } from "../../../hooks/useAuth";
+import TermsModal from "../../../shared/components/TermsModal";
 
 /* ── Ícono globo inline ── */
 const GlobeIcon = () => (
@@ -35,6 +36,7 @@ const HomePage = ({ onNavigate }) => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
   const { isDarkMode, toggleTheme } = useTheme();
   const { language, changeLanguage: setGlobalLanguage } = useLanguage();
   const dropdownRef = useRef(null);
@@ -572,14 +574,35 @@ const HomePage = ({ onNavigate }) => {
           </p>
 
           <div className="flex justify-center gap-8 text-sm text-gray-500">
-            <button className={`transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded ${isDarkMode ? 'hover:text-[#34D399]' : 'hover:text-emerald-400'}`}>{footerPrivacy}</button>
+            <button
+              onClick={() => setShowTerms(true)}
+              className={`transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded ${isDarkMode ? 'hover:text-[#34D399]' : 'hover:text-emerald-400'}`}
+            >
+              {footerPrivacy}
+            </button>
             <span className="text-gray-600">|</span>
-            <button className={`transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded ${isDarkMode ? 'hover:text-[#34D399]' : 'hover:text-emerald-400'}`}>{footerTerms}</button>
+            <button
+              onClick={() => setShowTerms(true)}
+              className={`transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded ${isDarkMode ? 'hover:text-[#34D399]' : 'hover:text-emerald-400'}`}
+            >
+              {footerTerms}
+            </button>
             <span className="text-gray-600">|</span>
-            <button className={`transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded ${isDarkMode ? 'hover:text-[#34D399]' : 'hover:text-emerald-400'}`}>{footerContact}</button>
+            <button
+              onClick={() => onNavigate("/user/plan-route")}
+              className={`transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded ${isDarkMode ? 'hover:text-[#34D399]' : 'hover:text-emerald-400'}`}
+            >
+              {footerContact}
+            </button>
           </div>
         </div>
       </footer>
+
+      <TermsModal
+        isOpen={showTerms}
+        onClose={() => setShowTerms(false)}
+        showAcceptButton={false}
+      />
 
       <style>{`
         @keyframes float {
