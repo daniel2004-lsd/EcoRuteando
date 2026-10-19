@@ -333,6 +333,13 @@ const UserHistory = ({ onNavigate }) => {
                                             <span className={`text-xs px-2 py-0.5 rounded-full ${isDarkMode ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600'}`}>
                                                 {transportLabel(trip.transportMode)}
                                             </span>
+                                            <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${
+                                                trip.source === 'mobile'
+                                                    ? isDarkMode ? 'bg-sky-950/70 text-sky-400 border-sky-800' : 'bg-sky-50 text-sky-700 border-sky-200'
+                                                    : isDarkMode ? 'bg-purple-950/70 text-purple-400 border-purple-800' : 'bg-purple-50 text-purple-700 border-purple-200'
+                                            }`}>
+                                                {trip.source === 'mobile' ? '📱 App Móvil' : '💻 Plataforma Web'}
+                                            </span>
                                         </div>
                                         <div className="flex flex-wrap gap-4 text-sm">
                                             <div className={`flex items-center gap-1 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>

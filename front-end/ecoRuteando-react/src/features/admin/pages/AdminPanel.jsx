@@ -12,13 +12,16 @@ import {
   ShieldIcon,
   ClockIcon,
   MapPinIcon,
-  CalendarIcon
+  CalendarIcon,
+  ChartIcon
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import obstacleReportService from "../../../services/obstacleReportService";
 import statsService from "../../../services/statsService";
 import supportService from "../../../services/supportService";
+import userService from "../../../services/userService";
+import routeService from "../../../services/routeService";
 
 const AdminPanel = ({ onNavigate }) => {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -77,6 +80,33 @@ const AdminPanel = ({ onNavigate }) => {
         console.error("Error cargando tickets:", err);
       });
 
+    // Totales reales (el analytics solo cuenta viajes completados → daba 0)
+    userService
+      .getUsers()
+      .then((list) => {
+        if (!active) return;
+        setStats((prev) => ({
+          ...prev,
+          users: Array.isArray(list) ? list.length : 0,
+        }));
+      })
+      .catch((err) => {
+        console.error("Error cargando usuarios:", err);
+      });
+
+    routeService
+      .getAll()
+      .then((list) => {
+        if (!active) return;
+        setStats((prev) => ({
+          ...prev,
+          routes: Array.isArray(list) ? list.length : 0,
+        }));
+      })
+      .catch((err) => {
+        console.error("Error cargando rutas:", err);
+      });
+
     return () => {
       active = false;
     };
@@ -103,6 +133,13 @@ const AdminPanel = ({ onNavigate }) => {
       title: t("admin.panel.modules.audit.title", "Auditoría"),
       subtitle: t("admin.panel.modules.audit.subtitle", "Registro de actividad del sistema"),
       onClick: () => onNavigate("admin/audit")
+    },
+    {
+      id: "statistics",
+      icon: <ChartIcon size={28} />,
+      title: t("admin.panel.modules.statistics.title", "Estadísticas Generales"),
+      subtitle: t("admin.panel.modules.statistics.subtitle", "Impacto global, usuarios, rutas y CO₂"),
+      onClick: () => onNavigate("admin/impact")
     },
     {
       id: "export",

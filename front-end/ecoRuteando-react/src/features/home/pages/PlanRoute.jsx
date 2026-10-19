@@ -1127,78 +1127,50 @@ const PlanRoute = ({ onNavigate }) => {
                   )}
                 </div>
 
-                {/* Botones de acción del viaje (Iniciar / Guardar) */}
-                {activeTripId ? (
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className={`text-xs font-bold ${isDarkMode ? "text-emerald-400" : "text-emerald-700"}`}>
-                          {t("planRoute.inProgress")}
-                        </span>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={completeTrip}
-                      disabled={completing}
-                      className="w-full py-2.5 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 shadow-md transition-all flex items-center justify-center gap-2"
-                    >
-                      {completing ? t("planRoute.completing") : t("planRoute.complete")}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {/* Botón principal: Iniciar viaje */}
-                    <button
-                      type="button"
-                      onClick={startTrip}
-                      disabled={startingTrip}
-                      className={`w-full py-2.5 px-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5 transition-all shadow-md ${
-                        isDarkMode ? "bg-emerald-600 hover:bg-emerald-500" : "bg-[#1a5c2a] hover:bg-[#145223]"
-                      }`}
-                    >
-                      <NavigationIcon className="w-3.5 h-3.5" />
-                      <span>{startingTrip ? t("planRoute.starting") : t("planRoute.start")}</span>
-                    </button>
+                                {/* Botones de guardar y favoritos */}
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={handleSaveClick}
+                    disabled={saving}
+                    className={`py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border ${
+                      saved || routeSavedId
+                        ? isDarkMode ? "bg-emerald-950/40 text-emerald-400 border-emerald-800" : "bg-emerald-50 text-emerald-800 border-emerald-300"
+                        : isDarkMode
+                          ? "bg-[#162329] text-gray-200 border-[#26383D] hover:bg-[#1f3037]"
+                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100 shadow-sm"
+                    }`}
+                  >
+                    <BookmarkIcon className="w-3.5 h-3.5" />
+                    <span>{saved || routeSavedId ? t("planRoute.savedInMyRoutes") : saving ? t("planRoute.saving") : t("planRoute.save")}</span>
+                  </button>
 
-                    {/* Botones secundarios: Guardar en Mis Rutas y Añadir a Favoritos */}
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={handleSaveClick}
-                        disabled={saving}
-                        className={`py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border ${
-                          saved || routeSavedId
-                            ? isDarkMode ? "bg-emerald-950/40 text-emerald-400 border-emerald-800" : "bg-emerald-50 text-emerald-800 border-emerald-300"
-                            : isDarkMode
-                              ? "bg-[#162329] text-gray-200 border-[#26383D] hover:bg-[#1f3037]"
-                              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100 shadow-sm"
-                        }`}
-                      >
-                        <BookmarkIcon className="w-3.5 h-3.5" />
-                        <span>{saved || routeSavedId ? t("planRoute.savedInMyRoutes") : saving ? t("planRoute.saving") : t("planRoute.save")}</span>
-                      </button>
+                  <button
+                    type="button"
+                    onClick={handleFavoriteClick}
+                    disabled={favoriting}
+                    className={`py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border ${
+                      favorited
+                        ? isDarkMode ? "bg-rose-950/40 text-rose-400 border-rose-800" : "bg-rose-50 text-rose-700 border-rose-300"
+                        : isDarkMode
+                          ? "bg-[#162329] text-gray-200 border-[#26383D] hover:bg-[#1f3037]"
+                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100 shadow-sm"
+                    }`}
+                  >
+                    <HeartIcon className={`w-3.5 h-3.5 ${favorited ? "text-rose-500 fill-rose-500" : ""}`} filled={favorited} />
+                    <span>{favorited ? t("planRoute.favorited") : favoriting ? t("planRoute.favoriting") : t("planRoute.favorite")}</span>
+                  </button>
+                </div>
 
-                      <button
-                        type="button"
-                        onClick={handleFavoriteClick}
-                        disabled={favoriting}
-                        className={`py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border ${
-                          favorited
-                            ? isDarkMode ? "bg-rose-950/40 text-rose-400 border-rose-800" : "bg-rose-50 text-rose-700 border-rose-300"
-                            : isDarkMode
-                              ? "bg-[#162329] text-gray-200 border-[#26383D] hover:bg-[#1f3037]"
-                              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100 shadow-sm"
-                        }`}
-                      >
-                        <HeartIcon className={`w-3.5 h-3.5 ${favorited ? "text-rose-500 fill-rose-500" : ""}`} filled={favorited} />
-                        <span>{favorited ? t("planRoute.favorited") : favoriting ? t("planRoute.favoriting") : t("planRoute.favorite")}</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-                {tripError && <p className="mt-2 text-center text-xs text-rose-500 font-medium">{tripError}</p>}
+                {/* NOTA INFORMATIVA: INICIO DE VIAJES EN LA APP MÓVIL */}
+                <div className={`mt-3 p-2.5 rounded-xl text-center text-xs border ${
+                  isDarkMode ? "bg-[#162329]/80 border-[#26383D] text-gray-300" : "bg-emerald-50/80 border-emerald-100 text-emerald-800"
+                }`}>
+                  <span className="font-semibold">📱 Inicio de viaje en tiempo real:</span>
+                  <span className="ml-1 opacity-90">
+                    {t("planRoute.mobileNavHint", "Para iniciar la navegación activa y el seguimiento GPS paso a paso, abre la App Móvil de EcoRuteando.")}
+                  </span>
+                </div>
               </div>
             )}
           </div>
