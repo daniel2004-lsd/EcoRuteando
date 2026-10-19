@@ -140,7 +140,8 @@ function AppContent() {
                     <Route path="/user/reporter-problem" element={<Navigate to="/dashboard" replace />} />
                     <Route path="/user/alerts" element={<ProtectedRoute><UserAlerts onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/favorites" element={<Navigate to="/user/routes" state={{ initialTab: "favorites" }} replace />} />
-                    <Route path="/user/dashboard" element={<Navigate to="/dashboard" replace />} />
+                    <Route path="/user/dashboard" element={<ProtectedRoute allowGuest><UserDashboard onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
                 </Routes>
             </main>
 
