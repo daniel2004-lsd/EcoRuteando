@@ -376,43 +376,6 @@ const UserAlerts = ({ onNavigate }) => {
             </div>
           ))}
         </div>
-
-        {/* Recomendaciones */}
-        <div className={`rounded-2xl p-6 shadow-md border ${isDarkMode ? 'bg-gradient-to-br from-emerald-900/50 to-green-900/50 border-emerald-500/30' : 'bg-gradient-to-br from-emerald-100 to-green-100 border-emerald-200'}`}>
-          <div className="flex items-center gap-3 mb-4">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-emerald-500/20' : 'bg-white'}`}>
-              <LeafIcon size={20} className="text-emerald-500" />
-            </div>
-            <h3 className={`text-lg font-bold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{t("alerts.recommendationsTitle", "💡 Recomendaciones para hoy")}</h3>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className={`flex items-center gap-2 p-3 rounded-lg ${isDarkMode ? 'bg-[#162329]' : 'bg-white'}`}>
-              <span>🧥</span>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Lleva paraguas, hay probabilidad de lluvia</p>
-            </div>
-            <div className={`flex items-center gap-2 p-3 rounded-lg ${isDarkMode ? 'bg-[#162329]' : 'bg-white'}`}>
-              <span>💧</span>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Mantente hidratado durante tu ruta</p>
-            </div>
-            <div className={`flex items-center gap-2 p-3 rounded-lg ${isDarkMode ? 'bg-[#162329]' : 'bg-white'}`}>
-              <span>👟</span>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Usa calzado cómodo para tus desplazamientos a pie</p>
-            </div>
-            <div className={`flex items-center gap-2 p-3 rounded-lg ${isDarkMode ? 'bg-[#162329]' : 'bg-white'}`}>
-              <span>🧴</span>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Usa protector solar, la radiación es alta</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Frase motivacional */}
-        <div className="mt-8 text-center">
-          <p className={`text-sm flex items-center justify-center gap-2 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>
-            <LeafIcon size={14} className="text-emerald-500" />
-            Mantente informado y viaja seguro. El clima no es una sorpresa
-            <LeafIcon size={14} className="text-emerald-500" />
-          </p>
-        </div>
       </div>
 
       {/* Modal de detalles */}

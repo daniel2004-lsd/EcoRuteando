@@ -15,19 +15,37 @@ const UserHistory = ({ onNavigate }) => {
 
     useEffect(() => {
         loadTrips();
+
+        // Sincronización en tiempo real para reflejar viajes completados en el móvil
+        const interval = setInterval(() => {
+            loadTrips(true);
+        }, 3000);
+
+        const handleSync = () => {
+            loadTrips(true);
+        };
+
+        window.addEventListener("focus", handleSync);
+        document.addEventListener("visibilitychange", handleSync);
+
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener("focus", handleSync);
+            document.removeEventListener("visibilitychange", handleSync);
+        };
     }, []);
 
-    const loadTrips = async () => {
-        setLoading(true);
+    const loadTrips = async (isSilent = false) => {
+        if (!isSilent) setLoading(true);
         setError(null);
         try {
             const data = await tripService.getAll();
             setTrips(data);
         } catch (err) {
             console.error("Error cargando historial de viajes:", err);
-            setError("No se pudieron cargar los viajes");
+            if (!isSilent) setError("No se pudieron cargar los viajes");
         } finally {
-            setLoading(false);
+            if (!isSilent) setLoading(false);
         }
     };
 
@@ -332,6 +350,13 @@ const UserHistory = ({ onNavigate }) => {
                                             </span>
                                             <span className={`text-xs px-2 py-0.5 rounded-full ${isDarkMode ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600'}`}>
                                                 {transportLabel(trip.transportMode)}
+                                            </span>
+                                            <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${
+                                                trip.source === 'mobile'
+                                                    ? isDarkMode ? 'bg-sky-950/70 text-sky-400 border-sky-800' : 'bg-sky-50 text-sky-700 border-sky-200'
+                                                    : isDarkMode ? 'bg-purple-950/70 text-purple-400 border-purple-800' : 'bg-purple-50 text-purple-700 border-purple-200'
+                                            }`}>
+                                                {trip.source === 'mobile' ? '📱 App Móvil' : '💻 Plataforma Web'}
                                             </span>
                                         </div>
                                         <div className="flex flex-wrap gap-4 text-sm">
