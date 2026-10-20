@@ -31,11 +31,25 @@ const DARK_MAP_STYLES = [
 
 const VALID_MAP_TYPE_IDS = ["roadmap", "satellite", "hybrid", "terrain"];
 
-const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", markers = [], selectedLocation, routeGeometry, showUserLocation = true, mapFocus = null, mapTypeId = "roadmap" }) => {
+const MapViewGoogle = ({ 
+  center, 
+  zoom, 
+  onLocationSelect, 
+  height = "100vh", 
+  markers = [], 
+  selectedLocation, 
+  routeGeometry, 
+  alternativeRoutes = [],
+  onSelectAlternative,
+  showUserLocation = true, 
+  mapFocus = null, 
+  mapTypeId = "roadmap" 
+}) => {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
   const routeRef = useRef(null);
+  const altRoutesRef = useRef([]);
   const userMarkerRef = useRef(null);
   const focusMarkerRef = useRef(null);
   const { isDarkMode } = useTheme();
@@ -185,41 +199,139 @@ const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", marke
     }
   }, [mapLoaded, showUserLocation]);
 
-  // Dibujar ruta
+  // Forzar resize de Google Maps al cambiar tamaño o cargar
   useEffect(() => {
-    if (!mapInstanceRef.current || !routeGeometry) return;
+    if (!mapInstanceRef.current || !mapLoaded) return;
+    const timer = setTimeout(() => {
+      if (mapInstanceRef.current && window.google?.maps) {
+        window.google.maps.event.trigger(mapInstanceRef.current, "resize");
+      }
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [mapLoaded, height]);
+
+  // Dibujar ruta activa (polyline) y rutas alternativas estilo Google Maps
+  useEffect(() => {
+    if (!mapInstanceRef.current || !mapLoaded) return;
 
     if (routeRef.current) {
       routeRef.current.setMap(null);
+      routeRef.current = null;
+    }
+    altRoutesRef.current.forEach((r) => r.setMap(null));
+    altRoutesRef.current = [];
+
+    const bounds = new window.google.maps.LatLngBounds();
+    let hasPoints = false;
+
+    // 1. Trazar rutas alternativas en gris si existen
+    if (Array.isArray(alternativeRoutes) && window.google?.maps?.geometry) {
+      alternativeRoutes.forEach((alt) => {
+        if (!alt?.geometry || alt.geometry === routeGeometry) return;
+        try {
+          const decodedAlt = window.google.maps.geometry.encoding.decodePath(alt.geometry);
+          if (decodedAlt && decodedAlt.length > 0) {
+            const altPoly = new window.google.maps.Polyline({
+              path: decodedAlt,
+              geodesic: true,
+              strokeColor: isDarkMode ? "#64748b" : "#94a3b8",
+              strokeOpacity: 0.75,
+              strokeWeight: 4,
+              map: mapInstanceRef.current,
+              zIndex: 10,
+            });
+
+            altPoly.addListener("click", () => {
+              if (typeof onSelectAlternative === "function") {
+                onSelectAlternative(alt.index);
+              }
+            });
+
+            decodedAlt.forEach((p) => {
+              bounds.extend(p);
+              hasPoints = true;
+            });
+            altRoutesRef.current.push(altPoly);
+          }
+        } catch (e) {
+          console.warn("Error decodificando polyline alternativa:", e);
+        }
+      });
     }
 
-    if (typeof routeGeometry === 'string' && routeGeometry.length > 0) {
+    // 2. Trazar la ruta principal seleccionada (verde esmeralda destacado)
+    if (typeof routeGeometry === 'string' && routeGeometry.length > 0 && window.google?.maps?.geometry) {
       try {
         const decodedPath = window.google.maps.geometry.encoding.decodePath(routeGeometry);
-        routeRef.current = new window.google.maps.Polyline({
-          path: decodedPath,
-          geodesic: true,
-          strokeColor: "#10b981",
-          strokeOpacity: 0.9,
-          strokeWeight: 5,
-          map: mapInstanceRef.current,
-        });
-        
-        const bounds = new window.google.maps.LatLngBounds();
-        decodedPath.forEach(point => bounds.extend(point));
-        mapInstanceRef.current.fitBounds(bounds);
+        if (decodedPath && decodedPath.length > 0) {
+          routeRef.current = new window.google.maps.Polyline({
+            path: decodedPath,
+            geodesic: true,
+            strokeColor: "#10b981",
+            strokeOpacity: 0.95,
+            strokeWeight: 6,
+            map: mapInstanceRef.current,
+            zIndex: 30,
+          });
+          
+          decodedPath.forEach(point => {
+            bounds.extend(point);
+            hasPoints = true;
+          });
+
+          mapInstanceRef.current.fitBounds(bounds, { top: 40, right: 40, bottom: 40, left: 40 });
+          return;
+        }
       } catch (e) {
-        console.error("Error decodificando polyline:", e);
+        console.warn("Error decodificando polyline guardada:", e);
       }
     }
-  }, [routeGeometry]);
 
-  // Actualizar marcadores
+    // Fallback: Si no hay polyline pero hay marcadores de origen y destino, trazar con DirectionsService o línea directa
+    const originM = markers.find(m => m.type === 'origin');
+    const destM = markers.find(m => m.type === 'destination');
+    if (originM && destM && window.google?.maps) {
+      if (window.google.maps.DirectionsService) {
+        const ds = new window.google.maps.DirectionsService();
+        ds.route({
+          origin: { lat: Number(originM.lat), lng: Number(originM.lng) },
+          destination: { lat: Number(destM.lat), lng: Number(destM.lng) },
+          travelMode: window.google.maps.TravelMode.WALKING,
+        }, (result, status) => {
+          if (status === 'OK' && result?.routes?.[0]?.overview_polyline && mapInstanceRef.current) {
+            try {
+              const decodedPath = window.google.maps.geometry.encoding.decodePath(result.routes[0].overview_polyline);
+              if (routeRef.current) routeRef.current.setMap(null);
+              routeRef.current = new window.google.maps.Polyline({
+                path: decodedPath,
+                geodesic: true,
+                strokeColor: "#10b981",
+                strokeOpacity: 0.95,
+                strokeWeight: 6,
+                map: mapInstanceRef.current,
+                zIndex: 30,
+              });
+              const fbBounds = new window.google.maps.LatLngBounds();
+              decodedPath.forEach(p => fbBounds.extend(p));
+              mapInstanceRef.current.fitBounds(fbBounds, { top: 40, right: 40, bottom: 40, left: 40 });
+            } catch (err) {
+              console.warn("Error decodificando directions fallback:", err);
+            }
+          }
+        });
+      }
+    }
+  }, [routeGeometry, alternativeRoutes, mapLoaded, markers, isDarkMode]);
+
+  // Actualizar marcadores (origen verde, destino rojo, etc.) y ajustar vista si no hay polyline
   useEffect(() => {
-    if (!mapInstanceRef.current) return;
+    if (!mapInstanceRef.current || !mapLoaded) return;
 
     markersRef.current.forEach(m => m.setMap(null));
     markersRef.current = [];
+
+    const bounds = new window.google.maps.LatLngBounds();
+    let hasValidPoints = false;
 
     markers.forEach(marker => {
       let iconUrl = "";
@@ -227,36 +339,58 @@ const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", marke
         iconUrl = "https://maps.google.com/mapfiles/ms/icons/green-dot.png";
       } else if (marker.type === 'destination') {
         iconUrl = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
-      } else if (marker.type === 'poi') {
-        iconUrl = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+      } else if (marker.type === 'poi' || marker.type === 'nearby') {
+        iconUrl = marker.iconUrl || "https://maps.google.com/mapfiles/ms/icons/orange-dot.png";
       }
       
+      const pos = { lat: Number(marker.lat), lng: Number(marker.lng) };
+      if (!Number.isFinite(pos.lat) || !Number.isFinite(pos.lng)) return;
+
+      bounds.extend(pos);
+      hasValidPoints = true;
+
       const m = new window.google.maps.Marker({
-        position: { lat: marker.lat, lng: marker.lng },
+        position: pos,
         map: mapInstanceRef.current,
         title: marker.popup,
         icon: iconUrl || undefined,
         animation: window.google.maps.Animation.DROP
       });
       
+      const badgePrefix = marker.type === 'origin' ? '🟢 Origen: ' : marker.type === 'destination' ? '🔴 Destino: ' : '📍 ';
+      const ratingHtml = marker.rating ? `<div style="margin-top: 4px; color: #f59e0b; font-size: 11px; font-weight: 700;">⭐ ${marker.rating} / 5</div>` : '';
+      const vicinityHtml = marker.vicinity ? `<div style="margin-top: 2px; color: #64748b; font-size: 11px;">${escapeHtml(marker.vicinity)}</div>` : '';
+
       const infoWindow = new window.google.maps.InfoWindow({
-        content: `<div style="padding: 8px; font-family: sans-serif; font-size: 13px;"><strong>${escapeHtml(marker.popup)}</strong></div>`
+        content: `<div style="padding: 6px 8px; font-family: system-ui, sans-serif; font-size: 13px; max-width: 220px;">
+          <strong>${badgePrefix}${escapeHtml(marker.popup || '')}</strong>
+          ${vicinityHtml}
+          ${ratingHtml}
+        </div>`
       });
       
       m.addListener('click', () => {
         infoWindow.open(mapInstanceRef.current, m);
+        if (typeof marker.onClick === 'function') {
+          marker.onClick();
+        }
       });
       
       markersRef.current.push(m);
     });
-  }, [markers]);
+
+    // Si hay marcadores y no hay polyline, encuadrar los puntos en el mapa
+    if (!routeGeometry && hasValidPoints && markers.length >= 2) {
+      mapInstanceRef.current.fitBounds(bounds, { top: 40, right: 40, bottom: 40, left: 40 });
+    }
+  }, [markers, mapLoaded, routeGeometry]);
 
   // Centrar en ubicación seleccionada
   useEffect(() => {
-    if (!mapInstanceRef.current || !selectedLocation) return;
+    if (!mapInstanceRef.current || !selectedLocation || !mapLoaded) return;
     mapInstanceRef.current.setCenter({ lat: selectedLocation.lat, lng: selectedLocation.lng });
     mapInstanceRef.current.setZoom(15);
-  }, [selectedLocation]);
+  }, [selectedLocation, mapLoaded]);
 
   return (
     <div style={{ 

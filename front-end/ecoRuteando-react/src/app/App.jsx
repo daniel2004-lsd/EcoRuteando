@@ -8,6 +8,7 @@ import { LogoImage } from "../shared/components/Icons";
 import LoadingOverlay from "../shared/components/LoadingOverlay";
 import ConfirmModal from "../shared/components/ConfirmModal";
 import ProtectedRoute from "../shared/components/ProtectedRoute";
+import TermsModal from "../shared/components/TermsModal";
 
 // Auth pages
 import Login from "../features/auth/components/Login";
@@ -32,7 +33,7 @@ import PlanRoute from "../features/home/pages/PlanRoute";
 import AdminPanel from "../features/admin/pages/AdminPanel";
 import RouteManage from "../features/home/pages/RouteManage";
 import AdminStatistics from "../features/admin/pages/AdminStatistics";
-import AdminReports from "../features/admin/pages/AdminReports";
+import AdminTickets from "../features/admin/pages/AdminTickets";
 import AdminExports from "../features/admin/pages/AdminExports";
 import AdminAudit from "../features/admin/pages/AdminAudit";
 import AdminUsers from "../features/admin/pages/AdminUsers";
@@ -125,7 +126,8 @@ function AppContent() {
                     <Route path="/verify-2fa" element={<TwoFactorVerify />} />
                     <Route path="/dashboard" element={<ProtectedRoute allowGuest><UserDashboard onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminPanel onNavigate={onNavigate} /></ProtectedRoute>} />
-                    <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminReports onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/admin/tickets" element={<ProtectedRoute requiredRole="admin"><AdminTickets onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/admin/reports" element={<Navigate to="/admin/tickets" replace />} />
                     <Route path="/admin/audit" element={<ProtectedRoute requiredRole="admin"><AdminAudit onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminUsers onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/impact" element={<ProtectedRoute requiredRole="admin"><AdminStatistics onNavigate={onNavigate} /></ProtectedRoute>} />
@@ -139,55 +141,17 @@ function AppContent() {
                     <Route path="/user/reporter-problem" element={<Navigate to="/dashboard" replace />} />
                     <Route path="/user/alerts" element={<ProtectedRoute><UserAlerts onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/favorites" element={<Navigate to="/user/routes" state={{ initialTab: "favorites" }} replace />} />
+                    <Route path="/user/dashboard" element={<ProtectedRoute allowGuest><UserDashboard onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
                 </Routes>
             </main>
 
-            {showTerms && (
-                <div className="modal-overlay animate-fade-in" onClick={() => setShowTerms(false)}>
-                    <div className="modal-box animate-slide-up" onClick={(e) => e.stopPropagation()}>
-                        <button onClick={() => setShowTerms(false)} className="absolute top-6 right-6 text-gray-400 hover:text-green-800 transition-colors text-xl">✕</button>
-
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-green-100 p-1 shadow-sm">
-                                <LogoImage size={22} />
-                            </div>
-                            <div>
-                                <h2 className="text-xl font-bold text-green-900">{t("terms.title", "Términos y Condiciones")}</h2>
-                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{t("terms.date", "EcoRuteando · Enero 2025")}</p>
-                            </div>
-                        </div>
-
-                        <div className="modal-content text-sm text-gray-600 space-y-5 leading-relaxed text-justify pr-2 max-h-[50vh] overflow-y-auto custom-scrollbar">
-                            <section>
-                                <h3 className="font-bold text-green-800 mb-1">{t("terms.acceptance.title", "1. Aceptación de los Términos")}</h3>
-                                <p>{t("terms.acceptance.text", "Al registrarse y utilizar los servicios de EcoRuteando, usted acepta quedar vinculado por estos Términos y Condiciones.")}</p>
-                            </section>
-                            <section>
-                                <h3 className="font-bold text-green-800 mb-1">{t("terms.service.title", "2. Descripción del Servicio")}</h3>
-                                <p>{t("terms.service.text", "EcoRuteando es una plataforma de movilidad sostenible desarrollada en el marco del programa de Desarrollo de Software del SENA.")}</p>
-                            </section>
-                            <section>
-                                <h3 className="font-bold text-green-800 mb-1">{t("terms.userRegistration.title", "3. Registro de Usuario")}</h3>
-                                <p>{t("terms.userRegistration.text", "El usuario deberá crear una cuenta con información veraz, completa y actualizada.")}</p>
-                            </section>
-                            <section>
-                                <h3 className="font-bold text-green-800 mb-1">{t("terms.acceptableUse.title", "4. Uso Aceptable")}</h3>
-                                <p>{t("terms.acceptableUse.text", "Queda expresamente prohibido: compartir contenido ofensivo, usar la plataforma para actividades ilegales.")}</p>
-                            </section>
-                        </div>
-
-                        <div className="flex gap-3 mt-8">
-                            <button onClick={() => setShowTerms(false)} className="flex-1 py-3.5 border-2 border-gray-100 rounded-2xl font-bold text-gray-400 hover:bg-gray-50 transition-all text-sm">{t("terms.close", "Cerrar")}</button>
-                            <button
-                                onClick={handleAcceptTerms}
-                                className="flex-1 bg-green-700 hover:bg-green-800 text-white py-3.5 rounded-2xl font-bold shadow-lg shadow-green-200 transition-all text-sm"
-                            >
-                                {t("terms.accept", "Acepto los términos")}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <TermsModal
+                isOpen={showTerms}
+                onClose={() => setShowTerms(false)}
+                onAccept={handleAcceptTerms}
+                showAcceptButton={true}
+            />
         </div>
     );
 }

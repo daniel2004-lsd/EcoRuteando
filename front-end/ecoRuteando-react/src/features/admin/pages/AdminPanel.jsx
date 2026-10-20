@@ -12,13 +12,15 @@ import {
   ShieldIcon,
   ClockIcon,
   MapPinIcon,
-  CalendarIcon
+  CalendarIcon,
+  ChartIcon
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import { useTranslation } from "react-i18next";
-import obstacleReportService from "../../../services/obstacleReportService";
 import statsService from "../../../services/statsService";
 import supportService from "../../../services/supportService";
+import userService from "../../../services/userService";
+import routeService from "../../../services/routeService";
 
 const AdminPanel = ({ onNavigate }) => {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -28,26 +30,12 @@ const AdminPanel = ({ onNavigate }) => {
     users: 0,
     routes: 0,
     tickets: 0,
+    pendingTickets: 0,
     co2Saved: 0
   });
 
-  const [reportCounts, setReportCounts] = useState({ total: 0, pending: 0 });
-
   useEffect(() => {
     let active = true;
-
-    obstacleReportService
-      .getReportsForAdmin()
-      .then((reports) => {
-        if (!active) return;
-        setReportCounts({
-          total: reports.length,
-          pending: reports.filter((r) => r.status === "pending").length,
-        });
-      })
-      .catch((err) => {
-        console.error("Error cargando reportes:", err);
-      });
 
     statsService
       .getStats()
@@ -68,13 +56,43 @@ const AdminPanel = ({ onNavigate }) => {
       .getAllTickets()
       .then((tickets) => {
         if (!active) return;
+        const list = Array.isArray(tickets) ? tickets : (tickets?.items || []);
+        const pending = list.filter((t) => t.status === "Open" || t.status === "Pending" || t.status === "InProgress").length;
         setStats((prev) => ({
           ...prev,
-          tickets: Array.isArray(tickets) ? tickets.length : 0,
+          tickets: list.length,
+          pendingTickets: pending,
         }));
       })
       .catch((err) => {
         console.error("Error cargando tickets:", err);
+      });
+
+    // Totales reales (el analytics solo cuenta viajes completados → daba 0)
+    userService
+      .getUsers()
+      .then((list) => {
+        if (!active) return;
+        setStats((prev) => ({
+          ...prev,
+          users: Array.isArray(list) ? list.length : 0,
+        }));
+      })
+      .catch((err) => {
+        console.error("Error cargando usuarios:", err);
+      });
+
+    routeService
+      .getAll()
+      .then((list) => {
+        if (!active) return;
+        setStats((prev) => ({
+          ...prev,
+          routes: Array.isArray(list) ? list.length : 0,
+        }));
+      })
+      .catch((err) => {
+        console.error("Error cargando rutas:", err);
       });
 
     return () => {
@@ -91,11 +109,11 @@ const AdminPanel = ({ onNavigate }) => {
       onClick: () => onNavigate("admin/users")
     },
     {
-      id: "reports",
-      icon: <ReportIcon size={28} />,
-      title: t("admin.panel.modules.reports.title", "Reportes"),
-      subtitle: t("admin.panel.modules.reports.subtitle", "Verificar y gestionar reportes"),
-      onClick: () => onNavigate("admin/reports")
+      id: "tickets",
+      icon: <TicketIcon size={28} />,
+      title: t("admin.panel.modules.tickets.title", "Gestión de Tickets (PQRS)"),
+      subtitle: t("admin.panel.modules.tickets.subtitle", "Atender consultas y solicitudes de usuarios"),
+      onClick: () => onNavigate("admin/tickets")
     },
     {
       id: "audit",
@@ -105,16 +123,19 @@ const AdminPanel = ({ onNavigate }) => {
       onClick: () => onNavigate("admin/audit")
     },
     {
+      id: "statistics",
+      icon: <ChartIcon size={28} />,
+      title: t("admin.panel.modules.statistics.title", "Estadísticas Generales"),
+      subtitle: t("admin.panel.modules.statistics.subtitle", "Impacto global, usuarios, rutas y CO₂"),
+      onClick: () => onNavigate("admin/impact")
+    },
+    {
       id: "export",
       icon: <DownloadIcon size={28} />,
       title: t("admin.panel.modules.export.title", "Exportar Datos"),
       subtitle: t("admin.panel.modules.export.subtitle", "PDF, Excel y CSV"),
       onClick: () => onNavigate("admin/exports")
     },
-  ];
-
-  const pendingActions = [
-    { id: "reports", icon: <ReportIcon size={18} />, label: t("admin.panel.pending.reports.label", "Reportes sin revisar"), desc: t("admin.panel.pending.reports.desc", "Requieren atención inmediata"), count: reportCounts.pending, color: "orange" }
   ];
 
   return (
@@ -169,9 +190,12 @@ const AdminPanel = ({ onNavigate }) => {
         </div>
 
         {/* Grid de estadísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           {/* Usuarios */}
-          <div className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}>
+          <div
+            onClick={() => onNavigate("admin/users")}
+            className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg cursor-pointer ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}
+          >
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2 ${isDarkMode ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
               <UsersIcon size={20} className="text-emerald-500" />
             </div>
@@ -180,7 +204,10 @@ const AdminPanel = ({ onNavigate }) => {
           </div>
 
           {/* Rutas */}
-          <div className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}>
+          <div
+            onClick={() => onNavigate("admin/impact")}
+            className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg cursor-pointer ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}
+          >
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2 ${isDarkMode ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
               <RouteIcon size={20} className="text-emerald-500" />
             </div>
@@ -188,24 +215,17 @@ const AdminPanel = ({ onNavigate }) => {
             <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{t("admin.panel.stats.routes", "Rutas")}</p>
           </div>
 
-          {/* Reportes */}
-          <div className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}>
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2 ${isDarkMode ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
-              <ReportIcon size={20} className="text-emerald-500" />
-            </div>
-            <p className={`text-2xl font-black ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{reportCounts.total}</p>
-            <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{t("admin.panel.stats.reports", "Reportes")}</p>
-          </div>
-
-          {/* Tickets */}
-          <div className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}>
+          {/* Tickets de Soporte */}
+          <div
+            onClick={() => onNavigate("admin/tickets")}
+            className={`rounded-xl p-4 text-center shadow-md transition-all hover:shadow-lg cursor-pointer ${isDarkMode ? 'bg-[#162329] border border-[#26383D] hover:border-emerald-500/50' : 'bg-white border border-gray-100 hover:border-emerald-200'}`}
+          >
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2 ${isDarkMode ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
               <TicketIcon size={20} className="text-emerald-500" />
             </div>
             <p className={`text-2xl font-black ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{stats.tickets}</p>
-            <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{t("admin.panel.stats.tickets", "Tickets")}</p>
+            <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{t("admin.panel.stats.tickets", "Tickets de Soporte (PQRS)")}</p>
           </div>
-
         </div>
 
         {/* Título de módulos */}
@@ -230,30 +250,7 @@ const AdminPanel = ({ onNavigate }) => {
           ))}
         </div>
 
-        {/* Acciones Pendientes */}
-        <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{t("admin.panel.pendingActionsTitle", "⚠️ Acciones Pendientes")}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {pendingActions.map((action) => (
-            <div
-              key={action.id}
-              onClick={action.id === "reports" ? () => onNavigate("admin/reports") : undefined}
-              className={`rounded-2xl p-5 shadow-md transition-all hover:shadow-lg border ${action.id === "reports" ? "cursor-pointer" : ""} ${isDarkMode ? 'bg-[#162329] border-[#26383D] hover:border-emerald-500/50' : 'bg-white border-gray-100 hover:border-emerald-200'}`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-emerald-500/20' : action.color === 'orange' ? 'bg-orange-100' : 'bg-purple-100'}`}>
-                    <span className={action.color === 'orange' ? 'text-orange-500' : 'text-purple-500'}>{action.icon}</span>
-                  </div>
-                  <div>
-                    <p className={`font-semibold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{action.label}</p>
-                    <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{action.desc}</p>
-                  </div>
-                </div>
-                <p className={`text-2xl font-black ${action.color === 'orange' ? 'text-orange-500' : 'text-purple-500'}`}>{action.count}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+
 
         {/* Impacto Ambiental */}
         <div className={`rounded-2xl p-6 text-center shadow-lg border ${isDarkMode ? 'bg-gradient-to-br from-emerald-900/50 to-green-900/50 border-emerald-500/30' : 'bg-gradient-to-br from-emerald-100 to-green-100 border-emerald-200'}`}>
