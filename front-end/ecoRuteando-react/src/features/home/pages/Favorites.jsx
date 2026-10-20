@@ -30,8 +30,8 @@ const Favorites = ({ onNavigate }) => {
   const [availableRoutes, setAvailableRoutes] = useState([]);
   const [routesLoading, setRoutesLoading] = useState(false);
 
-  const loadFavorites = async () => {
-    setLoading(true);
+  const loadFavorites = async (isSilent = false) => {
+    if (!isSilent) setLoading(true);
     setError(null);
     try {
       // Verificar sesión activa (CU11: precondición sesión activa)
@@ -39,7 +39,7 @@ const Favorites = ({ onNavigate }) => {
         await me();
       } catch (authErr) {
         setNeedsLogin(true);
-        setLoading(false);
+        if (!isSilent) setLoading(false);
         setFavorites([]);
         return;
       }
@@ -47,15 +47,34 @@ const Favorites = ({ onNavigate }) => {
       setFavorites(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Error cargando favoritos:", err);
-      setError(err?.response?.data?.detail || err?.message || t("favorites.errorLoad", "Error cargando los favoritos"));
-      setFavorites([]);
+      if (!isSilent) {
+        setError(err?.response?.data?.detail || err?.message || t("favorites.errorLoad", "Error cargando los favoritos"));
+        setFavorites([]);
+      }
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
   };
 
   useEffect(() => {
     loadFavorites();
+
+    const interval = setInterval(() => {
+      loadFavorites(true);
+    }, 3000);
+
+    const handleSync = () => {
+      loadFavorites(true);
+    };
+
+    window.addEventListener("focus", handleSync);
+    document.addEventListener("visibilitychange", handleSync);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("focus", handleSync);
+      document.removeEventListener("visibilitychange", handleSync);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
