@@ -280,6 +280,17 @@ const LocationSearch = ({ placeholder, onSelect, onClear, isDarkMode, externalVa
   );
 };
 
+const POI_CATEGORIES = [
+  { id: "restaurant", label: "Restaurantes", icon: "🍽️", placeType: "restaurant", color: "#ea4335" },
+  { id: "lodging", label: "Hoteles", icon: "🏨", placeType: "lodging", color: "#4285f4" },
+  { id: "cafe", label: "Cafés", icon: "☕", placeType: "cafe", color: "#a5673f" },
+  { id: "park", label: "Parques", icon: "🌳", placeType: "park", color: "#10b981" },
+  { id: "pharmacy", label: "Farmacias", icon: "💊", placeType: "pharmacy", color: "#e91e63" },
+  { id: "supermarket", label: "Supermercados", icon: "🛒", placeType: "supermarket", color: "#ff6d00" },
+  { id: "atm", label: "Cajeros", icon: "🏧", placeType: "atm", color: "#34a853" },
+  { id: "tourist_attraction", label: "Sitios de Interés", icon: "🏛️", placeType: "tourist_attraction", color: "#8b5cf6" },
+];
+
 // Componente principal
 const PlanRoute = ({ onNavigate }) => {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -301,6 +312,10 @@ const PlanRoute = ({ onNavigate }) => {
   const [nearbyPois, setNearbyPois] = useState([]);
   const [nearbyType, setNearbyType] = useState("restaurant");
   const [showNearbySearch, setShowNearbySearch] = useState(false);
+  const [activePoiFilter, setActivePoiFilter] = useState(null);
+  const [loadingPois, setLoadingPois] = useState(false);
+  const [routeAlternatives, setRouteAlternatives] = useState([]);
+  const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
   const [mapTypeId, setMapTypeId] = useState("roadmap");
   const [routeSavedId, setRouteSavedId] = useState(null);
   const [estimate, setEstimate] = useState(null);
@@ -335,14 +350,16 @@ const PlanRoute = ({ onNavigate }) => {
       fav.endLat != null &&
       fav.endLng != null
     ) {
+      const startName = fav.startName || (fav.routeName?.includes("→") ? fav.routeName.split("→")[0].trim() : null) || t("planRoute.defaultOrigin");
+      const destName = fav.destinationName || (fav.routeName?.includes("→") ? fav.routeName.split("→")[1].trim() : null) || t("planRoute.defaultDestination");
       const start = {
-        name: fav.routeName || t("planRoute.defaultOrigin"),
+        name: startName,
         address: `${fav.startLat}, ${fav.startLng}`,
         lat: fav.startLat,
         lng: fav.startLng,
       };
       const end = {
-        name: fav.routeName || t("planRoute.defaultDestination"),
+        name: destName,
         address: `${fav.endLat}, ${fav.endLng}`,
         lat: fav.endLat,
         lng: fav.endLng,
@@ -397,7 +414,65 @@ const PlanRoute = ({ onNavigate }) => {
     return t("planRoute.myLocation");
   };
 
-  // Función para calcular ruta
+  const CAR_EMISSION_FACTOR = 0.169;
+
+  // Registrar automáticamente la consulta y trayecto en el Historial del usuario
+  const registerCalculatedTripInHistory = async (calculatedRoute, originPoint, destPoint, mode, co2Val) => {
+    if (!isAuthenticated || !calculatedRoute || !originPoint?.lat || !destPoint?.lat) return;
+    try {
+      const modeMap = {
+        walking: "walking",
+        car: "car",
+      };
+
+      const baseName = `${originPoint.name} → ${destPoint.name}`;
+      const payload = {
+        name: `Viaje: ${baseName} (${Date.now()})`,
+        description: `[trip_transient] ${baseName}`,
+        transportType: modeMap[mode] || "walking",
+        startName: originPoint.name,
+        destinationName: destPoint.name,
+        startLat: originPoint.lat,
+        startLng: originPoint.lng,
+        endLat: destPoint.lat,
+        endLng: destPoint.lng,
+        encodedPolyline: calculatedRoute.geometry,
+        distanceKm: parseFloat(calculatedRoute.distance),
+        estimatedTimeMin: calculatedRoute.duration,
+        co2SavedKg: co2Val ?? null,
+      };
+
+      const savedRoute = await routeService.create(payload);
+      if (savedRoute?.id) {
+        setRouteSavedId(savedRoute.id);
+        const started = await tripService.start({
+          routeId: savedRoute.id,
+          transportMode: modeMap[mode] || "walking",
+          source: "web",
+        });
+
+        if (started?.id) {
+          setActiveTripId(started.id);
+          const distNum = parseFloat(calculatedRoute.distance);
+          const durNum = calculatedRoute.duration;
+          const finalCo2 = co2Val != null 
+            ? co2Val 
+            : (mode === "walking" ? parseFloat((distNum * CAR_EMISSION_FACTOR).toFixed(2)) : 0);
+
+          await tripService.complete(started.id, {
+            actualDistanceKm: distNum,
+            actualDurationMin: durNum,
+            actualCo2Kg: finalCo2,
+          });
+          showActionMessage("✓ Ruta calculada y registrada en tu Historial de Viajes", "success");
+        }
+      }
+    } catch (histErr) {
+      console.warn("No se pudo registrar la consulta en el historial:", histErr);
+    }
+  };
+
+  // Función para calcular ruta y sus diferentes alternativas de tiempo y CO2
   const calculateRoute = async (nextOrigin = origin, nextDestination = destination) => {
     if (!nextOrigin) {
       setError(t("planRoute.errors.selectOrigin"));
@@ -434,16 +509,89 @@ const PlanRoute = ({ onNavigate }) => {
       );
 
       if (result && result.encodedPolyline) {
-        const distance = (result.distance.valueMeters / 1000).toFixed(1);
-        const duration = Math.round(result.duration.valueSeconds / 60);
+        const baseDistance = (result.distance.valueMeters / 1000).toFixed(1);
+        const baseDuration = Math.round(result.duration.valueSeconds / 60);
 
-        setRoute({
-          distance,
-          duration,
+        const isCurrentCar = transportMode === "car";
+        const primaryCo2Saved = isCurrentCar ? 0 : parseFloat((Number(baseDistance) * CAR_EMISSION_FACTOR).toFixed(2));
+        const primaryCo2Emitted = isCurrentCar ? parseFloat((Number(baseDistance) * CAR_EMISSION_FACTOR).toFixed(2)) : 0;
+
+        const options = [];
+        // 1. Opción principal seleccionada
+        options.push({
+          index: 0,
+          label: result.summary ? `Por ${result.summary}` : (isCurrentCar ? "Ruta principal en auto" : "Ruta recomendada a pie"),
+          mode: transportMode,
+          distance: baseDistance,
+          duration: baseDuration,
+          geometry: result.encodedPolyline,
+          co2SavedKg: primaryCo2Saved,
+          co2EmittedKg: primaryCo2Emitted,
+          tag: isCurrentCar ? "Principal" : "Ecológica 🌱",
+        });
+
+        // 2. Rutas alternativas de Google Directions en el mismo medio de transporte
+        if (Array.isArray(result.alternatives) && result.alternatives.length > 0) {
+          result.alternatives.forEach((alt, idx) => {
+            const altDist = (alt.distance.valueMeters / 1000).toFixed(1);
+            const altDur = Math.round(alt.duration.valueSeconds / 60);
+            options.push({
+              index: options.length,
+              label: alt.summary ? `Por ${alt.summary}` : `Alternativa ${idx + 1}`,
+              mode: transportMode,
+              distance: altDist,
+              duration: altDur,
+              geometry: alt.encodedPolyline,
+              co2SavedKg: isCurrentCar ? 0 : parseFloat((Number(altDist) * CAR_EMISSION_FACTOR).toFixed(2)),
+              co2EmittedKg: isCurrentCar ? parseFloat((Number(altDist) * CAR_EMISSION_FACTOR).toFixed(2)) : 0,
+              tag: `Alternativa ${idx + 1}`,
+            });
+          });
+        }
+
+        // 3. Opción comparativa multimodal (a pie vs automóvil) para evidenciar tiempo y ahorro de CO2
+        try {
+          const compMode = isCurrentCar ? "walking" : "driving";
+          const compResult = await mapsService.getDirections(
+            nextOrigin.lat,
+            nextOrigin.lng,
+            nextDestination.lat,
+            nextDestination.lng,
+            compMode
+          );
+          if (compResult && compResult.encodedPolyline) {
+            const compDist = (compResult.distance.valueMeters / 1000).toFixed(1);
+            const compDur = Math.round(compResult.duration.valueSeconds / 60);
+            const compSaved = isCurrentCar ? parseFloat((Number(compDist) * CAR_EMISSION_FACTOR).toFixed(2)) : 0;
+            const compEmitted = isCurrentCar ? 0 : parseFloat((Number(compDist) * CAR_EMISSION_FACTOR).toFixed(2));
+            options.push({
+              index: options.length,
+              label: isCurrentCar ? "Alternativa Ecológica A Pie 🚶" : "Alternativa Rápida en Automóvil 🚗",
+              mode: isCurrentCar ? "walking" : "car",
+              distance: compDist,
+              duration: compDur,
+              geometry: compResult.encodedPolyline,
+              co2SavedKg: compSaved,
+              co2EmittedKg: compEmitted,
+              tag: isCurrentCar ? `🌱 Ahorras ${compSaved} kg CO₂` : `⚡ Ahorras tiempo (+${compEmitted} kg CO₂)`,
+              isComparative: true,
+            });
+          }
+        } catch (compErr) {
+          console.warn("No se pudo obtener la ruta multimodal alternativa:", compErr);
+        }
+
+        setRouteAlternatives(options);
+        setSelectedRouteIndex(0);
+
+        const currentRouteData = {
+          distance: baseDistance,
+          duration: baseDuration,
           geometry: result.encodedPolyline,
           startAddress: nextOrigin.address,
           endAddress: nextDestination.address,
-        });
+        };
+        setRoute(currentRouteData);
 
         if (!presetPendingRef.current) {
           setRouteSavedId(null);
@@ -464,7 +612,21 @@ const PlanRoute = ({ onNavigate }) => {
           setEstimate(estimateResult);
         } catch (err) {
           console.warn("Estimación de sostenibilidad no disponible:", err);
-          setEstimate(null);
+          setEstimate({
+            co2SavedKg: primaryCo2Saved,
+            estimatedCalories: transportMode === "walking" ? Math.round(Number(baseDistance) * 65) : 0,
+          });
+        }
+
+        // Registrar inmediatamente en el historial si el usuario está autenticado
+        if (isAuthenticated) {
+          registerCalculatedTripInHistory(
+            currentRouteData,
+            nextOrigin,
+            nextDestination,
+            transportMode,
+            primaryCo2Saved
+          );
         }
 
       } else {
@@ -475,6 +637,37 @@ const PlanRoute = ({ onNavigate }) => {
       setError(err?.response?.data?.message || err?.message || t("planRoute.errors.calculateRoute"));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSelectRouteOption = (index) => {
+    const selected = routeAlternatives[index];
+    if (!selected) return;
+    setSelectedRouteIndex(index);
+    const newRoute = {
+      distance: selected.distance,
+      duration: selected.duration,
+      geometry: selected.geometry,
+      startAddress: origin?.address,
+      endAddress: destination?.address,
+    };
+    setRoute(newRoute);
+    setEstimate({
+      co2SavedKg: selected.co2SavedKg,
+      estimatedCalories: selected.mode === "walking" ? Math.round(Number(selected.distance) * 65) : 0,
+    });
+    if (selected.mode !== transportMode) {
+      setTransportMode(selected.mode);
+    }
+
+    if (isAuthenticated) {
+      registerCalculatedTripInHistory(
+        newRoute,
+        origin,
+        destination,
+        selected.mode,
+        selected.co2SavedKg
+      );
     }
   };
 
@@ -741,9 +934,32 @@ const PlanRoute = ({ onNavigate }) => {
     );
   };
 
+  const handleTogglePoiCategory = async (cat) => {
+    if (activePoiFilter?.id === cat.id) {
+      setActivePoiFilter(null);
+      setNearbyPois([]);
+      return;
+    }
+    setActivePoiFilter(cat);
+    setLoadingPois(true);
+    try {
+      const centerLat = destination?.lat || origin?.lat || mapCenter.lat;
+      const centerLng = destination?.lng || origin?.lng || mapCenter.lng;
+      const res = await mapsService.getPlacesNearby(centerLat, centerLng, cat.placeType, 2500);
+      const list = res?.results || [];
+      setNearbyPois(list);
+      showActionMessage(`Encontrados ${list.length} ${cat.label.toLowerCase()} en el mapa`);
+    } catch (err) {
+      console.error("Error buscando lugares:", err);
+      showActionMessage(`No se pudieron cargar ${cat.label.toLowerCase()}`, "error");
+    } finally {
+      setLoadingPois(false);
+    }
+  };
+
   const loadNearbyPois = async (type) => {
     try {
-      const result = await mapsService.getPlacesNearby(mapCenter.lat, mapCenter.lng, type, 2000);
+      const result = await mapsService.getPlacesNearby(mapCenter.lat, mapCenter.lng, type, 2500);
       if (result?.results) setNearbyPois(result.results);
     } catch (err) {
       console.error("Error cargando lugares cercanos:", err);
@@ -874,15 +1090,25 @@ const PlanRoute = ({ onNavigate }) => {
           mapTypeId={mapTypeId}
           selectedLocation={origin}
           routeGeometry={route?.geometry}
+          alternativeRoutes={routeAlternatives.map((alt, idx) => ({
+            geometry: alt.geometry,
+            index: idx,
+            isSelected: idx === selectedRouteIndex,
+          }))}
+          onSelectAlternative={handleSelectRouteOption}
           showUserLocation={true}
           onLocationSelect={null}
           markers={[
             origin && { lat: origin.lat, lng: origin.lng, popup: t("planRoute.popupOrigin", { name: origin.name }), type: "origin" },
             destination && { lat: destination.lat, lng: destination.lng, popup: t("planRoute.popupDestination", { name: destination.name }), type: "destination" },
             ...nearbyPois.map((poi) => ({
-              lat: poi.lat, lng: poi.lng,
-              popup: `${poi.name}${poi.vicinity ? ` — ${poi.vicinity}` : ""}${poi.rating ? ` ⭐ ${poi.rating}` : ""}`,
+              lat: poi.lat,
+              lng: poi.lng,
+              popup: poi.name,
+              vicinity: poi.vicinity || poi.address || "",
+              rating: poi.rating,
               type: "nearby",
+              onClick: () => selectNearbyPoi(poi),
             })),
           ].filter(Boolean)}
         />
@@ -1028,6 +1254,98 @@ const PlanRoute = ({ onNavigate }) => {
               </div>
             </div>
 
+            {/* BARRA DE CHIPS DE LUGARES DE INTERÉS (PUNTOS DE INTERÉS ESTILO GOOGLE MAPS & MÓVIL) */}
+            <div className="pt-0.5">
+              <div className="flex items-center justify-between mb-1.5 px-0.5">
+                <span className={`text-[10px] font-extrabold tracking-wider uppercase ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                  Explorar Puntos de Interés
+                </span>
+                {activePoiFilter && (
+                  <button
+                    type="button"
+                    onClick={() => { setActivePoiFilter(null); setNearbyPois([]); }}
+                    className="text-[10px] font-bold text-rose-500 hover:underline"
+                  >
+                    ✕ Cerrar
+                  </button>
+                )}
+              </div>
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                {POI_CATEGORIES.map((cat) => {
+                  const isActive = activePoiFilter?.id === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => handleTogglePoiCategory(cat)}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
+                        isActive
+                          ? "bg-emerald-600 text-white border-emerald-500 shadow-md font-bold scale-[1.02]"
+                          : isDarkMode
+                            ? "bg-[#111C20] text-gray-300 border-[#26383D] hover:bg-[#162329] hover:text-white"
+                            : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:text-gray-900 shadow-sm"
+                      }`}
+                    >
+                      <span>{cat.icon}</span>
+                      <span>{cat.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* LISTA DE LUGARES ENCONTRADOS SI HAY UN FILTRO POI ACTIVO */}
+            {activePoiFilter && (
+              <div className={`p-2.5 rounded-xl border max-h-48 overflow-y-auto no-scrollbar space-y-1.5 transition-all ${
+                isDarkMode ? "bg-[#111C20] border-[#26383D]" : "bg-emerald-50/40 border-emerald-200"
+              }`}>
+                <div className="flex items-center justify-between text-xs font-bold px-1 mb-1">
+                  <span className={isDarkMode ? "text-emerald-400" : "text-[#1a5c2a]"}>
+                    {activePoiFilter.icon} {activePoiFilter.label} cercanos ({nearbyPois.length})
+                  </span>
+                  {loadingPois && (
+                    <div className="w-3.5 h-3.5 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+                  )}
+                </div>
+
+                {nearbyPois.length === 0 && !loadingPois && (
+                  <p className="text-[11px] text-gray-400 text-center py-2">
+                    No se encontraron {activePoiFilter.label.toLowerCase()} en este radio.
+                  </p>
+                )}
+
+                {nearbyPois.map((poi, idx) => (
+                  <div
+                    key={poi.placeId || poi.place_id || idx}
+                    className={`p-2 rounded-xl border flex items-center justify-between gap-2 text-xs transition-colors ${
+                      isDarkMode ? "bg-[#162329] border-[#26383D] hover:border-emerald-500/60" : "bg-white border-gray-200 hover:border-emerald-600/60 shadow-sm"
+                    }`}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="font-bold truncate text-[12px]">{poi.name}</p>
+                      {poi.vicinity && (
+                        <p className={`text-[10px] truncate ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                          {poi.vicinity}
+                        </p>
+                      )}
+                      {poi.rating && (
+                        <span className="text-[10px] text-amber-500 font-bold">
+                          ⭐ {poi.rating} / 5
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => selectNearbyPoi(poi)}
+                      className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-600 hover:bg-emerald-500 text-white shrink-0 shadow-sm transition-transform active:scale-95"
+                    >
+                      Ir aquí
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* ACCESOS RÁPIDOS Y BOTÓN DE CALCULAR */}
             <div className="flex items-center justify-between gap-2">
               <button
@@ -1080,6 +1398,77 @@ const PlanRoute = ({ onNavigate }) => {
               </div>
             )}
 
+            {/* SELECTOR DE DIFERENTES RUTAS ALTERNATIVAS CON TIEMPO Y CO2 EVITADO */}
+            {routeAlternatives.length > 0 && (
+              <div className="space-y-1.5 pt-1">
+                <div className="flex items-center justify-between px-0.5">
+                  <span className={`text-[10px] font-extrabold tracking-wider uppercase ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                    Rutas Encontradas ({routeAlternatives.length})
+                  </span>
+                  <span className="text-[10px] font-semibold text-emerald-500">
+                    Toca para elegir
+                  </span>
+                </div>
+
+                <div className="space-y-2 max-h-56 overflow-y-auto no-scrollbar">
+                  {routeAlternatives.map((alt, idx) => {
+                    const isSelected = selectedRouteIndex === idx;
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => handleSelectRouteOption(idx)}
+                        className={`w-full text-left p-2.5 rounded-xl border transition-all ${
+                          isSelected
+                            ? isDarkMode
+                              ? "bg-emerald-950/40 border-emerald-500 shadow-md ring-1 ring-emerald-500"
+                              : "bg-emerald-50 border-emerald-600 shadow-sm ring-1 ring-emerald-600"
+                            : isDarkMode
+                              ? "bg-[#111C20] border-[#26383D] hover:bg-[#162329]"
+                              : "bg-white border-gray-200 hover:bg-gray-50 shadow-sm"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span className="text-sm">{alt.mode === "car" ? "🚗" : "🚶"}</span>
+                            <span className="font-bold text-xs truncate max-w-[190px]">{alt.label}</span>
+                          </div>
+                          <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
+                            isSelected
+                              ? "bg-emerald-600 text-white"
+                              : isDarkMode ? "bg-[#162329] text-gray-300" : "bg-gray-100 text-gray-700"
+                          }`}>
+                            {alt.tag}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between text-xs mt-1">
+                          <div className="flex items-baseline gap-1.5">
+                            <span className={`font-black text-sm ${isSelected ? "text-emerald-500" : isDarkMode ? "text-gray-100" : "text-gray-800"}`}>
+                              {alt.duration} min
+                            </span>
+                            <span className={`text-[11px] ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                              ({alt.distance} km)
+                            </span>
+                          </div>
+
+                          {alt.mode === "walking" ? (
+                            <span className="text-[11px] font-bold text-emerald-500 flex items-center gap-0.5">
+                              🌱 -{alt.co2SavedKg} kg CO₂ evitado
+                            </span>
+                          ) : (
+                            <span className={`text-[11px] font-semibold flex items-center gap-0.5 ${isDarkMode ? "text-amber-400" : "text-amber-700"}`}>
+                              🚗 {alt.co2EmittedKg} kg CO₂
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* TARJETA DE RESULTADO DE RUTA (ESTILO GOOGLE MAPS ROUTE SUMMARY) */}
             {route && (
               <div className={`mt-2 p-3.5 rounded-xl border transition-all ${
@@ -1127,78 +1516,87 @@ const PlanRoute = ({ onNavigate }) => {
                   )}
                 </div>
 
-                {/* Botones de acción del viaje (Iniciar / Guardar) */}
-                {activeTripId ? (
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className={`text-xs font-bold ${isDarkMode ? "text-emerald-400" : "text-emerald-700"}`}>
-                          {t("planRoute.inProgress")}
-                        </span>
-                      </div>
-                    </div>
+                                {/* Botones de guardar y favoritos */}
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={handleSaveClick}
+                    disabled={saving}
+                    className={`py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border ${
+                      saved || routeSavedId
+                        ? isDarkMode ? "bg-emerald-950/40 text-emerald-400 border-emerald-800" : "bg-emerald-50 text-emerald-800 border-emerald-300"
+                        : isDarkMode
+                          ? "bg-[#162329] text-gray-200 border-[#26383D] hover:bg-[#1f3037]"
+                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100 shadow-sm"
+                    }`}
+                  >
+                    <BookmarkIcon className="w-3.5 h-3.5" />
+                    <span>{saved || routeSavedId ? t("planRoute.savedInMyRoutes") : saving ? t("planRoute.saving") : t("planRoute.save")}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleFavoriteClick}
+                    disabled={favoriting}
+                    className={`py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border ${
+                      favorited
+                        ? isDarkMode ? "bg-rose-950/40 text-rose-400 border-rose-800" : "bg-rose-50 text-rose-700 border-rose-300"
+                        : isDarkMode
+                          ? "bg-[#162329] text-gray-200 border-[#26383D] hover:bg-[#1f3037]"
+                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100 shadow-sm"
+                    }`}
+                  >
+                    <HeartIcon className={`w-3.5 h-3.5 ${favorited ? "text-rose-500 fill-rose-500" : ""}`} filled={favorited} />
+                    <span>{favorited ? t("planRoute.favorited") : favoriting ? t("planRoute.favoriting") : t("planRoute.favorite")}</span>
+                  </button>
+                </div>
+
+                {/* GESTIÓN DE VIAJE Y HISTORIAL */}
+                <div className="mt-3 pt-2.5 border-t border-inherit/10 space-y-2">
+                  <div className="flex items-center justify-between text-xs font-semibold px-0.5">
+                    <span className="text-emerald-500 flex items-center gap-1 font-bold">
+                      ✓ Registrado en tu Historial
+                    </span>
                     <button
                       type="button"
-                      onClick={completeTrip}
-                      disabled={completing}
-                      className="w-full py-2.5 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 shadow-md transition-all flex items-center justify-center gap-2"
+                      onClick={() => onNavigate?.("/user/history")}
+                      className={`text-xs font-bold underline hover:opacity-80 transition-opacity flex items-center gap-1 ${
+                        isDarkMode ? "text-emerald-400" : "text-[#1a5c2a]"
+                      }`}
                     >
-                      {completing ? t("planRoute.completing") : t("planRoute.complete")}
+                      Ver en Historial 📋
                     </button>
                   </div>
-                ) : (
-                  <div className="space-y-2">
-                    {/* Botón principal: Iniciar viaje */}
+
+                  {activeTripId ? (
+                    <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between gap-2">
+                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                        Viaje activo en progreso
+                      </span>
+                      <button
+                        type="button"
+                        onClick={completeTrip}
+                        disabled={completing}
+                        className="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 shadow-sm transition-all"
+                      >
+                        {completing ? t("planRoute.completing") : "Finalizar viaje"}
+                      </button>
+                    </div>
+                  ) : (
                     <button
                       type="button"
                       onClick={startTrip}
                       disabled={startingTrip}
-                      className={`w-full py-2.5 px-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5 transition-all shadow-md ${
+                      className={`w-full py-2 px-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2 transition-all shadow-md ${
                         isDarkMode ? "bg-emerald-600 hover:bg-emerald-500" : "bg-[#1a5c2a] hover:bg-[#145223]"
                       }`}
                     >
                       <NavigationIcon className="w-3.5 h-3.5" />
-                      <span>{startingTrip ? t("planRoute.starting") : t("planRoute.start")}</span>
+                      <span>{startingTrip ? t("planRoute.starting") : "Iniciar nuevo viaje activo"}</span>
                     </button>
-
-                    {/* Botones secundarios: Guardar en Mis Rutas y Añadir a Favoritos */}
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={handleSaveClick}
-                        disabled={saving}
-                        className={`py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border ${
-                          saved || routeSavedId
-                            ? isDarkMode ? "bg-emerald-950/40 text-emerald-400 border-emerald-800" : "bg-emerald-50 text-emerald-800 border-emerald-300"
-                            : isDarkMode
-                              ? "bg-[#162329] text-gray-200 border-[#26383D] hover:bg-[#1f3037]"
-                              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100 shadow-sm"
-                        }`}
-                      >
-                        <BookmarkIcon className="w-3.5 h-3.5" />
-                        <span>{saved || routeSavedId ? t("planRoute.savedInMyRoutes") : saving ? t("planRoute.saving") : t("planRoute.save")}</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={handleFavoriteClick}
-                        disabled={favoriting}
-                        className={`py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border ${
-                          favorited
-                            ? isDarkMode ? "bg-rose-950/40 text-rose-400 border-rose-800" : "bg-rose-50 text-rose-700 border-rose-300"
-                            : isDarkMode
-                              ? "bg-[#162329] text-gray-200 border-[#26383D] hover:bg-[#1f3037]"
-                              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100 shadow-sm"
-                        }`}
-                      >
-                        <HeartIcon className={`w-3.5 h-3.5 ${favorited ? "text-rose-500 fill-rose-500" : ""}`} filled={favorited} />
-                        <span>{favorited ? t("planRoute.favorited") : favoriting ? t("planRoute.favoriting") : t("planRoute.favorite")}</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-                {tripError && <p className="mt-2 text-center text-xs text-rose-500 font-medium">{tripError}</p>}
+                  )}
+                  {tripError && <p className="text-center text-xs text-rose-500 font-medium">{tripError}</p>}
+                </div>
               </div>
             )}
           </div>
