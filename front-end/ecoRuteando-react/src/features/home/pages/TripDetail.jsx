@@ -56,14 +56,33 @@ const TripDetail = ({ onNavigate }) => {
         return labels[mode] || mode || "—";
     };
 
-    const routePoints = trip?.actualRoute || [];
-    const mapCenter = routePoints.length > 0
-        ? { lat: routePoints[0].latitude, lng: routePoints[0].longitude }
-        : null;
+    const distanceValue = trip?.actualDistanceKm ?? trip?.estimatedDistanceKm;
+    const durationValue = trip?.actualDurationMin ?? trip?.estimatedDurationMin;
+    const co2Value = trip?.actualCo2Kg ?? trip?.estimatedCo2Kg;
 
-    const mapGeometry = routePoints.length > 0
-        ? routePoints.map((p) => ({ lat: p.latitude, lng: p.longitude }))
-        : null;
+    const routePoints = trip?.actualRoute || [];
+
+    const mapMarkers = [];
+    if (trip?.startLat != null && trip?.startLng != null) {
+        mapMarkers.push({
+            lat: Number(trip.startLat),
+            lng: Number(trip.startLng),
+            type: 'origin',
+            popup: trip.startName || 'Punto A (Origen)'
+        });
+    }
+    if (trip?.endLat != null && trip?.endLng != null) {
+        mapMarkers.push({
+            lat: Number(trip.endLat),
+            lng: Number(trip.endLng),
+            type: 'destination',
+            popup: trip.destinationName || 'Punto B (Destino)'
+        });
+    }
+
+    const mapCenter = trip?.startLat != null && trip?.startLng != null
+        ? { lat: Number(trip.startLat), lng: Number(trip.startLng) }
+        : (routePoints.length > 0 ? { lat: routePoints[0].latitude, lng: routePoints[0].longitude } : { lat: 2.9273, lng: -75.2819 });
 
     return (
         <div className={`min-h-screen ${isDarkMode ? 'bg-[#0B1215]' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
@@ -97,7 +116,7 @@ const TripDetail = ({ onNavigate }) => {
                             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-[#162329]/50 text-emerald-400 border border-emerald-500/30 hover:bg-[#1e293b]' : 'bg-white/20 text-white hover:bg-white/30 border border-white/30'}`}
                         >
                             <ArrowLeft size={16} />
-                            Volver
+                            Volver al historial
                         </button>
                     </div>
                 </div>
@@ -110,7 +129,7 @@ const TripDetail = ({ onNavigate }) => {
                 {loading && (
                     <div className="text-center py-12">
                         <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                        <p className={`${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Cargando detalle...</p>
+                        <p className={`${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Cargando detalle del viaje...</p>
                     </div>
                 )}
 
@@ -132,13 +151,47 @@ const TripDetail = ({ onNavigate }) => {
                 {/* Detalle */}
                 {!loading && !error && trip && (
                     <>
+                        {/* Trayecto Punto A -> Punto B */}
+                        {(trip.startName || trip.destinationName) && (
+                            <div className={`p-5 rounded-2xl mb-6 shadow-md border flex flex-col md:flex-row items-center justify-between gap-4 ${isDarkMode ? 'bg-[#162329] border-emerald-500/20' : 'bg-white border-emerald-100'}`}>
+                                <div className="flex items-center gap-3 w-full md:w-auto">
+                                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center font-bold text-emerald-500 text-lg">
+                                        A
+                                    </div>
+                                    <div>
+                                        <p className="text-xs uppercase font-semibold tracking-wider text-emerald-500">Punto A (Origen)</p>
+                                        <p className={`text-base font-bold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{trip.startName || "Origen"}</p>
+                                    </div>
+                                </div>
+                                <div className="hidden md:flex items-center text-emerald-500 font-semibold px-4 text-sm gap-2">
+                                    <span>────────</span>
+                                    <span>🚗 Recorrido</span>
+                                    <span>────────▶</span>
+                                </div>
+                                <div className="flex items-center gap-3 w-full md:w-auto">
+                                    <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-center font-bold text-red-500 text-lg">
+                                        B
+                                    </div>
+                                    <div>
+                                        <p className="text-xs uppercase font-semibold tracking-wider text-red-500">Punto B (Destino)</p>
+                                        <p className={`text-base font-bold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{trip.destinationName || "Destino"}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Mapa del recorrido */}
                         <div className={`rounded-2xl overflow-hidden shadow-lg border mb-8 ${isDarkMode ? 'border-emerald-800/20' : 'border-gray-100'}`}>
+                            <div className={`px-4 py-2.5 text-xs font-semibold flex items-center justify-between ${isDarkMode ? 'bg-[#111C20] text-emerald-400 border-b border-[#26383D]' : 'bg-emerald-50/70 text-emerald-800 border-b border-emerald-100'}`}>
+                                <span>🗺️ Trazado de ruta (Punto A ➔ Punto B)</span>
+                                <span>{trip.completed ? "Ruta completada" : "Viaje en curso"}</span>
+                            </div>
                             <MapViewGoogle
                                 height="420px"
-                                center={mapCenter || { lat: 4.7110, lng: -74.0721 }}
+                                center={mapCenter}
                                 zoom={14}
-                                routeGeometry={mapGeometry}
+                                markers={mapMarkers}
+                                routeGeometry={trip.encodedPolyline}
                                 showUserLocation={false}
                             />
                         </div>
@@ -148,19 +201,19 @@ const TripDetail = ({ onNavigate }) => {
                             <div className={`rounded-2xl p-5 text-center shadow-md border ${isDarkMode ? 'bg-[#162329] border-emerald-800/20' : 'bg-white border-gray-100'}`}>
                                 <p className={`text-xs font-medium ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Distancia</p>
                                 <p className={`text-2xl font-bold mt-1 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>
-                                    {trip.actualDistanceKm != null ? `${trip.actualDistanceKm} km` : "—"}
+                                    {distanceValue != null ? `${Number(distanceValue).toFixed(2)} km` : "—"}
                                 </p>
                             </div>
                             <div className={`rounded-2xl p-5 text-center shadow-md border ${isDarkMode ? 'bg-[#162329] border-emerald-800/20' : 'bg-white border-gray-100'}`}>
                                 <p className={`text-xs font-medium ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>Duración</p>
                                 <p className={`text-2xl font-bold mt-1 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>
-                                    {trip.actualDurationMin != null ? `${trip.actualDurationMin} min` : "—"}
+                                    {durationValue != null ? `${durationValue} min` : "—"}
                                 </p>
                             </div>
                             <div className={`rounded-2xl p-5 text-center shadow-md border ${isDarkMode ? 'bg-[#162329] border-emerald-800/20' : 'bg-white border-gray-100'}`}>
                                 <p className={`text-xs font-medium ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>CO₂ Ahorrado</p>
                                 <p className={`text-2xl font-bold mt-1 text-emerald-500`}>
-                                    {trip.actualCo2Kg != null ? `${trip.actualCo2Kg} kg` : "—"}
+                                    {co2Value != null ? `${Number(co2Value).toFixed(2)} kg` : "—"}
                                 </p>
                             </div>
                             <div className={`rounded-2xl p-5 text-center shadow-md border ${isDarkMode ? 'bg-[#162329] border-emerald-800/20' : 'bg-white border-gray-100'}`}>
