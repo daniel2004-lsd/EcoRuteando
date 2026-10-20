@@ -138,10 +138,6 @@ const AdminPanel = ({ onNavigate }) => {
     },
   ];
 
-  const pendingActions = [
-    { id: "tickets", icon: <TicketIcon size={18} />, label: t("admin.panel.pending.tickets.label", "Tickets pendientes"), desc: t("admin.panel.pending.tickets.desc", "Consultas de usuarios por atender"), count: stats.pendingTickets, color: "blue", onClick: () => onNavigate("admin/tickets") }
-  ];
-
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-[#0B1215]' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'}`}>
 
@@ -254,30 +250,7 @@ const AdminPanel = ({ onNavigate }) => {
           ))}
         </div>
 
-        {/* Acciones Pendientes */}
-        <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{t("admin.panel.pendingActionsTitle", "⚠️ Acciones Pendientes")}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {pendingActions.map((action) => (
-            <div
-              key={action.id}
-              onClick={action.id === "reports" ? () => onNavigate("admin/reports") : undefined}
-              className={`rounded-2xl p-5 shadow-md transition-all hover:shadow-lg border ${action.id === "reports" ? "cursor-pointer" : ""} ${isDarkMode ? 'bg-[#162329] border-[#26383D] hover:border-emerald-500/50' : 'bg-white border-gray-100 hover:border-emerald-200'}`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-emerald-500/20' : action.color === 'orange' ? 'bg-orange-100' : 'bg-purple-100'}`}>
-                    <span className={action.color === 'orange' ? 'text-orange-500' : 'text-purple-500'}>{action.icon}</span>
-                  </div>
-                  <div>
-                    <p className={`font-semibold ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>{action.label}</p>
-                    <p className={`text-xs ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-500'}`}>{action.desc}</p>
-                  </div>
-                </div>
-                <p className={`text-2xl font-black ${action.color === 'orange' ? 'text-orange-500' : 'text-purple-500'}`}>{action.count}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+
 
         {/* Impacto Ambiental */}
         <div className={`rounded-2xl p-6 text-center shadow-lg border ${isDarkMode ? 'bg-gradient-to-br from-emerald-900/50 to-green-900/50 border-emerald-500/30' : 'bg-gradient-to-br from-emerald-100 to-green-100 border-emerald-200'}`}>
