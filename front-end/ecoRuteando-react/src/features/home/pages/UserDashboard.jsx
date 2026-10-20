@@ -226,7 +226,21 @@ const UserDashboard = ({ onNavigate }) => {
       }
     };
     loadStats();
-    return () => { mounted = false; };
+
+    // Sincronización en tiempo real con la app móvil
+    const interval = setInterval(loadStats, 3000);
+    const handleSync = () => {
+      loadStats();
+    };
+    window.addEventListener("focus", handleSync);
+    document.addEventListener("visibilitychange", handleSync);
+
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+      window.removeEventListener("focus", handleSync);
+      document.removeEventListener("visibilitychange", handleSync);
+    };
   }, [user]);
 
   // Antes se llamaba handleBack/confirmBack/showBackModal, pero la función

@@ -72,6 +72,14 @@ const exportService = {
     if (to) params.to = to;
     return requestExport("/exports/stats", params, defaultName("estadisticas", format));
   },
+
+  getStatsData: async ({ from = null, to = null } = {}) => {
+    const params = { format: "json" };
+    if (from) params.from = from;
+    if (to) params.to = to;
+    const { data } = await api.get("/exports/stats", { params });
+    return data;
+  },
 };
 
 export default exportService;

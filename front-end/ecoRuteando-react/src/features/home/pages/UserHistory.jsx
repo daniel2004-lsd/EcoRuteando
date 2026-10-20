@@ -15,19 +15,37 @@ const UserHistory = ({ onNavigate }) => {
 
     useEffect(() => {
         loadTrips();
+
+        // Sincronización en tiempo real para reflejar viajes completados en el móvil
+        const interval = setInterval(() => {
+            loadTrips(true);
+        }, 3000);
+
+        const handleSync = () => {
+            loadTrips(true);
+        };
+
+        window.addEventListener("focus", handleSync);
+        document.addEventListener("visibilitychange", handleSync);
+
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener("focus", handleSync);
+            document.removeEventListener("visibilitychange", handleSync);
+        };
     }, []);
 
-    const loadTrips = async () => {
-        setLoading(true);
+    const loadTrips = async (isSilent = false) => {
+        if (!isSilent) setLoading(true);
         setError(null);
         try {
             const data = await tripService.getAll();
             setTrips(data);
         } catch (err) {
             console.error("Error cargando historial de viajes:", err);
-            setError("No se pudieron cargar los viajes");
+            if (!isSilent) setError("No se pudieron cargar los viajes");
         } finally {
-            setLoading(false);
+            if (!isSilent) setLoading(false);
         }
     };
 

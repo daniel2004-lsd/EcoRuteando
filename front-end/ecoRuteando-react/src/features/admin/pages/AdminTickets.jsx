@@ -15,11 +15,21 @@ import supportService from "../../../services/supportService";
 import toast from "react-hot-toast";
 
 const STATUS_CONFIG = {
-  all: { label: "Todos", color: "bg-gray-500/10 text-gray-500 border-gray-500/20" },
-  Open: { label: "Pendientes", color: "bg-blue-500/10 text-blue-500 border-blue-500/20" },
-  InProgress: { label: "En Proceso", color: "bg-amber-500/10 text-amber-500 border-amber-500/20" },
-  Resolved: { label: "Resueltos", color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" },
-  Closed: { label: "Cerrados", color: "bg-purple-500/10 text-purple-500 border-purple-500/20" },
+  all: { label: "Todos", color: "bg-gray-500/10 text-gray-400 border-gray-500/20" },
+  pending: { label: "Pendientes", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
+  in_progress: { label: "En Proceso", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
+  resolved: { label: "Resueltos / Respondidos", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
+  closed: { label: "Cerrados", color: "bg-purple-500/10 text-purple-400 border-purple-500/20" },
+};
+
+const normalizeStatus = (st) => {
+  if (!st) return "pending";
+  const s = String(st).toLowerCase().replace("_", "");
+  if (s === "open" || s === "pending") return "pending";
+  if (s === "inprogress") return "in_progress";
+  if (s === "resolved") return "resolved";
+  if (s === "closed") return "closed";
+  return s;
 };
 
 const AdminTickets = ({ onNavigate }) => {
@@ -29,7 +39,7 @@ const AdminTickets = ({ onNavigate }) => {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("pending");
   const [search, setSearch] = useState("");
 
   // Modal para ver y responder ticket
@@ -43,7 +53,12 @@ const AdminTickets = ({ onNavigate }) => {
     setError(null);
     try {
       const data = await supportService.getAllTickets();
-      setTickets(Array.isArray(data) ? data : (data?.items || []));
+      const rawList = Array.isArray(data) ? data : (data?.items || []);
+      const normalized = rawList.map((t) => ({
+        ...t,
+        status: normalizeStatus(t.status),
+      }));
+      setTickets(normalized);
     } catch (err) {
       console.error("Error cargando tickets de soporte:", err);
       setError("No se pudieron cargar las solicitudes de soporte.");
@@ -59,15 +74,16 @@ const AdminTickets = ({ onNavigate }) => {
   const handleUpdateStatus = async (ticketId, newStatus) => {
     try {
       setUpdatingStatus(true);
-      await supportService.updateStatus(ticketId, { status: newStatus, assignToMe: true });
-      toast.success(`Estado actualizado a: ${STATUS_CONFIG[newStatus]?.label || newStatus}`);
+      await supportService.updateStatus(ticketId, { status: newStatus, assignToMe: newStatus === "in_progress" });
+      const label = STATUS_CONFIG[newStatus]?.label || newStatus;
+      toast.success(`Estado actualizado a: ${label} ✓`);
       if (selectedTicket && selectedTicket.id === ticketId) {
         setSelectedTicket((prev) => ({ ...prev, status: newStatus }));
       }
       await loadTickets();
     } catch (err) {
       console.error("Error actualizando estado del ticket:", err);
-      toast.error("Error al actualizar estado.");
+      toast.error(err?.response?.data?.message || "Error al actualizar estado.");
     } finally {
       setUpdatingStatus(false);
     }
@@ -81,15 +97,21 @@ const AdminTickets = ({ onNavigate }) => {
       await supportService.addMessage(selectedTicket.id, {
         message: replyMessage.trim(),
       });
-      toast.success("Respuesta registrada con éxito.");
+      toast.success("¡Respuesta enviada! El ticket ha quedado Resuelto y enviado por correo al usuario ✉️");
       setReplyMessage("");
-      // Recargar detalle
+      // Recargar detalle y listado
       const updated = await supportService.getTicketById(selectedTicket.id);
-      setSelectedTicket(updated);
+      if (updated) {
+        setSelectedTicket({
+          ...updated,
+          status: normalizeStatus(updated.status),
+        });
+      }
+      setStatusFilter("resolved");
       await loadTickets();
     } catch (err) {
       console.error("Error enviando respuesta:", err);
-      toast.error("No se pudo enviar la respuesta.");
+      toast.error(err?.response?.data?.message || "No se pudo enviar la respuesta.");
     } finally {
       setSendingReply(false);
     }
@@ -102,13 +124,15 @@ const AdminTickets = ({ onNavigate }) => {
       !q ||
       (t.subject || "").toLowerCase().includes(q) ||
       (t.message || "").toLowerCase().includes(q) ||
-      (t.userEmail || "").toLowerCase().includes(q);
+      (t.userEmail || "").toLowerCase().includes(q) ||
+      (t.userName || "").toLowerCase().includes(q);
     return matchesStatus && matchesSearch;
   });
 
-  const pendingCount = tickets.filter((t) => t.status === "Open" || t.status === "Pending").length;
-  const inProgressCount = tickets.filter((t) => t.status === "InProgress").length;
-  const resolvedCount = tickets.filter((t) => t.status === "Resolved" || t.status === "Closed").length;
+  const pendingCount = tickets.filter((t) => t.status === "pending").length;
+  const inProgressCount = tickets.filter((t) => t.status === "in_progress").length;
+  const resolvedCount = tickets.filter((t) => t.status === "resolved").length;
+  const closedCount = tickets.filter((t) => t.status === "closed").length;
 
   return (
     <div className={`min-h-screen ${isDarkMode ? "bg-[#0B1215]" : "bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50"}`}>
@@ -254,18 +278,27 @@ const AdminTickets = ({ onNavigate }) => {
                   </p>
 
                   <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-gray-100 dark:border-[#26383D]">
-                    <div className="flex items-center gap-2 text-xs text-emerald-500 font-medium">
-                      <span>👤</span>
-                      <span>{ticket.userEmail || "Usuario EcoRuteando"}</span>
+                    <div className="flex items-center gap-2 text-xs min-w-0 flex-1">
+                      <div className="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center font-bold text-xs shrink-0">
+                        {(ticket.userName || ticket.userEmail || "U")[0].toUpperCase()}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <span className={`font-semibold text-xs block truncate ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                          {ticket.userName || "Usuario"}
+                        </span>
+                        <span className="text-[10px] text-gray-400 block truncate" title={ticket.userEmail}>
+                          {ticket.userEmail || "Sin correo"}
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0">
                       <button
                         type="button"
                         onClick={() => setSelectedTicket(ticket)}
                         className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-sm"
                       >
-                        Atender / Responder
+                        {ticket.status === "resolved" ? "Ver Respuesta" : "Atender / Responder"}
                       </button>
                     </div>
                   </div>
@@ -298,9 +331,13 @@ const AdminTickets = ({ onNavigate }) => {
                 </div>
                 <div>
                   <h3 className="text-base font-bold">{selectedTicket.subject}</h3>
-                  <p className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
-                    Usuario: {selectedTicket.userEmail || "Anónimo"} · {new Date(selectedTicket.createdAt).toLocaleDateString()}
-                  </p>
+                  <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                    <span className="font-semibold text-xs text-emerald-500">{selectedTicket.userName || "Usuario"}</span>
+                    <span className="text-gray-400 text-xs">•</span>
+                    <span className="text-xs text-gray-400 underline">{selectedTicket.userEmail || "Sin correo"}</span>
+                    <span className="text-gray-400 text-xs">•</span>
+                    <span className="text-[11px] text-gray-400">{selectedTicket.createdAt ? new Date(selectedTicket.createdAt).toLocaleDateString("es-CO") : ""}</span>
+                  </div>
                 </div>
               </div>
               <button
@@ -341,7 +378,7 @@ const AdminTickets = ({ onNavigate }) => {
                       }`}
                     >
                       <div className="flex items-center justify-between text-[10px] opacity-75 mb-1 font-semibold">
-                        <span>{msg.isAdmin ? "🛡️ Soporte EcoRuteando" : "👤 Usuario"}</span>
+                        <span>{msg.isAdmin ? "🛡️ Soporte EcoRuteando" : `👤 ${selectedTicket.userName || selectedTicket.userEmail || "Usuario"}`}</span>
                         <span>{msg.createdAt ? new Date(msg.createdAt).toLocaleString() : ""}</span>
                       </div>
                       <p>{msg.message}</p>
@@ -356,7 +393,7 @@ const AdminTickets = ({ onNavigate }) => {
                   Actualizar estado del ticket
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  {["Open", "InProgress", "Resolved", "Closed"].map((st) => (
+                  {["pending", "in_progress", "resolved", "closed"].map((st) => (
                     <button
                       key={st}
                       type="button"
@@ -378,9 +415,14 @@ const AdminTickets = ({ onNavigate }) => {
 
               {/* Formulario de respuesta */}
               <form onSubmit={handleSendReply} className="space-y-3 pt-2 border-t border-gray-100 dark:border-[#26383D]">
-                <label className={`block text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
-                  Responder al usuario
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className={`block text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                    Responder al usuario
+                  </label>
+                  <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+                    ✉️ Notificación por correo al enviar
+                  </span>
+                </div>
                 <textarea
                   rows={3}
                   value={replyMessage}
@@ -391,7 +433,10 @@ const AdminTickets = ({ onNavigate }) => {
                     isDarkMode ? "bg-[#111C20] border-[#26383D] text-white placeholder-gray-500" : "bg-white border-gray-300 text-gray-800 placeholder-gray-400"
                   }`}
                 />
-                <div className="flex justify-end">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[11px] text-gray-400">
+                    Al responder, pasará a <strong className="text-emerald-500">Resueltos / Respondidos</strong>.
+                  </span>
                   <button
                     type="submit"
                     disabled={sendingReply || !replyMessage.trim()}
