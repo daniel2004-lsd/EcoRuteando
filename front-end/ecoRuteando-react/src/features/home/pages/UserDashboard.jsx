@@ -21,6 +21,7 @@ import routeService from "../../../services/routeService";
 import tripService from "../../../services/tripService";
 import favoriteService from "../../../services/favoriteService";
 import toast from "react-hot-toast";
+import DownloadApkModal from "../../../shared/components/DownloadApkModal";
 
 // ---------------------------------------------------------------------------
 // Configuración de estilos por módulo.
@@ -164,6 +165,7 @@ const UserDashboard = ({ onNavigate }) => {
   const { isDarkMode, toggleTheme } = useTheme();
   const { logout, userRole } = useAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState({
     routes: 0,
@@ -368,6 +370,15 @@ const UserDashboard = ({ onNavigate }) => {
           </div>
 
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowDownloadModal(true)}
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all active:scale-95"
+              title="Descargar App Móvil (.apk)"
+            >
+              <span>📱</span>
+              <span className="hidden sm:inline">Descargar</span> App
+            </button>
+
             <button
               onClick={handleLogoutClick}
               aria-label={user ? t("dashboard.logout", "Cerrar sesión") : t("dashboard.backToHome", "Volver al inicio")}
@@ -623,6 +634,11 @@ const UserDashboard = ({ onNavigate }) => {
           </div>
         </div>
       )}
+
+      <DownloadApkModal
+        isOpen={showDownloadModal}
+        onClose={() => setShowDownloadModal(false)}
+      />
     </div>
   );
 };
