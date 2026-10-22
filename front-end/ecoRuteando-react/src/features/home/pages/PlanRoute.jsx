@@ -11,6 +11,7 @@ import favoriteService from "../../../services/favoriteService";
 import { loadGoogleMapsApi } from "../../../services/googleMapsLoader";
 import { useAuth } from "../../../app/context/AuthContext";
 import toast from "react-hot-toast";
+import DownloadApkModal from "../../../shared/components/DownloadApkModal";
 
 // Coordenadas de Neiva (viewport inicial del mapa)
 const NEIVA_LAT = 2.9273;
@@ -323,6 +324,7 @@ const PlanRoute = ({ onNavigate }) => {
   const [startingTrip, setStartingTrip] = useState(false);
   const [completing, setCompleting] = useState(false);
   const [tripError, setTripError] = useState(null);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
   const location = useLocation();
   const presetPendingRef = useRef(false);
   const [actionMessage, setActionMessage] = useState(null);
@@ -425,13 +427,15 @@ const PlanRoute = ({ onNavigate }) => {
         car: "car",
       };
 
-      const baseName = `${originPoint.name} → ${destPoint.name}`;
+      const rawOrigin = originPoint.name || "Origen";
+      const rawDest = destPoint.name || "Destino";
+      const baseName = `${rawOrigin.substring(0, 50)} → ${rawDest.substring(0, 50)}`;
       const payload = {
-        name: `Viaje: ${baseName} (${Date.now()})`,
-        description: `[trip_transient] ${baseName}`,
+        name: `Viaje: ${baseName} (${Date.now()})`.substring(0, 140),
+        description: `[trip_transient] ${baseName}`.substring(0, 950),
         transportType: modeMap[mode] || "walking",
-        startName: originPoint.name,
-        destinationName: destPoint.name,
+        startName: rawOrigin.substring(0, 190),
+        destinationName: rawDest.substring(0, 190),
         startLat: originPoint.lat,
         startLng: originPoint.lng,
         endLat: destPoint.lat,
@@ -444,7 +448,6 @@ const PlanRoute = ({ onNavigate }) => {
 
       const savedRoute = await routeService.create(payload);
       if (savedRoute?.id) {
-        setRouteSavedId(savedRoute.id);
         const started = await tripService.start({
           routeId: savedRoute.id,
           transportMode: modeMap[mode] || "walking",
@@ -452,7 +455,6 @@ const PlanRoute = ({ onNavigate }) => {
         });
 
         if (started?.id) {
-          setActiveTripId(started.id);
           const distNum = parseFloat(calculatedRoute.distance);
           const durNum = calculatedRoute.duration;
           const finalCo2 = co2Val != null 
@@ -691,15 +693,17 @@ const PlanRoute = ({ onNavigate }) => {
         car: "car",
       };
 
-      const baseName = `${origin.name} → ${destination.name}`;
+      const rawOrigin = origin.name || "Origen";
+      const rawDest = destination.name || "Destino";
+      const baseName = `${rawOrigin.substring(0, 50)} → ${rawDest.substring(0, 50)}`;
       const payload = {
-        name: isTransient ? `Viaje: ${baseName} (${Date.now()})` : baseName,
-        description: isTransient
+        name: (isTransient ? `Viaje: ${baseName} (${Date.now()})` : baseName).substring(0, 140),
+        description: (isTransient
           ? `[trip_transient] ${baseName}`
-          : t("planRoute.saveDescription", { from: origin.name, to: destination.name }),
+          : t("planRoute.saveDescription", { from: rawOrigin, to: rawDest })).substring(0, 950),
         transportType: modeMap[transportMode] || "walking",
-        startName: origin.name,
-        destinationName: destination.name,
+        startName: rawOrigin.substring(0, 190),
+        destinationName: rawDest.substring(0, 190),
         startLat: origin.lat,
         startLng: origin.lng,
         endLat: destination.lat,
@@ -870,10 +874,17 @@ const PlanRoute = ({ onNavigate }) => {
         actualCo2Kg: estimate?.co2SavedKg ?? null,
       });
 
+      setActiveTripId(null);
       onNavigate?.("/user/history");
     } catch (err) {
       console.error("Error completando viaje:", err);
-      setTripError(err?.response?.data?.message || err?.message || t("planRoute.errors.completeTrip"));
+      const msg = err?.response?.data?.message || err?.response?.data?.detail || err?.message || "";
+      if (msg.includes("ya fue finalizado") || err?.response?.status === 400) {
+        setActiveTripId(null);
+        onNavigate?.("/user/history");
+        return;
+      }
+      setTripError(msg || t("planRoute.errors.completeTrip"));
     } finally {
       setCompleting(false);
     }
@@ -1152,16 +1163,28 @@ const PlanRoute = ({ onNavigate }) => {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className={`p-2 rounded-xl text-sm transition-all ${
-                isDarkMode ? "hover:bg-[#111C20]" : "hover:bg-gray-100"
-              }`}
-              title="Cambiar tema"
-            >
-              {isDarkMode ? "☀️" : "🌙"}
-            </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setShowDownloadModal(true)}
+                className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all active:scale-95"
+                title="Descargar App Móvil (.apk)"
+              >
+                <span>📱</span>
+                <span className="hidden sm:inline">Descargar</span> App
+              </button>
+
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className={`p-2 rounded-xl text-sm transition-all ${
+                  isDarkMode ? "hover:bg-[#111C20]" : "hover:bg-gray-100"
+                }`}
+                title="Cambiar tema"
+              >
+                {isDarkMode ? "☀️" : "🌙"}
+              </button>
+            </div>
           </div>
 
           <div className="p-3.5 space-y-3">
@@ -1729,6 +1752,11 @@ const PlanRoute = ({ onNavigate }) => {
           </div>
         </div>
       )}
+
+      <DownloadApkModal
+        isOpen={showDownloadModal}
+        onClose={() => setShowDownloadModal(false)}
+      />
     </div>
   );
 };
