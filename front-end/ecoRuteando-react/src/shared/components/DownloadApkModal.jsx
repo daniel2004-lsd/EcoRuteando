@@ -26,8 +26,8 @@ export default function DownloadApkModal({ isOpen, onClose }) {
   const [copied, setCopied] = useState(false);
   const [networkMode, setNetworkMode] = useState("internet"); // "internet" | "local"
   const [localIp, setLocalIp] = useState("10.3.234.116");
-  const [internetUrl, setInternetUrl] = useState("https://feeding-irrigation-milk-log.trycloudflare.com/downloads/ecoruteando.apk");
-  const [version, setVersion] = useState("1.0.6");
+  const [internetUrl, setInternetUrl] = useState("https://github.com/daniel2004-lsd/EcoRuteando/releases/download/v1.0.7/ecoruteando.apk");
+  const [version, setVersion] = useState("1.0.7");
   const [qrTimestamp, setQrTimestamp] = useState(Date.now());
 
   // Cargar metadatos dinámicos del servidor al abrir el modal
