@@ -26,3 +26,7 @@ front-end/ecoRuteando-react/.env
 # memoria de trabajo del agente (no parte del proyecto)
 .project-memory/
 .agents/
+
+# binaries and office documents
+*.docx
+*.apk
