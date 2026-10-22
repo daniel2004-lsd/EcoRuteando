@@ -99,20 +99,6 @@ const UserHistory = ({ onNavigate }) => {
         }
     };
 
-    const exportToCsv = async () => {
-        if (exporting || filteredTrips.length === 0) return;
-        setExporting("csv");
-        try {
-            const result = await exportService.exportUserTrips("csv", { from: fromDate || null, to: toDate || null });
-            downloadBlob(result.blob, result.fileName);
-        } catch (err) {
-            console.error("Error exportando historial:", err);
-            toast.error(err?.detail || "No se pudo exportar el historial");
-        } finally {
-            setExporting(null);
-        }
-    };
-
     const escapeHtml = (value) =>
         String(value ?? "")
             .replace(/&/g, "&amp;")
@@ -302,14 +288,6 @@ const UserHistory = ({ onNavigate }) => {
                         >
                             <DownloadIcon size={16} />
                             {exporting === "xlsx" ? "Generando..." : "Excel"}
-                        </button>
-                        <button
-                            onClick={exportToCsv}
-                            disabled={exporting || loading || filteredTrips.length === 0}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${isDarkMode ? 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 border border-emerald-500/30' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200'}`}
-                        >
-                            <DownloadIcon size={16} />
-                            {exporting === "csv" ? "Generando..." : "CSV"}
                         </button>
                     </div>
                 </div>
