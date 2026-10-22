@@ -5,6 +5,7 @@ import { useTheme } from "../../../app/context/ThemeContext";
 import { useLanguage } from "../../../app/context/LanguageContext";
 import { useAuth } from "../../../hooks/useAuth";
 import TermsModal from "../../../shared/components/TermsModal";
+import DownloadApkModal from "../../../shared/components/DownloadApkModal";
 
 /* ── Ícono globo inline ── */
 const GlobeIcon = () => (
@@ -37,6 +38,7 @@ const HomePage = ({ onNavigate }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
   const { isDarkMode, toggleTheme } = useTheme();
   const { language, changeLanguage: setGlobalLanguage } = useLanguage();
   const dropdownRef = useRef(null);
@@ -191,6 +193,17 @@ const HomePage = ({ onNavigate }) => {
               {isDarkMode ? '☀️' : "🌙"}
             </button>
             <button
+              onClick={() => setShowDownloadModal(true)}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs lg:text-sm font-semibold transition-all duration-300 hover:scale-105 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${scrolled
+                  ? (isDarkMode ? 'border-emerald-500/50 bg-[#162329] text-emerald-400 hover:bg-[#111C20]' : 'border-emerald-500 bg-emerald-50 text-emerald-700 hover:bg-emerald-100')
+                  : 'border-white/50 bg-white/15 backdrop-blur-md text-white hover:bg-white/25'
+                }`}
+              title="Descargar app para Android (.apk)"
+            >
+              <span>🤖</span>
+              <span>App Android</span>
+            </button>
+            <button
               onClick={() => onNavigate("/login")}
               className={`px-5 lg:px-6 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${scrolled
                   ? (isDarkMode ? 'border-[#34D399] text-[#34D399] hover:bg-[#34D399] hover:text-[#0B1215]' : "border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white")
@@ -328,6 +341,10 @@ const HomePage = ({ onNavigate }) => {
             <button onClick={() => { handleGuestMode(); setMenuOpen(false); }} className={`w-full py-4 rounded-2xl font-semibold text-sm transition-all ${isDarkMode ? 'bg-[#111C20] border border-[#34D399]/50 text-[#34D399] hover:bg-[#162329]' : 'bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100'}`}>
               {navGuest}
             </button>
+            <button onClick={() => { setShowDownloadModal(true); setMenuOpen(false); }} className={`w-full py-3.5 rounded-2xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${isDarkMode ? 'bg-emerald-600/20 border border-emerald-500/50 text-[#34D399]' : 'bg-emerald-100/70 border border-emerald-300 text-emerald-900'}`}>
+              <span>🤖</span>
+              <span>Descargar App Android (.apk)</span>
+            </button>
           </div>
         </div>
       </div>
@@ -401,6 +418,13 @@ const HomePage = ({ onNavigate }) => {
               className={`w-full sm:w-auto px-8 md:px-10 py-3 md:py-4 rounded-2xl font-medium text-base md:text-lg text-white/85 underline-offset-4 hover:underline transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60`}
             >
               {heroGuestBtn}
+            </button>
+            <button
+              onClick={() => setShowDownloadModal(true)}
+              className="w-full sm:w-auto px-7 md:px-8 py-3 md:py-4 rounded-2xl font-bold text-base md:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center gap-2.5 border border-emerald-300/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+            >
+              <span>🤖</span>
+              <span>Descargar App (.apk)</span>
             </button>
           </div>
 
@@ -602,6 +626,11 @@ const HomePage = ({ onNavigate }) => {
         isOpen={showTerms}
         onClose={() => setShowTerms(false)}
         showAcceptButton={false}
+      />
+
+      <DownloadApkModal
+        isOpen={showDownloadModal}
+        onClose={() => setShowDownloadModal(false)}
       />
 
       <style>{`

@@ -133,7 +133,7 @@ const AdminPanel = ({ onNavigate }) => {
       id: "export",
       icon: <DownloadIcon size={28} />,
       title: t("admin.panel.modules.export.title", "Exportar Datos"),
-      subtitle: t("admin.panel.modules.export.subtitle", "PDF, Excel y CSV"),
+      subtitle: t("admin.panel.modules.export.subtitle", "PDF y Excel"),
       onClick: () => onNavigate("admin/exports")
     },
   ];
