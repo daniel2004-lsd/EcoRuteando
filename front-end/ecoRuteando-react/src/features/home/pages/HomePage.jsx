@@ -23,6 +23,16 @@ const PinDot = () => (
   </svg>
 );
 
+const DocumentIcon = ({ size = 20, className = "" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+    <polyline points="14 2 14 8 20 8" />
+    <line x1="16" y1="13" x2="8" y2="13" />
+    <line x1="16" y1="17" x2="8" y2="17" />
+    <polyline points="10 9 9 9 8 9" />
+  </svg>
+);
+
 /* ── Idiomas disponibles ── */
 const LANGUAGES = [
   { code: "es", label: "Español", flag: "🇨🇴" },
@@ -173,6 +183,12 @@ const HomePage = ({ onNavigate }) => {
               }`}>
               {navBenefits}
             </a>
+            <button onClick={() => setShowTerms(true)} className={`relative pb-1 transition-colors duration-300 after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-amber-400 after:transition-all after:duration-300 hover:after:w-full ${scrolled
+                ? (isDarkMode ? 'text-[#e2e8f0] hover:text-[#34D399]' : "text-gray-700 hover:text-emerald-600")
+                : "text-white/90 hover:text-white"
+              }`}>
+              {footerTerms}
+            </button>
             <button onClick={() => onNavigate("/register")} className={`relative pb-1 transition-colors duration-300 after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-amber-400 after:transition-all after:duration-300 hover:after:w-full ${scrolled
                 ? (isDarkMode ? 'text-[#e2e8f0] hover:text-[#34D399]' : "text-gray-700 hover:text-emerald-600")
                 : "text-white/90 hover:text-white"
@@ -307,6 +323,9 @@ const HomePage = ({ onNavigate }) => {
             </button>
             <button onClick={() => scrollToSection("why")} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-[#111C20] hover:text-[#34D399]' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'}`}>
               <ActivityIcon size={22} /> {navBenefits}
+            </button>
+            <button onClick={() => { setShowTerms(true); setMenuOpen(false); }} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-[#111C20] hover:text-[#34D399]' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'}`}>
+              <DocumentIcon size={22} className="text-emerald-500" /> {footerTerms}
             </button>
             <button onClick={() => { onNavigate("/register"); setMenuOpen(false); }} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-medium text-left ${isDarkMode ? 'text-gray-300 hover:bg-[#111C20] hover:text-[#34D399]' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'}`}>
               <HeartIcon size={22} /> {navJoin}
