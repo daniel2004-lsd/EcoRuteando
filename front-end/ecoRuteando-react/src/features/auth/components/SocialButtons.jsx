@@ -1,18 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import { GoogleIcon } from "../../../shared/components/Icons";
-
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+import { redirectToOAuth } from "../../../shared/oauthRedirect";
 
 function SocialButtons({ label = "Continuar con" }) {
     const { loginWithOAuth } = useAuth();
     const navigate = useNavigate();
 
     const handleGoogleLogin = () => {
-        const redirectUri = `${window.location.origin}/auth/callback`;
-        const scope = "openid email profile";
-        const url = `https://accounts.google.com/o/oauth2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&response_type=code`;
-        window.location.href = url;
+        redirectToOAuth("google");
     };
 
     return (
