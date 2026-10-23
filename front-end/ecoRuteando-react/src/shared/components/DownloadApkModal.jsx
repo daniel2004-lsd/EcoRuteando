@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import { LeafIcon, CloseIcon } from "./Icons";
 import { useTheme } from "../../app/context/ThemeContext";
 
@@ -67,10 +68,6 @@ export default function DownloadApkModal({ isOpen, onClose }) {
   const localDownloadUrl = `http://${localIp || "10.90.222.239"}:3007/downloads/ecoruteando.apk`;
   const activeDownloadUrl =
     networkMode === "local" ? localDownloadUrl : internetUrl;
-
-  const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
-    activeDownloadUrl
-  )}&bgcolor=${isDarkMode ? "162329" : "ffffff"}&color=${isDarkMode ? "34D399" : "059669"}&_t=${qrTimestamp}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(activeDownloadUrl);
@@ -227,12 +224,13 @@ export default function DownloadApkModal({ isOpen, onClose }) {
                     : "bg-white border-emerald-200"
                 }`}
               >
-                <img
-                  key={qrTimestamp + activeDownloadUrl}
-                  src={qrApiUrl}
-                  alt="QR para descargar APK de EcoRuteando"
-                  className="w-36 h-36 rounded-xl block object-contain"
-                  loading="eager"
+                <QRCodeSVG
+                  value={activeDownloadUrl}
+                  size={144}
+                  level="M"
+                  fgColor={isDarkMode ? "#34D399" : "#059669"}
+                  bgColor={isDarkMode ? "#111C20" : "#ffffff"}
+                  className="rounded-xl block"
                 />
               </div>
               <span className="text-[11px] mt-2 font-medium flex items-center gap-1 opacity-75">
