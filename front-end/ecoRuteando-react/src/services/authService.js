@@ -54,10 +54,11 @@ export const forgotPassword = async (email) => {
     return response.data;
 };
 
-export const resetPassword = async (token, newPassword) => {
+export const resetPassword = async (token, newPassword, email) => {
     const response = await api.post("/auth/reset-password", {
         token,
         newPassword,
+        email: email || undefined,
     });
     return response.data;
 };

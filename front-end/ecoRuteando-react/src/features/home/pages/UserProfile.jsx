@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../../app/context/LanguageContext";
 import { useTheme } from "../../../app/context/ThemeContext";
@@ -1524,13 +1525,14 @@ const UserProfile = ({ onNavigate }) => {
                   </div>
                 </div>
 
-                {/* Código QR */}
+                {/* Código QR (generado localmente sin transmitir secreto TOTP a terceros - H-03) */}
                 <div className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white border border-gray-200">
                   {twoFactorData.qrCodeUri ? (
-                    <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(twoFactorData.qrCodeUri)}`}
-                      alt="Código QR 2FA"
-                      className="w-44 h-44 object-contain rounded-lg"
+                    <QRCodeSVG
+                      value={twoFactorData.qrCodeUri}
+                      size={176}
+                      level="M"
+                      className="rounded-lg"
                     />
                   ) : (
                     <div className="w-44 h-44 flex items-center justify-center text-xs text-gray-400">
