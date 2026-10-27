@@ -69,16 +69,6 @@ export function AuthProvider({ children }) {
         return data;
     }, [saveTokens]);
 
-    const loginWithOAuth = useCallback(async (provider, token) => {
-        const data = await authService.oauthLogin(provider, token);
-        saveTokens(data.accessToken, data.refreshToken);
-
-        const userData = await authService.me();
-        setUser(userData);
-
-        return data;
-    }, [saveTokens]);
-
     const logout = useCallback(async () => {
         try {
             if (refreshToken) {
@@ -111,7 +101,6 @@ export function AuthProvider({ children }) {
                 userRole,
                 saveTokens,
                 loginUser,
-                loginWithOAuth,
                 logout,
                 setUser,
             }}

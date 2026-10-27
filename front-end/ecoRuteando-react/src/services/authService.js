@@ -85,16 +85,6 @@ export const deleteAccount = async () => {
     return response.data;
 };
 
-// ── OAuth ──────────────────────────────────────────────────────
-
-export const oauthLogin = async (provider, accessToken) => {
-    const response = await api.post("/auth/oauth/login", {
-        provider,
-        accessToken,
-    });
-    return response.data;
-};
-
 // ── Two-Factor Authentication ──────────────────────────────────
 
 export const enable2FA = async () => {
