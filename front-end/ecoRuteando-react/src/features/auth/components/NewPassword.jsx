@@ -83,7 +83,8 @@ const NewPassword = ({ recoveryCode, onClearRecoveryCode }) => {
         setLoading(true);
 
         try {
-            await resetPassword(token, form.pw);
+            const email = sessionStorage.getItem("passwordRecoveryEmail");
+            await resetPassword(token, form.pw, email);
 
             if (onClearRecoveryCode) onClearRecoveryCode();
             sessionStorage.removeItem("passwordRecoveryEmail");

@@ -84,6 +84,7 @@ const ReporterProblem = ({ onNavigate }) => {
     reportType: "obstruction",
     description: "",
     addressText: "",
+    photoUrl: "",
   });
   const [location, setLocation] = useState(null);
   const [gettingLocation, setGettingLocation] = useState(false);
@@ -219,6 +220,18 @@ const ReporterProblem = ({ onNavigate }) => {
     setSubmitError(null);
     setIsSubmitting(true);
 
+    if (formData.photoUrl && formData.photoUrl.trim()) {
+      const trimmedPhoto = formData.photoUrl.trim();
+      if (trimmedPhoto.length > 500) {
+        setSubmitError(t("reporterProblem.errors.photoTooLong", "La URL de la foto no puede superar 500 caracteres."));
+        return;
+      }
+      if (!/^https?:\/\//i.test(trimmedPhoto)) {
+        setSubmitError(t("reporterProblem.errors.invalidPhotoUrl", "La URL de la fotografía debe comenzar con http:// o https://"));
+        return;
+      }
+    }
+
     try {
       const finalAddress = formData.addressText?.trim() || formatCoords(location.lat, location.lng);
 
@@ -228,6 +241,7 @@ const ReporterProblem = ({ onNavigate }) => {
         latitude: location.lat,
         longitude: location.lng,
         addressText: finalAddress,
+        photoUrl: formData.photoUrl?.trim() || null,
       });
 
       setIsSubmitting(false);
@@ -236,7 +250,7 @@ const ReporterProblem = ({ onNavigate }) => {
 
       setTimeout(() => {
         setSubmitted(false);
-        setFormData({ reportType: "obstruction", description: "", addressText: "" });
+        setFormData({ reportType: "obstruction", description: "", addressText: "", photoUrl: "" });
         setLocation(null);
       }, 2500);
 
@@ -563,6 +577,54 @@ const ReporterProblem = ({ onNavigate }) => {
                       : "bg-gray-50 border border-gray-200 text-gray-800 focus:border-emerald-400"
                   }`}
                 />
+              </div>
+
+              {/* Fotografía del incidente (H-09) */}
+              <div className="mb-5">
+                <div className="flex items-center justify-between mb-2">
+                  <label className={`block text-xs font-bold uppercase tracking-wide ${isDarkMode ? "text-[#94a3b8]" : "text-gray-500"}`}>
+                    📷 {t("reporterProblem.photoLabel", "Fotografía del incidente (opcional)")}
+                  </label>
+                  {formData.photoUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, photoUrl: "" }))}
+                      className="text-xs text-rose-500 hover:text-rose-600 font-semibold"
+                    >
+                      ✕ {t("reporterProblem.removePhoto", "Quitar foto")}
+                    </button>
+                  )}
+                </div>
+                <input
+                  type="url"
+                  name="photoUrl"
+                  value={formData.photoUrl}
+                  onChange={handleChange}
+                  maxLength={500}
+                  placeholder={t("reporterProblem.photoPlaceholder", "URL de la imagen (ej: https://ejemplo.com/foto.jpg)")}
+                  className={`w-full px-4 py-2.5 rounded-lg text-sm transition-all focus:outline-none ${
+                    isDarkMode
+                      ? "bg-[#162329] border border-gray-600 text-[#e2e8f0] focus:border-emerald-500"
+                      : "bg-gray-50 border border-gray-200 text-gray-800 focus:border-emerald-400"
+                  }`}
+                />
+                <p className={`mt-1 text-[11px] ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                  {t("reporterProblem.photoHint", "Añadir una fotografía otorga mayor nivel de confianza inicial (+10 pts) al reporte.")}
+                </p>
+
+                {formData.photoUrl && (
+                  <div className="mt-3 relative rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-slate-900 h-44 flex items-center justify-center">
+                    <img
+                      src={formData.photoUrl}
+                      alt={t("reporterProblem.photoPreviewAlt", "Vista previa del obstáculo")}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.parentElement.innerHTML = '<span class="text-xs text-rose-500 p-4 font-medium">⚠️ No se pudo cargar la vista previa de la imagen. Verifica la URL.</span>';
+                      }}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Descripción */}
@@ -949,6 +1011,18 @@ const ReporterProblem = ({ onNavigate }) => {
                         <p className={`mt-3 text-sm ${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed`}>
                           {report.description}
                         </p>
+                      )}
+
+                      {/* Fotografía comunitaria (si existe) */}
+                      {report.photoUrl && (
+                        <div className="mt-3 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700/60 h-44 bg-slate-900/40">
+                          <img
+                            src={report.photoUrl}
+                            alt={t("reporterProblem.photoPreviewAlt", "Fotografía del obstáculo")}
+                            className="w-full h-full object-cover"
+                            onError={(e) => { e.target.style.display = 'none'; }}
+                          />
+                        </div>
                       )}
 
                       {/* Barra de Nivel de Confianza (CU22) */}
