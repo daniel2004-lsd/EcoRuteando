@@ -163,7 +163,7 @@ const ModuleCard = ({ module, isDarkMode, t }) => {
 const UserDashboard = ({ onNavigate }) => {
   const { t } = useTranslation();
   const { isDarkMode, toggleTheme } = useTheme();
-  const { logout, userRole } = useAuth();
+  const { logout, userRole, accessToken } = useAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [user, setUser] = useState(null);
@@ -195,7 +195,7 @@ const UserDashboard = ({ onNavigate }) => {
   useEffect(() => {
     let mounted = true;
     const loadStats = async () => {
-      const token = localStorage.getItem("accessToken");
+      const token = accessToken;
       if (!token && !user) return; // Modo invitado: no cargar stats
 
       try {
@@ -243,7 +243,7 @@ const UserDashboard = ({ onNavigate }) => {
       window.removeEventListener("focus", handleSync);
       document.removeEventListener("visibilitychange", handleSync);
     };
-  }, [user]);
+  }, [user, accessToken]);
 
   // Antes se llamaba handleBack/confirmBack/showBackModal, pero la función
   // en realidad cierra sesión (llama a logout()) y navega a "/". Ese nombre

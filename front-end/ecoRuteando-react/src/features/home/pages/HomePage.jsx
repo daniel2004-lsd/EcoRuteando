@@ -6,6 +6,7 @@ import { useLanguage } from "../../../app/context/LanguageContext";
 import { useAuth } from "../../../hooks/useAuth";
 import TermsModal from "../../../shared/components/TermsModal";
 import DownloadApkModal from "../../../shared/components/DownloadApkModal";
+import tokenStorage from "../../../services/tokenStorage";
 
 /* ── Ícono globo inline ── */
 const GlobeIcon = () => (
@@ -71,9 +72,7 @@ const HomePage = ({ onNavigate }) => {
     try {
       if (logout) await logout();
     } catch {}
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("userRole");
+    tokenStorage.clearTokens();
     onNavigate("/user/plan-route");
   };
 

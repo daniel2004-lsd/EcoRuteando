@@ -1,9 +1,10 @@
 import api from "../api/api";
+import tokenStorage from "./tokenStorage";
 
 // ── Auth ────────────────────────────────────────────────────────
 
 export const login = async (email, password) => {
-    const trustedDeviceToken = localStorage.getItem("trustedDeviceToken");
+    const trustedDeviceToken = tokenStorage.getTrustedDeviceToken();
     const response = await api.post("/auth/login", {
         email,
         password,
@@ -18,12 +19,16 @@ export const register = async (user) => {
 };
 
 export const refresh = async (refreshToken) => {
-    const response = await api.post("/auth/refresh", { refreshToken });
+    const response = await api.post("/auth/refresh", {
+        refreshToken: refreshToken || null
+    });
     return response.data;
 };
 
 export const logout = async (refreshToken) => {
-    const response = await api.post("/auth/logout", { refreshToken });
+    const response = await api.post("/auth/logout", {
+        refreshToken: refreshToken || null
+    });
     return response.data;
 };
 
@@ -54,10 +59,11 @@ export const forgotPassword = async (email) => {
     return response.data;
 };
 
-export const resetPassword = async (token, newPassword) => {
+export const resetPassword = async (token, newPassword, email) => {
     const response = await api.post("/auth/reset-password", {
         token,
         newPassword,
+        email: email || undefined,
     });
     return response.data;
 };
@@ -81,16 +87,6 @@ export const verifyEmail = async (code) => {
 
 export const deleteAccount = async () => {
     const response = await api.delete("/users/me");
-    return response.data;
-};
-
-// ── OAuth ──────────────────────────────────────────────────────
-
-export const oauthLogin = async (provider, accessToken) => {
-    const response = await api.post("/auth/oauth/login", {
-        provider,
-        accessToken,
-    });
     return response.data;
 };
 

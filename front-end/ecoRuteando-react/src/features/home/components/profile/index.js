@@ -1,0 +1,10 @@
+export { default as ProfileHeader } from "./ProfileHeader";
+export { default as StatsCards } from "./StatsCards";
+export { default as PersonalTab } from "./PersonalTab";
+export { default as SecurityTab } from "./SecurityTab";
+export { default as PreferencesTab } from "./PreferencesTab";
+export { default as SupportTab } from "./SupportTab";
+export { default as ConfirmIdentityModal } from "./ConfirmIdentityModal";
+export { default as ChangePasswordModal } from "./ChangePasswordModal";
+export { default as TwoFactorModal } from "./TwoFactorModal";
+export { default as DeleteAccountModal } from "./DeleteAccountModal";

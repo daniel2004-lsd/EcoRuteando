@@ -17,7 +17,6 @@ import Recover from "../features/auth/components/Recover";
 import VerifyCode from "../features/auth/components/VerifyCode";
 import VerifyEmailCode from "../features/auth/components/VerifyEmailCode";
 import NewPassword from "../features/auth/components/NewPassword";
-import OAuthCallback from "../features/auth/components/OAuthCallback";
 import TwoFactorVerify from "../features/auth/components/TwoFactorVerify";
 
 // App pages
@@ -122,7 +121,6 @@ function AppContent() {
                     <Route path="/verify" element={<VerifyCode onCodeVerified={(code) => setRecoveryCode(code)} />} />
                     <Route path="/verify-email" element={<VerifyEmailCode />} />
                     <Route path="/newpassword" element={<NewPassword recoveryCode={recoveryCode} onClearRecoveryCode={() => setRecoveryCode(null)} />} />
-                    <Route path="/auth/callback" element={<OAuthCallback />} />
                     <Route path="/verify-2fa" element={<TwoFactorVerify />} />
                     <Route path="/dashboard" element={<ProtectedRoute allowGuest><UserDashboard onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminPanel onNavigate={onNavigate} /></ProtectedRoute>} />
