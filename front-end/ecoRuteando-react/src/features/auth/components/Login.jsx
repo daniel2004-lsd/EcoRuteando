@@ -67,7 +67,6 @@ function Login() {
             const result = await loginUser(email, password);
 
             if (result.requiresTwoFactor) {
-                sessionStorage.setItem("twoFactorToken", result.twoFactorToken);
                 navigate("/verify-2fa");
                 return;
             }
