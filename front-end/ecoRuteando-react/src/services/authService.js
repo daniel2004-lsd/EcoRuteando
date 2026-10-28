@@ -1,9 +1,10 @@
 import api from "../api/api";
+import tokenStorage from "./tokenStorage";
 
 // ── Auth ────────────────────────────────────────────────────────
 
 export const login = async (email, password) => {
-    const trustedDeviceToken = localStorage.getItem("trustedDeviceToken");
+    const trustedDeviceToken = tokenStorage.getTrustedDeviceToken();
     const response = await api.post("/auth/login", {
         email,
         password,
@@ -18,12 +19,16 @@ export const register = async (user) => {
 };
 
 export const refresh = async (refreshToken) => {
-    const response = await api.post("/auth/refresh", { refreshToken });
+    const response = await api.post("/auth/refresh", {
+        refreshToken: refreshToken || null
+    });
     return response.data;
 };
 
 export const logout = async (refreshToken) => {
-    const response = await api.post("/auth/logout", { refreshToken });
+    const response = await api.post("/auth/logout", {
+        refreshToken: refreshToken || null
+    });
     return response.data;
 };
 

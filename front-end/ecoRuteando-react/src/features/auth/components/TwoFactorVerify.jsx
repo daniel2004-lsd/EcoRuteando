@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import api from "../../../api/api";
 import * as authService from "../../../services/authService";
+import tokenStorage from "../../../services/tokenStorage";
 
 function TwoFactorVerify() {
     const navigate = useNavigate();
@@ -20,10 +21,14 @@ function TwoFactorVerify() {
             return;
         }
 
+        const twoFactorToken = tokenStorage.getTwoFactorToken();
+        if (!twoFactorToken) {
+            setError("Sesión de 2FA no válida o expirada. Por favor inicia sesión de nuevo.");
+            return;
+        }
+
         setLoading(true);
         try {
-            const twoFactorToken = sessionStorage.getItem("twoFactorToken");
-
             // Send 2FA code with the temporary twoFactorToken and rememberDevice
             const response = await api.post("/auth/2fa/verify", { 
                 code, 
@@ -33,12 +38,12 @@ function TwoFactorVerify() {
             });
 
             if (response.data.trustedDeviceToken) {
-                localStorage.setItem("trustedDeviceToken", response.data.trustedDeviceToken);
+                tokenStorage.setTrustedDeviceToken(response.data.trustedDeviceToken);
             }
 
             if (response.data.accessToken) {
+                tokenStorage.clearTwoFactorToken();
                 saveTokens(response.data.accessToken, response.data.refreshToken);
-                sessionStorage.removeItem("twoFactorToken");
                 try {
                     const userData = await authService.me();
                     if (setUser) setUser(userData);
