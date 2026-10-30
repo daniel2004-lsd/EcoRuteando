@@ -113,7 +113,7 @@ const ReporterProblem = ({ onNavigate }) => {
     });
   };
 
-  const useGpsLocation = useCallback(() => {
+  const fetchGpsLocation = useCallback(() => {
     if (!navigator.geolocation) {
       setLocationError(t("reporterProblem.errors.geolocationUnsupported", "Tu navegador no soporta geolocalización."));
       return;
@@ -199,9 +199,9 @@ const ReporterProblem = ({ onNavigate }) => {
   // Intentar obtener GPS automáticamente si no se tiene al abrir la pestaña comunitaria
   useEffect(() => {
     if (activeTab === "community" && !location && !gettingLocation) {
-      useGpsLocation();
+      fetchGpsLocation();
     }
-  }, [activeTab, location, gettingLocation, useGpsLocation]);
+  }, [activeTab, location, gettingLocation, fetchGpsLocation]);
 
   // Envío del formulario
   const handleSubmit = async (e) => {
@@ -505,7 +505,7 @@ const ReporterProblem = ({ onNavigate }) => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <button
                     type="button"
-                    onClick={useGpsLocation}
+                    onClick={fetchGpsLocation}
                     disabled={gettingLocation}
                     className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all disabled:opacity-60 ${
                       isDarkMode
@@ -744,7 +744,6 @@ const ReporterProblem = ({ onNavigate }) => {
               <div className="space-y-4">
                 {myReports.map((report) => {
                   const statusKey = String(report.status || "pending").toLowerCase();
-                  const isPending = statusKey === "pending" || statusKey === "under_review";
                   const isValidated = statusKey === "validated";
                   const isRejected = statusKey === "rejected";
 
@@ -859,7 +858,7 @@ const ReporterProblem = ({ onNavigate }) => {
 
               <div className="flex items-center gap-2">
                 <button
-                  onClick={useGpsLocation}
+                  onClick={fetchGpsLocation}
                   disabled={gettingLocation}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all ${
                     location

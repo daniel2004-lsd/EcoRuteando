@@ -82,13 +82,11 @@ const MapViewGoogle = ({
       styles: isDarkMode ? DARK_MAP_STYLES : [],
     });
 
-    if (true) {
-      mapInstanceRef.current.addListener('click', (e) => {
-        const lat = e.latLng.lat();
-        const lng = e.latLng.lng();
-        onLocationSelectRef.current?.({ lat, lng });
-      });
-    }
+    mapInstanceRef.current.addListener('click', (e) => {
+      const lat = e.latLng.lat();
+      const lng = e.latLng.lng();
+      onLocationSelectRef.current?.({ lat, lng });
+    });
   }, [mapLoaded]);
 
   // Pan the existing map when `center` changes (e.g. "Centrar en Neiva",
@@ -222,7 +220,7 @@ const MapViewGoogle = ({
     altRoutesRef.current = [];
 
     const bounds = new window.google.maps.LatLngBounds();
-    let hasPoints = false;
+    let _hasPoints = false;
 
     // 1. Trazar rutas alternativas en gris si existen
     if (Array.isArray(alternativeRoutes) && window.google?.maps?.geometry) {
@@ -249,7 +247,7 @@ const MapViewGoogle = ({
 
             decodedAlt.forEach((p) => {
               bounds.extend(p);
-              hasPoints = true;
+              _hasPoints = true;
             });
             altRoutesRef.current.push(altPoly);
           }
@@ -276,7 +274,7 @@ const MapViewGoogle = ({
           
           decodedPath.forEach(point => {
             bounds.extend(point);
-            hasPoints = true;
+            _hasPoints = true;
           });
 
           mapInstanceRef.current.fitBounds(bounds, { top: 40, right: 40, bottom: 40, left: 40 });

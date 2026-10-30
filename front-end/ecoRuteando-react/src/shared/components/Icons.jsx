@@ -5,10 +5,10 @@
   /**
    * 1. COMPONENTE DE IMAGEN DE LOGO
    */
-  export const LogoImage = ({ size = 24, className = "" }) => (
+  export const LogoImage = ({ size = 32, className = "" }) => (
     <div 
       style={{ width: size, height: size }} 
-      className={`flex items-center justify-center overflow-hidden ${className}`}
+      className={`flex items-center justify-center overflow-hidden shrink-0 ${className}`}
     >
       <img 
         src={logoImg} 
@@ -23,23 +23,22 @@
    * Actualizado para evitar duplicados en el Home y mejorar visibilidad.
    */
   export const Logo = ({ size = "md" }) => {
-    const containerSz = size === "sm" ? "w-10 h-10" : size === "lg" ? "w-24 h-24" : size === "xl" ? "w-40 h-40" : "w-16 h-16";
-    const imageSz = size === "sm" ? 24 : size === "lg" ? 60 : size === "xl" ? 110 : 40;
-    const titleText = size === "sm" ? "text-lg" : size === "lg" ? "text-4xl" : size === "xl" ? "text-6xl" : "text-2xl";
+    const containerSz = size === "sm" ? "w-14 h-14" : size === "lg" ? "w-28 h-28" : size === "xl" ? "w-44 h-44" : "w-20 h-20";
+    const imageSz = size === "sm" ? 36 : size === "lg" ? 80 : size === "xl" ? 130 : 56;
+    const titleText = size === "sm" ? "text-xl" : size === "lg" ? "text-4xl" : size === "xl" ? "text-6xl" : "text-3xl";
     
-    // Si es XL (Hero), usamos blanco; si es SM (Navbar), usamos el color del texto heredado
     const textColor = size === "xl" ? "text-white" : "text-inherit";
 
     return (
       <div className="flex flex-col items-center gap-3 animate-fade-in w-full text-center">
-        <div className={`${containerSz} bg-white rounded-full flex items-center justify-center shadow-2xl animate-pulse-green border-4 border-white p-2`}>
+        <div className={`${containerSz} bg-white rounded-3xl flex items-center justify-center shadow-xl p-2.5 border-2 border-emerald-100 hover:scale-105 transition-transform`}>
           <LogoImage size={imageSz} />
         </div>
-        <h1 className={`${titleText} ${textColor} font-black tracking-tighter leading-none`} style={{fontFamily: "'Playfair Display', serif"}}>
+        <h1 className={`${titleText} ${textColor} font-black tracking-tight leading-none`} style={{fontFamily: "'Playfair Display', serif"}}>
           EcoRuteando
         </h1>
         {(size === "lg" || size === "xl") && (
-          <p className={`${size === 'xl' ? 'text-sm' : 'text-[11px]'} ${textColor} font-medium uppercase tracking-widest opacity-90`}>
+          <p className={`${size === "xl" ? "text-base" : "text-xs"} ${textColor} font-medium uppercase tracking-widest opacity-90`}>
             Movilidad sostenible para tu ciudad
           </p>
         )}
@@ -94,9 +93,9 @@
   export const XIcon = () => (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="#000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.252 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
   );
-  export const LeafIcon = ({ size = 24, white = false, blend = "normal" }) => (
-    <div style={{ width: size, height: size, filter: white ? "brightness(0) invert(1)" : "none", mixBlendMode: blend }} className="flex items-center justify-center">
-      <img src={logoImg} alt="Leaf" className="max-w-full max-h-full object-contain" />
+  export const LeafIcon = ({ size = 28, white = false, blend = "normal", className = "" }) => (
+    <div style={{ width: size, height: size, filter: white ? "brightness(0) invert(1)" : "none", mixBlendMode: blend }} className={`flex items-center justify-center shrink-0 ${className}`}>
+      <img src={logoImg} alt="EcoRuteando" className="max-w-full max-h-full object-contain block" />
     </div>
   );
   export const RouteIcon = ({ size = 28 }) => (

@@ -147,13 +147,13 @@ function Login() {
             </button>
 
             <div className="text-center mb-6">
-                <div className="flex justify-center mb-2">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-md transition-all duration-300 ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white'}`}>
-                        <img src="/logo.png" alt={t("auth.login.logoAlt", "Logo")} className="w-10 h-10" />
+                <div className="flex justify-center mb-3">
+                    <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-3xl p-3 flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-105 ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white border border-emerald-100 shadow-emerald-600/10'}`}>
+                        <img src="/logo.png" alt={t("auth.login.logoAlt", "EcoRuteando")} className="w-full h-full object-contain block" />
                     </div>
                 </div>
-                <h1 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-emerald-700'}`}>EcoRuteando</h1>
-                <p className={`text-[10px] mt-1 transition-colors duration-300 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>{t("auth.login.sustainableMobility", "Movilidad sostenible")}</p>
+                <h1 className={`text-3xl font-extrabold tracking-tight transition-colors duration-300 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-emerald-700'}`} style={{ fontFamily: "'Playfair Display', serif" }}>EcoRuteando</h1>
+                <p className={`text-xs mt-1 font-medium transition-colors duration-300 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>{t("auth.login.sustainableMobility", "Movilidad sostenible para tu ciudad")}</p>
             </div>
 
             <div className="w-full max-w-sm mx-auto">
