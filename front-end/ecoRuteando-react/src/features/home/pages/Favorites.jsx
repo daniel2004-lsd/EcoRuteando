@@ -37,7 +37,7 @@ const Favorites = ({ onNavigate }) => {
       // Verificar sesión activa (CU11: precondición sesión activa)
       try {
         await me();
-      } catch (authErr) {
+      } catch {
         setNeedsLogin(true);
         if (!isSilent) setLoading(false);
         setFavorites([]);

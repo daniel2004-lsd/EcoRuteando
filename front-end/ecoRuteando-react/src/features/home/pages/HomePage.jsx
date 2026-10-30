@@ -43,9 +43,16 @@ const LANGUAGES = [
 ];
 
 const HomePage = ({ onNavigate }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   const [menuOpen, setMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
@@ -71,7 +78,7 @@ const HomePage = ({ onNavigate }) => {
     // Modo invitado: limpia tokens previos si habían y navega directo a planificar ruta (igual que en móvil)
     try {
       if (logout) await logout();
-    } catch {}
+    } catch { /* noop */ }
     tokenStorage.clearTokens();
     onNavigate("/user/plan-route");
   };
@@ -156,14 +163,14 @@ const HomePage = ({ onNavigate }) => {
         <div className="max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between">
           <button
             type="button"
-            className="flex items-center gap-3 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-lg"
+            className="flex items-center gap-3.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-xl"
             onClick={() => scrollToSection("hero")}
           >
-            <div className={`relative w-10 h-10 rounded-full flex items-center justify-center shadow-lg ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white'}`}>
-              <LeafIcon size={20} className={isDarkMode ? 'text-[#34D399]' : 'text-emerald-600'} />
-              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-amber-400 ring-2 ring-white" />
+            <div className={`relative w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center shadow-lg p-2 transition-transform hover:scale-105 shrink-0 ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white border border-emerald-100 shadow-emerald-600/10'}`}>
+              <img src="/logo.png" alt="EcoRuteando" className="w-full h-full object-contain block" />
+              <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-amber-400 ring-2 ring-white" />
             </div>
-            <span className={`font-bold text-xl md:text-2xl tracking-tight ${scrolled ? (isDarkMode ? 'text-[#e2e8f0]' : "text-gray-800") : "text-white"
+            <span className={`font-bold text-2xl md:text-3xl tracking-tight ${scrolled ? (isDarkMode ? 'text-[#e2e8f0]' : "text-gray-800") : "text-white"
               }`} style={{ fontFamily: "'Playfair Display', serif" }}>
               EcoRuteando
             </span>
@@ -308,9 +315,11 @@ const HomePage = ({ onNavigate }) => {
         <div className={`absolute inset-0 ${isDarkMode ? 'bg-black/80' : 'bg-black/60'} backdrop-blur-sm transition-opacity duration-300 ${menuOpen ? "opacity-100" : "opacity-0"}`} onClick={() => setMenuOpen(false)} />
         <div className={`absolute top-0 right-0 bottom-0 w-[85%] max-w-sm ${isDarkMode ? 'bg-[#162329]' : 'bg-white'} flex flex-col shadow-2xl transition-transform duration-300 ease-out ${menuOpen ? "translate-x-0" : "translate-x-full"}`}>
           <div className={`p-5 border-b ${isDarkMode ? 'border-[#26383D]' : 'border-gray-100'} flex items-center justify-between`}>
-            <div className="flex items-center gap-2">
-              <LeafIcon size={24} className="text-[#34D399]" />
-              <span className={`font-bold text-lg ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`}>EcoRuteando</span>
+            <div className="flex items-center gap-3">
+              <div className={`w-11 h-11 rounded-2xl flex items-center justify-center p-1.5 shadow-sm shrink-0 ${isDarkMode ? 'bg-[#111C20] border border-[#26383D]' : 'bg-white border border-emerald-100'}`}>
+                <img src="/logo.png" alt="EcoRuteando" className="w-full h-full object-contain block" />
+              </div>
+              <span className={`font-bold text-xl ${isDarkMode ? 'text-[#e2e8f0]' : 'text-gray-800'}`} style={{ fontFamily: "'Playfair Display', serif" }}>EcoRuteando</span>
             </div>
             <button onClick={() => setMenuOpen(false)} aria-label="Cerrar menú" className={`${isDarkMode ? 'text-[#94a3b8] hover:text-[#34D399]' : 'text-gray-400 hover:text-emerald-600'} p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-lg`}>
               <CloseIcon />
@@ -447,12 +456,15 @@ const HomePage = ({ onNavigate }) => {
           </div>
 
           <div className="flex flex-wrap justify-center gap-3 px-4">
-            {heroStats.map(({ icon: Icon, text }, i) => (
-              <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm text-emerald-50 text-sm font-medium">
-                <Icon size={16} className="text-amber-300" />
-                {text}
-              </div>
-            ))}
+            {heroStats.map((stat, i) => {
+              const StatIcon = stat.icon;
+              return (
+                <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm text-emerald-50 text-sm font-medium">
+                  <StatIcon size={16} className="text-amber-300" />
+                  {stat.text}
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -602,11 +614,11 @@ const HomePage = ({ onNavigate }) => {
       {/* FOOTER */}
       <footer className={`py-10 px-6 ${isDarkMode ? 'bg-[#0B1215] border-t border-[#26383D]' : 'bg-gray-900'}`}>
         <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white'}`}>
-              <LeafIcon size={20} className={isDarkMode ? 'text-[#34D399]' : 'text-emerald-600'} />
+          <div className="flex items-center justify-center gap-3.5 mb-4">
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg p-2 ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white border border-emerald-100'}`}>
+              <img src="/logo.png" alt="EcoRuteando" className="w-full h-full object-contain block" />
             </div>
-            <span className="font-bold text-white text-xl" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <span className="font-bold text-white text-2xl" style={{ fontFamily: "'Playfair Display', serif" }}>
               EcoRuteando
             </span>
           </div>

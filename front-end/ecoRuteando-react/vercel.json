@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/:match*",
-      "destination": "https://ecoruteando-backend.onrender.com/api/:match*"
+      "destination": "https://ecoruteandobackend.onrender.com/api/:match*"
     },
     {
       "source": "/(.*)",
