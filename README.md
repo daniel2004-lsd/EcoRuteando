@@ -95,9 +95,9 @@
 - Axios para consumo de APIs
 
 ### Backend
-- Node.js con Express
-- PostgreSQL como base de datos
-- JWT para autenticación
+- .NET 9 (C#) con Clean Architecture Modular y CQRS / MediatR
+- PostgreSQL 16 + PostGIS (migraciones controladas con Liquibase)
+- JWT + BCrypt + TOTP (2FA) para autenticación y autorización por roles/permisos
 
 ### DevOps
 - Docker + Docker Compose

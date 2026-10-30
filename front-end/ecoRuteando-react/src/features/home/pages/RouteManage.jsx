@@ -288,7 +288,7 @@ const RouteManage = ({ onNavigate }) => {
           prev.filter((f) => String(f.routeId || f.id) !== String(routeId))
         );
         toast.success(t("favorites.removedSuccess", "Ruta quitada de Favoritos."));
-      } catch (err) {
+      } catch {
         toast.error(t("favorites.errorRemove", "Error al quitar de favoritos."));
       }
     } else {

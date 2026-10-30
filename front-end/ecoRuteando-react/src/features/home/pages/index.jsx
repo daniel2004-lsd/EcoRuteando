@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { LogoImage } from "../../../shared/components/Icons";
 
 /* ─── Íconos ─── */
@@ -174,12 +174,12 @@ const DashboardIndex = ({ onNavigate, userEmail = "danielsalazarvargas953@gmail.
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
 
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full border border-green-100 shadow-sm p-1 flex items-center justify-center bg-white">
-              <LogoImage size={20} />
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl border border-emerald-100 shadow-md p-1.5 flex items-center justify-center bg-white shrink-0">
+              <LogoImage size={34} />
             </div>
             <span
-              className="font-bold text-lg text-teal-700"
+              className="font-black text-2xl text-teal-700 tracking-tight"
               style={{ fontFamily: "'Playfair Display', serif" }}
             >
               EcoRuteando
