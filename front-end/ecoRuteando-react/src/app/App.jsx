@@ -17,7 +17,6 @@ import Recover from "../features/auth/components/Recover";
 import VerifyCode from "../features/auth/components/VerifyCode";
 import VerifyEmailCode from "../features/auth/components/VerifyEmailCode";
 import NewPassword from "../features/auth/components/NewPassword";
-import OAuthCallback from "../features/auth/components/OAuthCallback";
 import TwoFactorVerify from "../features/auth/components/TwoFactorVerify";
 
 // App pages
@@ -45,7 +44,7 @@ function AdminSection({ title }) {
     const navigate = useNavigate();
     const { isDarkMode } = useTheme();
     const { t } = useTranslation();
-    return (
+      return (
         <div className={`min-h-screen flex flex-col items-center justify-center gap-3 ${isDarkMode ? 'bg-[#0B1215]' : "bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50"}`}>
             <h1 className={`text-xl font-bold ${isDarkMode ? 'text-[#e2e8f0]' : "text-gray-700"}`}>{t(title)}</h1>
             <p className={`text-sm ${isDarkMode ? 'text-[#94a3b8]' : "text-gray-500"}`}>{t("admin.section.underConstruction", "Sección en construcción")}</p>
@@ -61,7 +60,7 @@ function AdminSection({ title }) {
 
 function AppContent() {
     const { isDarkMode } = useTheme();
-    const { i18n, t } = useTranslation();
+    const { i18n } = useTranslation();
     const navigate = useNavigate();
     const [isLoading] = useState(false);
     const [showTerms, setShowTerms] = useState(false);
@@ -122,7 +121,6 @@ function AppContent() {
                     <Route path="/verify" element={<VerifyCode onCodeVerified={(code) => setRecoveryCode(code)} />} />
                     <Route path="/verify-email" element={<VerifyEmailCode />} />
                     <Route path="/newpassword" element={<NewPassword recoveryCode={recoveryCode} onClearRecoveryCode={() => setRecoveryCode(null)} />} />
-                    <Route path="/auth/callback" element={<OAuthCallback />} />
                     <Route path="/verify-2fa" element={<TwoFactorVerify />} />
                     <Route path="/dashboard" element={<ProtectedRoute allowGuest><UserDashboard onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminPanel onNavigate={onNavigate} /></ProtectedRoute>} />

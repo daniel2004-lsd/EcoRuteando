@@ -1,15 +1,18 @@
 import axios from "axios";
+import tokenStorage from "../services/tokenStorage";
 
 const api = axios.create({
     baseURL: "/api",
+    withCredentials: true,
     headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "X-Client-Platform": "web"
     }
 });
 
-// Request interceptor — attach Access Token
+// Request interceptor — attach in-memory Access Token
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("accessToken");
+    const token = tokenStorage.getAccessToken();
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -70,27 +73,24 @@ api.interceptors.response.use(
             originalRequest._retry = true;
             isRefreshing = true;
 
-            const refreshToken = localStorage.getItem("refreshToken");
-
-            if (!refreshToken) {
-                // Sin sesión: /auth/me falla en silencio (modo invitado)
-                if (originalRequest.url === "/auth/me") {
-                    isRefreshing = false;
-                    return Promise.reject(error);
-                }
-                localStorage.clear();
-                window.location.href = "/login";
+            // Si no hay token previo en memoria, es modo invitado o sesión no iniciada:
+            // no intentar refresh ni redirigir forzosamente a login para no destruir la navegación del usuario
+            if (!tokenStorage.getAccessToken()) {
                 isRefreshing = false;
                 return Promise.reject(error);
             }
 
             try {
-                const { data } = await axios.post("/api/auth/refresh", {
-                    refreshToken,
+                // Solicitar nuevo access token enviando la cookie HttpOnly SameSite=Strict
+                const { data } = await axios.post("/api/auth/refresh", {}, {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Client-Platform": "web"
+                    }
                 });
 
-                localStorage.setItem("accessToken", data.accessToken);
-                localStorage.setItem("refreshToken", data.refreshToken);
+                tokenStorage.setAccessToken(data.accessToken);
 
                 processQueue(null, data.accessToken);
 
@@ -98,8 +98,13 @@ api.interceptors.response.use(
                 return api(originalRequest);
             } catch (refreshError) {
                 processQueue(refreshError, null);
-                localStorage.clear();
-                window.location.href = "/login";
+                tokenStorage.clearTokens();
+                if (typeof window !== "undefined" &&
+                    window.location.pathname !== "/login" &&
+                    window.location.pathname !== "/register" &&
+                    window.location.pathname !== "/") {
+                    window.location.href = "/login";
+                }
                 return Promise.reject(refreshError);
             } finally {
                 isRefreshing = false;

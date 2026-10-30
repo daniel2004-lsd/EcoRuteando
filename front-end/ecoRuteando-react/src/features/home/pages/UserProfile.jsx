@@ -30,7 +30,7 @@ const UserProfile = ({ onNavigate }) => {
 
   const [activeTab, setActiveTab] = useState("personal");
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   const [profile, setProfile] = useState({
     name: "",
@@ -232,9 +232,22 @@ const UserProfile = ({ onNavigate }) => {
     }
   };
 
-  // Guardar datos personales sin requerir contraseña
+  // Guardar datos personales: exige confirmación con contraseña si la cuenta tiene credencial local
   const handleSaveClick = () => {
-    executeProfileUpdate("");
+    if (userInfo.hasPassword) {
+      setIdentityPassword("");
+      setShowConfirmModal(true);
+    } else {
+      executeProfileUpdate("");
+    }
+  };
+
+  const handleConfirmSave = () => {
+    if (!identityPassword.trim()) {
+      toast.error(t("profile.security.enterCurrentPassword", "Por favor ingresa tu contraseña actual."));
+      return;
+    }
+    executeProfileUpdate(identityPassword);
   };
 
   // Cambio de contraseña
@@ -376,12 +389,12 @@ const UserProfile = ({ onNavigate }) => {
         isDarkMode ? "bg-[#162329]/90 border-[#26383D]" : "bg-white/90 border-gray-100 shadow-sm"
       }`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-900/20 text-white font-bold">
-              <LeafIcon size={22} white={true} />
+          <div className="flex items-center gap-3.5">
+            <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-md p-2 shrink-0 ${isDarkMode ? 'bg-[#111C20] border border-[#26383D]' : 'bg-white border border-emerald-100 shadow-emerald-600/10'}`}>
+              <img src="/logo.png" alt="EcoRuteando" className="w-full h-full object-contain block" />
             </div>
             <div>
-              <h1 className="text-lg sm:text-xl font-extrabold tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
                 {t("profile.title", "Mi Perfil")}
               </h1>
               <p className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>

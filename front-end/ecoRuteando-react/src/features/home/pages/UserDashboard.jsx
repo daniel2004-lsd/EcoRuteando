@@ -163,7 +163,7 @@ const ModuleCard = ({ module, isDarkMode, t }) => {
 const UserDashboard = ({ onNavigate }) => {
   const { t } = useTranslation();
   const { isDarkMode, toggleTheme } = useTheme();
-  const { logout, userRole } = useAuth();
+  const { logout, userRole, accessToken } = useAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [user, setUser] = useState(null);
@@ -183,7 +183,7 @@ const UserDashboard = ({ onNavigate }) => {
       try {
         const response = await me();
         if (mounted) setUser(response);
-      } catch (error) {
+      } catch {
         // Sin token: modo invitado (no error, solo console)
         if (mounted) setUser(null);
       }
@@ -195,7 +195,7 @@ const UserDashboard = ({ onNavigate }) => {
   useEffect(() => {
     let mounted = true;
     const loadStats = async () => {
-      const token = localStorage.getItem("accessToken");
+      const token = accessToken;
       if (!token && !user) return; // Modo invitado: no cargar stats
 
       try {
@@ -223,8 +223,8 @@ const UserDashboard = ({ onNavigate }) => {
             favorites: favorites.length
           });
         }
-      } catch (error) {
-        console.error("Error cargando stats:", error);
+      } catch (err) {
+        console.error("Error cargando stats:", err);
       }
     };
     loadStats();
@@ -243,7 +243,7 @@ const UserDashboard = ({ onNavigate }) => {
       window.removeEventListener("focus", handleSync);
       document.removeEventListener("visibilitychange", handleSync);
     };
-  }, [user]);
+  }, [user, accessToken]);
 
   // Antes se llamaba handleBack/confirmBack/showBackModal, pero la función
   // en realidad cierra sesión (llama a logout()) y navega a "/". Ese nombre
@@ -358,15 +358,18 @@ const UserDashboard = ({ onNavigate }) => {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md shrink-0">
-              <LeafIcon size={20} className="text-white" />
+          <div className="flex items-center gap-3.5">
+            <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-md p-2 shrink-0 ${isDarkMode ? 'bg-[#111C20] border border-[#26383D]' : 'bg-white border border-emerald-100 shadow-emerald-600/10'}`}>
+              <img src="/logo.png" alt="EcoRuteando" className="w-full h-full object-contain block" />
             </div>
             <div>
-              <h1 className={`text-lg font-black leading-none ${isDarkMode ? 'text-emerald-50' : "text-gray-800"}`}>
-                Ecoruteando
+              <h1 className={`text-xl sm:text-2xl font-black leading-none ${isDarkMode ? 'text-emerald-50' : "text-gray-800"}`} style={{ fontFamily: "'Playfair Display', serif" }}>
+                EcoRuteando
               </h1>
-              </div>
+              <p className={`text-[11px] font-medium mt-1 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>
+                Panel de Movilidad Sostenible
+              </p>
+            </div>
           </div>
 
           <div className="flex items-center gap-3">

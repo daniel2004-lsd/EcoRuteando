@@ -20,3 +20,4 @@ Cada registro sigue el estándar de Michael Nygard y documenta el contexto, el p
 | [ADR-008](./008-estrategia-autenticacion-hibrida-jwt-oauth-2fa.md) | Estrategia de Autenticación Híbrida: JWT, OAuth2 (Google) y Doble Factor (2FA) | **Aceptado** | 2025-09 | Seguridad / Autenticación |
 | [ADR-009](./009-integracion-servicios-externos-google-maps-tts-clima.md) | Estrategia de Integración con Servicios Externos: Google Maps Platform, TTS y Clima | **Aceptado** | 2025-09 | Integraciones / APIs |
 | [ADR-010](./010-contenedorizacion-docker-y-control-migraciones-liquibase.md) | Contenedorización con Docker Compose y Gestión de Esquema con Liquibase | **Aceptado** | 2025-09 | DevOps / Infraestructura |
+| [ADR-011](./011-aplazamiento-autenticacion-google-facebook.md) | Aplazamiento de autenticación con Google y Facebook | **Aceptada** | 2026-10 | Frontend / Autenticación |

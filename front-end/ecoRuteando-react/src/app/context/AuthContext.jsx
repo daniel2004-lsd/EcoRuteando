@@ -1,53 +1,72 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import * as authService from "../../services/authService";
+import tokenStorage from "../../services/tokenStorage";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-    const [accessToken, setAccessToken] = useState(
-        localStorage.getItem("accessToken")
-    );
-    const [refreshToken, setRefreshToken] = useState(
-        localStorage.getItem("refreshToken")
-    );
+    const [accessToken, setAccessToken] = useState(() => tokenStorage.getAccessToken());
+    const [refreshToken, setRefreshToken] = useState(() => tokenStorage.getRefreshToken());
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Load user on mount if token exists
+    // Sync state with in-memory token updates (e.g. from axios interceptor refresh)
     useEffect(() => {
-        const loadUser = async () => {
-            if (!accessToken) {
-                setLoading(false);
-                return;
-            }
+        const unsubscribe = tokenStorage.subscribe(({ accessToken: newAccess, refreshToken: newRefresh }) => {
+            setAccessToken(newAccess);
+            setRefreshToken(newRefresh);
+        });
+        return unsubscribe;
+    }, []);
+
+    // Restore session on mount via HttpOnly refresh cookie or in-memory token
+    useEffect(() => {
+        const initializeAuth = async () => {
             try {
-                const userData = await authService.me();
-                setUser(userData);
+                let currentToken = tokenStorage.getAccessToken();
+                if (!currentToken) {
+                    // Try to restore session via HttpOnly cookie
+                    const refreshData = await authService.refresh();
+                    if (refreshData?.accessToken) {
+                        tokenStorage.setAccessToken(refreshData.accessToken);
+                        currentToken = refreshData.accessToken;
+                    }
+                }
+
+                if (currentToken) {
+                    const userData = await authService.me();
+                    setUser(userData);
+                } else {
+                    setUser(null);
+                }
             } catch {
-                localStorage.removeItem("accessToken");
-                localStorage.removeItem("refreshToken");
-                setAccessToken(null);
-                setRefreshToken(null);
+                tokenStorage.clearTokens();
                 setUser(null);
             } finally {
                 setLoading(false);
             }
         };
-        loadUser();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+        initializeAuth();
+    }, []);
 
     const saveTokens = useCallback((access, refresh) => {
-        localStorage.setItem("accessToken", access);
-        localStorage.setItem("refreshToken", refresh);
-        setAccessToken(access);
-        setRefreshToken(refresh);
+        tokenStorage.setTokens(access, refresh);
+    }, []);
+
+    const saveTwoFactorToken = useCallback((token) => {
+        tokenStorage.setTwoFactorToken(token);
+    }, []);
+
+    const clearTwoFactorToken = useCallback(() => {
+        tokenStorage.clearTwoFactorToken();
     }, []);
 
     const loginUser = useCallback(async (email, password) => {
         const data = await authService.login(email, password);
 
-        // 2FA required
+        // 2FA required: store temporary 2FA token strictly in memory, isolated from access token
         if (data.requiresTwoFactor) {
+            tokenStorage.setTwoFactorToken(data.twoFactorToken);
             return {
                 requiresTwoFactor: true,
                 twoFactorToken: data.twoFactorToken,
@@ -69,31 +88,15 @@ export function AuthProvider({ children }) {
         return data;
     }, [saveTokens]);
 
-    const loginWithOAuth = useCallback(async (provider, token) => {
-        const data = await authService.oauthLogin(provider, token);
-        saveTokens(data.accessToken, data.refreshToken);
-
-        const userData = await authService.me();
-        setUser(userData);
-
-        return data;
-    }, [saveTokens]);
-
     const logout = useCallback(async () => {
         try {
-            if (refreshToken) {
-                await authService.logout(refreshToken);
-            }
+            await authService.logout();
         } catch {
             // Ignore logout errors
         }
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("userRole");
-        setAccessToken(null);
-        setRefreshToken(null);
+        tokenStorage.clearTokens();
         setUser(null);
-    }, [refreshToken]);
+    }, []);
 
     const isAuthenticated = !!accessToken && !!user;
     const isGuest = !accessToken && !user && !loading;
@@ -104,6 +107,9 @@ export function AuthProvider({ children }) {
             value={{
                 accessToken,
                 refreshToken,
+                twoFactorToken: tokenStorage.getTwoFactorToken(),
+                saveTwoFactorToken,
+                clearTwoFactorToken,
                 user,
                 loading,
                 isAuthenticated,
@@ -111,7 +117,6 @@ export function AuthProvider({ children }) {
                 userRole,
                 saveTokens,
                 loginUser,
-                loginWithOAuth,
                 logout,
                 setUser,
             }}
@@ -121,4 +126,5 @@ export function AuthProvider({ children }) {
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

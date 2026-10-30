@@ -3,8 +3,30 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../app/context/ThemeContext";
 import { register } from "../../../services/authService";
-import { redirectToOAuth } from "../../../shared/oauthRedirect";
 import toast from "react-hot-toast";
+
+const EyeIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
+
+const EyeOffIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+    <line x1="1" y1="1" x2="23" y2="23" />
+  </svg>
+);
+
+
+
+const XIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.252 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
+  </svg>
+);
+
 
 function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -111,43 +133,6 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
     window.location.href = "/";
   };
 
-  const handleGoogleLogin = () => redirectToOAuth("google");
-  const handleFacebookLogin = () => redirectToOAuth("facebook");
-
-  const EyeIcon = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
-  );
-
-  const EyeOffIcon = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-      <line x1="1" y1="1" x2="23" y2="23" />
-    </svg>
-  );
-
-  const GoogleIcon = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24">
-      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-    </svg>
-  );
-
-  const FacebookIcon = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2">
-      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-    </svg>
-  );
-
-  const XIcon = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.252 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
-    </svg>
-  );
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-gradient-to-br from-[#0B1215] to-[#111C20]' : 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50'} flex flex-col items-center justify-center px-4 py-6`}>
@@ -170,13 +155,13 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
       </button>
 
       <div className="text-center mb-6">
-        <div className="flex justify-center mb-2">
-          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-md transition-all duration-300 ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white'}`}>
-            <img src="/logo.png" alt="Logo" className="w-10 h-10" />
+        <div className="flex justify-center mb-3">
+          <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-3xl p-3 flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-105 ${isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white border border-emerald-100 shadow-emerald-600/10'}`}>
+            <img src="/logo.png" alt="EcoRuteando" className="w-full h-full object-contain block" />
           </div>
         </div>
-        <h1 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-emerald-700'}`}>EcoRuteando</h1>
-        <p className={`text-[10px] mt-1 transition-colors duration-300 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>{t("auth.register.sustainableMobility", "Movilidad sostenible")}</p>
+        <h1 className={`text-3xl font-extrabold tracking-tight transition-colors duration-300 ${isDarkMode ? 'text-[#e2e8f0]' : 'text-emerald-700'}`} style={{ fontFamily: "'Playfair Display', serif" }}>EcoRuteando</h1>
+        <p className={`text-xs mt-1 font-medium transition-colors duration-300 ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>{t("auth.register.sustainableMobility", "Movilidad sostenible para tu ciudad")}</p>
       </div>
 
       <div className="w-full max-w-md mx-auto">
@@ -376,24 +361,6 @@ function Register({ onShowTerms, termsAccepted, setTermsAccepted }) {
                 Registrarse
               </button>
 
-              <div className="relative flex items-center gap-2 my-4">
-                <div className={`flex-1 h-px ${isDarkMode ? 'bg-green-500/20' : 'bg-gray-200'}`} />
-                <span className={`text-[10px] font-medium uppercase tracking-wider ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-400'}`}>O regístrate con</span>
-                <div className={`flex-1 h-px ${isDarkMode ? 'bg-green-500/20' : 'bg-gray-200'}`} />
-              </div>
-
-              <div className="flex">
-                <button
-                  type="button"
-                  onClick={handleGoogleLogin}
-                  className={`w-full border rounded-lg py-2 flex justify-center items-center gap-2 transition-all duration-300 ${isDarkMode
-                    ? 'border-green-500/30 hover:border-green-500 hover:bg-green-500/10'
-                    : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50'
-                  }`}>
-                  <GoogleIcon />
-                  <span className={`text-xs font-medium transition-colors ${isDarkMode ? 'text-[#94a3b8]' : 'text-gray-600'}`}>Google</span>
-                </button>
-              </div>
             </div>
 
             <div className="text-center mt-5 pt-3 border-t border-gray-100 dark:border-green-500/20">

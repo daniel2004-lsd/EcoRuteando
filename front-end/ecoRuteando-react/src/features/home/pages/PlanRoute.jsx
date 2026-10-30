@@ -12,10 +12,51 @@ import { loadGoogleMapsApi } from "../../../services/googleMapsLoader";
 import { useAuth } from "../../../app/context/AuthContext";
 import toast from "react-hot-toast";
 import DownloadApkModal from "../../../shared/components/DownloadApkModal";
+import RecommendedDestinations, { RECOMMENDED_DESTINATIONS } from "../components/RecommendedDestinations";
+const SparklesIcon = ({ className = "w-4 h-4", size = 16 }) => (
+  <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+    <path d="M20 3v4"/>
+    <path d="M22 5h-4"/>
+    <path d="M4 17v2"/>
+    <path d="M5 18H3"/>
+  </svg>
+);
 
 // Coordenadas de Neiva (viewport inicial del mapa)
 const NEIVA_LAT = 2.9273;
 const NEIVA_LON = -75.2819;
+
+// Normalización segura de coordenadas (funciones de Google LatLng, strings, números)
+const parseCoord = (c) => {
+  if (c == null) return null;
+  if (typeof c === "function") {
+    try {
+      const val = c();
+      const n = Number(val);
+      return Number.isFinite(n) ? n : null;
+    } catch {
+      return null;
+    }
+  }
+  const n = Number(c);
+  return Number.isFinite(n) ? n : null;
+};
+
+// Cálculo de distancia en línea recta (Haversine) para estimaciones visuales y modo invitado
+const computeHaversineDistanceKm = (lat1, lon1, lat2, lon2) => {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
 
 // Orden de los tipos de mapa de Google y claves i18n de sus etiquetas
 const MAP_TYPE_ORDER = ["roadmap", "satellite", "hybrid", "terrain"];
@@ -72,12 +113,12 @@ const LocationSearch = ({ placeholder, onSelect, onClear, isDarkMode, externalVa
   const serviceHostRef = useRef(null);
   const placesServiceRef = useRef(null);
 
-  // Sincronizar cuando externalValue cambie (ej: swap, mi ubicación, precarga de favoritos)
-  useEffect(() => {
-    if (externalValue !== undefined) {
-      setQuery(externalValue || "");
-    }
-  }, [externalValue]);
+  // Sincronizar cuando externalValue cambie durante el renderizado (patrón oficial de React para derivar estado de props)
+  const [prevExternalValue, setPrevExternalValue] = useState(externalValue);
+  if (externalValue !== prevExternalValue) {
+    setPrevExternalValue(externalValue);
+    setQuery(externalValue || "");
+  }
 
   const getPlacesService = () => {
     if (!placesServiceRef.current && serviceHostRef.current) {
@@ -296,7 +337,7 @@ const POI_CATEGORIES = [
 const PlanRoute = ({ onNavigate }) => {
   const { isDarkMode, toggleTheme } = useTheme();
   const { t } = useTranslation();
-  const { isAuthenticated, isGuest } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [transportMode, setTransportMode] = useState("walking");
@@ -325,6 +366,40 @@ const PlanRoute = ({ onNavigate }) => {
   const [completing, setCompleting] = useState(false);
   const [tripError, setTripError] = useState(null);
   const [showDownloadModal, setShowDownloadModal] = useState(false);
+  const [activeTab, setActiveTab] = useState("plan"); // "plan" | "explore"
+  const [focusedDestination, setFocusedDestination] = useState(null);
+  const [poiError, setPoiError] = useState(null);
+  const [routeAuthWarning, setRouteAuthWarning] = useState(false);
+  const [routeZeroResultsSuggestion, setRouteZeroResultsSuggestion] = useState(null);
+
+  const handleViewDestinationOnMap = (dest) => {
+    setFocusedDestination(dest);
+    setMapCenter({ lat: dest.lat, lng: dest.lng });
+    setMapFocus({ lat: dest.lat, lng: dest.lng, zoom: 16, at: Date.now() });
+    showActionMessage(`📍 Enfocando en el mapa: ${dest.name}`, "info");
+  };
+
+  const handleRouteToDestination = (dest) => {
+    const destObj = {
+      name: dest.name,
+      address: dest.location,
+      lat: dest.lat,
+      lng: dest.lng,
+    };
+    setDestination(destObj);
+    setFocusedDestination(dest);
+    setMapCenter({ lat: dest.lat, lng: dest.lng });
+    setActiveTab("plan");
+    showActionMessage(`Destino fijado: ${dest.name}`, "success");
+
+    const originLat = parseCoord(origin?.lat);
+    const originLng = parseCoord(origin?.lng);
+    if (originLat != null && originLng != null) {
+      calculateRoute(origin, destObj);
+    } else {
+      showActionMessage("Selecciona tu punto de partida o usa 'Mi ubicación'", "info");
+    }
+  };
   const location = useLocation();
   const presetPendingRef = useRef(false);
   const [actionMessage, setActionMessage] = useState(null);
@@ -484,17 +559,25 @@ const PlanRoute = ({ onNavigate }) => {
       setError(t("planRoute.errors.selectDestination"));
       return;
     }
-    if (!nextOrigin.lat || !nextOrigin.lng) {
+
+    const originLat = parseCoord(nextOrigin?.lat);
+    const originLng = parseCoord(nextOrigin?.lng);
+    const destLat = parseCoord(nextDestination?.lat);
+    const destLng = parseCoord(nextDestination?.lng);
+
+    if (originLat == null || originLng == null) {
       setError(t("planRoute.errors.originInvalidCoords"));
       return;
     }
-    if (!nextDestination.lat || !nextDestination.lng) {
+    if (destLat == null || destLng == null) {
       setError(t("planRoute.errors.destinationInvalidCoords"));
       return;
     }
 
     setLoading(true);
     setError(null);
+    setRouteAuthWarning(false);
+    setRouteZeroResultsSuggestion(null);
 
     try {
       const modeMap = {
@@ -503,10 +586,10 @@ const PlanRoute = ({ onNavigate }) => {
       };
 
       const result = await mapsService.getDirections(
-        nextOrigin.lat,
-        nextOrigin.lng,
-        nextDestination.lat,
-        nextDestination.lng,
+        originLat,
+        originLng,
+        destLat,
+        destLng,
         modeMap[transportMode] || "walking"
       );
 
@@ -636,7 +719,45 @@ const PlanRoute = ({ onNavigate }) => {
       }
     } catch (err) {
       console.error("Error calculando ruta:", err);
-      setError(err?.response?.data?.message || err?.message || t("planRoute.errors.calculateRoute"));
+      const status = err?.response?.status;
+      const backendMessage = err?.response?.data?.message;
+
+      if (status === 401) {
+        // Fallback si una solicitud privada de respaldo requiere sesión
+        setRouteAuthWarning(true);
+        const distKm = computeHaversineDistanceKm(originLat, originLng, destLat, destLng);
+        const estMin = transportMode === "car" ? Math.max(3, Math.round(distKm / 0.4)) : Math.max(5, Math.round(distKm / 0.08));
+        setRoute({
+          distance: distKm.toFixed(1),
+          duration: estMin,
+          geometry: null,
+          startAddress: nextOrigin?.name || nextOrigin?.address || t("planRoute.defaultOrigin"),
+          endAddress: nextDestination?.name || nextDestination?.address || t("planRoute.defaultDestination"),
+          isDirectEstimate: true,
+        });
+        setError(null);
+      } else if (status === 400 && backendMessage) {
+        setError(backendMessage);
+      } else if (status === 404 && backendMessage) {
+        setError(backendMessage);
+        if (transportMode === "walking" && backendMessage.toLowerCase().includes("automóvil")) {
+          setRouteZeroResultsSuggestion("car");
+        } else if (transportMode === "car" && backendMessage.toLowerCase().includes("pie")) {
+          setRouteZeroResultsSuggestion("walking");
+        }
+      } else if (status === 429) {
+        const retryAfter = err?.response?.headers?.["retry-after"];
+        const waitMsg = retryAfter ? ` Por favor espera ${retryAfter} segundos.` : " Por favor espera un momento antes de intentar de nuevo.";
+        setError(`Has alcanzado el límite de solicitudes de cálculo de ruta.${waitMsg}`);
+      } else if (status === 502 || status === 503) {
+        setError("El servicio de cálculo de rutas de Google Maps no está disponible temporalmente (Error 502/503 del proveedor). Por favor intenta de nuevo en unos momentos.");
+      } else if (status === 500) {
+        setError("Ocurrió un error interno en el servidor al calcular la ruta. Por favor intenta de nuevo más tarde.");
+      } else if (err?.code === "ECONNABORTED" || err?.message?.includes("timeout")) {
+        setError("La solicitud de ruta excedió el tiempo de espera. Por favor verifica tu conexión e intenta de nuevo.");
+      } else {
+        setError(backendMessage || err?.message || t("planRoute.errors.calculateRoute"));
+      }
     } finally {
       setLoading(false);
     }
@@ -827,6 +948,10 @@ const PlanRoute = ({ onNavigate }) => {
   // Iniciar viaje
   const startTrip = async () => {
     if (!route || !origin || !destination) return;
+    if (!isAuthenticated) {
+      toast.error(t("planRoute.loginRequiredToTrip", "Inicia sesión para iniciar y registrar un trayecto en tiempo real."));
+      return;
+    }
 
     setStartingTrip(true);
     setTripError(null);
@@ -946,22 +1071,34 @@ const PlanRoute = ({ onNavigate }) => {
   };
 
   const handleTogglePoiCategory = async (cat) => {
+    // Si se presiona la misma categoría, la deseleccionamos sin afectar la barra
     if (activePoiFilter?.id === cat.id) {
       setActivePoiFilter(null);
       setNearbyPois([]);
+      setPoiError(null);
       return;
     }
+
     setActivePoiFilter(cat);
     setLoadingPois(true);
+    setPoiError(null);
+
     try {
-      const centerLat = destination?.lat || origin?.lat || mapCenter.lat;
-      const centerLng = destination?.lng || origin?.lng || mapCenter.lng;
+      const centerLat = parseCoord(destination?.lat) || parseCoord(origin?.lat) || parseCoord(mapCenter.lat) || NEIVA_LAT;
+      const centerLng = parseCoord(destination?.lng) || parseCoord(origin?.lng) || parseCoord(mapCenter.lng) || NEIVA_LON;
+
       const res = await mapsService.getPlacesNearby(centerLat, centerLng, cat.placeType, 2500);
       const list = res?.results || [];
       setNearbyPois(list);
-      showActionMessage(`Encontrados ${list.length} ${cat.label.toLowerCase()} en el mapa`);
+      if (list.length === 0) {
+        setPoiError(`No se encontraron ${cat.label.toLowerCase()} en un radio de 2.5 km.`);
+      } else {
+        showActionMessage(`Encontrados ${list.length} ${cat.label.toLowerCase()} en el mapa`, "success");
+      }
     } catch (err) {
-      console.error("Error buscando lugares:", err);
+      console.error("Error buscando lugares de categoría:", err);
+      setNearbyPois([]);
+      setPoiError(`No se pudieron cargar ${cat.label.toLowerCase()} (servicio temporalmente no disponible).`);
       showActionMessage(`No se pudieron cargar ${cat.label.toLowerCase()}`, "error");
     } finally {
       setLoadingPois(false);
@@ -978,14 +1115,12 @@ const PlanRoute = ({ onNavigate }) => {
   };
 
   const selectNearbyPoi = (poi) => {
-    const rawLat = poi.lat ?? poi.geometry?.location?.lat;
-    const rawLng = poi.lng ?? poi.geometry?.location?.lng;
-    const lat = typeof rawLat === "function" ? rawLat() : Number(rawLat);
-    const lng = typeof rawLng === "function" ? rawLng() : Number(rawLng);
+    const lat = parseCoord(poi.lat ?? poi.geometry?.location?.lat);
+    const lng = parseCoord(poi.lng ?? poi.geometry?.location?.lng);
     const address = poi.vicinity || poi.address || poi.formatted_address || "";
     const name = poi.name || address;
 
-    if (!name || !Number.isFinite(lat) || !Number.isFinite(lng)) {
+    if (!name || lat == null || lng == null) {
       setError(t("planRoute.errors.placeAsDestination"));
       return;
     }
@@ -1000,12 +1135,13 @@ const PlanRoute = ({ onNavigate }) => {
 
     setDestination(selected);
     setMapCenter({ lat, lng });
-    setShowNearbySearch(false);
+    setMapFocus({ lat, lng, zoom: 16, at: Date.now() });
+    // NO ocultamos el panel ni destruimos categorías: deben permanecer visibles
+    showActionMessage(`✓ Destino: ${name}`, "success");
 
-    const hasValidOrigin =
-      origin != null &&
-      Number.isFinite(Number(origin.lat)) &&
-      Number.isFinite(Number(origin.lng));
+    const originLat = parseCoord(origin?.lat);
+    const originLng = parseCoord(origin?.lng);
+    const hasValidOrigin = originLat != null && originLng != null;
 
     if (hasValidOrigin) {
       calculateRoute(origin, selected);
@@ -1013,7 +1149,7 @@ const PlanRoute = ({ onNavigate }) => {
     }
 
     if (!navigator.geolocation) {
-      setError(t("planRoute.errors.selectOriginOrLocation"));
+      showActionMessage("Selecciona tu punto de origen o escribe una dirección", "info");
       return;
     }
 
@@ -1033,7 +1169,7 @@ const PlanRoute = ({ onNavigate }) => {
         calculateRoute(geoLocation, selected);
       },
       () => {
-        setError(t("planRoute.errors.selectOriginOrLocation"));
+        showActionMessage("Selecciona tu punto de origen para calcular la ruta", "info");
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
@@ -1110,18 +1246,35 @@ const PlanRoute = ({ onNavigate }) => {
           showUserLocation={true}
           onLocationSelect={null}
           markers={[
-            origin && { lat: origin.lat, lng: origin.lng, popup: t("planRoute.popupOrigin", { name: origin.name }), type: "origin" },
-            destination && { lat: destination.lat, lng: destination.lng, popup: t("planRoute.popupDestination", { name: destination.name }), type: "destination" },
+            origin && {
+              lat: parseCoord(origin.lat),
+              lng: parseCoord(origin.lng),
+              popup: t("planRoute.popupOrigin", { name: origin.name }),
+              type: "origin",
+            },
+            destination && {
+              lat: parseCoord(destination.lat),
+              lng: parseCoord(destination.lng),
+              popup: t("planRoute.popupDestination", { name: destination.name }),
+              type: "destination",
+            },
+            focusedDestination && {
+              lat: parseCoord(focusedDestination.lat),
+              lng: parseCoord(focusedDestination.lng),
+              popup: `${focusedDestination.name} (${focusedDestination.category})`,
+              vicinity: focusedDestination.location,
+              type: "destination",
+            },
             ...nearbyPois.map((poi) => ({
-              lat: poi.lat,
-              lng: poi.lng,
+              lat: parseCoord(poi.lat ?? poi.geometry?.location?.lat),
+              lng: parseCoord(poi.lng ?? poi.geometry?.location?.lng),
               popup: poi.name,
               vicinity: poi.vicinity || poi.address || "",
               rating: poi.rating,
               type: "nearby",
               onClick: () => selectNearbyPoi(poi),
             })),
-          ].filter(Boolean)}
+          ].filter((m) => m && Number.isFinite(m.lat) && Number.isFinite(m.lng))}
         />
       </div>
 
@@ -1187,7 +1340,50 @@ const PlanRoute = ({ onNavigate }) => {
             </div>
           </div>
 
-          <div className="p-3.5 space-y-3">
+          {/* BARRA DE PESTAÑAS: PLANEAR RUTA vs LUGARES RECOMENDADOS */}
+          <div className="flex border-b border-inherit/10 px-3 pt-2 gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveTab("plan")}
+              className={`flex-1 pb-2 text-xs font-bold flex items-center justify-center gap-1.5 border-b-2 transition-all ${
+                activeTab === "plan"
+                  ? "border-emerald-500 text-emerald-600 dark:text-emerald-400 font-extrabold"
+                  : isDarkMode
+                    ? "border-transparent text-gray-400 hover:text-gray-200"
+                    : "border-transparent text-gray-500 hover:text-gray-900"
+              }`}
+            >
+              <NavigationIcon className="w-3.5 h-3.5" />
+              <span>Planear ruta</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("explore")}
+              className={`flex-1 pb-2 text-xs font-bold flex items-center justify-center gap-1.5 border-b-2 transition-all ${
+                activeTab === "explore"
+                  ? "border-emerald-500 text-emerald-600 dark:text-emerald-400 font-extrabold"
+                  : isDarkMode
+                    ? "border-transparent text-gray-400 hover:text-gray-200"
+                    : "border-transparent text-gray-500 hover:text-gray-900"
+              }`}
+            >
+              <SparklesIcon size={14} className="text-amber-500" />
+              <span>Lugares recomendados</span>
+            </button>
+          </div>
+
+          {activeTab === "explore" ? (
+            <div className="p-3.5">
+              <RecommendedDestinations
+                onSelectDestination={handleRouteToDestination}
+                onViewOnMap={handleViewDestinationOnMap}
+                isDarkMode={isDarkMode}
+                activeDestinationId={focusedDestination?.id}
+              />
+            </div>
+          ) : (
+            <div className="p-3.5 space-y-3">
             {/* SELECTOR DE MODO DE TRANSPORTE ESTILO GOOGLE MAPS */}
             <div className={`flex items-center justify-between gap-1 p-1 rounded-xl ${
               isDarkMode ? "bg-[#111C20]/90 border border-[#26383D]" : "bg-gray-100/90"
@@ -1286,10 +1482,11 @@ const PlanRoute = ({ onNavigate }) => {
                 {activePoiFilter && (
                   <button
                     type="button"
-                    onClick={() => { setActivePoiFilter(null); setNearbyPois([]); }}
-                    className="text-[10px] font-bold text-rose-500 hover:underline"
+                    onClick={() => { setActivePoiFilter(null); setNearbyPois([]); setPoiError(null); }}
+                    className="text-[10px] font-bold text-rose-500 hover:underline flex items-center gap-1"
                   >
-                    ✕ Cerrar
+                    <span>✕</span>
+                    <span>Limpiar filtro</span>
                   </button>
                 )}
               </div>
@@ -1303,7 +1500,7 @@ const PlanRoute = ({ onNavigate }) => {
                       onClick={() => handleTogglePoiCategory(cat)}
                       className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
                         isActive
-                          ? "bg-emerald-600 text-white border-emerald-500 shadow-md font-bold scale-[1.02]"
+                          ? "bg-emerald-600 text-white border-emerald-500 shadow-md font-bold scale-[1.02] ring-2 ring-emerald-400/40"
                           : isDarkMode
                             ? "bg-[#111C20] text-gray-300 border-[#26383D] hover:bg-[#162329] hover:text-white"
                             : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:text-gray-900 shadow-sm"
@@ -1331,7 +1528,13 @@ const PlanRoute = ({ onNavigate }) => {
                   )}
                 </div>
 
-                {nearbyPois.length === 0 && !loadingPois && (
+                {poiError && (
+                  <p className="text-[11px] text-amber-500 text-center py-2 px-1">
+                    {poiError}
+                  </p>
+                )}
+
+                {nearbyPois.length === 0 && !loadingPois && !poiError && (
                   <p className="text-[11px] text-gray-400 text-center py-2">
                     No se encontraron {activePoiFilter.label.toLowerCase()} en este radio.
                   </p>
@@ -1341,7 +1544,9 @@ const PlanRoute = ({ onNavigate }) => {
                   <div
                     key={poi.placeId || poi.place_id || idx}
                     className={`p-2 rounded-xl border flex items-center justify-between gap-2 text-xs transition-colors ${
-                      isDarkMode ? "bg-[#162329] border-[#26383D] hover:border-emerald-500/60" : "bg-white border-gray-200 hover:border-emerald-600/60 shadow-sm"
+                      destination?.name === poi.name
+                        ? isDarkMode ? "bg-emerald-950/40 border-emerald-500 ring-1 ring-emerald-500" : "bg-emerald-50 border-emerald-600 ring-1 ring-emerald-600"
+                        : isDarkMode ? "bg-[#162329] border-[#26383D] hover:border-emerald-500/60" : "bg-white border-gray-200 hover:border-emerald-600/60 shadow-sm"
                     }`}
                   >
                     <div className="min-w-0 flex-1">
@@ -1360,9 +1565,13 @@ const PlanRoute = ({ onNavigate }) => {
                     <button
                       type="button"
                       onClick={() => selectNearbyPoi(poi)}
-                      className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-600 hover:bg-emerald-500 text-white shrink-0 shadow-sm transition-transform active:scale-95"
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 shadow-sm transition-transform active:scale-95 ${
+                        destination?.name === poi.name
+                          ? "bg-emerald-700 text-white cursor-default"
+                          : "bg-emerald-600 hover:bg-emerald-500 text-white"
+                      }`}
                     >
-                      Ir aquí
+                      {destination?.name === poi.name ? "✓ Destino" : "Ir aquí"}
                     </button>
                   </div>
                 ))}
@@ -1411,6 +1620,60 @@ const PlanRoute = ({ onNavigate }) => {
                 )}
               </button>
             </div>
+
+            {/* ADVERTENCIA DE AUTENTICACIÓN REQUERIDA (ERROR 401 DEL BACKEND) */}
+            {routeAuthWarning && (
+              <div className={`p-3 rounded-xl border space-y-2 text-xs transition-all ${
+                isDarkMode ? "bg-amber-950/30 border-amber-600/50 text-amber-200" : "bg-amber-50 border-amber-200 text-amber-900"
+              }`}>
+                <div className="flex items-start gap-2">
+                  <span className="text-base select-none">🔒</span>
+                  <div className="flex-1">
+                    <p className="font-bold text-xs">Cálculo de ruta en tiempo real requiere autenticación</p>
+                    <p className="text-[11px] opacity-90 mt-0.5 leading-snug">
+                      Para consultar indicaciones paso a paso, rutas alternativas y registrar tu trayecto con ahorro de CO₂, inicia sesión con tu cuenta de EcoRuteando.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => onNavigate?.("/login")}
+                    className="flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold text-white bg-emerald-600 hover:bg-emerald-500 shadow-sm transition-all"
+                  >
+                    Iniciar sesión
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onNavigate?.("/register")}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold border transition-all ${
+                      isDarkMode ? "bg-[#162329] border-[#26383D] text-gray-200 hover:bg-[#1f3037]" : "bg-white border-gray-300 text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    Crear cuenta
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* SUGERENCIA DE CAMBIO DE MODO ANTE ZERO_RESULTS (404) */}
+            {routeZeroResultsSuggestion && (
+              <div className="pt-0.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newMode = routeZeroResultsSuggestion;
+                    setTransportMode(newMode);
+                    setRouteZeroResultsSuggestion(null);
+                    calculateRoute(origin, destination);
+                  }}
+                  className="w-full py-2 px-3 rounded-xl text-xs font-bold text-white bg-sky-600 hover:bg-sky-500 flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-[0.98]"
+                >
+                  <span>{routeZeroResultsSuggestion === "car" ? "🚗" : "🚶"}</span>
+                  <span>Calcular automáticamente {routeZeroResultsSuggestion === "car" ? "en automóvil" : "a pie"}</span>
+                </button>
+              </div>
+            )}
 
             {/* MENSAJES DE ERROR */}
             {error && (
@@ -1622,12 +1885,51 @@ const PlanRoute = ({ onNavigate }) => {
                 </div>
               </div>
             )}
+
+            {/* ACCESO RÁPIDO A LUGARES RECOMENDADOS */}
+            <div className={`p-2.5 rounded-xl border flex items-center justify-between gap-2 text-xs transition-all ${
+              isDarkMode ? "bg-[#111C20] border-[#26383D] text-gray-300" : "bg-emerald-50/50 border-emerald-100 text-gray-700"
+            }`}>
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="text-base select-none">🌟</span>
+                <div className="min-w-0">
+                  <p className="font-bold text-[11px] truncate">Lugares recomendados para descubrir</p>
+                  <p className={`text-[10px] truncate ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                    6 destinos verificados en Neiva y Huila
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveTab("explore")}
+                className="px-2.5 py-1 rounded-lg text-[11px] font-bold text-white bg-emerald-600 hover:bg-emerald-500 shrink-0 shadow-sm"
+              >
+                Descubrir →
+              </button>
+            </div>
           </div>
+          )}
         </div>
       </div>
 
       {/* BOTONES FLOTANTES DEL MAPA ESTILO GOOGLE MAPS (INFERIOR DERECHA) */}
       <div className="absolute bottom-6 right-4 md:right-6 z-20 flex flex-col gap-2.5 items-end">
+        <button
+          type="button"
+          onClick={() => setActiveTab(activeTab === "explore" ? "plan" : "explore")}
+          className={`w-11 h-11 rounded-2xl shadow-xl flex items-center justify-center transition-all ${
+            activeTab === "explore"
+              ? "bg-emerald-600 text-white"
+              : isDarkMode
+                ? "bg-[#162329]/95 text-amber-400 border border-[#26383D] hover:bg-[#111C20]"
+                : "bg-white/95 text-amber-600 hover:bg-gray-50 shadow-md"
+          }`}
+          title="Lugares recomendados para descubrir"
+          aria-label="Lugares recomendados para descubrir"
+        >
+          <SparklesIcon size={20} />
+        </button>
+
         <button
           type="button"
           onClick={handleNearbyToggle}

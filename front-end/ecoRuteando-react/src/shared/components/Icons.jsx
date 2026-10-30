@@ -5,10 +5,10 @@
   /**
    * 1. COMPONENTE DE IMAGEN DE LOGO
    */
-  export const LogoImage = ({ size = 24, className = "" }) => (
+  export const LogoImage = ({ size = 32, className = "" }) => (
     <div 
       style={{ width: size, height: size }} 
-      className={`flex items-center justify-center overflow-hidden ${className}`}
+      className={`flex items-center justify-center overflow-hidden shrink-0 ${className}`}
     >
       <img 
         src={logoImg} 
@@ -23,23 +23,22 @@
    * Actualizado para evitar duplicados en el Home y mejorar visibilidad.
    */
   export const Logo = ({ size = "md" }) => {
-    const containerSz = size === "sm" ? "w-10 h-10" : size === "lg" ? "w-24 h-24" : size === "xl" ? "w-40 h-40" : "w-16 h-16";
-    const imageSz = size === "sm" ? 24 : size === "lg" ? 60 : size === "xl" ? 110 : 40;
-    const titleText = size === "sm" ? "text-lg" : size === "lg" ? "text-4xl" : size === "xl" ? "text-6xl" : "text-2xl";
+    const containerSz = size === "sm" ? "w-14 h-14" : size === "lg" ? "w-28 h-28" : size === "xl" ? "w-44 h-44" : "w-20 h-20";
+    const imageSz = size === "sm" ? 36 : size === "lg" ? 80 : size === "xl" ? 130 : 56;
+    const titleText = size === "sm" ? "text-xl" : size === "lg" ? "text-4xl" : size === "xl" ? "text-6xl" : "text-3xl";
     
-    // Si es XL (Hero), usamos blanco; si es SM (Navbar), usamos el color del texto heredado
     const textColor = size === "xl" ? "text-white" : "text-inherit";
 
     return (
       <div className="flex flex-col items-center gap-3 animate-fade-in w-full text-center">
-        <div className={`${containerSz} bg-white rounded-full flex items-center justify-center shadow-2xl animate-pulse-green border-4 border-white p-2`}>
+        <div className={`${containerSz} bg-white rounded-3xl flex items-center justify-center shadow-xl p-2.5 border-2 border-emerald-100 hover:scale-105 transition-transform`}>
           <LogoImage size={imageSz} />
         </div>
-        <h1 className={`${titleText} ${textColor} font-black tracking-tighter leading-none`} style={{fontFamily: "'Playfair Display', serif"}}>
+        <h1 className={`${titleText} ${textColor} font-black tracking-tight leading-none`} style={{fontFamily: "'Playfair Display', serif"}}>
           EcoRuteando
         </h1>
         {(size === "lg" || size === "xl") && (
-          <p className={`${size === 'xl' ? 'text-sm' : 'text-[11px]'} ${textColor} font-medium uppercase tracking-widest opacity-90`}>
+          <p className={`${size === "xl" ? "text-base" : "text-xs"} ${textColor} font-medium uppercase tracking-widest opacity-90`}>
             Movilidad sostenible para tu ciudad
           </p>
         )}
@@ -91,18 +90,12 @@
   export const BusIcon = () => (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><rect x="2" y="3" width="20" height="14" rx="3"/><path d="M2 9h20M8 17v2m8-2v2"/><circle cx="7" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></svg>
   );
-  export const GoogleIcon = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-  );
-  export const FacebookIcon = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-  );
   export const XIcon = () => (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="#000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.252 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
   );
-  export const LeafIcon = ({ size = 24, white = false, blend = "normal" }) => (
-    <div style={{ width: size, height: size, filter: white ? "brightness(0) invert(1)" : "none", mixBlendMode: blend }} className="flex items-center justify-center">
-      <img src={logoImg} alt="Leaf" className="max-w-full max-h-full object-contain" />
+  export const LeafIcon = ({ size = 28, white = false, blend = "normal", className = "" }) => (
+    <div style={{ width: size, height: size, filter: white ? "brightness(0) invert(1)" : "none", mixBlendMode: blend }} className={`flex items-center justify-center shrink-0 ${className}`}>
+      <img src={logoImg} alt="EcoRuteando" className="max-w-full max-h-full object-contain block" />
     </div>
   );
   export const RouteIcon = ({ size = 28 }) => (
