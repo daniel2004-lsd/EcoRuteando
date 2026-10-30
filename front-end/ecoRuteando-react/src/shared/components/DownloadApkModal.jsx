@@ -26,9 +26,9 @@ export default function DownloadApkModal({ isOpen, onClose }) {
   const { isDarkMode } = useTheme();
   const [copied, setCopied] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState(
-    "https://github.com/daniel2004-lsd/EcoRuteando/releases/download/v1.0.7/ecoruteando.apk"
+    "https://github.com/daniel2004-lsd/EcoRuteando/releases/download/v1.0.9/ecoruteando.apk"
   );
-  const [version, setVersion] = useState("1.0.7");
+  const [version, setVersion] = useState("1.0.9");
 
   // Cargar metadatos dinámicos del servidor al abrir el modal
   useEffect(() => {
