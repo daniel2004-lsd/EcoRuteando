@@ -73,8 +73,9 @@ api.interceptors.response.use(
             originalRequest._retry = true;
             isRefreshing = true;
 
-            // Si falla /auth/me y no hay token previo en memoria, es modo invitado silencioso
-            if (originalRequest.url === "/auth/me" && !tokenStorage.getAccessToken()) {
+            // Si no hay token previo en memoria, es modo invitado o sesión no iniciada:
+            // no intentar refresh ni redirigir forzosamente a login para no destruir la navegación del usuario
+            if (!tokenStorage.getAccessToken()) {
                 isRefreshing = false;
                 return Promise.reject(error);
             }

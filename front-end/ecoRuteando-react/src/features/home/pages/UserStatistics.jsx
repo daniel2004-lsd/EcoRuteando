@@ -15,7 +15,6 @@ import {
 import { Line, Bar, Doughnut } from "react-chartjs-2";
 import { LeafIcon, ArrowLeft, ChartIcon, RouteIcon, ClockIcon, TrophyIcon } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
-import { useTranslation } from "react-i18next";
 import tripService from "../../../services/tripService";
 import routeService from "../../../services/routeService";
 
@@ -40,7 +39,6 @@ const TRANSPORT_COLORS = {
 
 const UserStatistics = ({ onNavigate }) => {
   const { isDarkMode, toggleTheme } = useTheme();
-  const { t } = useTranslation();
 
   const [loading, setLoading] = useState(true);
   const [tripsData, setTripsData] = useState([]);
@@ -251,7 +249,7 @@ const UserStatistics = ({ onNavigate }) => {
   };
 
   // Logros dinámicos basados en la actividad real
-  const achievements = [
+  const _achievements = [
     {
       name: "Primera Ruta",
       completed: routesCount >= 1,

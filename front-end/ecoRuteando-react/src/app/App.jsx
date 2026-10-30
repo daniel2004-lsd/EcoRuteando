@@ -44,7 +44,7 @@ function AdminSection({ title }) {
     const navigate = useNavigate();
     const { isDarkMode } = useTheme();
     const { t } = useTranslation();
-    return (
+      return (
         <div className={`min-h-screen flex flex-col items-center justify-center gap-3 ${isDarkMode ? 'bg-[#0B1215]' : "bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50"}`}>
             <h1 className={`text-xl font-bold ${isDarkMode ? 'text-[#e2e8f0]' : "text-gray-700"}`}>{t(title)}</h1>
             <p className={`text-sm ${isDarkMode ? 'text-[#94a3b8]' : "text-gray-500"}`}>{t("admin.section.underConstruction", "Sección en construcción")}</p>
@@ -60,7 +60,7 @@ function AdminSection({ title }) {
 
 function AppContent() {
     const { isDarkMode } = useTheme();
-    const { i18n, t } = useTranslation();
+    const { i18n } = useTranslation();
     const navigate = useNavigate();
     const [isLoading] = useState(false);
     const [showTerms, setShowTerms] = useState(false);

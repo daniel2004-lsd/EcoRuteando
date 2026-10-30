@@ -7,12 +7,13 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode }) => {
   const [isLoading, setIsLoading] = useState(false);
   const debounceTimer = useRef(null);
 
+  const displayedSuggestions = query.length < 3 ? [] : suggestions;
+
   // Buscar lugares mientras escribe
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     
     if (query.length < 3) {
-      setSuggestions([]);
       return;
     }
 
@@ -63,11 +64,11 @@ const LocationSearch = ({ placeholder, onSelect, isDarkMode }) => {
         </div>
       )}
       
-      {suggestions.length > 0 && (
+      {displayedSuggestions.length > 0 && (
         <div className={`absolute z-50 w-full mt-1 rounded-lg shadow-lg overflow-hidden ${
           isDarkMode ? 'bg-[#162329] border border-[#26383D]' : 'bg-white border border-gray-200'
         }`}>
-          {suggestions.map((place, idx) => (
+          {displayedSuggestions.map((place, idx) => (
             <button
               key={idx}
               onClick={() => handleSelect(place)}

@@ -1,8 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { LeafIcon } from "./Icons";
 
 const LoadingOverlay = ({ message = "Cargando...", isLoading = false, isDarkMode = false }) => {
   const [dots, setDots] = useState("");
+  const particles = useMemo(() => Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    left: `${(i * 17) % 100}%`,
+    top: `${(i * 23) % 100}%`,
+    delay: `${(i * 0.3) % 5}s`,
+    duration: `${3 + ((i * 0.4) % 4)}s`
+  })), []);
 
   useEffect(() => {
     if (!isLoading) return;
@@ -45,15 +52,15 @@ const LoadingOverlay = ({ message = "Cargando...", isLoading = false, isDarkMode
       
       {/* Partículas flotantes */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
+        {particles.map((p) => (
           <div
-            key={i}
+            key={p.id}
             className="absolute w-1 h-1 bg-white/40 rounded-full animate-float-particle"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${3 + Math.random() * 4}s`
+              left: p.left,
+              top: p.top,
+              animationDelay: p.delay,
+              animationDuration: p.duration
             }}
           />
         ))}
