@@ -32,7 +32,7 @@ const RutaMapa = ({ origin, destination, routeCoordinates, height = "400px" }) =
       zoom: 13,
     });
 
-    const mtLayer = new MaptilerLayer({
+    const _mtLayer = new MaptilerLayer({
       apiKey: MAPTILER_API_KEY,
       style: isDarkMode ? 'streets-v2-dark' : "streets-v2",
     }).addTo(map.current);

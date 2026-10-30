@@ -10,7 +10,6 @@ import {
   CloseIcon
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
-import { useTranslation } from "react-i18next";
 import supportService from "../../../services/supportService";
 import toast from "react-hot-toast";
 
@@ -34,7 +33,6 @@ const normalizeStatus = (st) => {
 
 const AdminTickets = ({ onNavigate }) => {
   const { isDarkMode, toggleTheme } = useTheme();
-  const { t } = useTranslation();
 
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -132,7 +130,7 @@ const AdminTickets = ({ onNavigate }) => {
   const pendingCount = tickets.filter((t) => t.status === "pending").length;
   const inProgressCount = tickets.filter((t) => t.status === "in_progress").length;
   const resolvedCount = tickets.filter((t) => t.status === "resolved").length;
-  const closedCount = tickets.filter((t) => t.status === "closed").length;
+  const _closedCount = tickets.filter((t) => t.status === "closed").length;
 
   return (
     <div className={`min-h-screen ${isDarkMode ? "bg-[#0B1215]" : "bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50"}`}>

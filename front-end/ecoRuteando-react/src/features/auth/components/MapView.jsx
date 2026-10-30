@@ -11,14 +11,14 @@ const MapViewGoogle = ({ center, zoom, onLocationSelect, height = "100vh", marke
   const markersRef = useRef([]);
   const routeRef = useRef(null);
   const { isDarkMode } = useTheme();
-  const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapLoaded, setMapLoaded] = useState(() => {
+    return typeof window !== "undefined" && !!(window.google && window.google.maps);
+  });
 
   // Cargar Google Maps
   useEffect(() => {
-    if (window.google && window.google.maps) {
-      setMapLoaded(true);
-      return;
-    }
+    if (mapLoaded) return;
+    if (typeof window !== "undefined" && window.google && window.google.maps) return;
 
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&language=es`;
