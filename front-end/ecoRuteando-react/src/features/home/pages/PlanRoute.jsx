@@ -368,6 +368,7 @@ const PlanRoute = ({ onNavigate }) => {
   const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [activeTab, setActiveTab] = useState("plan"); // "plan" | "explore"
   const [focusedDestination, setFocusedDestination] = useState(null);
+  const [addressHistory, setAddressHistory] = useState([]);
   const [poiError, setPoiError] = useState(null);
   const [routeAuthWarning, setRouteAuthWarning] = useState(false);
   const [routeZeroResultsSuggestion, setRouteZeroResultsSuggestion] = useState(null);
@@ -460,9 +461,15 @@ const PlanRoute = ({ onNavigate }) => {
 
   useEffect(() => {
     loadGoogleMapsApi().catch(() => setError(t("planRoute.errors.loadMaps")));
-    routeService.getUserAddressHistory().then(() => {});
+    if (isAuthenticated) {
+      routeService.getUserAddressHistory()
+        .then((data) => {
+          if (Array.isArray(data)) setAddressHistory(data);
+        })
+        .catch(() => {});
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isAuthenticated]);
 
   // Invertir origen y destino estilo Google Maps
   const handleSwap = () => {
@@ -677,6 +684,25 @@ const PlanRoute = ({ onNavigate }) => {
           endAddress: nextDestination.address,
         };
         setRoute(currentRouteData);
+
+        if (isAuthenticated) {
+          if (nextOrigin?.name) {
+            routeService.saveAddressHistory({
+              searchText: nextOrigin.name,
+              latitude: originLat,
+              longitude: originLng,
+              searchType: "route_origin"
+            }).catch(() => {});
+          }
+          if (nextDestination?.name) {
+            routeService.saveAddressHistory({
+              searchText: nextDestination.name,
+              latitude: destLat,
+              longitude: destLng,
+              searchType: "route_destination"
+            }).catch(() => {});
+          }
+        }
 
         if (!presetPendingRef.current) {
           setRouteSavedId(null);
@@ -1471,6 +1497,47 @@ const PlanRoute = ({ onNavigate }) => {
                   </button>
                 </div>
               </div>
+
+              {addressHistory.length > 0 && (
+                <div className="mt-2 pt-2 border-t border-gray-100 dark:border-[#26383D]">
+                  <div className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-1.5 flex items-center gap-1">
+                    <span>🕒</span>
+                    <span>{t("planRoute.frequentAddresses", "Direcciones frecuentes (CU27)")}</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
+                    {addressHistory.slice(0, 5).map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => {
+                          const loc = {
+                            name: item.searchText,
+                            address: item.searchText,
+                            lat: Number(item.latitude),
+                            lng: Number(item.longitude),
+                          };
+                          if (!origin) {
+                            setOrigin(loc);
+                            setOriginInputValue(loc.name);
+                            if (destination?.lat) calculateRoute(loc, destination);
+                          } else {
+                            setDestination(loc);
+                            if (origin?.lat) calculateRoute(origin, loc);
+                          }
+                        }}
+                        className={`text-xs px-2.5 py-1 rounded-full border transition-colors truncate max-w-[220px] ${
+                          isDarkMode
+                            ? "bg-[#162329] border-[#26383D] text-gray-300 hover:border-emerald-500"
+                            : "bg-gray-50 border-gray-200 text-gray-700 hover:border-emerald-500"
+                        }`}
+                        title={item.searchText}
+                      >
+                        📍 {item.searchText}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* BARRA DE CHIPS DE LUGARES DE INTERÉS (PUNTOS DE INTERÉS ESTILO GOOGLE MAPS & MÓVIL) */}
