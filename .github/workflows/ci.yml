@@ -1,9 +1,9 @@
 name: Validar Proyecto
 
 on:
-  push:
-    branches: [ develop, qa, main ]
   pull_request:
+    branches: [ develop, qa, main ]
+  push:
     branches: [ develop, qa, main ]
 
 jobs:
@@ -23,13 +23,13 @@ jobs:
 
       - name: Instalar dependencias
         working-directory: front-end/ecoRuteando-react
-        run: npm ci
+        run: npm ci --ignore-scripts
 
-      - name: Validar estilo y buenas prácticas (lint)
+      - name: Ejecutar Linting (H-09)
         working-directory: front-end/ecoRuteando-react
         run: npm run lint
 
-      - name: Ejecutar pruebas automatizadas
+      - name: Ejecutar Pruebas Automatizadas (H-09)
         working-directory: front-end/ecoRuteando-react
         run: npm test
 
