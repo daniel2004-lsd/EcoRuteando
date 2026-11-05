@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_DB: ecoRuteando_db
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
 
     ports:
       - "5450:5432"
@@ -85,7 +85,7 @@ services:
       - backend
 
     ports:
-      - "3007:80"
+      - "3007:8080"
 
     restart: unless-stopped
 
