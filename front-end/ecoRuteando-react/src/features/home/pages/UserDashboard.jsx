@@ -20,6 +20,7 @@ import { useTheme } from "../../../app/context/ThemeContext";
 import routeService from "../../../services/routeService";
 import tripService from "../../../services/tripService";
 import favoriteService from "../../../services/favoriteService";
+import statsService from "../../../services/statsService";
 import toast from "react-hot-toast";
 import DownloadApkModal from "../../../shared/components/DownloadApkModal";
 
@@ -171,7 +172,7 @@ const UserDashboard = ({ onNavigate }) => {
     routes: 0,
     trips: 0,
     co2Saved: 0,
-    points: 0,
+    // points retirado
     favorites: 0
   });
 
@@ -199,29 +200,48 @@ const UserDashboard = ({ onNavigate }) => {
       if (!token && !user) return; // Modo invitado: no cargar stats
 
       try {
-        const [routesRes, tripsRes, favoritesRes] = await Promise.allSettled([
-          routeService.getAll(),
-          tripService.getAll(),
-          favoriteService.getAll()
+        const [dashStatsRes, tripsRes] = await Promise.allSettled([
+          statsService.getUserDashboardStats(),
+          tripService.getAll()
         ]);
 
-        const routes = routesRes.status === "fulfilled" && Array.isArray(routesRes.value) ? routesRes.value : [];
         const trips = tripsRes.status === "fulfilled" && Array.isArray(tripsRes.value) ? tripsRes.value : [];
-        const favorites = favoritesRes.status === "fulfilled" && Array.isArray(favoritesRes.value) ? favoritesRes.value : [];
 
-        const completedTrips = trips.filter((t) => t.completed);
-        const totalCO2 = completedTrips.reduce((sum, r) => sum + (parseFloat(r.actualCo2Kg) || 0), 0);
-        const totalKm = completedTrips.reduce((sum, r) => sum + (parseFloat(r.actualDistanceKm) || 0), 0);
+        if (dashStatsRes.status === "fulfilled" && dashStatsRes.value) {
+          const dash = dashStatsRes.value;
+          if (mounted) {
+            setRecentTrips(trips.slice(0, 3));
+            setStats({
+              routes: Number(dash.routes?.created ?? 0),
+              trips: Number(dash.trips?.completed ?? 0),
+              co2Saved: Number(dash.totalCo2Kg ?? 0).toFixed(1),
+              // points retirado
+              favorites: Number(dash.favoritesCount ?? 0)
+            });
+          }
+        } else {
+          // Fallback seguro si el endpoint consolidado no responde
+          const [routesRes, favoritesRes] = await Promise.allSettled([
+            routeService.getAll(null, false, true),
+            favoriteService.getAll()
+          ]);
+          const routes = routesRes.status === "fulfilled" && Array.isArray(routesRes.value) ? routesRes.value : [];
+          const favorites = favoritesRes.status === "fulfilled" && Array.isArray(favoritesRes.value) ? favoritesRes.value : [];
+          const completedTrips = trips.filter((t) => t.completed);
+          const totalCO2 = completedTrips.reduce((sum, r) => sum + (parseFloat(r.actualCo2Kg) || 0), 0);
+          // totalKm retirado con points
+          // const _totalKm = completedTrips.reduce((sum, r) => sum + (parseFloat(r.actualDistanceKm) || 0), 0);
 
-        if (mounted) {
-          setRecentTrips(trips.slice(0, 3));
-          setStats({
-            routes: routes.length,
-            trips: completedTrips.length,
-            co2Saved: totalCO2.toFixed(1),
-            points: Math.round(totalKm * 10),
-            favorites: favorites.length
-          });
+          if (mounted) {
+            setRecentTrips(trips.slice(0, 3));
+            setStats((prev) => ({
+              routes: routes.length || prev.routes,
+              trips: completedTrips.length || prev.trips,
+              co2Saved: totalCO2 > 0 ? totalCO2.toFixed(1) : prev.co2Saved,
+              // points retirado
+              favorites: favorites.length || prev.favorites
+            }));
+          }
         }
       } catch (err) {
         console.error("Error cargando stats:", err);

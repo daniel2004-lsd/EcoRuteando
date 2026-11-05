@@ -25,13 +25,19 @@ const routeService = {
     await api.put(`/routes/${id}`, { id, ...route });
   },
 
-delete: async (id) => {
+  delete: async (id) => {
     await api.delete(`/routes/${id}`);
-},
+  },
 
-  // HU-23: Obtiene el historial de direcciones guardadas del usuario
+  // HU-23 / CU27: Obtiene el historial de direcciones guardadas del usuario autenticado
   getUserAddressHistory: async () => {
     const { data } = await api.get("/routes/history/addresses");
+    return data;
+  },
+
+  // HU-23 / CU27: Guarda una nueva dirección en el historial del usuario
+  saveAddressHistory: async (addressData) => {
+    const { data } = await api.post("/routes/history/addresses", addressData);
     return data;
   },
 };
