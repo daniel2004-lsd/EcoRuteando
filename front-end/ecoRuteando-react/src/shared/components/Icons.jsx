@@ -281,3 +281,43 @@ export const FileTextIcon = ({ size = 24, white = false }) => (
     <polyline points="10 9 9 9 8 9"/>
   </svg>
 );
+
+export const TruckIcon = ({ size = 24, white = false }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={white ? "white" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="1" y="3" width="15" height="13" />
+    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+    <circle cx="5.5" cy="18.5" r="2.5" />
+    <circle cx="18.5" cy="18.5" r="2.5" />
+  </svg>
+);
+
+export const BuildingIcon = ({ size = 24, white = false }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={white ? "white" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+    <line x1="9" y1="22" x2="9" y2="22.01" />
+    <line x1="15" y1="22" x2="15" y2="22.01" />
+    <line x1="9" y1="18" x2="9" y2="18.01" />
+    <line x1="15" y1="18" x2="15" y2="18.01" />
+    <line x1="9" y1="14" x2="9" y2="14.01" />
+    <line x1="15" y1="14" x2="15" y2="14.01" />
+    <line x1="9" y1="10" x2="9" y2="10.01" />
+    <line x1="15" y1="10" x2="15" y2="10.01" />
+    <line x1="9" y1="6" x2="9" y2="6.01" />
+    <line x1="15" y1="6" x2="15" y2="6.01" />
+  </svg>
+);
+
+export const CheckCircle2 = ({ size = 24, className = "" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="12" cy="12" r="10" />
+    <path d="m9 12 2 2 4-4" />
+  </svg>
+);
+
+export const AlertTriangle = ({ size = 24, className = "" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+    <line x1="12" y1="9" x2="12" y2="13" />
+    <line x1="12" y1="17" x2="12.01" y2="17" />
+  </svg>
+);
