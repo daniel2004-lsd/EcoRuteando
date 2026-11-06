@@ -32,6 +32,8 @@ import PlanRoute from "../features/home/pages/PlanRoute";
 import AdminPanel from "../features/admin/pages/AdminPanel";
 import RouteManage from "../features/home/pages/RouteManage";
 import AdminStatistics from "../features/admin/pages/AdminStatistics";
+import CorporateSustainability from "../features/admin/pages/CorporateSustainability";
+
 import AdminTickets from "../features/admin/pages/AdminTickets";
 import AdminExports from "../features/admin/pages/AdminExports";
 import AdminAudit from "../features/admin/pages/AdminAudit";
@@ -129,6 +131,8 @@ function AppContent() {
                     <Route path="/admin/audit" element={<ProtectedRoute requiredRole="admin"><AdminAudit onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminUsers onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/admin/impact" element={<ProtectedRoute requiredRole="admin"><AdminStatistics onNavigate={onNavigate} /></ProtectedRoute>} />
+                    <Route path="/admin/corporate-sustainability" element={<ProtectedRoute requiredRole="admin"><CorporateSustainability onNavigate={onNavigate} /></ProtectedRoute>} />
+
                     <Route path="/admin/exports" element={<ProtectedRoute requiredRole="admin"><AdminExports onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/profile" element={<ProtectedRoute><UserProfile onNavigate={onNavigate} /></ProtectedRoute>} />
                     <Route path="/user/plan-route" element={<ProtectedRoute allowGuest><PlanRoute onNavigate={onNavigate} /></ProtectedRoute>} />

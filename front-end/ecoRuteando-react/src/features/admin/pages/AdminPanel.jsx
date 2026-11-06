@@ -13,7 +13,8 @@ import {
   ClockIcon,
   MapPinIcon,
   CalendarIcon,
-  ChartIcon
+  ChartIcon,
+  TruckIcon
 } from "../../../shared/components/Icons";
 import { useTheme } from "../../../app/context/ThemeContext";
 import { useTranslation } from "react-i18next";
@@ -136,6 +137,14 @@ const AdminPanel = ({ onNavigate }) => {
       subtitle: t("admin.panel.modules.export.subtitle", "PDF y Excel"),
       onClick: () => onNavigate("admin/exports")
     },
+    {
+      id: "corporate_sustainability",
+      icon: <TruckIcon size={28} />,
+      title: "Sostenibilidad B2B & Flotas",
+      subtitle: "Gestión de flotas y compensación voluntaria",
+      onClick: () => onNavigate("admin/corporate-sustainability")
+    },
+
   ];
 
   return (
